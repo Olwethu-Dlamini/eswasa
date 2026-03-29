@@ -1,0 +1,28 @@
+I'm working on a custom admin CMS for the Eswatini Standards Authority (ESWASA) — a government standards body.
+
+The website has a public frontend (for visitors) and a private admin panel (for content editors).
+
+🔧 Tech Stack
+PHP (procedural, MySQLi)
+Bootstrap 5
+Folder structure:
+/eswasa
+├── index.php                 ← public homepage
+├── events.php                ← public events listing
+├── event-details.php         ← public single event page
+└── /admin
+    ├── index.php             ← admin router (loads pages via ?page=...)
+    ├── config.php            ← DB + session + helpers (set_flash, etc.)
+    ├── /pages                ← editable admin pages (e.g., events_edit.php)
+    └── /uploads              ← stores images/documents
+✅ Current Goal
+Make the Events section fully editable in the admin:
+
+Admins can add, edit, delete events with title, description, date, location, category, and image.
+Public pages (events.php, event-details.php) dynamically display these events from the database.
+Events are stored in a table: eswasa_events (columns: id, title, description, location, event_date, category, image).
+🛠️ Recent Fixes Needed
+Fix broken image preview in the admin edit form (path was wrong due to routing via index.php?page=...).
+Ensure delete/update operations work and stay on the correct admin page.
+Use secure, prepared statements and proper flash messaging.
+The system must not use frameworks — it’s pure PHP with a simple include-based router.

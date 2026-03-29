@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright:*)",
+      "Read(//c/Program Files/nodejs/node_modules/**)",
+      "Bash(npm ls:*)",
+      "Bash(npm install:*)",
+      "Bash(node measure.js)",
+      "Bash(node inspect.js)",
+      "Bash(pdftotext \"C:/laragon/www/eswasa/Booklet final.pdf\" \"C:/laragon/www/eswasa/booklet_text.txt\")",
+      "Bash(pdftotext \"C:/laragon/www/eswasa/CALIBRATION TAB.pdf\" \"C:/laragon/www/eswasa/calibration_text.txt\")",
+      "Bash(pdftotext \"C:/laragon/www/eswasa/Eswatini Standards Authority \\(ESWASA\\) Brochure.pdf\" \"C:/laragon/www/eswasa/brochure_text.txt\")",
+      "Bash(pdftotext \"C:/laragon/www/eswasa/standards catalogue price.pdf\" \"C:/laragon/www/eswasa/standards_text.txt\")"
+    ]
+  }
+}
