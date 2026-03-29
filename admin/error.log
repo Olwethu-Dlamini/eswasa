@@ -442,3 +442,8 @@ Stack trace:
 #0 C:\laragon\www\eswasa\admin\index.php(60): include()
 #1 {main}
   thrown in C:\laragon\www\eswasa\admin\pages\about_edit.php on line 15
+[29-Mar-2026 09:18:49 UTC] PHP Fatal error:  Uncaught Error: mysqli_stmt::bind_param(): Argument #2 could not be passed by reference in C:\laragon\www\eswasa\admin\pages\services_edit.php:15
+Stack trace:
+#0 C:\laragon\www\eswasa\admin\index.php(60): include()
+#1 {main}
+  thrown in C:\laragon\www\eswasa\admin\pages\services_edit.php on line 15

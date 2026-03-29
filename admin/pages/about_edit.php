@@ -5,71 +5,31 @@ if (!defined('ESWASA_ADMIN')) {
 
 $upload_dir = ADMIN_ROOT . '/uploads/';
 
-// ── Image upload helper ───────────────────────────────────────
-function handle_image_upload($file_key, $upload_dir) {
-    if (empty($_FILES[$file_key]['name'])) return null;
-
-    $file = $_FILES[$file_key];
-
-    if ($file['error'] !== UPLOAD_ERR_OK) {
-        $map = [
-            UPLOAD_ERR_INI_SIZE  => 'File exceeds server limit.',
-            UPLOAD_ERR_FORM_SIZE => 'File exceeds form limit.',
-            UPLOAD_ERR_PARTIAL   => 'File only partially uploaded.',
-            UPLOAD_ERR_NO_TMP_DIR=> 'Missing temp folder.',
-            UPLOAD_ERR_CANT_WRITE=> 'Failed to write to disk.',
-        ];
-        return ['error' => $map[$file['error']] ?? 'Upload error.'];
-    }
-
-    if ($file['size'] > 3 * 1024 * 1024) {
-        return ['error' => 'File "' . htmlspecialchars($file['name']) . '" exceeds the 3MB limit.'];
-    }
-
-    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (!in_array($ext, ['jpg','jpeg','png','webp'], true)) {
-        return ['error' => 'Invalid file type. Allowed: JPG, PNG, WEBP.'];
-    }
-
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mime  = $finfo->file($file['tmp_name']);
-    if (!in_array($mime, ['image/jpeg','image/png','image/webp'], true)) {
-        return ['error' => 'Invalid image content detected.'];
-    }
-
-    if (!is_dir($upload_dir)) @mkdir($upload_dir, 0755, true);
-
-    $new_name = uniqid('about_', true) . '.' . $ext;
-    $dest     = $upload_dir . $new_name;
-
-    if (!move_uploaded_file($file['tmp_name'], $dest)) {
-        return ['error' => 'Failed to save file to disk.'];
-    }
-
-    return ['path' => 'admin/uploads/' . $new_name];
-}
-
 // ── Save handler ──────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
 
-    $upload_errors = [];
-
-    $image_keys = ['about_img_vision', 'about_img_mission', 'about_img_team'];
     $image_updates = [];
+    $image_keys = ['about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner'];
+
     foreach ($image_keys as $key) {
-        if (!empty($_FILES[$key]['name'])) {
-            $result = handle_image_upload($key, $upload_dir);
-            if (isset($result['error'])) {
-                $upload_errors[] = $result['error'];
-            } elseif (isset($result['path'])) {
-                $image_updates[$key] = $result['path'];
+        $base64 = $_POST[$key . '_cropped'] ?? '';
+        if (!empty($base64) && strpos($base64, 'data:image') === 0) {
+            // Decode base64
+            list($type, $data) = explode(';', $base64);
+            list(, $data)      = explode(',', $data);
+            $data = base64_decode($data);
+
+            $ext = 'jpg';
+            if (strpos($type, 'image/png') !== false) $ext = 'png';
+            if (strpos($type, 'image/webp') !== false) $ext = 'webp';
+
+            $new_name = uniqid('about_', true) . '.' . $ext;
+            $dest     = $upload_dir . $new_name;
+
+            if (file_put_contents($dest, $data)) {
+                $image_updates[$key] = 'admin/uploads/' . $new_name;
             }
         }
-    }
-
-    if (!empty($upload_errors)) {
-        set_flash('danger', implode('<br>', $upload_errors));
-        redirect_self();
     }
 
     $text_fields = [
@@ -111,7 +71,7 @@ $keys = [
     'about_intro','about_vision','about_mission','about_history',
     'about_val_transparency','about_val_people','about_val_responsiveness',
     'about_val_innovation','about_val_professionalism',
-    'about_img_vision','about_img_mission','about_img_team',
+    'about_img_vision','about_img_mission','about_img_team', 'about_img_banner'
 ];
 $placeholders = implode(',', array_fill(0, count($keys), '?'));
 $res = $conn->prepare("SELECT page_key, content FROM page_content WHERE page_key IN ($placeholders)");
@@ -135,6 +95,7 @@ $defaults = [
     'about_img_vision'          => 'assets/img/maguga.jpg',
     'about_img_mission'         => 'assets/img/vision.jpg',
     'about_img_team'            => 'assets/img/blog_thumb10.jpg',
+    'about_img_banner'          => 'assets/img/blog_thumb11.jpg',
 ];
 foreach ($defaults as $k => $v) {
     if (empty($pc[$k])) $pc[$k] = $v;
@@ -143,7 +104,6 @@ foreach ($defaults as $k => $v) {
 function e($v) { return htmlspecialchars($v ?? ''); }
 
 function img_preview_src($path) {
-    // Paths stored as 'admin/uploads/...' or 'assets/img/...' — prepend ../ for admin context
     return '../' . ltrim($path, '/');
 }
 ?>
@@ -155,7 +115,7 @@ function img_preview_src($path) {
     </a>
 </div>
 
-<form method="post" id="aboutForm" enctype="multipart/form-data">
+<form method="post" id="aboutForm">
     <input type="hidden" name="save_about" value="1">
 
     <ul class="nav nav-tabs mb-4" role="tablist">
@@ -171,8 +131,8 @@ function img_preview_src($path) {
 
         <!-- WHO WE ARE -->
         <div class="tab-pane fade show active" id="tab-intro">
-            <div class="card">
-                <div class="card-header">Introduction</div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">Introduction</div>
                 <div class="card-body">
                     <label class="form-label text-muted small">Lead paragraph shown on the About Us page.</label>
                     <textarea class="form-control" name="about_intro" rows="5"><?= e($pc['about_intro']) ?></textarea>
@@ -182,8 +142,8 @@ function img_preview_src($path) {
 
         <!-- VISION -->
         <div class="tab-pane fade" id="tab-vision">
-            <div class="card">
-                <div class="card-header">Vision Statement</div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">Vision Statement</div>
                 <div class="card-body">
                     <label class="form-label text-muted small">Shown in the Vision card. Change the photo in the Images tab.</label>
                     <textarea class="form-control" name="about_vision" rows="4"><?= e($pc['about_vision']) ?></textarea>
@@ -193,8 +153,8 @@ function img_preview_src($path) {
 
         <!-- MISSION -->
         <div class="tab-pane fade" id="tab-mission">
-            <div class="card">
-                <div class="card-header">Mission Statement</div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">Mission Statement</div>
                 <div class="card-body">
                     <label class="form-label text-muted small">Shown in the Mission card. Change the photo in the Images tab.</label>
                     <textarea class="form-control" name="about_mission" rows="4"><?= e($pc['about_mission']) ?></textarea>
@@ -204,8 +164,8 @@ function img_preview_src($path) {
 
         <!-- CORE VALUES -->
         <div class="tab-pane fade" id="tab-values">
-            <div class="card">
-                <div class="card-header">Core Values</div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">Core Values</div>
                 <div class="card-body">
                     <p class="text-muted small mb-4">Edit the description for each value. Titles and icons are fixed in the front-end.</p>
                     <div class="row g-3">
@@ -230,8 +190,8 @@ function img_preview_src($path) {
 
         <!-- HISTORY -->
         <div class="tab-pane fade" id="tab-history">
-            <div class="card">
-                <div class="card-header">Brief History</div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">Brief History</div>
                 <div class="card-body">
                     <label class="form-label text-muted small">Separate paragraphs with a blank line.</label>
                     <textarea class="form-control" name="about_history" rows="12"><?= e($pc['about_history']) ?></textarea>
@@ -241,105 +201,190 @@ function img_preview_src($path) {
 
         <!-- IMAGES -->
         <div class="tab-pane fade" id="tab-images">
-
-            <div class="alert alert-info mb-4">
-                <i class="fas fa-info-circle me-2"></i>
-                Max <strong>3MB</strong> per image &nbsp;·&nbsp; Formats: JPG, PNG, WEBP &nbsp;·&nbsp;
-                Leave a field empty to keep the current image.
+            <div class="alert alert-info border-0 shadow-sm mb-4">
+                <i class="fas fa-magic me-2"></i>
+                Select an image to open the <strong>Full-Screen Editor</strong>.
             </div>
 
             <div class="row g-4">
+                <!-- Introductory Banner -->
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            Introductory Banner <small class="text-muted">1200 × 350</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3 ratio ratio-21x9 bg-light rounded overflow-hidden border">
+                                <img id="prev_about_img_banner" src="<?= img_preview_src($pc['about_img_banner']) ?>" style="object-fit:cover;">
+                            </div>
+                            <input type="file" class="form-control" accept="image/*" onchange="initCropper(this, 'about_img_banner', 1200/350)">
+                            <input type="hidden" name="about_img_banner_cropped" id="about_img_banner_cropped">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History/Team Banner -->
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            History/Team Banner <small class="text-muted">1200 × 350</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3 ratio ratio-21x9 bg-light rounded overflow-hidden border">
+                                <img id="prev_about_img_team" src="<?= img_preview_src($pc['about_img_team']) ?>" style="object-fit:cover;">
+                            </div>
+                            <input type="file" class="form-control" accept="image/*" onchange="initCropper(this, 'about_img_team', 1200/350)">
+                            <input type="hidden" name="about_img_team_cropped" id="about_img_team_cropped">
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Vision -->
                 <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header">Vision Image <small class="text-muted ms-2">1200 × 560 px recommended</small></div>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            Vision Image <small class="text-muted">1200 × 560</small>
+                        </div>
                         <div class="card-body">
-                            <div class="mb-3" style="height:160px;overflow:hidden;border:1px solid var(--bs-border-color);border-radius:4px;background:#f8f9fa;">
-                                <img id="prev_vision" src="<?= img_preview_src($pc['about_img_vision']) ?>"
-                                     style="width:100%;height:100%;object-fit:cover;">
+                            <div class="mb-3 ratio ratio-16x9 bg-light rounded overflow-hidden border">
+                                <img id="prev_about_img_vision" src="<?= img_preview_src($pc['about_img_vision']) ?>" style="object-fit:cover;">
                             </div>
-                            <input type="file" class="form-control" name="about_img_vision"
-                                   accept=".jpg,.jpeg,.png,.webp"
-                                   onchange="previewImg(this,'prev_vision')">
-                            <div class="form-text">Max 3MB · JPG, PNG, WEBP</div>
+                            <input type="file" class="form-control" accept="image/*" onchange="initCropper(this, 'about_img_vision', 1200/560)">
+                            <input type="hidden" name="about_img_vision_cropped" id="about_img_vision_cropped">
                         </div>
                     </div>
                 </div>
 
                 <!-- Mission -->
                 <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header">Mission Image <small class="text-muted ms-2">1200 × 560 px recommended</small></div>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            Mission Image <small class="text-muted">1200 × 560</small>
+                        </div>
                         <div class="card-body">
-                            <div class="mb-3" style="height:160px;overflow:hidden;border:1px solid var(--bs-border-color);border-radius:4px;background:#f8f9fa;">
-                                <img id="prev_mission" src="<?= img_preview_src($pc['about_img_mission']) ?>"
-                                     style="width:100%;height:100%;object-fit:cover;">
+                            <div class="mb-3 ratio ratio-16x9 bg-light rounded overflow-hidden border">
+                                <img id="prev_about_img_mission" src="<?= img_preview_src($pc['about_img_mission']) ?>" style="object-fit:cover;">
                             </div>
-                            <input type="file" class="form-control" name="about_img_mission"
-                                   accept=".jpg,.jpeg,.png,.webp"
-                                   onchange="previewImg(this,'prev_mission')">
-                            <div class="form-text">Max 3MB · JPG, PNG, WEBP</div>
+                            <input type="file" class="form-control" accept="image/*" onchange="initCropper(this, 'about_img_mission', 1200/560)">
+                            <input type="hidden" name="about_img_mission_cropped" id="about_img_mission_cropped">
                         </div>
                     </div>
                 </div>
-
-                <!-- Team Banner -->
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">Team Banner <small class="text-muted ms-2">1200 × 350 px recommended</small></div>
-                        <div class="card-body">
-                            <div class="mb-3" style="height:175px;overflow:hidden;border:1px solid var(--bs-border-color);border-radius:4px;background:#f8f9fa;">
-                                <img id="prev_team" src="<?= img_preview_src($pc['about_img_team']) ?>"
-                                     style="width:100%;height:100%;object-fit:cover;">
-                            </div>
-                            <input type="file" class="form-control" name="about_img_team"
-                                   accept=".jpg,.jpeg,.png,.webp"
-                                   onchange="previewImg(this,'prev_team')">
-                            <div class="form-text">Max 3MB · JPG, PNG, WEBP</div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
-
-    </div><!-- /.tab-content -->
+    </div>
 
     <!-- Save bar -->
     <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
         <a href="index.php?page=about_edit.php" class="btn btn-outline-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary px-4">
+        <button type="submit" class="btn btn-primary px-4 shadow-sm">
             <i class="fas fa-save me-1"></i> Save Changes
         </button>
     </div>
-
 </form>
 
+<!-- Cropper Modal -->
+<div class="modal fade" id="cropperModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-dark text-white border-0">
+                <h5 class="modal-title"><i class="fas fa-crop-alt me-2"></i> Image Editor</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0" style="height: 75vh; background: #1a1a1a;">
+                <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                    <img id="cropperImage" style="display: block; max-width: 100%;">
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-0 d-flex justify-content-between p-3">
+                <div class="btn-group shadow-sm">
+                    <button type="button" class="btn btn-white border" onclick="cropper.rotate(-90)" title="Rotate Left"><i class="fas fa-undo"></i></button>
+                    <button type="button" class="btn btn-white border" onclick="cropper.rotate(90)" title="Rotate Right"><i class="fas fa-redo"></i></button>
+                    <button type="button" class="btn btn-white border" onclick="cropper.zoom(0.1)" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                    <button type="button" class="btn btn-white border" onclick="cropper.zoom(-0.1)" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                    <button type="button" class="btn btn-white border" onclick="cropper.reset()" title="Reset"><i class="fas fa-sync-alt"></i></button>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Discard</button>
+                    <button type="button" class="btn btn-primary px-4 fw-bold shadow-sm" onclick="cropAndSave()">
+                        <i class="fas fa-check me-2"></i>Apply Crop
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-function previewImg(input, previewId) {
-    if (!input.files || !input.files[0]) return;
-    const file = input.files[0];
-    if (file.size > 3 * 1024 * 1024) {
-        alert('File is ' + (file.size/1024/1024).toFixed(1) + 'MB — max allowed is 3MB.');
-        input.value = '';
-        return;
+let cropper;
+let currentKey;
+let modal;
+let cropImg;
+
+// Wait for both DOM and Bootstrap/Cropper to be ready
+window.addEventListener('load', function() {
+    const modalEl = document.getElementById('cropperModal');
+    if (modalEl && typeof bootstrap !== 'undefined') {
+        modal = new bootstrap.Modal(modalEl);
+        cropImg = document.getElementById('cropperImage');
     }
+});
+
+function initCropper(input, key, ratio) {
+    if (!input.files || !input.files[0]) return;
+    currentKey = key;
+    
     const reader = new FileReader();
-    reader.onload = e => document.getElementById(previewId).src = e.target.result;
-    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+        cropImg.src = e.target.result;
+        
+        if (modal) {
+            modal.show();
+            
+            // Re-init cropper once modal is shown
+            if (cropper) cropper.destroy();
+            setTimeout(() => {
+                cropper = new Cropper(cropImg, {
+                    aspectRatio: ratio,
+                    viewMode: 0, 
+                    dragMode: 'move',
+                    autoCropArea: 0.8,
+                    background: false,
+                });
+            }, 300);
+        }
+    };
+    reader.readAsDataURL(input.files[0]);
+    input.value = '';
+}
+
+function cropAndSave() {
+    if (!cropper) return;
+    const canvas = cropper.getCroppedCanvas({
+        width: 1200,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high',
+    });
+    
+    const base64 = canvas.toDataURL('image/jpeg', 0.9);
+    const hiddenInput = document.getElementById(currentKey + '_cropped');
+    const previewImg = document.getElementById('prev_' + currentKey);
+    
+    if (hiddenInput) hiddenInput.value = base64;
+    if (previewImg) previewImg.src = base64;
+    
+    modal.hide();
 }
 
 // Warn on unsaved changes
 (function(){
     let dirty = false;
-    document.querySelectorAll('#aboutForm textarea, #aboutForm input').forEach(el => {
-        el.addEventListener('change', ()=>{ dirty=true; });
-        el.addEventListener('input',  ()=>{ dirty=true; });
+    document.addEventListener('input', (e) => {
+        if (e.target.closest('#aboutForm')) dirty = true;
     });
     window.addEventListener('beforeunload', e => {
-        if (dirty) { e.preventDefault(); e.returnValue=''; }
+        if (dirty) { e.preventDefault(); e.returnValue = ''; }
     });
-    document.getElementById('aboutForm').addEventListener('submit', ()=>{ dirty=false; });
+    document.getElementById('aboutForm')?.addEventListener('submit', () => { dirty = false; });
 })();
 </script>

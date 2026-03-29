@@ -7,7 +7,7 @@ $keys = [
     'about_intro', 'about_vision', 'about_mission', 'about_history',
     'about_val_transparency', 'about_val_people', 'about_val_responsiveness',
     'about_val_innovation', 'about_val_professionalism',
-    'about_img_vision', 'about_img_mission', 'about_img_team',
+    'about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner'
 ];
 $placeholders = implode(',', array_fill(0, count($keys), '?'));
 $types = str_repeat('s', count($keys));
@@ -24,10 +24,10 @@ $stmt->close();
 
 // Fallback defaults
 $defaults = [
-    'about_intro'              => 'The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023. ESWASA, being the National Standards Body of Eswatini, is mandated by this Act to advance quality and standards in local businesses, government, and industry.',
+    'about_intro'              => 'The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023. ESWASA is a national standards body mandated to develop, promote, and enforce standards and quality assurance in Eswatini.',
     'about_vision'             => 'A competitive and Sustainable Trade Environment informed by effective standardization and conformity assurance in Eswatini.',
     'about_mission'            => 'We provide and promote internationally recognized quality standards and conformity assessment services to improve business performance, minimize health and safety risks and ensure environmental integrity in collaboration with regulators.',
-    'about_history'            => "The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023.\n\nESWASA, being the National Standards Body of Eswatini, is mandated by this Act to advance quality and standards in local businesses, government, and industry.\n\nThe decision to establish ESWASA was in line with regional and international trends initiated by World Trade Organisation (WTO) efforts aimed at removing tariff and non-tariff barriers to trade and creating a neutral platform that promotes the trade of quality goods and services across nations and economic blocs.\n\nIn addition to opening up global trade opportunities, standardisation also ensures that imported and locally manufactured goods are safe for human and animal life and do not harm the environment.",
+    'about_history'            => "The Eswatini Standards Authority (ESWASA) is a parastatal organisation within the Ministry of Commerce, Industry, and Trade established by the Eswatini government under the Standards and Quality Act (10) of 2003, amended in 2023.\n\nESWASA is mandated by this Act to promote quality and standards in local businesses, government, and industry.",
     'about_val_transparency'   => 'We conduct our business with honesty, openness, and integrity in all standardization processes.',
     'about_val_people'         => 'We prioritize people—building trust, collaboration, and mutually beneficial relationships with stakeholders.',
     'about_val_responsiveness' => 'We act promptly and effectively to meet the evolving needs of our customers, markets, and partners.',
@@ -36,6 +36,7 @@ $defaults = [
     'about_img_vision'          => 'assets/img/maguga.jpg',
     'about_img_mission'         => 'assets/img/vision.jpg',
     'about_img_team'            => 'assets/img/blog_thumb10.jpg',
+    'about_img_banner'          => 'assets/img/blog_thumb11.jpg',
 ];
 foreach ($defaults as $k => $v) {
     if (empty($pc[$k])) $pc[$k] = $v;
@@ -61,6 +62,7 @@ function render_paragraphs($text) {
     <meta name="description" content="Learn about the Eswatini Standards and Quality Assurance Authority (ESWASA).">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <!-- CSS here -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/animate.min.css">
     <link rel="stylesheet" href="assets/css/magnific-popup.css">
@@ -73,268 +75,404 @@ function render_paragraphs($text) {
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
+        /* Breadcrumb White Text Override */
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
-        .breadcrumb-content .title { color: #fff !important; }
-        .breadcrumb-separator i { color: #fff !important; }
+        .breadcrumb-content .title {
+            color: #fff !important;
+        }
+        
+        .breadcrumb-separator i {
+            color: #fff !important;
+        }
+        
+        /* Restricted Mobile Fix for Images - Only affects main content */
+        .main-area img {
+            max-width: 100%;
+            height: auto;
+        }
 
-        .strategy-card, .value-card {
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            border: none; background: #fff;
-            display: flex; flex-direction: column; height: 100%;
+        /* Responsive Banner Height */
+        .banner-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .strategy-card:hover, .value-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+        .banner-wrapper img {
+            width: 100%;
+            height: 400px; /* Default desktop height */
+            object-fit: cover;
         }
-        .value-icon {
-            width: 70px; height: 70px;
-            background: rgba(46,49,145,0.1); color: #2E3191;
+
+        /* Core Values Responsive Grid */
+        .values-diagram-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 10px 0;
+        }
+        
+        .values-center-image {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .value-card-custom {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            height: 100%;
+        }
+
+        .value-icon-circle {
+            width: 50px;
+            height: 50px;
+            background: rgba(46, 49, 145, 0.1);
+            color: #2E3191;
             border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center;
-            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
-            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 1.3rem;
         }
-        .value-card:hover .value-icon {
-            transform: scale(1.15) rotate(10deg);
-            background: #dc3545; color: #fff;
-        }
-        .value-title  { font-weight: 700; font-size: 1.1rem; color: #333; margin-bottom: 8px; }
-        .value-description { color: #666; font-size: 0.9rem; }
 
+        /* Sliders Styling - Optimized for Android */
+        .bg_color3 { background-color: #e6f0fa; }
+        .affiliations-slider {
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 20px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .slider-track {
+            display: flex;
+            width: calc(280px * 12); 
+            animation: scroll 25s linear infinite;
+            -webkit-animation: scroll 25s linear infinite;
+            transform: translateZ(0); /* Hardware acceleration */
+            -webkit-transform: translateZ(0);
+        }
+        .slider-item {
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            padding: 0 15px;
+        }
+        .logo-card-fixed {
+            width: 250px;
+            height: 150px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .logo-card-fixed img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* MISSION/VISION IMAGES */
+        .mission-vision-img-wrapper {
+            height: 300px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .mission-vision-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Android Scroll Keyframes */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-280px * 6)); }
+        }
+        @-webkit-keyframes scroll {
+            0% { -webkit-transform: translateX(0); }
+            100% { -webkit-transform: translateX(calc(-280px * 6)); }
+        }
+
+        /* MOBILE OVERRIDES (Android/iOS) */
+        @media (max-width: 768px) {
+            .banner-wrapper img {
+                height: 200px !important; /* Shorter banner on mobile */
+            }
+            .mission-vision-img-wrapper {
+                height: 200px !important;
+            }
+            .logo-card-fixed {
+                width: 180px !important;
+                height: 110px !important;
+            }
+            .slider-item {
+                width: 200px !important;
+            }
+            .slider-track {
+                width: calc(200px * 12) !important;
+            }
+            @keyframes scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(calc(-200px * 6)); }
+            }
+            @-webkit-keyframes scroll {
+                0% { -webkit-transform: translateX(0); }
+                100% { -webkit-transform: translateX(calc(-200px * 6)); }
+            }
+            .values-center-image {
+                max-width: 300px !important;
+                margin: 20px auto !important;
+            }
+            .info-section h3 {
+                font-size: 1.2rem !important;
+            }
+            .display-6 {
+                font-size: 1.8rem !important;
+            }
+        }
+
+        .section-divider {
+            width: 100px;
+            height: 4px;
+            background: #2E3191;
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+        
         .info-section {
             background: #f9f9f9;
-            padding: 35px 30px;
+            padding: 20px;
+            margin: 10px 0;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .info-section h3 { color: #333; margin-bottom: 12px; }
-
-        .section-divider {
-            width: 100px; height: 4px;
-            background: #2E3191;
-            margin: 16px auto 0; border-radius: 2px;
-        }
-
-        /* Affiliation slider */
-        .affiliations-slider { overflow-x: hidden; }
-        .slider-track { animation: scroll 22s linear infinite; }
-        .slider-track:hover { animation-play-state: paused; }
-        .slider-item { flex: 0 0 auto; width: 200px; text-align: center; }
-        .affiliation-logo {
-            width: 150px; height: 100px; object-fit: contain;
-            background: #fff; padding: 10px; border-radius: 6px;
-            display: block; margin: 0 auto;
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
-        .slider-item:hover .affiliation-logo {
-            transform: scale(1.1);
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
-        }
-        @keyframes scroll {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .card, .info-section { border-radius: 12px; }
-        @media (max-width: 768px) { .section-divider { width: 70px; } }
+        
+        h2, h3, p { color: #333 !important; }
     </style>
 </head>
 <body>
+    <!-- Scroll-top -->
     <button class="scroll__top scroll-to-target" data-target="html">
         <i class="fas fa-angle-up"></i>
     </button>
+    
+    <?php include("includes/header.php")?>
+    
+<main class="main-area fix">
+    <!-- breadcrumb-area -->
+    <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('assets/img/bg.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-content text-center text-md-start">
+                        <nav class="breadcrumb justify-content-center justify-content-md-start">
+                            <span><a href="index.php">Home</a></span>
+                            <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
+                            <span>About Us</span>
+                        </nav>
+                        <h3 class="title">Who We Are</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section Center Title -->
+    <section class="about-eswasa-area py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <div class="about-content">
+                        <div class="section__title mb-4">
+                            <h2 class="title" style="color: #2e3191;">About Us</h2>
+                            <div class="section-divider"></div>
+                        </div>
+                        <p class="mt-4 lead px-2">
+                            The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023.
+                        </p>
+                        <p class="lead px-2">
+                            ESWASA is a national standards body mandated to develop, promote, and enforce standards and quality assurance in Eswatini.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <?php include("includes/header.php"); ?>
-
-    <main class="main-area fix">
-
-        <!-- Breadcrumb -->
-        <section class="breadcrumb-area breadcrumb-bg"
-                 style="background-image:url('assets/img/bg.png');background-size:cover;background-position:center;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="breadcrumb-content">
-                            <nav class="breadcrumb">
-                                <span><a href="index.php">Home</a></span>
-                                <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span>About Us</span>
-                            </nav>
-                            <h3 class="title">Who We Are</h3>
+    <!-- Banner Image -->
+    <div class="container px-3 mb-5">
+        <div class="banner-wrapper">
+            <img src="<?= htmlspecialchars($pc['about_img_banner']) ?>" alt="ESWASA Banner">
+        </div>
+    </div>
+    
+    <section class="py-4">
+        <div class="container">
+            <!-- VISION AND MISSION -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="info-section h-100 d-flex flex-column">
+                        <h3>Vision</h3>
+                        <p><strong><?= htmlspecialchars($pc['about_vision']) ?></strong></p>
+                        <div class="mt-auto">
+                            <div class="mission-vision-img-wrapper">
+                                <img src="<?= htmlspecialchars($pc['about_img_vision']) ?>" alt="Vision">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-section h-100 d-flex flex-column">
+                        <h3>Mission</h3>
+                        <p><strong><?= htmlspecialchars($pc['about_mission']) ?></strong></p>
+                        <div class="mt-auto">
+                            <div class="mission-vision-img-wrapper">
+                                <img src="<?= htmlspecialchars($pc['about_img_mission']) ?>" alt="Mission">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Main content -->
-        <section class="py-5">
-            <div class="container">
+            <!-- CORE VALUES -->
+            <div class="text-center mt-5 mb-4">
+                <h2 class="fw-bold" style="color: #2E3191;">Our Core Values</h2>
+                <div class="section-divider"></div>
+            </div>
 
-                <!-- Intro -->
-                <div class="text-center mb-5">
-                    <h2 class="display-6 fw-bold" style="color:#2E3191;">Eswatini Standards Authority (ESWASA)</h2>
-                    <div class="section-divider"></div>
-                    <p class="mt-4 lead" style="max-width:820px;margin:20px auto 0;">
-                        <?= htmlspecialchars($pc['about_intro']) ?>
-                    </p>
-                </div>
-
-                <!-- Vision & Mission -->
-                <div class="row g-4 mb-5">
-                    <div class="col-md-6">
-                        <div class="info-section h-100 d-flex flex-column">
-                            <h3>Vision</h3>
-                            <p class="mb-4"><strong><?= htmlspecialchars($pc['about_vision']) ?></strong></p>
-                            <div class="mt-auto">
-                                <div style="height:280px;overflow:hidden;border-radius:8px;background:#f0f0f0;">
-                                    <img src="<?= htmlspecialchars($pc['about_img_vision']) ?>" alt="Vision" class="img-fluid w-100 h-100" style="object-fit:cover;">
-                                </div>
-                            </div>
+            <div class="values-diagram-container">
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-3 d-flex flex-column gap-3">
+                        <div class="value-card-custom">
+                            <div class="value-icon-circle"><i class="fas fa-eye"></i></div>
+                            <h4>Transparency</h4>
+                            <p><?= htmlspecialchars($pc['about_val_transparency']) ?></p>
+                        </div>
+                        <div class="value-card-custom">
+                            <div class="value-icon-circle"><i class="fas fa-users"></i></div>
+                            <h4>People-Centricity</h4>
+                            <p><?= htmlspecialchars($pc['about_val_people']) ?></p>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="info-section h-100 d-flex flex-column">
-                            <h3>Mission</h3>
-                            <p class="mb-4"><strong><?= htmlspecialchars($pc['about_mission']) ?></strong></p>
-                            <div class="mt-auto">
-                                <div style="height:280px;overflow:hidden;border-radius:8px;background:#f0f0f0;">
-                                    <img src="<?= htmlspecialchars($pc['about_img_mission']) ?>" alt="Mission" class="img-fluid w-100 h-100" style="object-fit:cover;">
-                                </div>
-                            </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="COre Values.PNG" alt="Core Values" class="values-center-image shadow-sm border img-fluid">
+                    </div>
+                    <div class="col-lg-3 d-flex flex-column gap-3">
+                        <div class="value-card-custom">
+                            <div class="value-icon-circle"><i class="fas fa-bolt"></i></div>
+                            <h4>Responsiveness</h4>
+                            <p><?= htmlspecialchars($pc['about_val_responsiveness']) ?></p>
+                        </div>
+                        <div class="value-card-custom">
+                            <div class="value-icon-circle"><i class="fas fa-award"></i></div>
+                            <h4>Professionalism</h4>
+                            <p><?= htmlspecialchars($pc['about_val_professionalism']) ?></p>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <div class="value-card-custom mx-auto" style="max-width: 350px;">
+                            <div class="value-icon-circle"><i class="fas fa-lightbulb"></i></div>
+                            <h4>Innovation</h4>
+                            <p><?= htmlspecialchars($pc['about_val_innovation']) ?></p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Core Values -->
-                <div class="text-center mb-4">
-                    <h3 class="fw-bold" style="color:#2E3191;">Our Core Values</h3>
+            </div>
+            
+            <!-- HISTORY -->
+            <div class="info-section mt-5 mb-5">
+                <h3>Brief History</h3>
+                <?= render_paragraphs($pc['about_history']) ?>
+            </div>
+            
+            <!-- TEAM IMAGE -->
+            <div class="my-5">
+                <div class="banner-wrapper" style="height: auto;">
+                    <img src="<?= htmlspecialchars($pc['about_img_team']) ?>" alt="Team" style="height: 350px; width: 100%; object-fit: cover;">
                 </div>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            </div>
+        </div>
+    </section>
+    
+    <!-- Affiliations -->
+    <section class="bg_color3 py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold" style="color: #2E3191;">Our Affiliations</h2>
+            </div>
+            <div class="affiliations-slider overflow-hidden">
+                <div class="slider-track d-flex flex-nowrap">
                     <?php
-                    $values = [
-                        ['key' => 'about_val_transparency',    'icon' => 'fa-eye',        'title' => 'Transparency'],
-                        ['key' => 'about_val_people',          'icon' => 'fa-users',      'title' => 'People-Centricity'],
-                        ['key' => 'about_val_responsiveness',  'icon' => 'fa-bolt',       'title' => 'Responsiveness'],
-                        ['key' => 'about_val_innovation',      'icon' => 'fa-lightbulb',  'title' => 'Innovation'],
-                        ['key' => 'about_val_professionalism', 'icon' => 'fa-award',      'title' => 'Professionalism'],
+                    $affs = [
+                        ['src'=>'admin/uploads/itu.png',  'alt'=>'ITU',  'href'=>'https://www.itu.int/'],
+                        ['src'=>'admin/uploads/iso.png',  'alt'=>'ISO',  'href'=>'https://www.iso.org/'],
+                        ['src'=>'admin/uploads/iec.png',  'alt'=>'IEC',  'href'=>'https://www.iec.ch/'],
+                        ['src'=>'admin/uploads/arso.png', 'alt'=>'ARSO', 'href'=>'https://www.arso-org.org/'],
+                        ['src'=>'admin/uploads/astm.png', 'alt'=>'ASTM', 'href'=>'https://www.astm.org/'],
+                        ['src'=>'assets/img/WTO.png',    'alt'=>'WTO',  'href'=>'https://www.wto.org'],
+                        ['src'=>'assets/img/AP.png',    'alt'=>'AP',  'href'=>''],
+                        ['src'=>'assets/img/sadcstan.jpg',    'alt'=>'sadcstan',  'href'=>''],
                     ];
-                    foreach ($values as $v): ?>
-                    <div class="col">
-                        <div class="card value-card border-0 shadow-sm rounded-3 p-4 h-100 text-center">
-                            <span class="value-icon"><i class="fas <?= $v['icon'] ?> fa-2x"></i></span>
-                            <h3 class="value-title"><?= htmlspecialchars($v['title']) ?></h3>
-                            <p class="value-description"><?= htmlspecialchars($pc[$v['key']]) ?></p>
-                        </div>
+                    foreach (array_merge($affs, $affs) as $a): ?>
+                    <div class="slider-item">
+                        <a href="<?= $a['href'] ?>" target="_blank" rel="noopener" class="logo-card-fixed">
+                            <img src="<?= $a['src'] ?>" alt="<?= $a['alt'] ?>">
+                        </a>
                     </div>
                     <?php endforeach; ?>
                 </div>
-
-                <!-- Brief History -->
-                <div class="info-section mb-5">
-                    <h3>Brief History</h3>
-                    <?= render_paragraphs($pc['about_history']) ?>
-                </div>
-
-                <!-- Team image -->
-                <div class="my-5">
-                    <div class="rounded-3 overflow-hidden shadow" style="max-width:1200px;height:350px;margin:0 auto;">
-                        <img src="<?= htmlspecialchars($pc['about_img_team']) ?>" alt="ESWASA Team" class="w-100 h-100" style="object-fit:cover;">
-                    </div>
-                </div>
-
             </div>
-        </section>
-
-        <!-- Affiliations -->
-        <section class="content_section white_section bg_color3 py-5" style="background-color:#e6f0fa;">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2 class="display-6 fw-bold" style="color:#2E3191;">
-                        Our Affiliations
-                        <span class="d-block fs-5 text-muted mt-2">Partnering for Excellence</span>
-                    </h2>
-                </div>
-                <div class="affiliations-slider overflow-hidden">
-                    <div class="slider-track d-flex flex-nowrap">
-                        <?php
-                        $affiliations = [
-                            ['src'=>'admin/uploads/itu.png',  'alt'=>'ITU',  'href'=>'https://www.itu.int/'],
-                            ['src'=>'admin/uploads/iso.png',  'alt'=>'ISO',  'href'=>'https://www.iso.org/'],
-                            ['src'=>'admin/uploads/iec.png',  'alt'=>'IEC',  'href'=>'https://www.iec.ch/'],
-                            ['src'=>'admin/uploads/arso.png', 'alt'=>'ARSO', 'href'=>'https://www.arso-org.org/'],
-                            ['src'=>'admin/uploads/astm.png', 'alt'=>'ASTM', 'href'=>'https://www.astm.org/'],
-                        ];
-                        // Duplicate for seamless loop
-                        $all = array_merge($affiliations, $affiliations);
-                        foreach ($all as $a): ?>
-                        <div class="slider-item px-3">
-                            <a href="<?= $a['href'] ?>" target="_blank" rel="noopener noreferrer">
-                                <img src="<?= $a['src'] ?>" alt="<?= $a['alt'] ?>" class="affiliation-logo">
-                            </a>
-                        </div>
-                        <?php endforeach; ?>
+        </div>
+    </section>
+    
+    <!-- Accreditation -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5 px-3">
+                <h2 class="fw-bold" style="color: #2E3191;">ESWASA ACCREDITATION</h2>
+                <p class="text-muted mt-3">Eswatini Standards Authority is accredited by SADCAS.</p>
+            </div>
+            <div class="affiliations-slider overflow-hidden">
+                <div class="slider-track d-flex flex-nowrap">
+                    <?php
+                    $accs = [
+                        ['src'=>'assets/img/SADCAS.png', 'href'=>'https://www.sadcas.org', 'alt'=>'SADCAS'],
+                        ['src'=>'assets/img/ILAC.JPG',  'href'=>'', 'alt'=>'ILAC'],
+                        ['src'=>'assets/img/iaf.webp',   'href'=>'https://www.iaf.nu/', 'alt'=>'IAF'],
+                      
+                        
+                    ];
+                    foreach (array_merge($accs, $accs) as $a): ?>
+                    <div class="slider-item">
+                        <a href="<?= $a['href'] ?>" target="_blank" rel="noopener" class="logo-card-fixed">
+                            <img src="<?= $a['src'] ?>" alt="<?= $a['alt'] ?>">
+                        </a>
                     </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
+</main>
 
-        <!-- Accreditation -->
-        <section class="py-5 bg-light">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2 class="display-6 fw-bold" style="color:#2E3191;">ESWASA ACCREDITATION</h2>
-                    <p class="text-muted mt-3" style="max-width:700px;margin:0 auto;">
-                        Eswatini Standards Authority Management Systems Certification Services is accredited by the Southern African Development Community Accreditation Service (SADCAS).
-                    </p>
-                    <p class="lead mt-3">
-                        <strong>Scopes:</strong> Quality Management Systems to ISO/IEC 17021-1:2015 and ISO/IEC 17021-3:2017 (Certification to ISO 9001:2015), IAF Codes 3, 12, 13 and 38
-                    </p>
-                </div>
-                <div class="affiliations-slider overflow-hidden">
-                    <div class="slider-track d-flex flex-nowrap align-items-center">
-                        <?php
-                        $accreditations = [
-                            ['src'=>'assets/img/SADCAS.png', 'alt'=>'SADCAS', 'href'=>'https://www.sadcas.org'],
-                            ['src'=>'assets/img/iaf.webp',   'alt'=>'IAF',    'href'=>'https://www.iaf.nu/'],
-                            ['src'=>'assets/img/sadc.webp',  'alt'=>'SADC',   'href'=>'https://www.sadc.org'],
-                            ['src'=>'assets/img/WTO.png',    'alt'=>'WTO',    'href'=>'https://www.wto.org'],
-                        ];
-                        $all2 = array_merge($accreditations, $accreditations);
-                        foreach ($all2 as $a): ?>
-                        <div class="slider-item px-3">
-                            <a href="<?= $a['href'] ?>" target="_blank" rel="noopener noreferrer">
-                                <div class="d-flex align-items-center justify-content-center" style="width:180px;height:120px;">
-                                    <img src="<?= $a['src'] ?>" alt="<?= $a['alt'] ?>" class="img-fluid" style="max-width:100%;max-height:100%;object-fit:contain;">
-                                </div>
-                            </a>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <?php include("includes/footer.php"); ?>
-
+    <?php include("includes/footer.php")?>
+    
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/isotope.pkgd.min.js"></script>
-    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <script src="assets/js/jquery.odometer.min.js"></script>
-    <script src="assets/js/jquery.appear.js"></script>
-    <script src="assets/js/tween-max.min.js"></script>
-    <script src="assets/js/select2.min.js"></script>
-    <script src="assets/js/slick.min.js"></script>
-    <script src="assets/js/slick-animation.min.js"></script>
-    <script src="assets/js/tg-cursor.min.js"></script>
-    <script src="assets/js/form-contact.js"></script>
-    <script src="assets/js/wow.min.js"></script>
-    <script src="assets/js/aos.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
 </html>

@@ -288,13 +288,10 @@ if (!$events) {
                         <h2 class="title tg-svg" style="color: #2e3191;">About Us</h2>
                     </div>
                     <p>
-                        The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023. ESWASA, being the National Standards Body of Eswatini, is mandated by this Act to advance quality and standards in local businesses, government, and industry.
+                        The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023.
                     </p>
                     <p>
-                        We provide and promote internationally recognized quality standards and conformity assessment services to improve business performance, minimize health and safety risks and ensure environmental integrity in collaboration with regulators.
-                    </p>
-                    <p>
-                        We also operate across several key areas: Management Systems Certification, Product Certification, Scales & Metrology Services, Standards Development & Sales, Product Testing Services, Standards-based Training, and Information Centre / WTO Enquiry Point.
+                        ESWASA is a national standards body mandated to develop, promote, and enforce standards and quality assurance in Eswatini.
                     </p>
                     <!-- Optional: Add a button -->
                     <!-- <a href="#" class="btn btn-primary mt-3">Learn More</a> -->
