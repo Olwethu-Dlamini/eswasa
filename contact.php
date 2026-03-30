@@ -1,4 +1,6 @@
 <?php
+include_once 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
 // Handle form submission at the very top
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize inputs
@@ -120,6 +122,64 @@ if (isset($_SESSION['contact_error'])) {
             margin-bottom: 25px;
             border: 1px solid #f5c6cb;
         }
+        .location-card {
+            background: #fff;
+            border-radius: 6px;
+            padding: 25px;
+            border: 1px solid #ddd;
+            height: 100%;
+        }
+        .location-card h5 {
+            color: #2e3191;
+            font-weight: 700;
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+        }
+        .location-card .loc-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .location-card .loc-line i {
+            color: #2e3191;
+            margin-top: 4px;
+            flex-shrink: 0;
+            width: 16px;
+            text-align: center;
+        }
+        .location-card .loc-line a {
+            color: #2e3191;
+            text-decoration: none;
+        }
+        .location-card .loc-line a:hover {
+            text-decoration: underline;
+        }
+        .contact-bottom-row {
+            border-top: 1px solid #e8e8e8;
+            padding-top: 20px;
+            margin-top: 25px;
+        }
+        .contact-bottom-row h6 {
+            color: #2e3191;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .contact-bottom-row p {
+            color: #444;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        .contact-bottom-row a {
+            color: #2e3191;
+            text-decoration: none;
+        }
+        .contact-bottom-row a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -131,7 +191,7 @@ if (isset($_SESSION['contact_error'])) {
 
     <main class="main-area fix">
 
-        <section class="breadcrumb-area breadcrumb-bg" data-background="assets/img/bg/breadcrumb_bg.jpg">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('contact', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -155,42 +215,43 @@ if (isset($_SESSION['contact_error'])) {
                         <div class="contact-info-wrap">
                             <h2 class="title">Get In Touch With Us</h2>
                             <p>Contact us anytime for support, we are always just 1 click away from you.</p>
-                            <ul class="list-wrap">
-                                <li>
-                                    <div class="icon">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                    </div>
-                                    <div class="content">
-                                        <p><strong>Head Office:</strong> Plot 247, Marbel Construction Premises, King Mswati III Avenue West, Matsapha Industrial Site</p>
-                                        <p><strong>Metrology Laboratory:</strong> King Sobhuza II Avenue, Matsapha Crescent, Opposite YKK Zippers, Matsapha Industrial Site</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="icon">
-                                        <i class="fas fa-mobile-alt"></i>
-                                    </div>
-                                    <div class="content">
-                                        <p><strong>Head Office:</strong> <a href="tel:+26825184633">(+268) 2518 4633/ 4610</a></p>
-                                        <p><strong>Metrology Lab:</strong> <a href="tel:+26825186633">(+268) 2518 6633</a></p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="icon">
-                                        <i class="fas fa-inbox"></i>
-                                    </div>
-                                    <div class="content">
-                                        <p>P. O. Box 1399, Matsapha, Eswatini</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="icon">
-                                        <i class="far fa-envelope"></i>
-                                    </div>
-                                    <div class="content">
-                                        <a href="mailto:info@swasa.co.sz">info@swasa.co.sz</a>
-                                    </div>
-                                </li>
-                            </ul>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <!-- Head Office -->
+                            <div class="col-md-6">
+                                <div class="location-card">
+                                    <h5>Head Office</h5>
+                                    <div class="loc-line"><i class="fas fa-map-marker-alt"></i><span>Plot 247, Marbel Construction Premises,</span></div>
+                                    <div class="loc-line"><span style="margin-left: 26px;">King Mswati III Avenue West</span></div>
+                                    <div class="loc-line"><span style="margin-left: 26px;">Matsapha Industrial Site</span></div>
+                                    <div class="loc-line mt-2"><i class="fas fa-phone-alt"></i><a href="tel:+26825184633">(+268) 2518 4633/ 4610</a></div>
+                                </div>
+                            </div>
+                            <!-- Metrology Laboratory -->
+                            <div class="col-md-6">
+                                <div class="location-card">
+                                    <h5>Metrology Laboratory</h5>
+                                    <div class="loc-line"><i class="fas fa-map-marker-alt"></i><span>King Sobhuza II Avenue</span></div>
+                                    <div class="loc-line"><span style="margin-left: 26px;">Matsapha Crescent, Opposite YKK Zippers</span></div>
+                                    <div class="loc-line"><span style="margin-left: 26px;">Matsapha Industrial Site</span></div>
+                                    <div class="loc-line mt-2"><i class="fas fa-phone-alt"></i><a href="tel:+26825186633">(+268) 2518 6633</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Postal & Website row -->
+                        <div class="row contact-bottom-row">
+                            <div class="col-sm-6">
+                                <h6><i class="fas fa-envelope me-2"></i>Postal Address:</h6>
+                                <p>P.O. Box 1399,</p>
+                                <p>Matsapha, Eswatini</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <h6><i class="fas fa-globe me-2"></i>Website:</h6>
+                                <p><a href="https://www.swasa.co.sz" target="_blank">www.swasa.co.sz</a></p>
+                                <p><a href="mailto:info@swasa.co.sz">info@swasa.co.sz</a></p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-7">

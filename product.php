@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -207,7 +208,7 @@ include 'includes/db_connect.php';
     <main class="main-area fix">
 
         <!-- breadcrumb-area -->
-        <section class="breadcrumb-area breadcrumb-bg" data-background="assets/img/bg/breadcrumb_bg.jpg">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('product', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -233,55 +234,36 @@ include 'includes/db_connect.php';
             <div class="container">
                 <!-- 1. About Product Certification -->
                 <div class="highlighted-section">
-                    <h3></i>About Product Certification</h3>
-                    <p>
-                        The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.
-                    </p>
+                    <h3>About Product Certification</h3>
+                    <p>ESWASA implemented the ISO 17021 and 17065 Standards on our management systems and product certification schemes in order to provide trusted certification services and assurance that products and services meet customer expectations.</p>
+                    <p>Product certification demonstrates commitment to safety, quality and performance standards set at an organizational, local or international level.</p>
             </div>
 
                 
 
                 <!-- 3. Certification Process -->
-                <!-- Certification Process -->
-<section class="cert-process-section py-5 bg-light">
+                <!-- Product Certification Process -->
+<section class="py-5" style="background: #eaf1f5;">
     <div class="container">
-
-        <div class="text-center mb-5">
-            <h2 class="section-title">How Certification Works</h2>
-          
+        <h2 class="section-title mb-4">Product Certification Process</h2>
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <img src="admin/uploads/image26.jpg" alt="Six-step certification process" class="img-fluid" style="border-radius: 8px;">
+            </div>
+            <div class="col-lg-7">
+                <ol style="font-size: 0.95rem; color: #333; line-height: 2; padding-left: 20px;">
+                    <li>Application/ Quote/ Planning and Scheduling</li>
+                    <li>Initial Assessment (Process& Systems at Factory/ Plant)</li>
+                    <li>Sampling& Testing of Product (sourcing of an Accredited lab)</li>
+                    <li>Submission to Certification Approval Committee (CAC)</li>
+                    <li>Awarding of Permit/ Certification for 3 years</li>
+                    <li>Post permit inspection/ Audits& sampling/ Product testing</li>
+                </ol>
+                <div class="text-center mt-3">
+                    <img src="assets/img/product.png" alt="SWASA Product Certification Mark" style="height: 100px;">
+                </div>
+            </div>
         </div>
-
-        <!-- ROW 1 -->
-        <div class="process-row d-flex justify-content-center flex-wrap align-items-center">
-            <div class="process-circle">STEP 1<br><span>Initial Enquiry</span></div>
-            <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 2<br><span>Promotional Visit & Application</span></div>
-            <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 3<br><span>Quote Provided, Contract & Payment Commitment</span></div>
-        </div>
-
-        <div class="process-divider"></div>
-
-        <!-- ROW 2 -->
-        <div class="process-row d-flex justify-content-center flex-wrap align-items-center">
-            <div class="process-circle">STEP 4<br><span>Stage 1 Initial Audit / Factory Evaluation & Sampling</span></div>
-            <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 5<br><span>Stage 2 Initial Audit / Product Testing</span></div>
-            <div class="process-arrow">›</div>
-            <div class="process-circle highlight">Certification<br>Decision</div>
-        </div>
-
-        <div class="process-divider"></div>
-
-        <!-- ROW 3 -->
-        <div class="process-row d-flex justify-content-center flex-wrap align-items-center">
-            <div class="process-circle">STEP 6<br><span>Issue of Certificate</span></div>
-            <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 7<br><span>2 Surveillance Audits</span></div>
-            <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 8<br><span>Recertification Audit</span></div>
-        </div>
-
     </div>
 </section>
 

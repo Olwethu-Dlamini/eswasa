@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -29,16 +30,27 @@ include 'includes/db_connect.php';
     
     <style>
         .cert-section {
-            padding: 80px 0;
+            padding: 50px 0;
         }
         .cert-card {
             background: white;
             border-radius: 10px;
-            padding: 40px 30px;
-            margin: 20px 0;
+            padding: 35px 30px;
+            margin: 10px 0;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            /* REMOVED: border-left: 4px solid #2e3191; */
             transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cert-card .card-mark {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 210px;
+            height: 210px;
+            object-fit: contain;
+            opacity: 1;
+            pointer-events: none;
         }
         .cert-card:hover {
             transform: translateY(-5px);
@@ -76,7 +88,7 @@ include 'includes/db_connect.php';
             justify-content: center;
             gap: 30px;
             flex-wrap: wrap;
-            margin: 50px 0;
+            margin: 25px 0 10px;
         }
         .cert-image-item {
             text-align: center;
@@ -96,50 +108,31 @@ include 'includes/db_connect.php';
             color: #666;
             font-size: 0.9rem;
         }
-        .process-step {
-            text-align: center;
-            padding: 30px 20px;
-        }
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: #2e3191;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 auto 20px;
-        }
-        .process-step h4 {
-            color: #2e3191;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        .process-step p {
-            color: #666;
-            line-height: 1.6;
-        }
-        .impact-numbers {
-            background: #f8f9fa;
-            padding: 50px 0;
+        /* ── Steps to certification image section ── */
+        .steps-img-section {
             text-align: center;
         }
-        .impact-item {
-            padding: 20px;
+        .steps-img-section img {
+            max-width: 100%;
+            height: auto;
         }
-        .impact-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            display: block;
-            color: #2e3191;
+
+        /* Side-by-side paragraphs with subtle divider */
+        @media (min-width: 992px) {
+            .cert-split-left {
+                border-right: 1px solid rgba(0,0,0,0.12);
+                padding-right: 30px;
+            }
+            .cert-split-right {
+                padding-left: 30px;
+            }
         }
-        .impact-text {
-            font-size: 1.1rem;
-            color: #666;
+        @media (max-width: 991.98px) {
+            .cert-split-left {
+                border-bottom: 1px solid rgba(0,0,0,0.12);
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
@@ -164,7 +157,7 @@ include 'includes/db_connect.php';
     <main class="main-area fix">
 
         <!-- breadcrumb-area -->
-        <section class="breadcrumb-area breadcrumb-bg" data-background="assets/img/bg/breadcrumb_bg.jpg">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('certification', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -188,12 +181,21 @@ include 'includes/db_connect.php';
         <section class="cert-section">
             <div class="container">
                 <div class="row">
-                    <div class="col-12 text-center mb-5">
+                    <div class="col-12 text-center mb-3">
                         <h2 style="color: #2e3191;">Your Path to Quality Excellence</h2>
                         <p class="lead">The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.</p>
-                        <p class="lead">The department mainly focuses on Management Systems Certification, Ingelo Certification, Product Certification (ESWASA Mark), Testing Services, and Scales and Metrology Services.</p>
-                        <p class="lead">ESWASA clients in this division range from large globally recognised organizations with successful brands to local small businesses.</p>
                     </div>
+                </div>
+                <div class="row mb-4 cert-split">
+                    <div class="col-lg-6 cert-split-left">
+                        <p class="lead" style="text-align: left;">Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
+                    </div>
+                    <div class="col-lg-6 cert-split-right">
+                        <p class="lead" style="text-align: left;">The department mainly focuses on Management Systems Certification, Ingelo Certification, Product Certification (ESWASA Mark), Testing Services, and Scales and Metrology Services.</p>
+                    </div>
+                </div>
+                <div class="text-center mb-3">
+                    <h4 style="color: #2e3191; font-weight: 600;">Each ESWASA mark represents a commitment to quality, trust, and excellence in Eswatini</h4>
                 </div>
                 <div class="cert-images">
                     <div class="cert-image-item">
@@ -224,7 +226,7 @@ include 'includes/db_connect.php';
         <section class="cert-section">
             <div class="container">
                 <div class="row">
-                    <div class="col-12 text-center mb-5">
+                    <div class="col-12 text-center mb-3">
                         <h2 style="color: #2e3191;">What Certification Can Do For Your Business</h2>
                         <p class="lead">Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
                     </div>
@@ -242,6 +244,7 @@ include 'includes/db_connect.php';
                                 <li>Stand out from your competitors</li>
                             </ul>
                             <a href="product.php" class="btn-cert">Explore Product Certification</a>
+                            <img src="assets/img/product.png" alt="Product Mark" class="card-mark">
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -256,62 +259,25 @@ include 'includes/db_connect.php';
                                 <li>Better resource utilization</li>
                             </ul>
                             <a href="managementsystems.php" class="btn-cert">Discover Management Systems</a>
+                            <img src="assets/img/management.png" alt="Management Mark" class="card-mark">
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Simple Process -->
-<section class="cert-section bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-5">
-                <h2 style="color: #2e3191;">Your Certification Journey Made Simple</h2>
-                <p class="lead">We guide you every step of the way - no stress, no surprises</p>
+        <!-- Steps to Certification -->
+        <section class="cert-section bg-light">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 style="color: #2e3191;">Your Certification Journey Made Simple</h2>
+                    <p class="lead">We guide you every step of the way - no stress, no surprises</p>
+                </div>
+                <div class="steps-img-section">
+                    <img src="assets/img/steps-to-certification.jpg" alt="Steps to Certification: Gap Analysis, Training and Documentation, Internal Audit and MRM, Audit and Certification, ISO Certified">
+                </div>
             </div>
-        </div>
-
-        <div class="row">
-            <!-- Step 1 -->
-            <div class="col-md-4 process-step">
-                <div class="step-number">1</div>
-                <h4>Preliminary Assessment</h4>
-                <p>Conduct a self-assessment to identify areas needing improvement within your operations.</p>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="col-md-4 process-step">
-                <div class="step-number">2</div>
-                <h4>Documentation</h4>
-                <p>Develop and maintain clear, comprehensive records of all practices, procedures, and processes related to your company.</p>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="col-md-4 process-step">
-                <div class="step-number">3</div>
-                <h4>Training</h4>
-                <p>Ensure that all employees are adequately trained in accordance with the requirements of the SZNS ISO standard.</p>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <!-- Step 4 -->
-            <div class="col-md-6 process-step">
-                <div class="step-number">4</div>
-                <h4>Third-party Audit</h4>
-                <p>Engage a certification body for a thorough inspection to verify compliance with the standard.</p>
-            </div>
-
-            <!-- Step 5 -->
-            <div class="col-md-6 process-step">
-                <div class="step-number">5</div>
-                <h4>Corrective Actions</h4>
-                <p>Rectify any non-conformities identified during the audit before certification can be granted.</p>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
 
         <!-- Get Started -->

@@ -26,6 +26,10 @@ function submenu_open($pages, $current) {
             </li>
 
             <li class="nav-item">
+                <?= nav_link('breadcrumbs_edit.php', $current_page, 'fa-image', 'Breadcrumb Images') ?>
+            </li>
+
+            <li class="nav-item">
                 <?= nav_link('services_edit.php', $current_page, 'fa-handshake', 'Our Services') ?>
             </li>
 

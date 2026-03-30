@@ -623,22 +623,29 @@ textarea {
 ===========================*/
 .breadcrumb-bg {
   position: relative;
-  padding: 150px 0 155px;
   z-index: 1;
+  /* height tracks image ratio (400/1920 ≈ 20.83vw) so cover shows the full image */
+  min-height: clamp(155px, 20.83vw, 400px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
 }
 @media (max-width: 1500px) {
   .breadcrumb-bg {
-    padding: 105px 0 110px;
+    min-height: clamp(155px, 20.83vw, 350px);
   }
 }
 @media (max-width: 1199.98px) {
   .breadcrumb-bg {
-    padding: 90px 0 95px;
+    min-height: clamp(155px, 20.83vw, 300px);
   }
 }
 @media (max-width: 767.98px) {
   .breadcrumb-bg {
-    padding: 75px 0 80px;3437
+    min-height: 155px;3437
   }
 }
 .breadcrumb-bg::before {

@@ -41,6 +41,7 @@ $allowed_pages = [
     'announcements_edit.php',
     'faq_edit.php',
     'publications_edit.php',
+    'breadcrumbs_edit.php',
 ];
 
 // Resolve page
@@ -76,6 +77,7 @@ $page_titles = [
     'announcements_edit.php' => 'Announcements',
     'faq_edit.php'           => 'FAQ',
     'publications_edit.php'  => 'Publications',
+    'breadcrumbs_edit.php'   => 'Breadcrumb Images',
 ];
 $page_title = $page_titles[$page] ?? ucfirst(str_replace(['.php','_'], ['', ' '], $page));
 

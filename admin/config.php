@@ -54,9 +54,8 @@ function set_flash($type, $message) {
     ];
 }
 
-// Redirect to the current page (without query string)
+// Redirect to the current page (preserves query string)
 function redirect_self() {
-    $url = strtok($_SERVER['REQUEST_URI'], '?');
-    header("Location: $url");
+    header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }

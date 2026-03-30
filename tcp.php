@@ -1,3 +1,4 @@
+<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
@@ -118,7 +119,7 @@
     <?php include("includes/header.php")?>
 
     <main class="main-area fix">
-        <section class="breadcrumb-area breadcrumb-bg" data-background="assets/img/bg/breadcrumb_bg.jpg">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('tcp', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">

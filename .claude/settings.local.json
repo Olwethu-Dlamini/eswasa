@@ -10,7 +10,21 @@
       "Bash(pdftotext \"C:/laragon/www/eswasa/Booklet final.pdf\" \"C:/laragon/www/eswasa/booklet_text.txt\")",
       "Bash(pdftotext \"C:/laragon/www/eswasa/CALIBRATION TAB.pdf\" \"C:/laragon/www/eswasa/calibration_text.txt\")",
       "Bash(pdftotext \"C:/laragon/www/eswasa/Eswatini Standards Authority \\(ESWASA\\) Brochure.pdf\" \"C:/laragon/www/eswasa/brochure_text.txt\")",
-      "Bash(pdftotext \"C:/laragon/www/eswasa/standards catalogue price.pdf\" \"C:/laragon/www/eswasa/standards_text.txt\")"
+      "Bash(pdftotext \"C:/laragon/www/eswasa/standards catalogue price.pdf\" \"C:/laragon/www/eswasa/standards_text.txt\")",
+      "Bash(php:*)",
+      "Bash(grep -r \"CREATE TABLE\\\\|INSERT INTO\\\\|UPDATE.*SET\\\\|ALTER TABLE\" /c/laragon/www/eswasa/admin/*.php)",
+      "Bash(grep -h \"eswasa_\\\\|page_content\\\\|banners\\\\|site_statistics\" /c/laragon/www/eswasa/admin/pages/*.php)",
+      "Bash(grep -n \"breadcrumb-separator\\\\|fas fa-angle-right\" /c/laragon/www/eswasa/*.php)",
+      "Bash(ls:*)",
+      "Bash(mysql -u root eswasa -e \"SHOW CREATE TABLE page_content\\\\G\")",
+      "Bash(C:/laragon/bin/mysql/mysql-8.0.30-winx64/bin/mysql.exe -u root eswasa -e \"SHOW CREATE TABLE page_content\\\\G\" 2>&1)",
+      "Bash(\"C:/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe\" -u root eswasa -e \"SHOW CREATE TABLE page_content\\\\G\" 2>&1)",
+      "Bash(\"C:/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe\" -u root eswasa -e \"SELECT page_key, LEFT\\(content, 80\\) as content_preview FROM page_content WHERE page_key LIKE 'breadcrumb_bg_%';\" 2>&1)",
+      "Bash(\"C:/laragon/bin/php/php-8.3.26-Win32-vs16-x64/php.exe\" -r \"\nchdir\\('C:/laragon/www/eswasa'\\);\ninclude 'includes/db_connect.php';\ninclude 'includes/breadcrumb_helper.php';\necho 'certification: ' . get_breadcrumb_bg\\('certification', 'DEFAULT'\\) . PHP_EOL;\necho 'services: ' . get_breadcrumb_bg\\('services', 'DEFAULT'\\) . PHP_EOL;\n\" 2>&1)",
+      "Bash(curl -s \"http://localhost/eswasa/Certification.php\")",
+      "Bash(curl:*)",
+      "Bash(\"C:/laragon/bin/php/php-8.3.26-Win32-vs16-x64/php.exe\" -r \"\n\\\\$src = imagecreatefrompng\\('C:/laragon/www/eswasa/steps to certification.PNG'\\);\n\\\\$w = imagesx\\(\\\\$src\\);\n\\\\$h = imagesy\\(\\\\$src\\);\n// Top design is roughly the top 42% of the image\n\\\\$cropH = \\(int\\)\\(\\\\$h * 0.42\\);\n\\\\$dst = imagecreatetruecolor\\(\\\\$w, \\\\$cropH\\);\n// White background\n\\\\$white = imagecolorallocate\\(\\\\$dst, 255, 255, 255\\);\nimagefill\\(\\\\$dst, 0, 0, \\\\$white\\);\nimagecopy\\(\\\\$dst, \\\\$src, 0, 0, 0, 0, \\\\$w, \\\\$cropH\\);\n// Save as high quality PNG\nimagepng\\(\\\\$dst, 'C:/laragon/www/eswasa/assets/img/steps-to-certification.png', 1\\);\nimagedestroy\\(\\\\$src\\);\nimagedestroy\\(\\\\$dst\\);\necho 'Cropped: ' . \\\\$w . 'x' . \\\\$cropH;\n\" 2>&1)",
+      "Bash(\"C:/laragon/bin/php/php-8.3.26-Win32-vs16-x64/php.exe\" -r \"\n\\\\$src = imagecreatefrompng\\('C:/laragon/www/eswasa/assets/img/steps-to-certification.png'\\);\n\\\\$w = imagesx\\(\\\\$src\\);\n\\\\$h = imagesy\\(\\\\$src\\);\n// Upscale 3x for crisp quality\n\\\\$nw = \\\\$w * 3;\n\\\\$nh = \\\\$h * 3;\n\\\\$dst = imagecreatetruecolor\\(\\\\$nw, \\\\$nh\\);\n\\\\$white = imagecolorallocate\\(\\\\$dst, 255, 255, 255\\);\nimagefill\\(\\\\$dst, 0, 0, \\\\$white\\);\nimagecopyresampled\\(\\\\$dst, \\\\$src, 0, 0, 0, 0, \\\\$nw, \\\\$nh, \\\\$w, \\\\$h\\);\nimagepng\\(\\\\$dst, 'C:/laragon/www/eswasa/assets/img/steps-to-certification.png', 1\\);\nimagedestroy\\(\\\\$src\\);\nimagedestroy\\(\\\\$dst\\);\necho 'Upscaled: ' . \\\\$nw . 'x' . \\\\$nh;\n\" 2>&1)"
     ]
   }
 }

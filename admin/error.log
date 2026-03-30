@@ -447,3 +447,9 @@ Stack trace:
 #0 C:\laragon\www\eswasa\admin\index.php(60): include()
 #1 {main}
   thrown in C:\laragon\www\eswasa\admin\pages\services_edit.php on line 15
+[30-Mar-2026 07:46:32 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS uq_page_key (page_key)' at line 1 in C:\laragon\www\eswasa\admin\pages\breadcrumbs_edit.php:83
+Stack trace:
+#0 C:\laragon\www\eswasa\admin\pages\breadcrumbs_edit.php(83): mysqli->query('ALTER TABLE pag...')
+#1 C:\laragon\www\eswasa\admin\index.php(61): include('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\eswasa\admin\pages\breadcrumbs_edit.php on line 83

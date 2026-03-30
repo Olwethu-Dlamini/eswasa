@@ -7,7 +7,8 @@ $keys = [
     'about_intro', 'about_vision', 'about_mission', 'about_history',
     'about_val_transparency', 'about_val_people', 'about_val_responsiveness',
     'about_val_innovation', 'about_val_professionalism',
-    'about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner'
+    'about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner',
+    'about_breadcrumb_title', 'about_breadcrumb_bg'
 ];
 $placeholders = implode(',', array_fill(0, count($keys), '?'));
 $types = str_repeat('s', count($keys));
@@ -37,6 +38,8 @@ $defaults = [
     'about_img_mission'         => 'assets/img/vision.jpg',
     'about_img_team'            => 'assets/img/blog_thumb10.jpg',
     'about_img_banner'          => 'assets/img/blog_thumb11.jpg',
+    'about_breadcrumb_title'    => 'Who We Are',
+    'about_breadcrumb_bg'       => 'assets/img/bg.png',
 ];
 foreach ($defaults as $k => $v) {
     if (empty($pc[$k])) $pc[$k] = $v;
@@ -58,7 +61,7 @@ function render_paragraphs($text) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Who We Are - ESWASA</title>
+    <title><?= htmlspecialchars($pc['about_breadcrumb_title']) ?> - ESWASA</title>
     <meta name="description" content="Learn about the Eswatini Standards and Quality Assurance Authority (ESWASA).">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -81,11 +84,11 @@ function render_paragraphs($text) {
         .breadcrumb-content .title {
             color: #fff !important;
         }
-        
+
         .breadcrumb-separator i {
             color: #fff !important;
         }
-        
+
         /* Restricted Mobile Fix for Images - Only affects main content */
         .main-area img {
             max-width: 100%;
@@ -112,7 +115,7 @@ function render_paragraphs($text) {
             margin: 20px auto;
             padding: 10px 0;
         }
-        
+
         .values-center-image {
             max-width: 450px;
             width: 100%;
@@ -155,7 +158,7 @@ function render_paragraphs($text) {
         }
         .slider-track {
             display: flex;
-            width: calc(280px * 12); 
+            width: calc(280px * 12);
             animation: scroll 25s linear infinite;
             -webkit-animation: scroll 25s linear infinite;
             transform: translateZ(0); /* Hardware acceleration */
@@ -252,7 +255,7 @@ function render_paragraphs($text) {
             margin: 20px auto 0;
             border-radius: 2px;
         }
-        
+
         .info-section {
             background: #f9f9f9;
             padding: 20px;
@@ -260,7 +263,7 @@ function render_paragraphs($text) {
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
+
         h2, h3, p { color: #333 !important; }
     </style>
 </head>
@@ -269,12 +272,12 @@ function render_paragraphs($text) {
     <button class="scroll__top scroll-to-target" data-target="html">
         <i class="fas fa-angle-up"></i>
     </button>
-    
+
     <?php include("includes/header.php")?>
-    
+
 <main class="main-area fix">
     <!-- breadcrumb-area -->
-    <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('assets/img/bg.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= htmlspecialchars($pc['about_breadcrumb_bg']) ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -284,13 +287,13 @@ function render_paragraphs($text) {
                             <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                             <span>About Us</span>
                         </nav>
-                        <h3 class="title">Who We Are</h3>
+                        <h3 class="title"><?= htmlspecialchars($pc['about_breadcrumb_title']) ?></h3>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    
+
     <!-- About Section Center Title -->
     <section class="about-eswasa-area py-5">
         <div class="container">
@@ -301,12 +304,9 @@ function render_paragraphs($text) {
                             <h2 class="title" style="color: #2e3191;">About Us</h2>
                             <div class="section-divider"></div>
                         </div>
-                        <p class="mt-4 lead px-2">
-                            The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023.
-                        </p>
-                        <p class="lead px-2">
-                            ESWASA is a national standards body mandated to develop, promote, and enforce standards and quality assurance in Eswatini.
-                        </p>
+                        <div class="mt-4 lead px-2">
+                            <?= render_paragraphs($pc['about_intro']) ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -319,7 +319,7 @@ function render_paragraphs($text) {
             <img src="<?= htmlspecialchars($pc['about_img_banner']) ?>" alt="ESWASA Banner">
         </div>
     </div>
-    
+
     <section class="py-4">
         <div class="container">
             <!-- VISION AND MISSION -->
@@ -392,13 +392,13 @@ function render_paragraphs($text) {
                     </div>
                 </div>
             </div>
-            
+
             <!-- HISTORY -->
             <div class="info-section mt-5 mb-5">
                 <h3>Brief History</h3>
                 <?= render_paragraphs($pc['about_history']) ?>
             </div>
-            
+
             <!-- TEAM IMAGE -->
             <div class="my-5">
                 <div class="banner-wrapper" style="height: auto;">
@@ -407,7 +407,7 @@ function render_paragraphs($text) {
             </div>
         </div>
     </section>
-    
+
     <!-- Affiliations -->
     <section class="bg_color3 py-5">
         <div class="container">
@@ -438,7 +438,7 @@ function render_paragraphs($text) {
             </div>
         </div>
     </section>
-    
+
     <!-- Accreditation -->
     <section class="py-5 bg-light">
         <div class="container">
@@ -453,8 +453,8 @@ function render_paragraphs($text) {
                         ['src'=>'assets/img/SADCAS.png', 'href'=>'https://www.sadcas.org', 'alt'=>'SADCAS'],
                         ['src'=>'assets/img/ILAC.JPG',  'href'=>'', 'alt'=>'ILAC'],
                         ['src'=>'assets/img/iaf.webp',   'href'=>'https://www.iaf.nu/', 'alt'=>'IAF'],
-                      
-                        
+
+
                     ];
                     foreach (array_merge($accs, $accs) as $a): ?>
                     <div class="slider-item">
@@ -470,7 +470,7 @@ function render_paragraphs($text) {
 </main>
 
     <?php include("includes/footer.php")?>
-    
+
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/main.js"></script>

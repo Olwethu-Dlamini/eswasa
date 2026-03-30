@@ -1,3 +1,4 @@
+<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -212,7 +213,7 @@
     <!-- main-area -->
     <main class="main-area fix">
         <!-- breadcrumb-area -->
-        <section class="breadcrumb-area breadcrumb-bg" data-background="assets/img/bg/bg.png">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('meetourteam', 'assets/img/bg/bg.png') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
