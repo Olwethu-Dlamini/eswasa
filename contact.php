@@ -105,6 +105,7 @@ if (isset($_SESSION['contact_error'])) {
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="includes/cta-section.css">
     <style>
         .contact-form-success {
             background-color: #d4edda;
@@ -307,7 +308,7 @@ if (isset($_SESSION['contact_error'])) {
                                         <textarea name="message" placeholder="Message" required><?= htmlspecialchars($prefill['message'] ?? '') ?></textarea>
                                     </div>
                                     <div class="form-grp col-10 mx-auto text-center">
-                                        <button type="submit" class="btn btn-contact-bg">Submit Message</button>
+                                        <button type="submit" class="btn-cta" style="cursor:pointer;">Submit Message</button>
                                     </div>
                                 </form>
                             </div>

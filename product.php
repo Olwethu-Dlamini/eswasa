@@ -27,7 +27,8 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    
+    <link rel="stylesheet" href="includes/cta-section.css">
+
     <style>
         .btn-cert {
             background-color: #2E3191;
@@ -43,7 +44,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         /* Removed blue left border — now clean highlight */
         .highlighted-section {
-            background-color: #f8f9fd;
+            background-color: #f5f5f0;
             padding: 25px;
             margin: 30px 0;
             border-radius: 6px;
@@ -112,6 +113,9 @@ include_once 'includes/breadcrumb_helper.php';
             .highlighted-section {
                 padding: 20px 15px;
             }
+            .highlighted-section h3 {
+                font-size: 1.2rem;
+            }
             .prod-process-steps li {
                 padding-left: 40px;
             }
@@ -119,6 +123,23 @@ include_once 'includes/breadcrumb_helper.php';
                 width: 28px;
                 height: 28px;
                 font-size: 0.85rem;
+            }
+            /* Process images stack on mobile */
+            .col-lg-7.mb-4.mb-lg-0,
+            .col-lg-5 {
+                text-align: center;
+            }
+            .col-lg-5 img {
+                width: 60% !important;
+                margin-top: 20px;
+            }
+            /* Certified Products grid smaller */
+            .certified-products-img {
+                height: 160px !important;
+            }
+            /* Section title */
+            .section-title {
+                font-size: 1.3rem;
             }
         }
 
@@ -243,42 +264,54 @@ include_once 'includes/breadcrumb_helper.php';
 
                 <!-- 3. Certification Process -->
                 <!-- Product Certification Process -->
-<section class="py-5" style="background: #eaf1f5;">
+<section class="py-5" style="background: #ffffff;">
     <div class="container">
         <h2 class="section-title mb-4">Product Certification Process</h2>
         <div class="row align-items-center">
-            <div class="col-lg-5 mb-4 mb-lg-0">
-                <img src="admin/uploads/image26.jpg" alt="Six-step certification process" class="img-fluid" style="border-radius: 8px;">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <img src="produt pro.jpg" alt="Product Certification Process" class="img-fluid" style="border-radius: 8px; width: 100%; object-fit: contain;">
             </div>
-            <div class="col-lg-7">
-                <ol style="font-size: 0.95rem; color: #333; line-height: 2; padding-left: 20px;">
-                    <li>Application/ Quote/ Planning and Scheduling</li>
-                    <li>Initial Assessment (Process& Systems at Factory/ Plant)</li>
-                    <li>Sampling& Testing of Product (sourcing of an Accredited lab)</li>
-                    <li>Submission to Certification Approval Committee (CAC)</li>
-                    <li>Awarding of Permit/ Certification for 3 years</li>
-                    <li>Post permit inspection/ Audits& sampling/ Product testing</li>
-                </ol>
-                <div class="text-center mt-3">
-                    <img src="assets/img/product.png" alt="SWASA Product Certification Mark" style="height: 100px;">
-                </div>
+            <div class="col-lg-5">
+                <img src="admin/uploads/eswasa01.png" alt="ESWASA Product Certification" class="img-fluid" style="border-radius: 8px; width: 50%; object-fit: contain;">
             </div>
         </div>
     </div>
 </section>
 
-                <!-- Action Buttons -->
-                <div class="text-center my-5">
-                    <a href="qoute_certification.php" class="btn btn-cert btn-lg me-3">Submit Application</a>
-                    <a href="contact.php" class="btn btn-cert btn-lg">Contact Certification Team</a>
-                </div>
+            </div>
+        </section>
 
-                <div class="alert alert-info text-center" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    <strong>Need urgent certification for export or regulatory compliance?</strong> 
-                    ESWASA offers expedited assessment for priority sectors. Enquire via certification@eswasa.org.sz
+        <!-- ESWASA Certified Products -->
+        <section class="py-5" style="background: #f5f5f0;">
+            <div class="container">
+                <h2 class="text-center mb-5" style="color: #2e3191; font-weight: 700;">ESWASA Certified Products</h2>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <img src="admin/uploads/image28.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                    </div>
+                    <div class="col-6">
+                        <img src="admin/uploads/image29.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                    </div>
+                    <div class="col-6">
+                        <img src="admin/uploads/image30.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                    </div>
+                    <div class="col-6">
+                        <img src="admin/uploads/image31.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                    </div>
                 </div>
+            </div>
+        </section>
 
+        <section class="cta-journey-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="cta-title">Begin Your Product Certification Journey</h2>
+                        <p class="cta-subtitle">Get your Product ESWASA Certified today!</p>
+                        <a href="qoute_certification.php" class="btn-cta">Submit Application</a>
+                        <a href="contact.php" class="btn-cta">Contact Certification Team</a>
+                    </div>
+                </div>
             </div>
         </section>
 

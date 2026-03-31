@@ -67,7 +67,7 @@
                                         <li class="active"><a href="index.php">Home</a>
                                             
                                         </li>
-                                        <li class="menu-item-has-children"><a href="#">About Us</a>
+                                        <li class="menu-item-has-children"><a href="about-us.php">About Us</a>
                                             <ul class="sub-menu">
                                                 <li><a href="about-us.php">Who Are We</a></li>
                                                 <li><a href="Meetourteam.php">Meet Our Team</a></li>
@@ -78,7 +78,7 @@
                                         <li class="active"><a href="services.php">Our Services</a>
                                         </li>
                                         
-                                        <li class="menu-item-has-children"><a href="#">Training</a>
+                                        <li class="menu-item-has-children"><a href="training-about.php">Training</a>
                                             <ul class="sub-menu">
                                                 <li><a href="training-about.php">About ESWASA Trainings</a></li>
                                                 <li><a href="training-calendar.php">Training Calendar</a></li>
@@ -86,7 +86,7 @@
                                                
                                             </ul>
                                         </li>
-                                        <li class="menu-item-has-children"><a href="">Certification</a>
+                                        <li class="menu-item-has-children"><a href="Certification.php">Certification</a>
                                             <ul class="sub-menu">
                                                 <li><a href="Certification.php">ESWASA Certification </a></li>
                                                 <li><a href="managementsystems.php">Management Systems </a></li>
@@ -97,14 +97,14 @@
                                             </ul>
                                         </li>
 
-                                         <li class="menu-item-has-children"><a href="">Calibration</a>
+                                         <li class="menu-item-has-children"><a href="Calibration.php">Calibration</a>
                                             <ul class="sub-menu">
                                                 <li><a href="Calibration.php">Scales and Metrology services</a></li>
-                                                <li><a href="qoute_calibration.php">Request for Quotation</a></li>
+                                                <li><a href="contactcalibration.php">Request for Quotation</a></li>
                                             </ul>
                                         </li>
 
-                                        <li class="menu-item-has-children"><a href="">Standards</a>
+                                        <li class="menu-item-has-children"><a href="Standards.php">Standards</a>
                                             <ul class="sub-menu">
                                                 <li><a href="Standards.php">Standards Development</a></li>
                                                 <li><a href="tcp.php">ESWASA Technical Committee Platform </a></li>
@@ -114,7 +114,7 @@
                                             </ul>
                                         </li>
 
-                                         <li class="menu-item-has-children"><a href="#">Updates</a>
+                                         <li class="menu-item-has-children"><a href="events.php">Updates</a>
                                             <ul class="sub-menu">
                                                 <li><a href="events.php">Events</a></li>
                                                 <li><a href="vacancies.php">Vacancies</a></li>

@@ -369,7 +369,7 @@ function render_paragraphs($text) {
                         </div>
                     </div>
                     <div class="col-lg-6 text-center">
-                        <img src="COre Values.PNG" alt="Core Values" class="values-center-image shadow-sm border img-fluid">
+                        <img src="about core.jpg" alt="Core Values" class="values-center-image shadow-sm border img-fluid">
                     </div>
                     <div class="col-lg-3 d-flex flex-column gap-3">
                         <div class="value-card-custom">

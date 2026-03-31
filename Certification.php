@@ -27,7 +27,8 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" type="text/css" href="rs-plugin/css/settings.css" media="screen">
     <link rel="stylesheet" type="text/css" href="assets/css/extralayers.css" media="screen">
     <link rel="stylesheet" href="assets/css/main.css">
-    
+    <link rel="stylesheet" href="includes/cta-section.css">
+
     <style>
         .cert-section {
             padding: 50px 0;
@@ -280,16 +281,15 @@ include_once 'includes/breadcrumb_helper.php';
         </section>
 
 
-        <!-- Get Started -->
-        <section class="cert-section">
+        <section class="cta-journey-section">
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h2 style="color: #2e3191;">Ready to Get Started?</h2>
-                        <p class="mb-4">Begin your certification journey with ESWASA today</p>
-                        <a href="contact.php" class="btn-cert">Contact Us</a>
-                        <a href="qoute_certification.php" class="btn-cert">Request Quote</a>
-                        <a href="training-about.php" class="btn-cert">Training Programs</a>
+                        <h2 class="cta-title">Begin Your Certification Journey</h2>
+                        <p class="cta-subtitle">Begin your certification journey with ESWASA today.</p>
+                        <a href="contact.php" class="btn-cta">Contact Us</a>
+                        <a href="qoute_certification.php" class="btn-cta">Request Quote</a>
+                        <a href="training-about.php" class="btn-cta">Training Programs</a>
                     </div>
                 </div>
             </div>

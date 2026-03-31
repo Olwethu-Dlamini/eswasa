@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="includes/cta-section.css">
 
     <style>
         /* General TC Button Style */
@@ -190,8 +191,8 @@
                 </div>
 
                 <div class="text-center my-5">
-                    <a href="standardsdev.php" class="btn btn-tc btn-lg me-3">Learn About Standards Development</a>
-                    <a href="contact.php" class="btn btn-tc btn-lg">Contact Us</a>
+                    <a href="Standards.php" class="btn-cta">Learn About Standards Development</a>
+                    <a href="contact.php" class="btn-cta">Contact Us</a>
                 </div>
             </div>
         </section>

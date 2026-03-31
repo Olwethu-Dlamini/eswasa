@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="includes/cta-section.css">
     <style>
         /* Button Style */
         .btn-wp {
@@ -226,8 +227,8 @@
                     </div>
 
                 <div class="text-center my-5 pt-4">
-                    <a href="standardsdev.php" class="btn btn-wp btn-lg me-3">Propose a Standard Project</a>
-                    <a href="contact.php" class="btn btn-wp btn-lg">General Enquiries</a>
+                    <a href="Standards.php" class="btn-cta">Propose a Standard Project</a>
+                    <a href="contact.php" class="btn-cta">General Enquiries</a>
                 </div>
 
             </div>

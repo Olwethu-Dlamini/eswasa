@@ -28,7 +28,8 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    
+    <link rel="stylesheet" href="includes/cta-section.css">
+
     <style>
         .form-control, .form-select {
             border-radius: 0.375rem;
@@ -293,7 +294,7 @@ include_once 'includes/breadcrumb_helper.php';
 
                         <!-- Submit Button -->
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-submit-quote">
+                            <button type="submit" class="btn-cta" style="cursor:pointer;">
                                 Submit Request for Quotation
                             </button>
                         </div>

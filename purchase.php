@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="includes/cta-section.css">
     <style>
         /* Button Style */
         .btn-purchase {
@@ -196,8 +197,8 @@
 
 
                 <div class="text-center my-5 pt-3">
-                    <a href="contact.php" class="btn btn-purchase btn-lg me-3">Contact Sales Team</a>
-                    <a href="standards.php" class="btn btn-purchase btn-lg">View All Standards Areas</a>
+                    <a href="contact.php" class="btn-cta">Contact Sales Team</a>
+                    <a href="Standards.php" class="btn-cta">View All Standards Areas</a>
                 </div>
 
             </div>

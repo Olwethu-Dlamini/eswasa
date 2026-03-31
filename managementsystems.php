@@ -27,7 +27,8 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" type="text/css" href="rs-plugin/css/settings.css" media="screen">
     <link rel="stylesheet" type="text/css" href="assets/css/extralayers.css" media="screen">
     <link rel="stylesheet" href="assets/css/main.css">
-    
+    <link rel="stylesheet" href="includes/cta-section.css">
+
     <style>
         .cert-section {
             padding: 60px 0;
@@ -667,16 +668,15 @@ include_once 'includes/breadcrumb_helper.php';
     </div>
 </section>
 
-        <!-- Begin Your Certification Journey -->
-        <section class="cert-section" style="background: #eaf1f5;">
+        <section class="cta-journey-section">
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h2 class="section-title">Begin Your Certification Journey</h2>
-                        <p class="mb-4">Submit an application or request a preliminary consultation with our certification team.</p>
-                        <a href="qoute_certification.php" class="btn-cert">Request Quote</a>
-                        <a href="contact.php" class="btn-cert">Contact Us Now</a>
-                        <a href="training-about.php" class="btn-cert">Attend Implementation Training</a>
+                        <h2 class="cta-title">Begin Your Certification Journey</h2>
+                        <p class="cta-subtitle">Submit an application or request a preliminary consultation with our certification team.</p>
+                        <a href="qoute_certification.php" class="btn-cta">Request Quote</a>
+                        <a href="contact.php" class="btn-cta">Contact Us Now</a>
+                        <a href="training-about.php" class="btn-cta">Attend Implementation Training</a>
                     </div>
                 </div>
             </div>

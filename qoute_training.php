@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="includes/cta-section.css">
     <style>
         .form-control, .form-select {
             border-radius: 0.375rem; /* Match Bootstrap's default rounded corners */
@@ -230,7 +231,7 @@
 
                         <!-- Submit Button -->
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3">Submit Request</button>
+                            <button type="submit" class="btn-cta" style="cursor:pointer;">Submit Request</button>
                         </div>
                     </form>
                 </div>

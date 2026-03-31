@@ -28,7 +28,8 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    
+    <link rel="stylesheet" href="includes/cta-section.css">
+
     <style>
         .btn-service {
             background-color: #2E3191;
@@ -329,16 +330,14 @@ include_once 'includes/breadcrumb_helper.php';
                 
 
               
-        <!-- Action Buttons (ENLARGED) -->
-        <section class="cert-section">
+        <section class="cta-journey-section">
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h2 class="section-title">Get Calibrations</h2>
-                        <p class="mb-4">Submit an application or request a preliminary consultation with our calibration team.</p>
-                        <a href="qoute_calibration.php" class="btn-cert">Submit Application</a>
-                        <a href="contactcalibration.php" class="btn-cert">Contact Metrology Unit</a>
-                       
+                        <h2 class="cta-title">Get Calibrations</h2>
+                        <p class="cta-subtitle">Submit an application or request a preliminary consultation with our calibration team.</p>
+                        <a href="contactcalibration.php" class="btn-cta">Submit Application</a>
+                        <a href="contactcalibration.php" class="btn-cta">Contact Metrology Unit</a>
                     </div>
                 </div>
             </div>

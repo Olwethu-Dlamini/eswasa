@@ -28,7 +28,8 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    
+    <link rel="stylesheet" href="includes/cta-section.css">
+
     <style>
         .btn-dev {
             background-color: #2E3191;
@@ -205,20 +206,6 @@ include_once 'includes/breadcrumb_helper.php';
                     </p>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="text-center my-5">
-                    <a href="contact.php" class="btn btn-dev btn-lg me-3">
-                        Contact Standards Unit
-                    </a>
-                    <a href="tcplatform.php" class="btn btn-dev btn-lg">
-                        Register for a Technical Committee
-                    </a>
-                </div>
-
-                <div class="alert alert-info text-center" role="alert">
-                    <strong>Current Priority Areas:</strong> Climate-resilient agriculture, renewable energy, digital economy, and local content in public procurement.
-                </div>
-
             </div>
         </section>
 
@@ -247,6 +234,19 @@ include_once 'includes/breadcrumb_helper.php';
                         <img src="assets/img/implementation_flow.png" alt="Implementation Process Flow" class="img-fluid" />
                         <!-- Note: You would need to create or upload this image file -->
                         <p class="text-center mt-3"><small>#ImprovingTheWorldWeLiveIn</small></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-journey-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="cta-title">Get Involved in Standards Development</h2>
+                        <p class="cta-subtitle">Contact our Standards Unit or register for a Technical Committee to contribute to national standards.</p>
+                        <a href="contact.php" class="btn-cta">Contact Standards Unit</a>
+                        <a href="tcp.php" class="btn-cta">Register for a Technical Committee</a>
                     </div>
                 </div>
             </div>
