@@ -25,32 +25,52 @@
     <link rel="stylesheet" href="includes/cta-section.css">
 
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         /* General TC Button Style */
         .btn-tc {
-            background-color: #2E3191; /* ESWASA Primary Blue */
-            color: white;
-            border-color: #2E3191;
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
             margin: 5px;
             transition: background-color 0.3s;
         }
         .btn-tc:hover {
-            background-color: #1a1f71;
-            border-color: #1a1f71;
-            color: white;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
 
         /* Introduction Box */
         .intro-box {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+            background-color: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 30px;
             margin: 25px 0;
-            border-radius: 8px;
+            border-radius: 4px;
         }
         .intro-box h3 {
-            color: #2E3191;
+            color: #2B3388;
             margin-top: 0;
-            border-bottom: 2px solid #2E3191;
+            border-bottom: 2px solid #2B3388;
             padding-bottom: 10px;
             margin-bottom: 15px;
             display: inline-block;
@@ -59,27 +79,26 @@
         /* Professional Benefit Card Styling */
         .tc-benefit-card {
             position: relative;
-            background-color: #ffffff;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
+            background-color: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 2px 5px rgba(43, 51, 136, 0.02);
             padding: 25px;
             min-height: 250px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
         .tc-benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border-color: #2B3388;
+            box-shadow: 0 4px 10px rgba(43, 51, 136, 0.07);
         }
         .tc-benefit-card h4 {
-            color: #2E3191;
+            color: #2B3388;
             font-weight: 700;
             margin-top: 0;
-            /* FIX: Increased padding to prevent text overlap with the icon box */
-            padding-left: 60px; 
+            padding-left: 60px;
         }
-        
+
         /* Icon Box Styling */
         .icon-box {
             position: absolute;
@@ -89,25 +108,35 @@
             height: 35px;
             line-height: 35px;
             text-align: center;
-            border-radius: 5px;
-            background-color: #2E3191;
-            color: white;
+            border-radius: 4px;
+            background-color: #2B3388;
+            color: #fff;
             font-size: 16px;
         }
 
         /* Application Section Styling (Highlighted Action) */
         .application-section {
-            background-color: #eef5ff;
+            background-color: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 30px;
             margin: 40px 0;
-            border-radius: 8px;
-            /* FIX: Removed blue border that was perceived as 'AI lining' */
-            /* border-top: 5px solid #2E3191; */ 
+            border-radius: 4px;
         }
         .application-section h3 {
-            color: #2E3191;
+            color: #2B3388;
             margin-top: 0;
             margin-bottom: 15px;
+        }
+        .application-section a { color: #2B3388; }
+        .application-section a:hover { color: rgba(43, 51, 136, 0.85); }
+
+        @media (max-width: 767.98px) {
+            .intro-box { padding: 20px; }
+            .tc-benefit-card { padding: 20px; min-height: 0; margin-bottom: 20px; }
+            .tc-benefit-card h4 { padding-left: 50px; font-size: 1.05rem; }
+            .icon-box { top: 20px; left: 16px; }
+            .application-section { padding: 20px; }
+            .breadcrumb-content .title { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -149,7 +178,7 @@
                     <p>TCs are responsible for developing, maintaining, and revising **Eswatini National Standards (SZNS)** within their specific technical areas. They ensure that standards are developed through a consensus-based process, reflecting the needs and expertise of all relevant parties.</p>
                 </div>
 
-                <h2 class="text-center mt-5 mb-4" style="color: #2E3191; font-weight: 700;">Key Benefits of Joining an ESWASA TC</h2>
+                <h2 class="text-center mt-5 mb-4" style="color: #2B3388; font-weight: 700;">Key Benefits of Joining an ESWASA TC</h2>
 
                 <div class="row my-5">
                     <div class="col-lg-6 col-md-12">

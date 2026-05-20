@@ -24,11 +24,31 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="includes/cta-section.css">
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         /* Button Style */
         .btn-wp {
-            background-color: #2E3191; /* ESWASA Primary Blue */
-            color: white;
-            border-color: #2E3191;
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
             margin: 5px;
             padding: 10px 30px;
             font-weight: 600;
@@ -36,48 +56,49 @@
             transition: background-color 0.3s;
         }
         .btn-wp:hover {
-            background-color: #1a1f71;
-            border-color: #1a1f71;
-            color: white;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
 
         /* Introduction Section (Clean Professional Box) */
         .intro-box {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+            background-color: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 40px;
             margin: 40px 0 60px 0;
             border-radius: 4px;
         }
         .intro-box h3 {
-            color: #2E3191;
+            color: #2B3388;
             margin-top: 0;
             margin-bottom: 20px;
             font-weight: 700;
-            border-bottom: 3px solid #f0f0f0; 
+            border-bottom: 3px solid rgba(43, 51, 136, 0.15);
             padding-bottom: 15px;
         }
         .intro-box p {
             font-size: 16px;
             line-height: 1.6;
+            color: #2B3388;
         }
-        
+
         /* Work Programme List Styling - Card Look */
         .wp-list-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 25px;
-            margin-bottom: 12px; 
-            border: 1px solid #e9ecef;
+            margin-bottom: 12px;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
-            background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(43, 51, 136, 0.04);
             transition: box-shadow 0.3s, border-color 0.3s;
         }
         .wp-list-item:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-color: #2E3191;
+            box-shadow: 0 4px 8px rgba(43, 51, 136, 0.07);
+            border-color: #2B3388;
         }
 
         .wp-content {
@@ -85,7 +106,7 @@
         }
         .wp-title {
             font-weight: 600;
-            color: #2E3191; /* Title color set to primary blue */
+            color: #2B3388;
             font-size: 1.1em;
             margin-bottom: 5px;
             transition: color 0.2s;
@@ -95,12 +116,12 @@
             text-decoration: none;
         }
         .wp-title a:hover {
-            color: #1a1f71; /* Darken on hover */
+            color: rgba(43, 51, 136, 0.85);
             text-decoration: underline;
         }
         .wp-details {
             font-size: 0.9em;
-            color: #6c757d;
+            color: rgba(43, 51, 136, 0.75);
         }
         .wp-status {
             text-align: right;
@@ -114,18 +135,29 @@
             font-weight: bold;
             font-size: 0.85em;
             text-transform: uppercase;
+            background-color: #2B3388;
+            color: #fff;
         }
         .status-published {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #2B3388;
+            color: #fff;
         }
         .status-underdev {
-            background-color: #fff3cd;
-            color: #856404;
+            background-color: #fff;
+            color: #2B3388;
+            border: 1px solid #2B3388;
         }
         .status-revision {
-             background-color: #d1ecf1; /* Light blue for revisions */
-            color: #0c5460;
+            background-color: rgba(43, 51, 136, 0.15);
+            color: #2B3388;
+        }
+
+        @media (max-width: 767.98px) {
+            .intro-box { padding: 24px; margin: 24px 0 32px 0; }
+            .intro-box h3 { font-size: 1.2rem; }
+            .wp-list-item { flex-direction: column; align-items: flex-start; padding: 16px; }
+            .wp-status { text-align: left; padding-left: 0; min-width: 0; margin-top: 10px; }
+            .breadcrumb-content .title { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -166,7 +198,7 @@
                     <p>Interested stakeholders are invited to review the programme and provide feedback. For more information on specific projects, please contact us directly.</p>
                 </div>
 
-                <h4 class="mb-4" style="color: #2E3191; font-weight: 600;">Current and Recent Projects</h4>
+                <h4 class="mb-4" style="color: #2B3388; font-weight: 600;">Current and Recent Projects</h4>
 
                 <div class="wp-list-container">
                     <div class="wp-list-item">

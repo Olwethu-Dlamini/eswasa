@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>ESWASA - Contact Us Calibration</title>
-    <meta name="description" content="">
+    <title>Contact Calibration Services - Eswatini Standards Authority (ESWASA)</title>
+    <meta name="description" content="Contact the ESWASA Metrology and Calibration laboratory at Matsapha Industrial Site for accredited calibration services and enquiries.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -26,6 +26,121 @@
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
+        /* ========== Contact info list ========== */
+        .contact-info-wrap .title { color: #2B3388; }
+        .contact-info-wrap > p { color: rgba(43, 51, 136, 0.75); margin-bottom: 24px; }
+        .contact-info-wrap .list-wrap { list-style: none; padding: 0; margin: 0; }
+        .contact-info-wrap .list-wrap li {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
+        }
+        .contact-info-wrap .list-wrap li:last-child { border-bottom: none; }
+        .contact-info-wrap .list-wrap .icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            background: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2B3388;
+            flex-shrink: 0;
+        }
+        .contact-info-wrap .list-wrap .content { color: #2B3388; }
+        .contact-info-wrap .list-wrap .content p { color: #2B3388; margin: 0; line-height: 1.5; }
+        .contact-info-wrap .list-wrap .content a {
+            display: block;
+            color: #2B3388;
+            text-decoration: none;
+            line-height: 1.6;
+        }
+        .contact-info-wrap .list-wrap .content a:hover { text-decoration: underline; }
+
+        /* ========== Form inputs ========== */
+        .form-control, input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select {
+            border: 1px solid rgba(43, 51, 136, 0.25);
+            border-radius: 4px;
+            color: #2B3388;
+            background: #fff;
+        }
+        .form-control:focus, input:focus, textarea:focus, select:focus {
+            border-color: #2B3388;
+            box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.15);
+            outline: none;
+        }
+        .form-label, label { color: #2B3388; font-weight: 600; }
+        .form-grp input,
+        .form-grp textarea {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+        .form-grp textarea { min-height: 140px; }
+        .form-grp input::placeholder,
+        .form-grp textarea::placeholder { color: rgba(43, 51, 136, 0.6); }
+
+        /* ========== Submit button ========== */
+        .btn-contact-bg,
+        input[type="submit"],
+        button[type="submit"] {
+            background-color: #2B3388 !important;
+            color: #fff !important;
+            border: 1px solid #2B3388 !important;
+            border-radius: 4px !important;
+            padding: 12px 32px;
+            font-family: Arial, sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .btn-contact-bg:hover,
+        input[type="submit"]:hover,
+        button[type="submit"]:hover {
+            background-color: rgba(43, 51, 136, 0.85) !important;
+            color: #fff !important;
+            border-color: rgba(43, 51, 136, 0.85) !important;
+        }
+        .ajax-response { color: #2B3388; }
+
+        /* ========== Mobile responsive ========== */
+        @media (max-width: 767.98px) {
+            body { font-size: 15px; }
+            .contact-info-wrap .title { font-size: 1.4rem; }
+            .contact-info-wrap .list-wrap li { padding: 12px 0; gap: 10px; }
+            .contact-info-wrap .list-wrap .icon { width: 34px; height: 34px; }
+            .col-lg-5 + .col-lg-7 { margin-top: 30px; }
+            .btn-contact-bg,
+            input[type="submit"] { width: 100%; padding: 12px 20px; }
+            .contact-map iframe { height: 320px; }
+        }
+    </style>
 </head>
 
 <body>
@@ -113,8 +228,8 @@
                                         <i class="fas fa-mobile-alt"></i>
                                     </div>
                                     <div class="content">
-                                        <a href="tel:+268 25184610">+268 2518 6633 </a>
-                                        <a href="tel:+268 25184526">+268 2518 4610</a>
+                                        <a href="tel:+26825186633">(+268) 2518 6633</a>
+                                        <a href="tel:+26825184610">(+268) 2518 4610</a>
                                     </div>
                                 </li>
                                 <li>
@@ -165,7 +280,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-grp">
-                                            <input name="subject" type="text" placeholder="Calibration Services *" required>
+                                            <input name="subject" type="text" value="Calibration Services" required>
                                         </div>
                                     </div>
                                 </div>

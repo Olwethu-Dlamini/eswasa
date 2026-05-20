@@ -5,8 +5,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Biztek - Corporate & Business Template</title>
-    <meta name="description" content="">
+    <title>Board of Directors - ESWASA</title>
+    <meta name="description" content="The ESWASA Board of Directors — strategic oversight and governance of the Eswatini Standards Authority.">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -25,26 +26,47 @@
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        /* Additional styles for the Board page */
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+
+        /* Board cards — restrained DIN/BIS aesthetic */
         .board-member-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             background-color: #fff;
             display: flex;
             flex-direction: column;
-            height: 100%; /* Ensure card takes full height of grid item */
+            height: 100%;
+            padding: 16px;
+            border-radius: 4px;
+            transition: border-color .25s ease, box-shadow .25s ease;
         }
         .board-member-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
         }
         .board-img-container {
             position: relative;
-            width: 100%; /* Fill card width */
-            padding-top: 100%; /* Maintain 1:1 aspect ratio (square) */
-            overflow: hidden; /* Crop the image */
-            border: 5px solid #f0f0f0; /* Light border matching template style */
-            margin-bottom: 15px; /* Space below image */
+            width: 100%;
+            padding-top: 100%;
+            overflow: hidden;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            margin-bottom: 15px;
         }
         .board-img {
             position: absolute;
@@ -52,50 +74,59 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Crop the image to fill the container */
+            object-fit: cover;
         }
-        .board-member-info { /* New container for text content */
-            flex: 1; /* Take up remaining space */
+        .board-member-info {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center text content */
-            text-align: center; /* Center text alignment */
+            align-items: center;
+            text-align: center;
         }
         .board-member-name {
             font-weight: 700;
-            font-size: 1.25rem;
-            color: #333; /* Darker color for better contrast */
-            margin-bottom: 0.25rem; /* Space below name */
+            font-size: 1.15rem;
+            color: #2B3388;
+            margin-bottom: 0.25rem;
         }
         .board-member-role {
             font-weight: 600;
-            color: #2E3191; /* Primary template color */
-            font-size: 1rem;
-            margin-bottom: 0.5rem; /* Space below role */
+            color: rgba(43, 51, 136, 0.75);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
         }
         .board-member-bio {
-            color: #666; /* Muted color for bio */
+            color: rgba(43, 51, 136, 0.8);
             font-size: 0.9rem;
-            margin-bottom: 1rem; /* Space below bio */
-            flex-grow: 1; /* Push bio up but allow it to grow */
+            margin-bottom: 1rem;
+            flex-grow: 1;
         }
-        .board-member-social {
-            margin-top: auto; /* Push social icons to the bottom */
-        }
+        .board-member-social { margin-top: auto; }
         .social-icon {
             display: inline-block;
             width: 36px;
             height: 36px;
-            line-height: 36px;
+            line-height: 34px;
             text-align: center;
-            background-color: #f0f0f0;
+            background-color: #fff;
+            color: #2B3388;
+            border: 1px solid rgba(43, 51, 136, 0.25);
             border-radius: 50%;
-            margin: 0 5px;
-            transition: background-color 0.3s ease;
+            margin: 0 4px;
+            transition: background-color .2s ease, color .2s ease, border-color .2s ease;
         }
         .social-icon:hover {
-            background-color: #2E3191; /* Primary template color */
-            color: white;
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
+        }
+
+        /* Section divider — flatten the bg-primary rounded-pill to a brand line */
+        .bg-primary { background-color: #2B3388 !important; }
+
+        @media (max-width: 767.98px) {
+            .board-member-card { padding: 12px; }
+            .board-member-name { font-size: 1.05rem; }
         }
     </style>
 </head>

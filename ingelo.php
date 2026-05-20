@@ -30,29 +30,49 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="includes/cta-section.css">
 
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         /* Clean highlight - no icons, no blue border */
         .highlighted-section {
-            background-color: #f8f9fd;
+            background-color: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 25px;
             margin: 30px 0;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(46, 49, 145, 0.04);
+            border-radius: 4px;
         }
         .highlighted-section h3 {
-            color: #2E3191;
+            color: #2B3388;
             margin-top: 0;
             font-weight: 700;
             font-size: 1.5rem;
         }
         .ingelo-application-form {
-            background-color: #f0f8ff;
+            background-color: rgba(43, 51, 136, 0.04);
             padding: 25px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin-top: 30px;
-            border: 1px solid #d0d9f0;
+            border: 1px solid rgba(43, 51, 136, 0.15);
         }
         .ingelo-application-form h3 {
-            color: #2E3191;
+            color: #2B3388;
             font-weight: 700;
             font-size: 1.4rem;
         }
@@ -66,15 +86,20 @@ include_once 'includes/breadcrumb_helper.php';
         }
 
         .benefit-card {
-            background: white;
+            background: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .benefit-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 2px 6px rgba(43, 51, 136, 0.07);
         }
 
         .benefit-card h4 {
-            color: #2E3191;
+            color: #2B3388;
             margin-top: 0;
             font-weight: 700;
             font-size: 1.1rem;
@@ -97,15 +122,15 @@ include_once 'includes/breadcrumb_helper.php';
 
         /* Improved first section styling */
         .intro-section {
-            background: linear-gradient(135deg, #f8f9fd 0%, #ffffff 100%);
+            background: rgba(43, 51, 136, 0.04);
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(46, 49, 145, 0.08);
+            border-radius: 4px;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             margin-bottom: 30px;
         }
 
         .intro-section h2 {
-            color: #2E3191;
+            color: #2B3388;
             font-weight: 700;
             font-size: 1.6rem;
             margin-bottom: 15px;
@@ -115,10 +140,10 @@ include_once 'includes/breadcrumb_helper.php';
         .intro-section p {
             font-size: 1rem;
             line-height: 1.6;
-            color: #333;
+            color: #2B3388;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767.98px) {
             .highlighted-section, .ingelo-application-form {
                 padding: 20px 15px;
             }
@@ -126,7 +151,7 @@ include_once 'includes/breadcrumb_helper.php';
                 columns: 1;
             }
             .intro-section h2 {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
             .intro-section {
                 padding: 20px 15px;
@@ -134,6 +159,7 @@ include_once 'includes/breadcrumb_helper.php';
             .benefits-grid {
                 grid-template-columns: 1fr;
             }
+            .breadcrumb-content .title { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -190,7 +216,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="row align-items-start g-3">
                         <!-- Image Column -->
                         <div class="col-lg-3 col-md-4 mb-3 mb-md-0">
-                            <img src="assets/img/Ingelo.png" alt="Ingelo Quality Mark" class="img-fluid rounded img-close-to-text" style="object-fit: contain; min-width: 120px; max-width: 100%;">
+                            <img src="assets/img/Ingelo.png" alt="Ingelo MSME Product Certification Mark" class="img-fluid rounded img-close-to-text" style="object-fit: contain; min-width: 120px; max-width: 100%;">
                         </div>
 
                         <!-- Content Column -->
@@ -287,7 +313,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <p>To begin the Ingelo Certification process, please:</p>
                     <ol>
                         <li>Download and complete the official application form</li>
-                        <li>Submit via email to <strong>certification@eswasa.org.sz</strong> or in person at ESWASA offices, Matsapha</li>
+                        <li>Submit via email to <strong>certification@swasa.co.sz</strong> or in person at ESWASA offices, Matsapha</li>
                     </ol>
                     <div class="mt-3">
                         <a href="admin/uploads/ingelo_application_form.pdf" class="btn-cta" target="_blank">

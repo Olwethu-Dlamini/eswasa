@@ -9,8 +9,8 @@ include_once 'includes/breadcrumb_helper.php';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Get Certified with ESWASA - Your Gateway to Quality Excellence</title>
-    <meta name="description" content="Transform your business with ESWASA certification. Build trust, access new markets, and demonstrate your commitment to quality standards in Eswatini.">
+    <title>Certification Services - ESWASA</title>
+    <meta name="description" content="ESWASA certification services — independent third-party conformity assessment for management systems, products, testing, and metrology.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <!-- CSS here -->
@@ -30,16 +30,73 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="includes/cta-section.css">
 
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
+        /* Canonical section title — matches training-*, qoute, services pages */
+        .display-6 {
+            color: #2B3388;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 0;
+            border-radius: 0;
+        }
+
+        /* Intro card — wraps important descriptive paragraphs */
+        .intro-card {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-left: 3px solid #2B3388;
+            border-radius: 4px;
+            padding: 26px 28px;
+            max-width: 920px;
+            margin: 0 auto;
+            transition: border-color .25s ease, box-shadow .25s ease;
+        }
+        .intro-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.08);
+        }
+        .intro-card p {
+            margin: 0;
+            color: rgba(43, 51, 136, 0.85);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
         .cert-section {
             padding: 50px 0;
         }
         .cert-card {
-            background: white;
-            border-radius: 10px;
-            padding: 35px 30px;
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            padding: 32px 28px;
             margin: 10px 0;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.06);
+            transition: border-color .25s ease, box-shadow .25s ease;
             position: relative;
             overflow: hidden;
         }
@@ -54,22 +111,23 @@ include_once 'includes/breadcrumb_helper.php';
             pointer-events: none;
         }
         .cert-card:hover {
-            transform: translateY(-5px);
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
         }
         .cert-card h3 {
-            color: #2e3191;
+            color: #2B3388;
             margin-bottom: 20px;
             font-size: 1.6rem;
             font-weight: 700;
         }
         .cert-card p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 25px;
-            color: #555;
+            font-size: 1rem;
+            line-height: 1.65;
+            margin-bottom: 16px;
+            color: rgba(43, 51, 136, 0.85);
         }
         .btn-cert {
-            background: #2e3191;
+            background: #2B3388;
             color: white;
             padding: 12px 25px;
             border-radius: 5px;
@@ -81,8 +139,8 @@ include_once 'includes/breadcrumb_helper.php';
             transition: all 0.3s ease;
         }
         .btn-cert:hover {
-            background: #1a1f71;
-            color: white;
+            background: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
         .cert-images {
             display: flex;
@@ -102,11 +160,11 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .cert-image-item p {
             font-weight: 600;
-            color: #2e3191;
+            color: #2B3388;
             margin: 0;
         }
         .cert-image-item small {
-            color: #666;
+            color: rgba(43, 51, 136, 0.75);
             font-size: 0.9rem;
         }
         /* ── Steps to certification image section ── */
@@ -118,22 +176,96 @@ include_once 'includes/breadcrumb_helper.php';
             height: auto;
         }
 
-        /* Side-by-side paragraphs with subtle divider */
-        @media (min-width: 992px) {
-            .cert-split-left {
-                border-right: 1px solid rgba(0,0,0,0.12);
-                padding-right: 30px;
-            }
-            .cert-split-right {
-                padding-left: 30px;
-            }
+        /* Cert-split cards — "Why Certify" + "Our Focus Areas" */
+        .cert-split-card {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            padding: 26px 26px 24px;
+            height: 100%;
+            transition: border-color .25s ease, box-shadow .25s ease;
+        }
+        .cert-split-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.08);
+        }
+        .cert-split-card-title {
+            color: #2B3388;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 14px;
+            line-height: 1.3;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        .cert-split-card-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 36px;
+            height: 2px;
+            background: #2B3388;
+        }
+        .cert-split-card p {
+            color: rgba(43, 51, 136, 0.85);
+            font-size: 1rem;
+            line-height: 1.65;
+            margin: 0;
         }
         @media (max-width: 991.98px) {
-            .cert-split-left {
-                border-bottom: 1px solid rgba(0,0,0,0.12);
-                padding-bottom: 20px;
-                margin-bottom: 20px;
+            .cert-split-left .cert-split-card {
+                margin-bottom: 16px;
             }
+        }
+        @media (max-width: 767.98px) {
+            .cert-split-card { padding: 22px 20px; }
+            .cert-split-card-title { font-size: 1.05rem; }
+            .cert-split-card p { font-size: 0.95rem; }
+        }
+
+        /* ── Page-wide mobile layout ── */
+        @media (max-width: 991.98px) {
+            .cert-section { padding: 40px 0; }
+            .cert-card { padding: 26px 22px; }
+            .cert-card h3 { font-size: 1.35rem; }
+            .cert-card p { font-size: 0.98rem; }
+            .cert-card .card-mark { width: 150px; height: 150px; opacity: 0.6; }
+            .cert-images { gap: 22px; }
+            .cert-image-item { max-width: 170px; }
+        }
+        @media (max-width: 767.98px) {
+            section.breadcrumb-area .title { font-size: 1.6rem; }
+            .cert-section { padding: 32px 0; }
+            section h2 { font-size: 1.45rem !important; }
+            section h4 { font-size: 1.05rem !important; }
+            .display-6 { font-size: 1.55rem !important; }
+            .intro-card { padding: 20px 18px; }
+            .intro-card p { font-size: 0.95rem; line-height: 1.6; }
+            .cert-images { gap: 16px; }
+            .cert-image-item { max-width: 45%; }
+            .cert-image-item img { max-height: 90px; width: auto; }
+            .cert-image-item p { font-size: 0.88rem; }
+            .cert-image-item small { font-size: 0.78rem; line-height: 1.35; display: inline-block; }
+            .cert-card { padding: 22px 18px; }
+            .cert-card h3 { font-size: 1.2rem; }
+            .cert-card p, .cert-card ul li { font-size: 0.95rem; }
+            .cert-card .card-mark {
+                position: static;
+                display: block;
+                width: 130px;
+                height: 130px;
+                opacity: 1;
+                margin: 8px auto 18px;
+            }
+            .btn-cert { width: 100%; text-align: center; margin-right: 0; padding: 12px 20px; }
+            .steps-img-section img { max-width: 100%; }
+        }
+        @media (max-width: 575.98px) {
+            section h2 { font-size: 1.3rem !important; }
+            .cert-card .card-mark { width: 110px; height: 110px; }
+            .cert-image-item { max-width: 47%; }
+            .cert-image-item img { max-height: 75px; }
         }
     </style>
 </head>
@@ -170,7 +302,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Certification</span>
                             </nav>
-                            <h3 class="title">Certification Services</h3>
+                            <h1 class="title">Certification Services</h1>
                         </div>
                     </div>
                 </div>
@@ -181,22 +313,29 @@ include_once 'includes/breadcrumb_helper.php';
         <!-- Certification Images with Meaning -->
         <section class="cert-section">
             <div class="container">
-                <div class="row">
-                    <div class="col-12 text-center mb-3">
-                        <h2 style="color: #2e3191;">Your Path to Quality Excellence</h2>
-                        <p class="lead">The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.</p>
-                    </div>
+                <div class="main_title centered upper mb-4 text-center">
+                    <h2 class="display-6 fw-bold">Your Path to Quality Excellence</h2>
+                    <div class="section-divider"></div>
                 </div>
-                <div class="row mb-4 cert-split">
+                <div class="intro-card mb-5">
+                    <p>The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.</p>
+                </div>
+                <div class="row mb-4 cert-split g-3">
                     <div class="col-lg-6 cert-split-left">
-                        <p class="lead" style="text-align: left;">Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
+                        <div class="cert-split-card">
+                            <h4 class="cert-split-card-title">Why Certify</h4>
+                            <p>Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
+                        </div>
                     </div>
                     <div class="col-lg-6 cert-split-right">
-                        <p class="lead" style="text-align: left;">The department mainly focuses on Management Systems Certification, Ingelo Certification, Product Certification (ESWASA Mark), Testing Services, and Scales and Metrology Services.</p>
+                        <div class="cert-split-card">
+                            <h4 class="cert-split-card-title">Our Focus Areas</h4>
+                            <p>The department mainly focuses on Management Systems Certification, Ingelo Certification, Product Certification (ESWASA Mark), Testing Services, and Scales and Metrology Services.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="text-center mb-3">
-                    <h4 style="color: #2e3191; font-weight: 600;">Each ESWASA mark represents a commitment to quality, trust, and excellence in Eswatini</h4>
+                    <h4 style="color: #2B3388; font-weight: 600;">Each ESWASA mark represents a commitment to quality, trust, and excellence in Eswatini</h4>
                 </div>
                 <div class="cert-images">
                     <div class="cert-image-item">
@@ -216,7 +355,7 @@ include_once 'includes/breadcrumb_helper.php';
                     </div>
                     <div class="cert-image-item">
                         <img src="assets/img/Ingelo.png" alt="Approved Products" class="img-fluid">
-                        <p>Ingelo Certification Scheme Mark</p>
+                        <p>Ingelo MSME Product Certification Mark</p>
                         <small>Scheme for local producers</small>
                     </div>
                 </div>
@@ -226,11 +365,12 @@ include_once 'includes/breadcrumb_helper.php';
         <!-- Certification Benefits -->
         <section class="cert-section">
             <div class="container">
-                <div class="row">
-                    <div class="col-12 text-center mb-3">
-                        <h2 style="color: #2e3191;">What Certification Can Do For Your Business</h2>
-                        <p class="lead">Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
-                    </div>
+                <div class="main_title centered upper mb-4 text-center">
+                    <h2 class="display-6 fw-bold">What Certification Can Do For Your Business</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="intro-card mb-5">
+                    <p>Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
@@ -244,8 +384,8 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Charge premium prices for certified quality</li>
                                 <li>Stand out from your competitors</li>
                             </ul>
-                            <a href="product.php" class="btn-cert">Explore Product Certification</a>
                             <img src="assets/img/product.png" alt="Product Mark" class="card-mark">
+                            <a href="product.php" class="btn-cert">Explore Product Certification</a>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -259,8 +399,8 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Improved employee productivity</li>
                                 <li>Better resource utilization</li>
                             </ul>
-                            <a href="managementsystems.php" class="btn-cert">Discover Management Systems</a>
                             <img src="assets/img/management.png" alt="Management Mark" class="card-mark">
+                            <a href="managementsystems.php" class="btn-cert">Discover Management Systems</a>
                         </div>
                     </div>
                 </div>
@@ -271,7 +411,7 @@ include_once 'includes/breadcrumb_helper.php';
         <section class="cert-section bg-light">
             <div class="container">
                 <div class="text-center mb-4">
-                    <h2 style="color: #2e3191;">Your Certification Journey Made Simple</h2>
+                    <h2 style="color: #2B3388;">Your Certification Journey Made Simple</h2>
                     <p class="lead">We guide you every step of the way - no stress, no surprises</p>
                 </div>
                 <div class="steps-img-section">

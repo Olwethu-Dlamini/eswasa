@@ -78,78 +78,175 @@ function render_paragraphs($text) {
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        /* Breadcrumb White Text Override */
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 12px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted {
+            color: rgba(43, 51, 136, 0.7) !important;
+        }
+
+        /* Breadcrumb stays white over the dark breadcrumb-bg image */
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title {
             color: #fff !important;
         }
+        .breadcrumb-separator i { color: #fff !important; }
 
-        .breadcrumb-separator i {
-            color: #fff !important;
+        /* Section heading divider */
+        .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 0;
+            border-radius: 0;
         }
 
-        /* Restricted Mobile Fix for Images - Only affects main content */
-        .main-area img {
-            max-width: 100%;
-            height: auto;
+        /* Page section titles — wider gap above vm-card h3 for clearer hierarchy */
+        .about-eswasa-area h2.title,
+        .container h2.fw-bold {
+            font-size: 2.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin: 0;
         }
 
-        /* Responsive Banner Height */
+        /* Restrict big images to content width */
+        .main-area img { max-width: 100%; height: auto; }
+
+        /* Banner image wrapper */
         .banner-wrapper {
             max-width: 1200px;
             margin: 0 auto;
-            border-radius: 12px;
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(43, 51, 136, 0.06);
         }
         .banner-wrapper img {
             width: 100%;
-            height: 400px; /* Default desktop height */
+            height: 400px;
             object-fit: cover;
+            display: block;
         }
 
-        /* Core Values Responsive Grid */
+        /* Core Values — wheel layout (cards wrap around small center picture) */
         .values-diagram-container {
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 0 auto;
             padding: 10px 0;
         }
-
-        .values-center-image {
-            max-width: 450px;
+        /* Pull side cards in toward the centre image on desktop so the wheel reads as one cohesive group */
+        @media (min-width: 992px) {
+            .values-diagram-container > .row > .col-lg-3:first-child .value-card-custom {
+                margin-left: auto;
+                margin-right: 0;
+            }
+            .values-diagram-container > .row > .col-lg-3:nth-child(3) .value-card-custom {
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+        img.values-center-image {
+            max-width: 300px !important;
             width: 100%;
-            height: auto;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
             margin: 0 auto;
             display: block;
-            border-radius: 15px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.20);
+        }
+        @media (max-width: 991.98px) {
+            img.values-center-image { max-width: 240px !important; margin: 16px auto; }
+        }
+        @media (max-width: 575.98px) {
+            img.values-center-image { max-width: 200px !important; }
+        }
+
+        /* Team figure caption */
+        .team-figure { margin: 0; }
+        .team-figure figcaption {
+            margin-top: 14px;
+            text-align: center;
+            color: rgba(43, 51, 136, 0.75);
+            font-size: 14px;
+            font-style: italic;
+            line-height: 1.5;
         }
 
         .value-card-custom {
             background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 50%;
+            aspect-ratio: 1 / 1;
+            max-width: 280px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 34px;
+            box-shadow: 0 2px 8px rgba(43, 51, 136, 0.10);
             text-align: center;
-            border: 1px solid #f0f0f0;
-            height: 100%;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
         }
-
+        .value-card-custom:hover {
+            border-color: rgba(43, 51, 136, 0.45);
+            box-shadow: 0 10px 24px rgba(43, 51, 136, 0.18);
+            transform: translateY(-2px);
+        }
+        .value-card-custom h4 {
+            font-weight: 700;
+            font-size: 17px;
+            margin: 0 0 8px;
+            color: #2B3388;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+        }
+        .value-card-custom p {
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+            color: rgba(43, 51, 136, 0.78);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
         .value-icon-circle {
-            width: 50px;
-            height: 50px;
-            background: rgba(46, 49, 145, 0.1);
-            color: #2E3191;
+            width: 76px;
+            height: 76px;
+            background: rgba(43, 51, 136, 0.10);
+            color: #2B3388;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 12px;
-            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .value-icon-circle svg {
+            width: 44px;
+            height: 44px;
         }
 
-        /* Sliders Styling - Optimized for Android */
-        .bg_color3 { background-color: #e6f0fa; }
+        /* Section backgrounds — bg_color3 (affiliations) + Bootstrap bg-light (accreditation) */
+        .bg_color3 { background-color: rgba(43, 51, 136, 0.04) !important; }
+        section.bg-light { background-color: #fff !important; }
+
+        /* Affiliations / Accreditation sliders */
         .affiliations-slider {
             overflow: hidden;
             white-space: nowrap;
@@ -158,11 +255,16 @@ function render_paragraphs($text) {
         }
         .slider-track {
             display: flex;
-            width: calc(280px * 12);
-            animation: scroll 25s linear infinite;
-            -webkit-animation: scroll 25s linear infinite;
-            transform: translateZ(0); /* Hardware acceleration */
+            min-width: 100%;
+            animation: scroll 20s linear infinite;
+            -webkit-animation: scroll 20s linear infinite;
+            transform: translateZ(0);
             -webkit-transform: translateZ(0);
+        }
+        /* Pause both sliders on hover — matches services.php */
+        .affiliations-slider:hover .slider-track {
+            animation-play-state: paused;
+            -webkit-animation-play-state: paused;
         }
         .slider-item {
             width: 280px;
@@ -176,11 +278,24 @@ function render_paragraphs($text) {
             height: 150px;
             background: #fff;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 3px rgba(43, 51, 136, 0.06);
+            border: 1px solid rgba(43, 51, 136, 0.10);
+            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        .logo-card-fixed:hover {
+            transform: translateY(-6px) scale(1.04);
+            border-color: rgba(43, 51, 136, 0.45);
+            box-shadow: 0 10px 24px rgba(43, 51, 136, 0.18);
+        }
+        .logo-card-fixed img {
+            transition: transform .25s ease;
+        }
+        .logo-card-fixed:hover img {
+            transform: scale(1.05);
         }
         .logo-card-fixed img {
             max-width: 100%;
@@ -188,83 +303,120 @@ function render_paragraphs($text) {
             object-fit: contain;
         }
 
-        /* MISSION/VISION IMAGES */
-        .mission-vision-img-wrapper {
-            height: 300px;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        .mission-vision-img-wrapper img {
-            width: 100%;
+        /* Vision & Mission infographic cards */
+        .vm-section { background: #fff; }
+        .vm-card {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.12);
+            border-radius: 4px;
+            padding: 40px 36px;
             height: 100%;
-            object-fit: cover;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .vm-card:hover {
+            border-color: rgba(43, 51, 136, 0.40);
+            box-shadow: 0 6px 16px rgba(43, 51, 136, 0.10);
+        }
+        .vm-icon {
+            width: 64px;
+            height: 64px;
+            color: #2B3388;
+            margin: 0 0 26px;
+        }
+        .vm-icon svg { width: 100%; height: 100%; }
+        .vm-card h3 {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 20px;
+            margin: 0 0 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2B3388;
+            display: inline-block;
+            line-height: 1.2;
+        }
+        .vm-card p {
+            color: #2B3388;
+            font-size: 15px;
+            line-height: 1.7;
+            margin: 0;
+            font-weight: 400;
         }
 
-        /* Android Scroll Keyframes */
+        /* Info section (History only now) */
+        .info-section {
+            background: rgba(43, 51, 136, 0.04);
+            padding: 28px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid rgba(43, 51, 136, 0.10);
+            box-shadow: none;
+        }
+        .info-section h3 {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 0 0 14px;
+        }
+        .info-section p {
+            color: #2B3388;
+            font-size: 16px;
+            line-height: 1.65;
+            margin: 0 0 10px;
+        }
+        .info-section p:last-child { margin-bottom: 0; }
+        .info-section p strong { font-weight: 700; }
+
+        /* Bootstrap `lead` class — scale relative to our 12px base */
+        body .lead { font-size: 18px; line-height: 1.7; font-weight: 400; }
+
+        /* Slider keyframes — translate by exactly half so the duplicated set loops seamlessly */
         @keyframes scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-280px * 6)); }
+            100% { transform: translateX(-50%); }
         }
         @-webkit-keyframes scroll {
             0% { -webkit-transform: translateX(0); }
-            100% { -webkit-transform: translateX(calc(-280px * 6)); }
+            100% { -webkit-transform: translateX(-50%); }
         }
 
-        /* MOBILE OVERRIDES (Android/iOS) */
-        @media (max-width: 768px) {
-            .banner-wrapper img {
-                height: 200px !important; /* Shorter banner on mobile */
-            }
-            .mission-vision-img-wrapper {
-                height: 200px !important;
-            }
-            .logo-card-fixed {
-                width: 180px !important;
-                height: 110px !important;
-            }
-            .slider-item {
-                width: 200px !important;
-            }
-            .slider-track {
-                width: calc(200px * 12) !important;
-            }
-            @keyframes scroll {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(calc(-200px * 6)); }
-            }
-            @-webkit-keyframes scroll {
-                0% { -webkit-transform: translateX(0); }
-                100% { -webkit-transform: translateX(calc(-200px * 6)); }
-            }
-            .values-center-image {
-                max-width: 300px !important;
-                margin: 20px auto !important;
-            }
-            .info-section h3 {
-                font-size: 1.2rem !important;
-            }
-            .display-6 {
-                font-size: 1.8rem !important;
-            }
+        /* ========== Mobile responsive ========== */
+        @media (max-width: 991.98px) {
+            .banner-wrapper img { height: 280px; }
+            .info-section { padding: 22px; }
+            .about-eswasa-area h2.title,
+            .container h2.fw-bold { font-size: 1.8rem; }
+            .vm-card { padding: 32px 28px; }
         }
-
-        .section-divider {
-            width: 100px;
-            height: 4px;
-            background: #2E3191;
-            margin: 20px auto 0;
-            border-radius: 2px;
+        @media (max-width: 767.98px) {
+            .banner-wrapper img { height: 200px !important; }
+            .logo-card-fixed { width: 180px !important; height: 110px !important; padding: 14px; }
+            .slider-item { width: 200px !important; padding: 0 10px; }
+            /* Mobile keyframes also use -50% — content is still duplicated 1:1 so half is one full set */
+            .info-section h3 { font-size: 17px !important; }
+            .info-section p { font-size: 15px; }
+            .about-eswasa-area h2.title,
+            .container h2.fw-bold { font-size: 1.55rem; }
+            .display-6 { font-size: 1.6rem !important; }
+            .value-card-custom { max-width: 240px; padding: 28px 30px; }
+            .value-card-custom h4 { font-size: 16px; margin-bottom: 8px; }
+            .value-card-custom p { font-size: 13px; }
+            .value-icon-circle { width: 60px; height: 60px; margin-bottom: 10px; }
+            .value-icon-circle svg { width: 34px; height: 34px; }
+            body .lead { font-size: 16px; }
+            .vm-card { padding: 28px 22px; }
+            .vm-icon { width: 52px; height: 52px; margin-bottom: 20px; }
+            .vm-card h3 { font-size: 18px; margin-bottom: 14px; }
+            .vm-card p { font-size: 14px; }
         }
-
-        .info-section {
-            background: #f9f9f9;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        @media (max-width: 575.98px) {
+            .info-section { padding: 18px; }
+            .value-card-custom { max-width: 210px; padding: 24px 26px; }
+            .value-card-custom h4 { font-size: 14px; }
+            .value-card-custom p { font-size: 12px; -webkit-line-clamp: 2; }
+            .value-icon-circle { width: 52px; height: 52px; margin-bottom: 8px; }
+            .value-icon-circle svg { width: 28px; height: 28px; }
+            .banner-wrapper img { height: 170px !important; }
         }
-
-        h2, h3, p { color: #333 !important; }
     </style>
 </head>
 <body>
@@ -287,7 +439,7 @@ function render_paragraphs($text) {
                             <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                             <span>About Us</span>
                         </nav>
-                        <h3 class="title"><?= htmlspecialchars($pc['about_breadcrumb_title']) ?></h3>
+                        <h1 class="title"><?= htmlspecialchars($pc['about_breadcrumb_title']) ?></h1>
                     </div>
                 </div>
             </div>
@@ -301,7 +453,7 @@ function render_paragraphs($text) {
                 <div class="col-lg-10 text-center">
                     <div class="about-content">
                         <div class="section__title mb-4">
-                            <h2 class="title" style="color: #2e3191;">About Us</h2>
+                            <h2 class="title" style="color: #2B3388;">About Us</h2>
                             <div class="section-divider"></div>
                         </div>
                         <div class="mt-4 lead px-2">
@@ -313,81 +465,138 @@ function render_paragraphs($text) {
         </div>
     </section>
 
-    <!-- Banner Image -->
-    <div class="container px-3 mb-5">
-        <div class="banner-wrapper">
-            <img src="<?= htmlspecialchars($pc['about_img_banner']) ?>" alt="ESWASA Banner">
-        </div>
-    </div>
-
     <section class="py-4">
         <div class="container">
             <!-- VISION AND MISSION -->
+            <div class="text-center mt-3 mb-4">
+                <h2 class="fw-bold" style="color: #2B3388;">Vision &amp; Mission</h2>
+                <div class="section-divider"></div>
+            </div>
             <div class="row g-4 mb-5">
                 <div class="col-md-6">
-                    <div class="info-section h-100 d-flex flex-column">
-                        <h3>Vision</h3>
-                        <p><strong><?= htmlspecialchars($pc['about_vision']) ?></strong></p>
-                        <div class="mt-auto">
-                            <div class="mission-vision-img-wrapper">
-                                <img src="<?= htmlspecialchars($pc['about_img_vision']) ?>" alt="Vision">
-                            </div>
+                    <div class="vm-card">
+                        <div class="vm-icon" aria-hidden="true">
+                            <!-- Eye — universal "vision" symbol, drawn in the homepage family -->
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 24 Q14 10 24 10 Q34 10 44 24 Q34 38 24 38 Q14 38 4 24 Z"/>
+                                <circle cx="24" cy="24" r="8"/>
+                                <circle cx="24" cy="24" r="4" fill="currentColor"/>
+                            </svg>
                         </div>
+                        <h3>Vision</h3>
+                        <p><?= htmlspecialchars($pc['about_vision']) ?></p>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="info-section h-100 d-flex flex-column">
-                        <h3>Mission</h3>
-                        <p><strong><?= htmlspecialchars($pc['about_mission']) ?></strong></p>
-                        <div class="mt-auto">
-                            <div class="mission-vision-img-wrapper">
-                                <img src="<?= htmlspecialchars($pc['about_img_mission']) ?>" alt="Mission">
-                            </div>
+                    <div class="vm-card">
+                        <div class="vm-icon" aria-hidden="true">
+                            <!-- Mountain peak with planted flag — new glyph, same drawing family -->
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 40 L18 22 L26 32 L34 16 L44 40 Z"/>
+                                <line x1="34" y1="16" x2="34" y2="4"/>
+                                <path d="M34 4 L44 8 L34 12 Z" fill="currentColor"/>
+                                <line x1="14" y1="40" x2="34" y2="40"/>
+                            </svg>
                         </div>
+                        <h3>Mission</h3>
+                        <p><?= htmlspecialchars($pc['about_mission']) ?></p>
                     </div>
                 </div>
             </div>
 
             <!-- CORE VALUES -->
             <div class="text-center mt-5 mb-4">
-                <h2 class="fw-bold" style="color: #2E3191;">Our Core Values</h2>
+                <h2 class="fw-bold" style="color: #2B3388;">Our Core Values</h2>
                 <div class="section-divider"></div>
             </div>
 
             <div class="values-diagram-container">
-                <div class="row g-4 align-items-center">
-                    <div class="col-lg-3 d-flex flex-column gap-3">
+                <!-- Row 1: Transparency · Image · Responsiveness -->
+                <div class="row g-2 align-items-center">
+                    <div class="col-lg-3">
                         <div class="value-card-custom">
-                            <div class="value-icon-circle"><i class="fas fa-eye"></i></div>
+                            <div class="value-icon-circle" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="20" cy="20" r="12"/>
+                                    <circle cx="20" cy="20" r="4" fill="currentColor"/>
+                                    <line x1="29" y1="29" x2="40" y2="40" stroke-width="3"/>
+                                </svg>
+                            </div>
                             <h4>Transparency</h4>
                             <p><?= htmlspecialchars($pc['about_val_transparency']) ?></p>
                         </div>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="about core.jpg" alt="Core Values" class="values-center-image">
+                    </div>
+                    <div class="col-lg-3">
                         <div class="value-card-custom">
-                            <div class="value-icon-circle"><i class="fas fa-users"></i></div>
+                            <div class="value-icon-circle" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="22" cy="26" r="14"/>
+                                    <circle cx="22" cy="26" r="2.5" fill="currentColor"/>
+                                    <line x1="22" y1="14" x2="22" y2="16"/>
+                                    <line x1="34" y1="26" x2="32" y2="26"/>
+                                    <line x1="22" y1="38" x2="22" y2="36"/>
+                                    <line x1="10" y1="26" x2="12" y2="26"/>
+                                    <line x1="22" y1="26" x2="22" y2="19"/>
+                                    <line x1="22" y1="26" x2="29" y2="26"/>
+                                    <polygon points="34 8 44 4 40 14" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <h4>Responsiveness</h4>
+                            <p><?= htmlspecialchars($pc['about_val_responsiveness']) ?></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Row 2: People-Centricity · Innovation · Professionalism -->
+                <div class="row g-2 mt-2 align-items-center">
+                    <div class="col-lg-3">
+                        <div class="value-card-custom">
+                            <div class="value-icon-circle" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="24" cy="14" r="5" fill="currentColor"/>
+                                    <circle cx="12" cy="18" r="4" fill="currentColor"/>
+                                    <circle cx="36" cy="18" r="4" fill="currentColor"/>
+                                    <path d="M14 38 V34 C14 30 18 27 24 27 C30 27 34 30 34 34 V38"/>
+                                    <path d="M4 38 V34 C4 31 7 29 11 28.7"/>
+                                    <path d="M44 38 V34 C44 31 41 29 37 28.7"/>
+                                </svg>
+                            </div>
                             <h4>People-Centricity</h4>
                             <p><?= htmlspecialchars($pc['about_val_people']) ?></p>
                         </div>
                     </div>
                     <div class="col-lg-6 text-center">
-                        <img src="about core.jpg" alt="Core Values" class="values-center-image shadow-sm border img-fluid">
-                    </div>
-                    <div class="col-lg-3 d-flex flex-column gap-3">
-                        <div class="value-card-custom">
-                            <div class="value-icon-circle"><i class="fas fa-bolt"></i></div>
-                            <h4>Responsiveness</h4>
-                            <p><?= htmlspecialchars($pc['about_val_responsiveness']) ?></p>
-                        </div>
-                        <div class="value-card-custom">
-                            <div class="value-icon-circle"><i class="fas fa-award"></i></div>
-                            <h4>Professionalism</h4>
-                            <p><?= htmlspecialchars($pc['about_val_professionalism']) ?></p>
-                        </div>
-                    </div>
-                    <div class="col-12 mt-4">
-                        <div class="value-card-custom mx-auto" style="max-width: 350px;">
-                            <div class="value-icon-circle"><i class="fas fa-lightbulb"></i></div>
+                        <div class="value-card-custom mx-auto">
+                            <div class="value-icon-circle" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="24" cy="24" r="5" fill="currentColor"/>
+                                    <ellipse cx="24" cy="24" rx="20" ry="8"/>
+                                    <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(60 24 24)"/>
+                                    <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(-60 24 24)"/>
+                                    <circle cx="44" cy="24" r="2" fill="currentColor"/>
+                                    <circle cx="4" cy="24" r="2" fill="currentColor"/>
+                                </svg>
+                            </div>
                             <h4>Innovation</h4>
                             <p><?= htmlspecialchars($pc['about_val_innovation']) ?></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="value-card-custom">
+                            <div class="value-icon-circle" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 8 H34 V18 C34 24 30 28 24 28 C18 28 14 24 14 18 Z" fill="currentColor"/>
+                                    <path d="M14 10 H8 V14 C8 18 11 20 14 20"/>
+                                    <path d="M34 10 H40 V14 C40 18 37 20 34 20"/>
+                                    <line x1="24" y1="28" x2="24" y2="36"/>
+                                    <line x1="18" y1="36" x2="30" y2="36"/>
+                                    <path d="M16 42 L18 36 L30 36 L32 42 Z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <h4>Professionalism</h4>
+                            <p><?= htmlspecialchars($pc['about_val_professionalism']) ?></p>
                         </div>
                     </div>
                 </div>
@@ -399,12 +608,6 @@ function render_paragraphs($text) {
                 <?= render_paragraphs($pc['about_history']) ?>
             </div>
 
-            <!-- TEAM IMAGE -->
-            <div class="my-5">
-                <div class="banner-wrapper" style="height: auto;">
-                    <img src="<?= htmlspecialchars($pc['about_img_team']) ?>" alt="Team" style="height: 350px; width: 100%; object-fit: cover;">
-                </div>
-            </div>
         </div>
     </section>
 
@@ -412,7 +615,8 @@ function render_paragraphs($text) {
     <section class="bg_color3 py-5">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold" style="color: #2E3191;">Our Affiliations</h2>
+                <h2 class="fw-bold" style="color: #2B3388;">Our Affiliations</h2>
+                <div class="section-divider"></div>
             </div>
             <div class="affiliations-slider overflow-hidden">
                 <div class="slider-track d-flex flex-nowrap">
@@ -443,7 +647,8 @@ function render_paragraphs($text) {
     <section class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5 px-3">
-                <h2 class="fw-bold" style="color: #2E3191;">ESWASA ACCREDITATION</h2>
+                <h2 class="fw-bold" style="color: #2B3388;">ESWASA ACCREDITATION</h2>
+                <div class="section-divider"></div>
                 <p class="text-muted mt-3">Eswatini Standards Authority is accredited by SADCAS.</p>
             </div>
             <div class="affiliations-slider overflow-hidden">
@@ -451,6 +656,7 @@ function render_paragraphs($text) {
                     <?php
                     $accs = [
                         ['src'=>'assets/img/SADCAS.png', 'href'=>'https://www.sadcas.org', 'alt'=>'SADCAS'],
+                        ['src'=>'assets/img/SABS.png',   'href'=>'https://www.sabs.co.za', 'alt'=>'SABS'],
                         ['src'=>'assets/img/ILAC.JPG',  'href'=>'', 'alt'=>'ILAC'],
                         ['src'=>'assets/img/iaf.webp',   'href'=>'https://www.iaf.nu/', 'alt'=>'IAF'],
 

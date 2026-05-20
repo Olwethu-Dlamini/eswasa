@@ -22,58 +22,148 @@
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        /* Combined styles for the Meet Our Team page */
-        .team-section {
-            margin-bottom: 60px;
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
         }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted {
+            color: rgba(43, 51, 136, 0.7) !important;
+        }
+
+        /* Breadcrumb stays white over the dark breadcrumb-bg image */
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title {
+            color: #fff !important;
+        }
+        .breadcrumb-separator i { color: #fff !important; }
+
+        /* Page intro */
         .team-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 56px;
         }
+        .team-header h3 {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+        .team-header .section-divider {
+            margin: 14px auto 22px;
+        }
+        .team-header p {
+            color: rgba(43, 51, 136, 0.78);
+            font-size: 16px;
+            line-height: 1.65;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        /* Section title — same pattern as index/about-us (separate divider div) */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 0;
+            font-weight: 700;
+            color: #2B3388;
+            font-size: 2.15rem;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+        .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 36px;
+            border-radius: 0;
+        }
+
+        /* Pyramid layout — featured leader on top, members in a centered grid below */
+        .team-section { margin-bottom: 60px; }
         .team-layout {
-            display: flex;
-            align-items: flex-start;
-            gap: 40px;
-        }
-        .team-leader {
-            flex: 0 0 30%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 32px;
         }
+        .team-leader { flex: 0 0 auto; }
         .team-members {
-            flex: 1;
+            width: 100%;
+            max-width: 1000px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 22px;
+            margin: 0 auto;
+            justify-items: center;
         }
+
+        /* Member cards — uniform size */
         .team-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
             background-color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 15px;
+            padding: 22px 18px;
+            border: 1px solid rgba(43, 51, 136, 0.12);
+            border-radius: 4px;
+            height: 100%;
+            max-width: 220px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
         }
         .team-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: rgba(43, 51, 136, 0.40);
+            box-shadow: 0 6px 16px rgba(43, 51, 136, 0.10);
+            transform: translateY(-3px);
         }
+
+        /* Featured leader card — slightly larger, top accent bar, stronger shadow */
+        .team-leader .team-card {
+            max-width: 260px;
+            padding: 28px 22px 24px;
+            border-color: rgba(43, 51, 136, 0.22);
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.10);
+        }
+        .team-leader .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: #2B3388;
+            border-radius: 4px 4px 0 0;
+        }
+        .team-leader .team-card:hover {
+            box-shadow: 0 10px 24px rgba(43, 51, 136, 0.18);
+        }
+
+        /* Circular portraits */
         .team-img-container {
             position: relative;
             overflow: hidden;
-            border: 5px solid #f0f0f0;
-            margin-bottom: 15px;
+            border-radius: 50%;
+            border: 2px solid rgba(43, 51, 136, 0.15);
+            margin-bottom: 18px;
+            width: 140px;
+            padding-top: 140px;
         }
         .team-leader .team-img-container {
-            width: 250px;
-            padding-top: 250px; /* Square aspect ratio */
-        }
-        .team-members .team-img-container {
-            width: 150px;
-            padding-top: 150px; /* Square aspect ratio */
+            width: 180px;
+            padding-top: 180px;
+            border-width: 3px;
+            margin-bottom: 22px;
         }
         .team-img {
             position: absolute;
@@ -83,69 +173,76 @@
             height: 100%;
             object-fit: cover;
         }
+
         .team-name {
             font-weight: 700;
-            font-size: 1.25rem;
-            color: #333;
-            margin-bottom: 0.25rem;
+            font-size: 15px;
+            color: #2B3388;
+            margin: 0 0 4px;
+            line-height: 1.3;
         }
         .team-role {
             font-weight: 600;
-            color: #2E3191;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            color: rgba(43, 51, 136, 0.75);
+            font-size: 13px;
+            margin: 0 0 8px;
+            line-height: 1.3;
+        }
+        .team-leader .team-name {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+        .team-leader .team-role {
+            font-size: 13px;
+            color: #2B3388;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
         .team-bio {
-            color: #666;
-            font-size: 0.9rem;
+            color: rgba(43, 51, 136, 0.78);
+            font-size: 14px;
             margin-bottom: 1rem;
+            line-height: 1.55;
         }
         .team-social {
             margin-top: auto;
         }
         .social-icon {
             display: inline-block;
-            width: 36px;
-            height: 36px;
-            line-height: 36px;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
             text-align: center;
-            background-color: #f0f0f0;
+            background-color: rgba(43, 51, 136, 0.08);
+            color: #2B3388;
             border-radius: 50%;
-            margin: 0 5px;
-            transition: background-color 0.3s ease;
+            margin: 0 4px;
+            transition: background-color .2s ease, color .2s ease;
         }
         .social-icon:hover {
-            background-color: #2E3191;
-            color: white;
+            background-color: #2B3388;
+            color: #fff;
         }
 
-        /* Section title separator */
-        .section-title {
-            text-align: center;
-            margin: 50px 0 30px;
-            font-weight: 700;
-            color: #2E3191;
-            position: relative;
-        }
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background-color: #2E3191;
-            margin: 15px auto;
-            border-radius: 2px;
+        /* ESWASA staff intro paragraph */
+        .eswasa-staff-content p {
+            color: #2B3388;
+            font-size: 16px;
+            line-height: 1.65;
+            max-width: 820px;
+            margin: 0 auto;
         }
 
-        /* Staff Photo Section */
+        /* Staff group photo */
         .staff-photo-container {
             width: 100%;
             max-width: 900px;
             height: 0;
-            padding-bottom: 40%; /* 5:2 aspect ratio (e.g., 900×360) */
-            background: #f8f9fa;
-            border: 1px dashed #ccc;
-            border-radius: 8px;
+            padding-bottom: 40%;
+            background: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
             position: relative;
             overflow: hidden;
             margin: 0 auto;
@@ -168,13 +265,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #e9ecef;
-            color: #6c757d;
+            background-color: transparent;
+            color: rgba(43, 51, 136, 0.55);
             display: flex;
             align-items: center;
             justify-content: center;
             font-style: italic;
-            font-size: 1rem;
+            font-size: 14px;
             text-align: center;
             padding: 0 20px;
         }
@@ -182,22 +279,37 @@
             display: flex;
         }
 
-        @media (max-width: 768px) {
-            .team-layout {
-                flex-direction: column;
-                align-items: center;
+        /* ========== Mobile responsive ========== */
+        @media (max-width: 991.98px) {
+            .team-layout { gap: 28px; }
+            .team-img-container { width: 120px; padding-top: 120px; }
+            .team-leader .team-img-container { width: 160px; padding-top: 160px; }
+            .section-title { font-size: 1.8rem; }
+        }
+        @media (max-width: 767.98px) {
+            .team-layout { gap: 28px; }
+            .team-members {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 16px;
             }
-            .team-leader .team-img-container {
-                width: 200px;
-                padding-top: 200px;
-            }
-            .team-members .team-img-container {
-                width: 120px;
-                padding-top: 120px;
-            }
-            .staff-photo-container {
-                padding-bottom: 50%; /* More vertical on mobile */
-            }
+            .team-img-container { width: 110px; padding-top: 110px; }
+            .team-leader .team-img-container { width: 150px; padding-top: 150px; }
+            .team-leader .team-card { max-width: 240px; padding: 24px 18px 22px; }
+            .team-leader .team-name { font-size: 17px; }
+            .section-title { font-size: 1.55rem; margin: 40px 0 0; }
+            .staff-photo-container { padding-bottom: 50%; }
+            .team-header h3 { font-size: 1.3rem; }
+            .team-header p { font-size: 15px; }
+        }
+        @media (max-width: 575.98px) {
+            .team-members { grid-template-columns: repeat(2, 1fr); }
+            .team-card { padding: 18px 14px; }
+            .team-name { font-size: 13px; }
+            .team-role { font-size: 12px; }
+            .team-leader .team-card { max-width: 220px; }
+            .team-leader .team-img-container { width: 130px; padding-top: 130px; }
+            .team-leader .team-name { font-size: 16px; }
+            .team-leader .team-role { font-size: 12px; }
         }
     </style>
 </head>
@@ -220,12 +332,12 @@
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
                                 <span property="itemListElement" typeof="ListItem">
-                                    <a href="index.html">Home</a>
+                                    <a href="index.php">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Meet Our Team</span>
                             </nav>
-                            <h3 class="title">Meet Our Team</h3>
+                            <h1 class="title">Meet Our Team</h1>
                         </div>
                     </div>
                 </div>
@@ -233,16 +345,17 @@
         </section>
         <!-- breadcrumb-area-end -->
         <div class="container py-5">
-            <!-- Main Header -->
+            <!-- Page intro -->
             <div class="team-header">
-                <h2 class="display-6 fw-bold">MEET OUR TEAM</h2>
-                <h4>Meet our Board and Management</h4>
-                <p class="text-muted">Meet our leadership team, dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of our nation's industries.</p>
+                <h3>Our Board and Management</h3>
+                <div class="section-divider"></div>
+                <p>Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini&rsquo;s industries.</p>
             </div>
 
             <!-- Board Section -->
             <div class="team-section">
                 <h2 class="section-title">BOARD OF DIRECTORS</h2>
+                <div class="section-divider"></div>
                 <div class="team-layout">
                     <div class="team-leader">
                         <div class="team-card">
@@ -294,6 +407,7 @@
             <!-- Management Section -->
             <div class="team-section">
                 <h2 class="section-title">MANAGEMENT TEAM</h2>
+                <div class="section-divider"></div>
                 <div class="team-layout">
                     <div class="team-leader">
                         <div class="team-card">
@@ -337,6 +451,7 @@
             <!-- ESWASA STAFF Section (now at bottom) -->
             <div class="team-section">
                 <h2 class="section-title">ESWASA STAFF</h2>
+                <div class="section-divider"></div>
                 <div class="eswasa-staff-content text-center mb-4">
                     <p>
                         The Eswatini Standards Authority (ESWASA) operates through a dedicated team of professionals committed to upholding national and international standards. Our staff spans disciplines in standardisation, metrology, testing, certification, and quality assurance—working collaboratively to support industry growth, consumer protection, and regional trade compliance.

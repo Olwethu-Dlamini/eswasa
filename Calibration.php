@@ -31,17 +31,37 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="includes/cta-section.css">
 
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         .btn-service {
-            background-color: #2E3191;
+            background-color: #2B3388;
             color: white;
-            border-color: #2E3191;
+            border-color: #2B3388;
             margin: 5px;
             font-weight: 600;
             padding: 10px 22px;
         }
         .btn-service:hover {
-            background-color: #1a1f71;
-            border-color: #1a1f71;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
             color: white;
         }
         /* Enlarged action buttons */
@@ -52,16 +72,16 @@ include_once 'includes/breadcrumb_helper.php';
             font-weight: 700 !important;
             display: inline-block;
         }
-        /* Clean sections — no blue borders, no icons */
+        /* Clean sections — borders over shadows (DIN/BIS restrained aesthetic) */
         .highlighted-section {
-            background-color: #f8f9fd;
+            background-color: rgba(43, 51, 136, 0.04);
             padding: 25px;
             margin: 30px 0;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(46, 49, 145, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.12);
+            border-radius: 4px;
         }
         .highlighted-section h3 {
-            color: #2E3191;
+            color: #2B3388;
             margin-top: 0;
             font-weight: 700;
             font-size: 1.5rem;
@@ -82,7 +102,7 @@ include_once 'includes/breadcrumb_helper.php';
             position: absolute;
             left: 0;
             top: 2px;
-            background-color: #2E3191;
+            background-color: #2B3388;
             color: white;
             width: 32px;
             height: 32px;
@@ -96,13 +116,13 @@ include_once 'includes/breadcrumb_helper.php';
         .metrology-category {
             text-align: center;
             padding: 20px;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            background-color: #f8f9fa;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            background-color: rgba(43, 51, 136, 0.04);
             margin-bottom: 20px;
         }
         .metrology-category h4 {
-            color: #2E3191;
+            color: #2B3388;
             font-weight: 600;
         }
         .metrology-info-table {
@@ -112,17 +132,17 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .metrology-info-table th,
         .metrology-info-table td {
-            border: 1px solid #dee2e6;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 14px;
             text-align: left;
         }
         .metrology-info-table th {
-            background-color: #2E3191;
+            background-color: #2B3388;
             color: white;
             font-weight: 600;
         }
         .metrology-info-table tr:nth-child(even) {
-            background-color: #fbfcff;
+            background-color: rgba(43, 51, 136, 0.04);
         }
 
         @media (max-width: 768px) {
@@ -152,14 +172,14 @@ include_once 'includes/breadcrumb_helper.php';
 }
 
 .section-title {
-    color: #2e3191;
+    color: #2B3388;
     margin-bottom: 30px;
     font-weight: 700;
     text-align: center;
 }
 
 .btn-cert {
-    background: #2e3191;
+    background: #2B3388;
     color: white;
     padding: 10px 25px;
     border-radius: 5px;
@@ -172,7 +192,7 @@ include_once 'includes/breadcrumb_helper.php';
 }
 
 .btn-cert:hover {
-    background: #1a1f71;
+    background: rgba(43, 51, 136, 0.85);
     color: white;
 }
 
@@ -336,7 +356,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="col-12 text-center">
                         <h2 class="cta-title">Get Calibrations</h2>
                         <p class="cta-subtitle">Submit an application or request a preliminary consultation with our calibration team.</p>
-                        <a href="contactcalibration.php" class="btn-cta">Submit Application</a>
+                        <a href="qoute_calibration.php" class="btn-cta">Request Calibration Quote</a>
                         <a href="contactcalibration.php" class="btn-cta">Contact Metrology Unit</a>
                     </div>
                 </div>

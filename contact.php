@@ -90,8 +90,8 @@ if (isset($_SESSION['contact_error'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>ESWASA - Contact Us</title>
-    <meta name="description" content="">
+    <title>Contact Us - Eswatini Standards Authority (ESWASA)</title>
+    <meta name="description" content="Get in touch with the Eswatini Standards Authority. Reach our Head Office in Matsapha or contact us for standards, certification and metrology enquiries.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -107,31 +107,83 @@ if (isset($_SESSION['contact_error'])) {
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="includes/cta-section.css">
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
+        /* ========== Form inputs ========== */
+        .form-control, input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+            border: 1px solid rgba(43, 51, 136, 0.25);
+            border-radius: 4px;
+            color: #2B3388;
+            background: #fff;
+        }
+        .form-control:focus, input:focus, textarea:focus, select:focus {
+            border-color: #2B3388;
+            box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.15);
+            outline: none;
+        }
+        .form-label, label { color: #2B3388; font-weight: 600; }
+
+        /* ========== Submit button ========== */
+        .btn-cta, button[type="submit"] {
+            background-color: #2B3388;
+            color: #fff;
+            border: 1px solid #2B3388;
+            border-radius: 4px;
+            padding: 12px 32px;
+            font-family: Arial, sans-serif;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .btn-cta:hover, button[type="submit"]:hover {
+            background-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
+            border-color: rgba(43, 51, 136, 0.85);
+        }
+
+        /* ========== Page-specific ========== */
         .contact-form-success {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: rgba(43, 51, 136, 0.04);
+            color: #2B3388;
             padding: 15px;
-            border-radius: 6px;
+            border-radius: 4px;
             margin-bottom: 25px;
-            border: 1px solid #c3e6cb;
+            border: 1px solid rgba(43, 51, 136, 0.25);
         }
         .contact-form-error {
-            background-color: #f8d7da;
-            color: #721c24;
+            background-color: rgba(43, 51, 136, 0.04);
+            color: #2B3388;
             padding: 15px;
-            border-radius: 6px;
+            border-radius: 4px;
             margin-bottom: 25px;
-            border: 1px solid #f5c6cb;
+            border: 1px solid #2B3388;
         }
         .location-card {
             background: #fff;
-            border-radius: 6px;
+            border-radius: 4px;
             padding: 25px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             height: 100%;
         }
         .location-card h5 {
-            color: #2e3191;
+            color: #2B3388;
             font-weight: 700;
             margin-bottom: 18px;
             font-size: 1.1rem;
@@ -141,45 +193,70 @@ if (isset($_SESSION['contact_error'])) {
             align-items: flex-start;
             gap: 10px;
             margin-bottom: 8px;
-            color: #444;
+            color: #2B3388;
             font-size: 0.95rem;
             line-height: 1.5;
         }
         .location-card .loc-line i {
-            color: #2e3191;
+            color: #2B3388;
             margin-top: 4px;
             flex-shrink: 0;
             width: 16px;
             text-align: center;
         }
         .location-card .loc-line a {
-            color: #2e3191;
+            color: #2B3388;
             text-decoration: none;
         }
         .location-card .loc-line a:hover {
             text-decoration: underline;
         }
         .contact-bottom-row {
-            border-top: 1px solid #e8e8e8;
+            border-top: 1px solid rgba(43, 51, 136, 0.15);
             padding-top: 20px;
             margin-top: 25px;
         }
         .contact-bottom-row h6 {
-            color: #2e3191;
+            color: #2B3388;
             font-weight: 700;
             margin-bottom: 8px;
         }
         .contact-bottom-row p {
-            color: #444;
+            color: #2B3388;
             margin-bottom: 4px;
             font-size: 0.95rem;
         }
         .contact-bottom-row a {
-            color: #2e3191;
+            color: #2B3388;
             text-decoration: none;
         }
         .contact-bottom-row a:hover {
             text-decoration: underline;
+        }
+        .contact-info-wrap .title { color: #2B3388; }
+        .contact-info-wrap p { color: rgba(43, 51, 136, 0.75); }
+        .form-grp input,
+        .form-grp textarea {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+        .form-grp textarea { min-height: 140px; }
+        .form-grp input::placeholder,
+        .form-grp textarea::placeholder { color: rgba(43, 51, 136, 0.6); }
+
+        /* ========== Mobile responsive ========== */
+        @media (max-width: 767.98px) {
+            body { font-size: 15px; }
+            .contact-info-wrap .title { font-size: 1.4rem; }
+            .location-card { padding: 18px; }
+            .location-card h5 { font-size: 1rem; }
+            .contact-bottom-row { margin-top: 18px; padding-top: 16px; }
+            .col-lg-5 + .col-lg-7 { margin-top: 30px; }
+            .btn-cta, button[type="submit"] { width: 100%; padding: 12px 20px; }
+            .contact-map iframe { height: 320px; }
         }
     </style>
 </head>
@@ -227,6 +304,7 @@ if (isset($_SESSION['contact_error'])) {
                                     <div class="loc-line"><span style="margin-left: 26px;">King Mswati III Avenue West</span></div>
                                     <div class="loc-line"><span style="margin-left: 26px;">Matsapha Industrial Site</span></div>
                                     <div class="loc-line mt-2"><i class="fas fa-phone-alt"></i><a href="tel:+26825184633">(+268) 2518 4633/ 4610</a></div>
+                                    <div class="loc-line"><i class="fas fa-mobile-alt"></i><a href="tel:+26878068944">(+268) 7806 8944</a></div>
                                 </div>
                             </div>
                             <!-- Metrology Laboratory -->

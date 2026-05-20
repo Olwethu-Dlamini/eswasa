@@ -5,8 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Request for Quotation - SWASA</title>
-    <meta name="description" content="Submit a request for quotation for SWASA services.">
+    <title>Request a Quote - ESWASA</title>
+    <meta name="description" content="Submit a request for quotation for ESWASA services including certification, testing, calibration, standards, and training.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -25,53 +25,111 @@
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        .form-control, .form-select {
-            border-radius: 0.375rem; /* Match Bootstrap's default rounded corners */
-            border: 1px solid #ced4da;
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
+        /* Form controls */
+        .form-control, .form-select,
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select {
+            border-radius: 4px;
+            border: 1px solid rgba(43, 51, 136, 0.25);
             padding: 0.75rem 1rem;
+            color: #2B3388;
+            background: #fff;
         }
-        .form-control:focus, .form-select:focus {
-            border-color: #2E3191; /* Use primary color for focus */
-            box-shadow: 0 0 0 0.2rem rgba(46, 49, 145, 0.25); /* Focus shadow */
+        .form-control:focus, .form-select:focus,
+        input:focus, textarea:focus, select:focus {
+            border-color: #2B3388;
+            box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.15);
+            outline: none;
         }
-        .form-label {
+        .form-label, label {
             font-weight: 600;
-            color: #333;
+            color: #2B3388;
         }
+        .form-check-input:checked {
+            background-color: #2B3388;
+            border-color: #2B3388;
+        }
+        .form-text { color: rgba(43, 51, 136, 0.7); }
         .required::after {
             content: " *";
-            color: #dc3545; /* Bootstrap danger color for required fields */
+            color: #2B3388;
         }
+
+        /* Form sections */
         .form-section {
-            border: 1px solid #e9ecef;
-            border-radius: 0.5rem;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            background-color: #f8f9fa; /* Light background for sections */
+            background-color: rgba(43, 51, 136, 0.04);
         }
         .form-section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #2E3191; /* Primary color */
+            color: #2B3388;
             margin-bottom: 1rem;
-            border-bottom: 2px solid #2E3191;
+            border-bottom: 2px solid #2B3388;
             padding-bottom: 0.5rem;
         }
+
+        /* Primary buttons */
         .btn-primary {
-            background-color: #2E3191; /* Use primary color */
-            border-color: #2E3191;
+            background-color: #2B3388;
+            border-color: #2B3388;
+            color: #fff;
+            border-radius: 4px;
         }
         .btn-primary:hover {
-            background-color: #1a1f71; /* Darker shade on hover */
-            border-color: #1a1f71;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
         .btn-primary:focus {
-            box-shadow: 0 0 0 0.2rem rgba(46, 49, 145, 0.5); /* Focus shadow */
+            box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.35);
         }
-        .text-gradient-primary {
-            background: linear-gradient(45deg, #2E3191, #00c6ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+        /* Section title — canonical pattern (matches training-calendar, training-about, board, etc.) */
+        .display-6 {
+            color: #2B3388;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 0;
+            border-radius: 0;
+        }
+        /* Legacy gradient class — flatten if anything still uses it */
+        .text-gradient-primary { color: #2B3388 !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
+        .bg-primary { background-color: #2B3388 !important; }
+
+        /* Mobile responsive */
+        @media (max-width: 767.98px) {
+            body { font-size: 15px; }
+            .form-section { padding: 1rem; }
+            .form-section-title { font-size: 1.1rem; }
+            .btn-primary.btn-lg { width: 100%; padding: 0.85rem 1rem; }
         }
     </style>
 </head>
@@ -99,12 +157,12 @@
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
                                 <span property="itemListElement" typeof="ListItem">
-                                    <a href="index.html">Home</a>
+                                    <a href="index.php">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Request for Quotation</span>
+                                <span property="itemListElement" typeof="ListItem">Request a Quote</span>
                             </nav>
-                            <h3 class="title">Request for Quotation</h3>
+                            <h1 class="title">Request a Quote</h1>
                         </div>
                     </div>
                 </div>
@@ -114,13 +172,11 @@
 
         <div class="container py-5">
             <!-- Section Header -->
-            <div class="main_title centered upper mb-5">
-                <h2 class="display-6 fw-bold text-center text-gradient-primary">
-                    Request a Quote
-                    <span class="d-block fs-5 text-muted mt-2">Get a personalized quotation for our services</span>
-                    <span class="d-block mx-auto mt-3 bg-primary rounded-pill" style="width: 100px; height: 4px;"></span>
-                </h2>
-                <p class="text-muted text-center mt-4">
+            <div class="main_title centered upper mb-5 text-center">
+                <h2 class="display-6 fw-bold">Request a Quote</h2>
+                <p class="text-muted mt-2 mb-0">Get a personalized quotation for our services</p>
+                <div class="section-divider"></div>
+                <p class="text-muted mt-4 mb-0">
                     Please fill out the form below with details about the services you require. We will provide you with a detailed quotation based on your specifications.
                 </p>
             </div>

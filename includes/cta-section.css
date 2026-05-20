@@ -1,27 +1,27 @@
 /* Shared CTA Button Styles — works anywhere */
 .btn-cta {
-    background: #2e3191;
+    background: #2B3388;
     color: #fff;
     padding: 14px 30px;
-    border-radius: 6px;
+    border-radius: 4px;
     text-decoration: none;
     display: inline-block;
     margin: 8px 10px;
-    border: 2px solid #2e3191;
+    border: 2px solid #2B3388;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: all 0.3s ease;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
     cursor: pointer;
 }
 .btn-cta:hover {
-    background: #1a1f71;
-    border-color: #1a1f71;
+    background: rgba(43, 51, 136, 0.85);
+    border-color: rgba(43, 51, 136, 0.85);
     color: #fff;
 }
 
 /* CTA Journey Section Styles */
 .cta-journey-section {
-    background: #e2e6f3;
+    background: rgba(43, 51, 136, 0.06);
     padding: 80px 0;
     width: 100%;
     clear: both;
@@ -29,13 +29,14 @@
     float: none;
 }
 .cta-journey-section .cta-title {
-    color: #2e3191;
-    font-size: 2.4rem;
-    font-weight: 800;
+    color: #2B3388;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     margin-bottom: 20px;
 }
 .cta-journey-section .cta-subtitle {
-    color: #555;
+    color: rgba(43, 51, 136, 0.75);
     font-size: 1rem;
     margin-bottom: 35px;
 }

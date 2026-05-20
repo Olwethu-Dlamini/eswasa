@@ -11,7 +11,8 @@ include_once 'includes/breadcrumb_helper.php';
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Frequently Asked Questions - ESWASA</title>
-    <meta name="description" content="">
+    <meta name="description" content="Frequently Asked Questions about ESWASA training, standards, certification and general information.">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <!-- CSS here -->
@@ -30,12 +31,32 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="assets/css/main.css">
     
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         .faq-category {
-            background: #f8f9fa;
+            background: rgba(43, 51, 136, 0.04);
             padding: 40px 0;
         }
         .category-title {
-            color: #2e3191;
+            color: #2B3388;
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 30px;
@@ -46,27 +67,46 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .accordion-button {
             font-weight: 600;
-            color: #2e3191;
+            color: #2B3388;
             background: #fff;
-            border: 1px solid #e9ecef;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             margin-bottom: 10px;
-            border-radius: 8px !important;
+            border-radius: 4px !important;
         }
         .accordion-button:not(.collapsed) {
-            background: #2e3191;
+            background: #2B3388;
             color: #fff;
-            border-color: #2e3191;
+            border-color: #2B3388;
+        }
+        .accordion-button:focus {
+            border-color: #2B3388;
+            box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.15);
         }
         .accordion-body {
-            background: #f8f9fa;
-            border-radius: 0 0 8px 8px;
+            background: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            color: #2B3388;
         }
         .contact-info-box {
-            background: #e8f4ff;
+            background: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin-top: 40px;
             text-align: center;
+            color: #2B3388;
+        }
+        .contact-info-box h4 { color: #2B3388; font-weight: 700; }
+
+        @media (max-width: 767.98px) {
+            .category-title { font-size: 1.4rem; margin-bottom: 20px; }
+            .faq-section { padding: 36px 0; }
+            .accordion-button { font-size: 0.95rem; padding: 12px 14px; }
+            .accordion-body { padding: 14px; font-size: 0.95rem; }
+            .contact-info-box { padding: 20px; }
+            .breadcrumb-content .title { font-size: 1.5rem; }
         }
     </style>
 </head>

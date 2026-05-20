@@ -47,6 +47,26 @@ $recentEvents = $recentStmt->get_result();
     <link rel="stylesheet" href="assets/css/main.css">
     <!-- Keep other CSS if needed, but main.css should cover most -->
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         .event-content img {
             max-width: 100%;
             height: auto;
@@ -59,17 +79,82 @@ $recentEvents = $recentStmt->get_result();
             position: relative;
         }
         .breadcrumb-area .breadcrumb-content {
-            background: rgba(0,0,0,0.38);
+            background: rgba(43, 51, 136, 0.38);
             padding: 35px 0 20px 0;
-            border-radius: 8px;
+            border-radius: 4px;
         }
         .event-meta {
-            color: #666;
+            color: rgba(43, 51, 136, 0.75);
             font-size: 0.95rem;
             margin-bottom: 20px;
         }
         .event-meta i {
             margin-right: 8px;
+        }
+        .blog-widget {
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            padding: 20px;
+            background: #fff;
+        }
+        .blog-widget .widget-title {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
+        }
+        .rc-post-item {
+            display: flex;
+            gap: 12px;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
+        }
+        .rc-post-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .rc-post-thumb img {
+            border-radius: 4px;
+        }
+        .rc-post-content .title {
+            font-size: 0.95rem;
+            margin: 0 0 5px 0;
+            line-height: 1.3;
+        }
+        .rc-post-content .title a {
+            color: #2B3388;
+            text-decoration: none;
+        }
+        .rc-post-content .title a:hover {
+            color: rgba(43, 51, 136, 0.85);
+        }
+        .rc-post-content .date {
+            color: rgba(43, 51, 136, 0.7);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 767.98px) {
+            .breadcrumb-area .breadcrumb-content {
+                padding: 20px 10px 12px 10px;
+            }
+            .breadcrumb-content .title {
+                font-size: 1.4rem;
+            }
+            .event-content {
+                font-size: 1rem !important;
+            }
+            .blog-widget {
+                margin-top: 30px;
+            }
+            .event-meta span {
+                display: block;
+                margin-bottom: 5px;
+                margin-left: 0 !important;
+            }
         }
     </style>
 </head>

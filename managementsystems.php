@@ -30,27 +30,60 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="includes/cta-section.css">
 
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+
+        /* Breadcrumb stays white over the dark breadcrumb-bg image */
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+
         .cert-section {
             padding: 60px 0;
         }
         .section-title {
-            color: #2e3191;
+            color: #2B3388;
             margin-bottom: 30px;
             font-weight: 700;
+        }
+        .display-6 {
+            color: #2B3388;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 0;
+            border-radius: 0;
         }
         .cert-card {
             background: white;
             border-radius: 8px;
             padding: 30px;
             margin: 20px 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.10);
         }
         .cert-card h3 {
-            color: #2e3191;
+            color: #2B3388;
             margin-bottom: 15px;
         }
         .btn-cert {
-            background: #2e3191;
+            background: #2B3388;
             color: white;
             padding: 10px 25px;
             border-radius: 5px;
@@ -61,21 +94,21 @@ include_once 'includes/breadcrumb_helper.php';
             font-weight: 600;
         }
         .btn-cert:hover {
-            background: #1a1f71;
+            background: rgba(43, 51, 136, 0.85);
             color: white;
         }
         .scheme-card {
             background: white;
-            border: 1px solid #e3e6ea;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 8px;
             padding: 25px 15px;
             text-align: center;
             height: 100%;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.10);
             transition: all 0.2s ease;
         }
         .scheme-card:hover {
-            border-color: #2e3191;
+            border-color: #2B3388;
         }
         .scheme-card img {
             width: 80px;
@@ -95,13 +128,13 @@ include_once 'includes/breadcrumb_helper.php';
             font-size: 1.3rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #222;
+            color: #2B3388;
             margin-bottom: 10px;
         }
         .certified-wrap .cw-header .cw-divider {
             width: 60px;
             height: 3px;
-            background: #2e3191;
+            background: #2B3388;
             margin: 0 auto;
             border-radius: 2px;
             position: relative;
@@ -110,7 +143,7 @@ include_once 'includes/breadcrumb_helper.php';
             content: '';
             width: 10px;
             height: 10px;
-            border: 2px solid #2e3191;
+            border: 2px solid #2B3388;
             border-radius: 50%;
             background: #fff;
             position: absolute;
@@ -124,7 +157,7 @@ include_once 'includes/breadcrumb_helper.php';
             border-collapse: collapse;
         }
         .certified-table thead th {
-            background: #2e3191;
+            background: #2B3388;
             color: #fff;
             font-weight: 600;
             padding: 13px 18px;
@@ -137,21 +170,76 @@ include_once 'includes/breadcrumb_helper.php';
             background: #fff;
         }
         .certified-table tbody tr:nth-child(even) {
-            background: #e8f0f8;
+            background: rgba(43, 51, 136, 0.04);
         }
         .certified-table tbody td {
             padding: 12px 18px;
             border: none;
-            color: #444;
-            border-bottom: 1px solid #e0e6ed;
+            color: #2B3388;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.12);
         }
         .certified-table tbody td:nth-child(2) {
             text-align: center;
         }
+        /* Certified-clients logo grid */
+        .client-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            padding: 10px 24px 30px;
+        }
+        .client-tile {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            min-height: 130px;
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+            transition: border-color .25s ease, box-shadow .25s ease;
+        }
+        .client-tile:hover {
+            border-color: #2B3388;
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.08);
+        }
+        .client-tile img {
+            max-width: 100%;
+            max-height: 70px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+        .client-tile .client-wordmark {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            line-height: 1.25;
+            text-transform: uppercase;
+        }
+        .client-tile .client-standard {
+            color: rgba(43, 51, 136, 0.7);
+            font-size: 0.78rem;
+            letter-spacing: 0.3px;
+        }
+        @media (max-width: 575.98px) {
+            .client-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 10px 14px 24px;
+            }
+            .client-tile { min-height: 110px; padding: 14px 10px; }
+            .client-tile .client-wordmark { font-size: 0.88rem; }
+            .client-tile .client-standard { font-size: 0.72rem; }
+        }
         .doc-card {
             display: block;
             background: #fff;
-            border: 1px solid #e0e4ea;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 6px;
             padding: 25px 15px 20px;
             text-align: center;
@@ -169,13 +257,13 @@ include_once 'includes/breadcrumb_helper.php';
             left: 0;
             width: 100%;
             height: 3px;
-            background: #2e3191;
+            background: #2B3388;
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
         .doc-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.12);
         }
         .doc-card:hover::after {
             transform: scaleX(1);
@@ -208,7 +296,7 @@ include_once 'includes/breadcrumb_helper.php';
             height: 28px;
         }
         .doc-card p {
-            color: #333;
+            color: #2B3388;
             font-weight: 600;
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -218,29 +306,43 @@ include_once 'includes/breadcrumb_helper.php';
         .benefits-list {
             list-style: none;
             padding: 0;
-            margin: 0;
+            margin: 0 auto;
+            max-width: 920px;
+            column-count: 2;
+            column-gap: 48px;
         }
         .benefits-list li {
-            padding: 8px 0 8px 25px;
+            padding: 10px 0 10px 22px;
             position: relative;
-            color: #333;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            color: #2B3388;
+            font-size: 1rem;
+            line-height: 1.5;
+            break-inside: avoid;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.10);
         }
         .benefits-list li::before {
-            content: '\f105';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
+            content: '';
             position: absolute;
             left: 0;
-            color: #2e3191;
+            top: 18px;
+            width: 8px;
+            height: 2px;
+            background: #2B3388;
+        }
+        @media (max-width: 767.98px) {
+            .benefits-list {
+                column-count: 1;
+                max-width: 560px;
+            }
+            .benefits-list li { font-size: 0.95rem; padding: 9px 0 9px 20px; }
+            .benefits-list li::before { top: 17px; }
         }
         .process-step {
             padding: 20px;
             text-align: center;
         }
         .step-number {
-            background: #2e3191;
+            background: #2B3388;
             color: white;
             width: 40px;
             height: 40px;
@@ -260,16 +362,16 @@ include_once 'includes/breadcrumb_helper.php';
         .standard-block {
             background: white;
             padding: 25px;
-            border: 1px solid #e3e6ea;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 6px;
             transition: all 0.2s ease;
         }
         .standard-block:hover {
             box-shadow: 0 4px 12px rgba(46, 49, 145, 0.08);
-            border-color: #2e3191;
+            border-color: #2B3388;
         }
         .standard-code {
-            color: #2e3191;
+            color: #2B3388;
             font-weight: 700;
             font-size: 1.1rem;
             margin-bottom: 8px;
@@ -277,7 +379,7 @@ include_once 'includes/breadcrumb_helper.php';
         .standard-name {
             font-weight: 600;
             margin-bottom: 12px;
-            color: #111;
+            color: #2B3388;
         }
 
         @media (max-width: 768px) {
@@ -292,7 +394,7 @@ include_once 'includes/breadcrumb_helper.php';
 }
 
 .process-circle {
-    background: #1d2d70;
+    background: #2B3388;
     color: #fff;
     width: 165px;
     height: 165px;
@@ -315,9 +417,9 @@ include_once 'includes/breadcrumb_helper.php';
 }
 
 .process-circle.highlight {
-    background: #f0b835;
-    color: #000;
-    border: 3px solid #e6a900;
+    background: #fff;
+    color: #2B3388;
+    border: 3px solid #2B3388;
     font-weight: 700;
 }
 
@@ -325,15 +427,15 @@ include_once 'includes/breadcrumb_helper.php';
     font-size: 40px;
     font-weight: 700;
     margin: 0 10px;
-    color: #d19d27;
+    color: #2B3388;
 }
 
 .process-divider {
     width: 80%;
-    height: 4px;
-    background: #d9d9d9;
+    height: 2px;
+    background: rgba(43, 51, 136, 0.18);
     margin: 20px auto;
-    border-radius: 10px;
+    border-radius: 0;
 }
 
 @media (max-width: 768px) {
@@ -461,8 +563,9 @@ include_once 'includes/breadcrumb_helper.php';
                             <h3>Accreditation</h3>
                             <p>Eswatini Standards Authority Management Systems Certification Services is accredited by the Southern African Development Community Accreditation Service (SADCAS).</p>
                             <p>Scopes: Quality Management Systems to ISO/IEC 17021-1:2015 and ISO/IEC 17021-3:2017 (Certification to ISO 9001:2015), IAF Codes 3, 12, 13 and 38</p>
-                            <div class="mt-3">
-                                <img src="admin/uploads/image12.png" alt="SADCAS Accreditation Logos" class="img-fluid">
+                            <div class="mt-3 d-flex flex-wrap align-items-center gap-3">
+                                <img src="admin/uploads/image12.png" alt="SADCAS Accreditation" class="img-fluid" style="max-height: 90px; width: auto;">
+                                <img src="assets/img/SABS.png" alt="SABS Accreditation" class="img-fluid" style="max-height: 90px; width: auto;">
                             </div>
                         </div>
                     </div>
@@ -470,15 +573,11 @@ include_once 'includes/breadcrumb_helper.php';
                         <div class="cert-card">
                             <h3>ESWASA’s Certifications Portfolio</h3>
                             <table class="table table-sm mb-3">
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS ISO 9001</td><td>Quality Management Systems</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS ISO 14001</td><td>Environmental Management Systems</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS ISO 22000</td><td>Food Safety Management Systems</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS ISO 45001</td><td>Occupational Health &amp; Safety Management Systems</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS SANS 10330</td><td>Hazard Analysis and Critical Control Points</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS SANS 542:2020</td><td>Concrete Roofing Tiles</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS CODEXSTAN 306:2015</td><td>Chilli Sauce Specifications</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS CODEXSTAN 12:1981</td><td>Honey</td></tr>
-                                <tr><td class="fw-bold" style="color:#2e3191;">SZNS 006:2011</td><td>Liquid Soap Specification</td></tr>
+                                <tr><td class="fw-bold" style="color:#2B3388;">SZNS ISO 9001</td><td>Quality Management Systems</td></tr>
+                                <tr><td class="fw-bold" style="color:#2B3388;">SZNS ISO 14001</td><td>Environmental Management Systems</td></tr>
+                                <tr><td class="fw-bold" style="color:#2B3388;">SZNS ISO 22000</td><td>Food Safety Management Systems</td></tr>
+                                <tr><td class="fw-bold" style="color:#2B3388;">SZNS ISO 45001</td><td>Occupational Health &amp; Safety Management Systems</td></tr>
+                                <tr><td class="fw-bold" style="color:#2B3388;">SZNS SANS 10330</td><td>Hazard Analysis and Critical Control Points</td></tr>
                             </table>
                             <p class="text-muted" style="font-size:0.9rem;">More certifications can be added to the portfolio informed by interest indicated by clients.</p>
                         </div>
@@ -488,32 +587,49 @@ include_once 'includes/breadcrumb_helper.php';
         </section>
 
         <!-- ESWASA Certified Organisations -->
-        <section class="cert-section" style="background: #eaf1f5;">
+        <section class="cert-section" style="background: rgba(43, 51, 136, 0.04);">
             <div class="container">
                 <div class="certified-wrap">
                     <div class="cw-header">
-                        <h3>Certified Organisations</h3>
+                        <h3>Some of the Certified Organisations</h3>
                         <div class="cw-divider"></div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="certified-table">
-                            <thead>
-                                <tr>
-                                    <th>Name of Clients</th>
-                                    <th>Standard</th>
-                                    <th>Client Physical Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Eagles Nest</td><td>SZNS SANS 10330:2007</td><td>Portion 132, Malkerns, Eswatini.</td></tr>
-                                <tr><td>Umbuluzi Farm Chickens</td><td>SZNS ISO 22000:2005</td><td>Portion 6 of farm 668 Mafutseni, Eswatini</td></tr>
-                                <tr><td>MP Foods</td><td>SZNS SANS 10330:2007</td><td>Plot 645, 5th Avenue Matsapha Industrial, Eswatini</td></tr>
-                                <tr><td>Galp Petroleum</td><td>SZNS ISO 9001:2015</td><td>King Sobhuza 11 Avenue, Industrial Site Matsapha</td></tr>
-                                <tr><td>Swazi Wire Industries</td><td>SZNS ISO 9001:2015</td><td>1st Avenue, Matsapha Industrial Site</td></tr>
-                                <tr><td>ASD Medicals</td><td>SZNS ISO 9001:2015</td><td>Lot 689 Tabankulu Street, Mvakaza Park, Matsapha Industrial Estate</td></tr>
-                            </tbody>
-                        </table>
+                    <?php
+                    // Source: ESWASA Certified Clients List (May 2026).
+                    // Standards mapped to current SZNS revisions per the portfolio table above.
+                    $clients = [
+                        ['slug'=>'galp-petroleum',        'name'=>'GALP Eswatini',         'standard'=>'SZNS ISO 9001:2015'],
+                        ['slug'=>'swazi-wire-industries', 'name'=>'Eswatini Wire',         'standard'=>'SZNS ISO 9001:2015'],
+                        ['slug'=>'asd-medicals',          'name'=>'ASD Medicals',          'standard'=>'SZNS ISO 9001:2015'],
+                        ['slug'=>'phocweni-clinic',       'name'=>'Phocweni Clinic',       'standard'=>'SZNS ISO 9001:2015'],
+                        ['slug'=>'mp-foods',              'name'=>'MP Foods',              'standard'=>'SZNS SANS 10330:2020 — HACCP'],
+                        ['slug'=>'eagles-nest',           'name'=>'Eagles Nest',           'standard'=>'SZNS SANS 10330:2020 — HACCP'],
+                        ['slug'=>'dd-williamson',         'name'=>'DD Williamson',         'standard'=>'SZNS ISO 45001:2018'],
+                        ['slug'=>'dd-williamson',         'name'=>'DD Williamson',         'standard'=>'SZNS ISO 14001:2015'],
+                    ];
+                    ?>
+                    <div class="client-grid">
+                        <?php foreach ($clients as $c):
+                            $logo = null;
+                            foreach (['png','jpg','jpeg','webp','svg'] as $ext) {
+                                $candidate = 'assets/img/clients/'.$c['slug'].'.'.$ext;
+                                if (file_exists(__DIR__.'/'.$candidate)) { $logo = $candidate; break; }
+                            }
+                        ?>
+                        <div class="client-tile">
+                            <?php if ($logo): ?>
+                                <img src="<?= htmlspecialchars($logo) ?>" alt="<?= htmlspecialchars($c['name']) ?> logo">
+                            <?php else: ?>
+                                <div class="client-wordmark"><?= htmlspecialchars($c['name']) ?></div>
+                            <?php endif; ?>
+                            <div class="client-standard"><?= htmlspecialchars($c['standard']) ?></div>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
+                    <p class="text-center mt-4 mb-0" style="font-size: 0.95rem;">
+                        For information on suspended, withdrawn or reduced-scope certifications, see the
+                        <a href="certification-status.php" style="color:#2B3388; font-weight:600; text-decoration:underline;">Certification Status Register</a>.
+                    </p>
                 </div>
             </div>
         </section>
@@ -528,31 +644,31 @@ include_once 'includes/breadcrumb_helper.php';
                 <div class="row g-4">
                     <div class="col-lg col-md-4 col-6">
                         <a href="CER_RU_028 RULES FOR THE USE OF THE CERTIFICATION MARK.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #3b3583;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Rules for the Use of the Certification Mark</p>
                         </a>
                     </div>
                     <div class="col-lg col-md-4 col-6">
                         <a href="CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #8ab030;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Procedure for Appeals Handling</p>
                         </a>
                     </div>
                     <div class="col-lg col-md-4 col-6">
                         <a href="CER_PR_006 PROCEDURE FOR COMPLAINTS HANDLING.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #1a8a9a;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Procedure for Complaints Handling</p>
                         </a>
                     </div>
                     <div class="col-lg col-md-4 col-6">
                         <a href="CER_PR_026 PROCEDURE FOR SUSPENSION WITHDRAWAL REDUCED SCOPE OF CERTIFICATION.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #e05a2b;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Procedure for Suspension/ Withdrawal/ Reduced Scope of Certification</p>
                         </a>
                     </div>
                     <div class="col-lg col-md-4 col-6">
                         <a href="Impartiality Policy - SWASA Certification.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #2e3191;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Impartiality Policy</p>
                         </a>
                     </div>
@@ -560,33 +676,45 @@ include_once 'includes/breadcrumb_helper.php';
                 <div class="row g-4 mt-0">
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="CER_PR_020 PROCEDURE FOR MANAGEMENT SYSTEMS CERTIFICATION AUDITS.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #3b3583;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Procedure for Management Systems Certification Audits</p>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="CER_PR_014 GRANT OF CERTIFICATION PROCEDURE.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #1a8a9a;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Grant of Certification Procedure</p>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="CER_FO_ 028 CLIENT NOTICE OF CHANGES.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #e05a2b;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Client Notice of Changes</p>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="CER_PR_015 HANDLING REQUESTS FOR INFORMATION.pdf" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #2e3191;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                             <p>Handling Requests for Information</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <a href="CER_PR_012 EXTENDING SCOPE OF CERTIFICATION PROCEDURE.pdf" target="_blank" class="doc-card">
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <p>Extending Scope of Certification Procedure</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <a href="CER_PR_028 SPECIAL AUDITS PROCEDURE.pdf" target="_blank" class="doc-card">
+                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <p>Special Audits Procedure</p>
                         </a>
                     </div>
                 </div>
             </div>
         </section>
 
-<section class="cert-section py-5" style="background: #f4f6fa;">
+<section class="cert-section py-5" style="background: rgba(43, 51, 136, 0.04);">
     <div class="container">
         <div class="text-center mb-4">
             <h2 class="section-title">Why Certify with ESWASA?</h2>
@@ -620,9 +748,9 @@ include_once 'includes/breadcrumb_helper.php';
 
         <!-- ROW 2 -->
         <div class="process-row d-flex justify-content-center flex-wrap align-items-center">
-            <div class="process-circle">STEP 4<br><span>Stage 1 Initial Audit / Factory Evaluation & Sampling</span></div>
+            <div class="process-circle">STEP 4<br><span>Stage 1 Audit — Documentation & Site Readiness</span></div>
             <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 5<br><span>Stage 2 Initial Audit / Product Testing</span></div>
+            <div class="process-circle">STEP 5<br><span>Stage 2 Audit — Implementation Effectiveness</span></div>
             <div class="process-arrow">›</div>
             <div class="process-circle highlight">Certification<br>Decision</div>
         </div>
@@ -644,27 +772,22 @@ include_once 'includes/breadcrumb_helper.php';
 <!-- Benefits of Certification -->
 <section class="cert-section py-5">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-7">
-                <h2 class="section-title">Benefits of Certification</h2>
-                <ul class="benefits-list">
-                    <li>Improvement in Reputation and Credibility</li>
-                    <li>Improvement in Customer Satisfaction</li>
-                    <li>Improved Business Processes and Efficiency</li>
-                    <li>Opens New Markets and Business Opportunities</li>
-                    <li>Compliance with Regulations and Managing Risks</li>
-                    <li>Employee Engagement through Accountability</li>
-                    <li>Cost Savings After Waste Reduction</li>
-                    <li>Greater Supplier Relationships</li>
-                    <li>Framework for Continual Improvement</li>
-                    <li>Competitive Advantage Over Non-Certified Businesses</li>
-                </ul>
-            </div>
-            <div class="col-lg-5 text-center mt-4 mt-lg-0">
-                <img src="admin/uploads/image18.jpg" alt="Professional in suit" class="img-fluid" style="border-radius: 10px; max-height: 400px; object-fit: cover;">
-            </div>
+        <div class="main_title centered upper mb-4 text-center">
+            <h2 class="display-6 fw-bold">Benefits of Certification</h2>
+            <div class="section-divider"></div>
         </div>
-
+        <ul class="benefits-list">
+            <li>Improvement in Reputation and Credibility</li>
+            <li>Improvement in Customer Satisfaction</li>
+            <li>Improved Business Processes and Efficiency</li>
+            <li>Opens New Markets and Business Opportunities</li>
+            <li>Compliance with Regulations and Managing Risks</li>
+            <li>Employee Engagement through Accountability</li>
+            <li>Cost Savings After Waste Reduction</li>
+            <li>Greater Supplier Relationships</li>
+            <li>Framework for Continual Improvement</li>
+            <li>Competitive Advantage Over Non-Certified Businesses</li>
+        </ul>
     </div>
 </section>
 

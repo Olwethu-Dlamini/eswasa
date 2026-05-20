@@ -22,42 +22,63 @@
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         /* Brand Colors */
         :root {
-            --eswasa-blue: #2E3191;
-            --eswasa-dark: #1a1f71;
-            --eswasa-light-gray: #f9f9f9;
+            --eswasa-blue: #2B3388;
+            --eswasa-dark: rgba(43, 51, 136, 0.85);
+            --eswasa-light-gray: rgba(43, 51, 136, 0.04);
         }
 
         /* Publication Card */
         .publication-card {
-            border: 1px solid #e0e0e0;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
             padding: 20px;
             margin-bottom: 20px;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            background-color: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .publication-card:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
         }
         .publication-title {
-            color: var(--eswasa-blue);
+            color: #2B3388;
             font-weight: 600;
             font-size: 1.25rem;
             margin: 0 0 10px 0;
         }
         .publication-meta {
             font-size: 0.875rem;
-            color: #666;
+            color: rgba(43, 51, 136, 0.75);
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
         }
         .publication-meta span:not(:last-child)::after {
             content: " | ";
             margin: 0 8px;
-            color: #aaa;
+            color: rgba(43, 51, 136, 0.6);
         }
         .publication-type {
             display: inline-block;
@@ -66,34 +87,44 @@
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
+            background-color: #fff;
+            color: #2B3388;
+            border: 1px solid rgba(43, 51, 136, 0.30);
         }
-        .type-standard { background-color: #e6f0fa; color: #0072A5; }
-        .type-report { background-color: #e0f5e0; color: #1BBC9B; }
-        .type-guidance { background-color: #fff3cd; color: #856404; }
-        .type-newsletter { background-color: #f8d7da; color: #721c24; }
-        .type-annual-report { background-color: #d1ecf1; color: #0c5460; }
+        .type-standard,
+        .type-report,
+        .type-guidance,
+        .type-newsletter,
+        .type-annual-report,
+        .type-annual_report {
+            background-color: #fff;
+            color: #2B3388;
+            border: 1px solid rgba(43, 51, 136, 0.30);
+        }
         .publication-description {
             margin-bottom: 15px;
-            color: #444;
+            color: #2B3388;
         }
         .publication-link a {
-            color: var(--eswasa-blue);
+            color: #2B3388;
             text-decoration: none;
             font-weight: 500;
         }
         .publication-link a:hover {
+            color: rgba(43, 51, 136, 0.85);
             text-decoration: underline;
         }
 
         /* Info & Links Box */
         .info-box, .related-links-section {
-            background-color: var(--eswasa-light-gray);
+            background-color: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
             padding: 20px;
             margin: 20px 0;
         }
         .info-box h3, .related-links-section h3 {
-            color: var(--eswasa-blue);
+            color: #2B3388;
             margin-top: 0;
             font-size: 1.25rem;
         }
@@ -105,11 +136,11 @@
             margin-bottom: 10px;
         }
         .related-links-section ul li a {
-            color: #333;
+            color: #2B3388;
             text-decoration: none;
         }
         .related-links-section ul li a:hover {
-            color: var(--eswasa-blue);
+            color: rgba(43, 51, 136, 0.85);
             text-decoration: underline;
         }
 
@@ -120,17 +151,43 @@
         .filter-btn {
             margin: 0 8px 10px 0;
             padding: 8px 16px;
-            border: 1px solid #ddd;
-            background: white;
+            border: 1px solid rgba(43, 51, 136, 0.30);
+            background: #fff;
+            color: #2B3388;
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 0.95rem;
+            font-family: Arial, sans-serif;
         }
         .filter-btn.active, .filter-btn:hover {
-            background-color: var(--eswasa-blue);
-            color: white;
-            border-color: var(--eswasa-blue);
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
+        }
+
+        @media (max-width: 767.98px) {
+            .publication-card {
+                padding: 15px;
+            }
+            .publication-title {
+                font-size: 1.1rem;
+            }
+            .publication-meta span:not(:last-child)::after {
+                content: "";
+                margin: 0;
+            }
+            .publication-meta span {
+                display: block;
+                margin-bottom: 4px;
+            }
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+            .info-box, .related-links-section {
+                padding: 15px;
+            }
         }
     </style>
 </head>

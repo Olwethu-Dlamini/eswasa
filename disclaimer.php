@@ -10,7 +10,7 @@ include_once 'includes/breadcrumb_helper.php';
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Disclaimer - ESWASA</title>
-    <meta name="description" content="">
+    <meta name="description" content="ESWASA Website Disclaimer outlining terms of use, limitations of liability, and information accuracy for the Eswatini Standards Authority site.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <!-- CSS here -->
@@ -29,6 +29,26 @@ include_once 'includes/breadcrumb_helper.php';
     <link rel="stylesheet" href="assets/css/main.css">
     
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         .legal-content {
             background: #fff;
             padding: 60px 0;
@@ -37,15 +57,15 @@ include_once 'includes/breadcrumb_helper.php';
             margin-bottom: 50px;
         }
         .legal-section h2 {
-            color: #2e3191;
+            color: #2B3388;
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 30px;
-            border-bottom: 3px solid #2e3191;
+            border-bottom: 3px solid #2B3388;
             padding-bottom: 15px;
         }
         .legal-section h3 {
-            color: #2e3191;
+            color: #2B3388;
             font-size: 1.5rem;
             font-weight: 600;
             margin: 30px 0 15px 0;
@@ -54,7 +74,7 @@ include_once 'includes/breadcrumb_helper.php';
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 20px;
-            color: #333;
+            color: #2B3388;
         }
         .legal-section ul {
             margin-bottom: 25px;
@@ -64,25 +84,38 @@ include_once 'includes/breadcrumb_helper.php';
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 10px;
-            color: #333;
+            color: #2B3388;
         }
         .highlight-box {
-            background: #f8f9fa;
-            border-left: 4px solid #2e3191;
+            background: rgba(43, 51, 136, 0.04);
+            border-left: 4px solid #2B3388;
             padding: 25px;
             margin: 25px 0;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 4px 4px 0;
         }
         .contact-box {
-            background: #e8f4ff;
+            background: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 25px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin: 30px 0;
         }
         .breadcrumb-nav {
-            background: #f8f9fa;
+            background: rgba(43, 51, 136, 0.04);
             padding: 15px 0;
             margin-bottom: 0;
+        }
+
+        @media (max-width: 767.98px) {
+            .legal-content { padding: 40px 0; }
+            .legal-section { margin-bottom: 30px; }
+            .legal-section h2 { font-size: 1.7rem; margin-bottom: 20px; padding-bottom: 10px; }
+            .legal-section h3 { font-size: 1.2rem; margin: 22px 0 10px 0; }
+            .legal-section p,
+            .legal-section li { font-size: 1rem; line-height: 1.7; }
+            .highlight-box,
+            .contact-box { padding: 16px; margin: 18px 0; }
+            .breadcrumb-content .title { font-size: 1.6rem; }
         }
     </style>
 </head>

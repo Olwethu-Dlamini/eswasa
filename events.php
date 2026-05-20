@@ -14,40 +14,52 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <!-- Keep other CSS if needed, but main.css should include your custom styles -->
     <style>
-        /* BASE STYLES & BRANDING */
-        :root {
-            --eswasa-blue: #2E3191;
-            --eswasa-dark: #1a1f71;
-            --eswasa-light-blue: #eef5ff;
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
         }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
 
         .btn-event {
-            background-color: var(--eswasa-blue);
-            color: white;
-            border-color: var(--eswasa-blue);
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
             margin: 5px;
         }
         .btn-event:hover {
-            background-color: var(--eswasa-dark);
-            border-color: var(--eswasa-dark);
-            color: white;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
 
-        /* Event Item Styles */
+        /* Event item — borders over shadows */
         .events__item {
-            transition: box-shadow 0.3s ease;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            transition: border-color .25s ease, box-shadow .25s ease;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
             overflow: hidden;
             margin-bottom: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            background: #fff;
         }
         .events__item:hover {
-            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
         }
-        .events__item-thumb {
-            position: relative;
-        }
+        .events__item-thumb { position: relative; }
         .events__item-thumb img {
             width: 100%;
             height: 200px;
@@ -57,26 +69,25 @@
             position: absolute;
             bottom: 10px;
             left: 10px;
-            background-color: var(--eswasa-blue);
-            color: white;
+            background-color: #2B3388;
+            color: #fff;
             padding: 6px 12px;
-            border-radius: 5px;
+            border-radius: 3px;
             font-size: 0.9rem;
             font-weight: 600;
             z-index: 10;
         }
-        .events__item-content {
-            padding: 15px;
-        }
+        .events__item-content { padding: 16px; }
         .events__item-content .title a {
-            color: #333;
+            color: #2B3388;
             text-decoration: none;
+            font-weight: 600;
         }
         .events__item-content .title a:hover {
-            color: var(--eswasa-blue);
+            color: rgba(43, 51, 136, 0.75);
         }
         .location {
-            color: #666;
+            color: rgba(43, 51, 136, 0.7);
             font-size: 0.9rem;
         }
 
@@ -84,9 +95,9 @@
         .rc-post-item {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.12);
         }
         .rc-post-item:last-child {
             border-bottom: none;
@@ -99,7 +110,8 @@
             height: 60px;
             margin-right: 15px;
             overflow: hidden;
-            border-radius: 4px;
+            border-radius: 3px;
+            border: 1px solid rgba(43, 51, 136, 0.12);
         }
         .rc-post-thumb img {
             width: 100%;
@@ -109,17 +121,23 @@
         .rc-post-content .title a {
             font-size: 0.95rem;
             line-height: 1.3;
-            color: #333;
+            color: #2B3388;
             text-decoration: none;
+            font-weight: 600;
         }
         .rc-post-content .title a:hover {
-            color: var(--eswasa-blue);
+            color: rgba(43, 51, 136, 0.75);
         }
         .rc-post-content .date {
             font-size: 0.8rem;
-            color: #666;
+            color: rgba(43, 51, 136, 0.7);
             display: block;
-            margin-top: 5px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 767.98px) {
+            .events__item-thumb img { height: 170px; }
+            .rc-post-thumb { width: 52px; height: 52px; }
         }
     </style>
 </head>

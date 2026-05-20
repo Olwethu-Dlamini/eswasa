@@ -22,11 +22,31 @@
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         /* BASE STYLES & BRANDING */
         :root {
-            --eswasa-blue: #2E3191;
-            --eswasa-dark: #1a1f71;
-            --eswasa-light-blue: #eef5ff;
+            --eswasa-blue: #2B3388;
+            --eswasa-dark: rgba(43, 51, 136, 0.85);
+            --eswasa-light-blue: rgba(43, 51, 136, 0.04);
         }
 
         .vacancy-area {
@@ -35,31 +55,31 @@
         }
 
         .vacancy-card {
-            border: 1px solid #eee;
-            border-radius: 6px;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
             padding: 25px;
             margin-bottom: 25px;
-            transition: box-shadow 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
         }
         .vacancy-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
         }
         .vacancy-title {
-            color: var(--eswasa-blue);
+            color: #2B3388;
             font-weight: 700;
             margin-top: 0;
             margin-bottom: 5px;
             font-size: 1.5rem;
         }
         .vacancy-meta {
-            color: #666;
+            color: rgba(43, 51, 136, 0.75);
             font-size: 0.95rem;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 1px dashed #eee;
+            border-bottom: 1px dashed rgba(43, 51, 136, 0.15);
         }
         .vacancy-meta span {
             margin-right: 25px;
@@ -78,11 +98,11 @@
             position: relative;
             padding-left: 20px;
             margin-bottom: 8px;
-            color: #444;
+            color: #2B3388;
         }
         .vacancy-description ul li::before {
             content: "—";
-            color: #888;
+            color: rgba(43, 51, 136, 0.6);
             font-weight: normal;
             display: inline-block;
             width: 1em;
@@ -90,55 +110,58 @@
         }
         .vacancy-application-link a {
             display: inline-block;
-            background-color: var(--eswasa-blue);
-            color: white;
+            background-color: #2B3388;
+            color: #fff;
             padding: 10px 20px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: 600;
-            transition: background-color 0.3s;
+            border: 1px solid #2B3388;
+            transition: background-color 0.2s, border-color 0.2s;
         }
         .vacancy-application-link a:hover {
-            background-color: var(--eswasa-dark);
-            color: white;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
 
         /* General Application Info Box */
         .info-box {
-            background-color: #f9f9f9;
-            border-radius: 6px;
+            background-color: rgba(43, 51, 136, 0.04);
+            border-radius: 4px;
             padding: 25px;
             margin-bottom: 30px;
-            border: 1px solid #eee;
+            border: 1px solid rgba(43, 51, 136, 0.15);
         }
         .info-box h3 {
-            color: var(--eswasa-blue);
+            color: #2B3388;
             font-weight: 700;
             margin-top: 0;
             margin-bottom: 15px;
         }
         .info-box p a {
-            color: var(--eswasa-blue);
+            color: #2B3388;
             font-weight: 600;
             text-decoration: none;
         }
         .info-box p a:hover {
+            color: rgba(43, 51, 136, 0.85);
             text-decoration: underline;
         }
 
         /* Modal Styles - Match Public Page Exactly */
         #vacancyModal .modal-content {
-            border-radius: 6px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
+            border-radius: 4px;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
         }
         #vacancyModal .modal-header {
-            background-color: #f9f9f9;
-            border-bottom: 1px solid #eee;
+            background-color: rgba(43, 51, 136, 0.04);
+            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
             padding: 20px 30px;
         }
         #vacancyModal .modal-title {
-            color: var(--eswasa-blue);
+            color: #2B3388;
             font-weight: 700;
             font-size: 1.5rem;
             margin: 0;
@@ -147,11 +170,11 @@
             padding: 30px;
         }
         #vacancyModal .modal-meta {
-            color: #666;
+            color: rgba(43, 51, 136, 0.75);
             font-size: 0.95rem;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px dashed #eee;
+            border-bottom: 1px dashed rgba(43, 51, 136, 0.15);
         }
         #vacancyModal .modal-meta span {
             margin-right: 25px;
@@ -165,7 +188,7 @@
         }
         #vacancyModal .vacancy-full-responsibilities h5 {
             margin: 20px 0 15px 0;
-            color: var(--eswasa-blue);
+            color: #2B3388;
             font-weight: 700;
         }
         #vacancyModal .vacancy-full-responsibilities ul {
@@ -177,11 +200,11 @@
             position: relative;
             padding-left: 20px;
             margin-bottom: 8px;
-            color: #444;
+            color: #2B3388;
         }
         #vacancyModal .vacancy-full-responsibilities ul li::before {
             content: "—";
-            color: #888;
+            color: rgba(43, 51, 136, 0.6);
             font-weight: normal;
             display: inline-block;
             width: 1em;
@@ -190,26 +213,55 @@
 
         /* Modal Buttons */
         #vacancyModal .btn-apply {
-            background-color: var(--eswasa-blue);
-            color: white;
-            border: none;
+            background-color: #2B3388;
+            color: #fff;
+            border: 1px solid #2B3388;
             padding: 10px 20px;
             border-radius: 4px;
             font-weight: 600;
             text-decoration: none;
             display: inline-block;
-            transition: background-color 0.3s;
+            transition: background-color 0.2s, border-color 0.2s;
         }
         #vacancyModal .btn-apply:hover {
-            background-color: var(--eswasa-dark);
-            color: white;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
         #vacancyModal .btn-secondary {
-            background-color: #6c757d;
-            border: none;
+            background-color: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.30);
             padding: 10px 20px;
             border-radius: 4px;
-            color: white;
+            color: #2B3388;
+        }
+        #vacancyModal .btn-secondary:hover {
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
+        }
+
+        @media (max-width: 767.98px) {
+            .vacancy-card {
+                padding: 18px;
+            }
+            .vacancy-title {
+                font-size: 1.2rem;
+            }
+            .vacancy-meta span {
+                display: block;
+                margin-right: 0;
+                margin-bottom: 4px;
+            }
+            .info-box {
+                padding: 18px;
+            }
+            #vacancyModal .modal-body {
+                padding: 20px;
+            }
+            #vacancyModal .modal-header {
+                padding: 15px 20px;
+            }
         }
     </style>
 </head>

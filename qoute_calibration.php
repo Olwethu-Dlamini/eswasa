@@ -10,8 +10,8 @@ include_once 'includes/breadcrumb_helper.php';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Request a Certification Quote - ESWASA</title>
-    <meta name="description" content="Submit a request for quotation for ESWASA certification services including Management Systems, Product, and Ingelo Quality Mark.">
+    <title>Request a Calibration Quote - ESWASA</title>
+    <meta name="description" content="Submit a request for quotation for ESWASA calibration and metrology services. Formal quotation issued within 2 working days.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
@@ -53,7 +53,7 @@ include_once 'includes/breadcrumb_helper.php';
 
         /* Form controls */
         .form-control, .form-select,
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], input[type="file"], textarea, select {
             border-radius: 4px;
             border: 1px solid rgba(43, 51, 136, 0.25);
             padding: 0.75rem 1rem;
@@ -98,6 +98,23 @@ include_once 'includes/breadcrumb_helper.php';
             padding-bottom: 0.5rem;
         }
 
+        /* SLA banner */
+        .sla-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(43, 51, 136, 0.06);
+            border: 1px solid rgba(43, 51, 136, 0.20);
+            border-left: 3px solid #2B3388;
+            color: #2B3388;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 10px 16px;
+            border-radius: 4px;
+            margin-top: 18px;
+        }
+        .sla-banner i { color: #2B3388; }
+
         /* Primary buttons */
         .btn-primary {
             background-color: #2B3388;
@@ -112,9 +129,6 @@ include_once 'includes/breadcrumb_helper.php';
             border-color: rgba(43, 51, 136, 0.85);
             color: #fff;
             box-shadow: 0 2px 6px rgba(43, 51, 136, 0.18);
-        }
-        .btn-primary:focus {
-            box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.35);
         }
 
         /* CTA submit button (inline in markup) */
@@ -151,13 +165,6 @@ include_once 'includes/breadcrumb_helper.php';
         .text-gradient-primary { color: #2B3388 !important; background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; }
         .bg-primary { background-color: #2B3388 !important; }
 
-        /* Enlarged submit button */
-        .btn-submit-quote {
-            font-size: 1.2rem;
-            padding: 16px 50px !important;
-            margin-top: 20px;
-        }
-
         /* Mobile responsive */
         @media (max-width: 767.98px) {
             body { font-size: 15px; }
@@ -165,6 +172,7 @@ include_once 'includes/breadcrumb_helper.php';
             .form-section-title { font-size: 1.1rem; }
             .btn-cta, .btn-primary { width: 100%; padding: 0.85rem 1rem; }
             .form-check-inline { display: block; margin-right: 0; margin-bottom: 0.5rem; }
+            .sla-banner { font-size: 0.88rem; padding: 8px 12px; }
         }
     </style>
 </head>
@@ -192,7 +200,7 @@ include_once 'includes/breadcrumb_helper.php';
     <main class="main-area fix">
 
         <!-- breadcrumb-area -->
-        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('qoute_certification', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('qoute_calibration', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -202,11 +210,11 @@ include_once 'includes/breadcrumb_helper.php';
                                     <a href="index.php">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Certification</span>
+                                <span property="itemListElement" typeof="ListItem">Calibration</span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Request a Quote</span>
                             </nav>
-                            <h1 class="title">Request a Certification Quote</h1>
+                            <h1 class="title">Request a Calibration Quote</h1>
                         </div>
                     </div>
                 </div>
@@ -217,26 +225,32 @@ include_once 'includes/breadcrumb_helper.php';
         <div class="container py-5">
             <!-- Section Header -->
             <div class="main_title centered upper mb-5 text-center">
-                <h2 class="display-6 fw-bold">Request a Certification Quote</h2>
-                <p class="text-muted mt-2 mb-0">Get a formal quotation for ESWASA certification services</p>
+                <h2 class="display-6 fw-bold">Request a Calibration Quote</h2>
+                <p class="text-muted mt-2 mb-0">Get a formal quotation for ESWASA calibration and metrology services</p>
                 <div class="section-divider"></div>
                 <p class="text-muted mt-4 mb-0">
-                    Provide details about your certification needs. ESWASA will assess your request and issue a formal quotation within 5 working days.
+                    Provide details about your instruments and requirements. ESWASA will assess your request and issue a formal quotation within 2 working days.
                 </p>
+                <div class="sla-banner">
+                    <i class="fas fa-clock"></i>
+                    <span>Formal quotation issued within 2 working days</span>
+                </div>
             </div>
 
-            <!-- Request for Quotation Form -->
+            <!-- Request for Calibration Quotation Form -->
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <form id="certQuoteForm" action="process_quote.php" method="POST" enctype="multipart/form-data">
-                        <!-- Contact Information -->
+                    <form id="calQuoteForm" action="process_quote.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="quote_type" value="calibration">
+
+                        <!-- Organisation Details -->
                         <div class="form-section">
                             <h3 class="form-section-title">Organisation Details</h3>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="companyName" class="form-label required">Organisation Name</label>
-                                        <input type="text" class="form-control" id="companyName" name="organisation_name" required>
+                                        <label for="organisationName" class="form-label required">Organisation Name</label>
+                                        <input type="text" class="form-control" id="organisationName" name="organisation_name" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -276,104 +290,101 @@ include_once 'includes/breadcrumb_helper.php';
                             </div>
                             <div class="mb-3">
                                 <label for="address" class="form-label required">Physical Address</label>
-                                <textarea class="form-control" id="address" name="address" rows="2" placeholder="Include region/tinkhundla if applicable" required></textarea>
+                                <textarea class="form-control" id="address" name="address" rows="2" placeholder="Include town/region (e.g., Matsapha, Manzini)" required></textarea>
                             </div>
                         </div>
 
-                        <!-- Certification Requirements -->
+                        <!-- Instruments to be Calibrated -->
                         <div class="form-section">
-                            <h3 class="form-section-title">Certification Request</h3>
-                            <div class="mb-3">
-                                <label for="certType" class="form-label required">Type of Certification</label>
-                                <select class="form-select" id="certType" name="certification_type" required>
-                                    <option value="" disabled selected>Select certification type</option>
-                                    <option value="management_systems">Management Systems (e.g., ISO 9001, ISO 14001)</option>
-                                    <option value="product">Product Certification (e.g., electrical, food, building materials)</option>
-                                    <option value="ingelo">Ingelo Quality Mark (Locally manufactured goods)</option>
-                                    <option value="combined">Combined (e.g., ISO + Product)</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3" id="standardsField">
-                                <label for="standards" class="form-label">Applicable Standards (if known)</label>
-                                <input type="text" class="form-control" id="standards" name="standards" placeholder="e.g., ISO 9001:2015, SANS 1853, FSSC 22000">
-                            </div>
+                            <h3 class="form-section-title">Instruments to be Calibrated</h3>
 
                             <div class="mb-3">
-                                <label for="scope" class="form-label required">Scope of Certification</label>
-                                <textarea class="form-control" id="scope" name="scope" rows="3" placeholder="Describe products, processes, locations, or departments to be certified" required></textarea>
+                                <label for="instrumentType" class="form-label required">Type of Instrument</label>
+                                <input type="text" class="form-control" id="instrumentType" name="instrument_type" placeholder="e.g., Weighbridge, electronic balance, pressure gauge, thermometer" required>
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="employees" class="form-label">Number of Employees</label>
-                                        <input type="number" class="form-control" id="employees" name="employees" min="1">
+                                        <label for="capacityRange" class="form-label">Capacity / Range</label>
+                                        <input type="text" class="form-control" id="capacityRange" name="capacity_range" placeholder="e.g., 30 kg, 0–100°C, 0–10 MPa">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="sites" class="form-label">Number of Sites/Locations</label>
-                                        <input type="number" class="form-control" id="sites" name="sites" min="1" value="1">
+                                        <label for="accuracyClass" class="form-label">Accuracy Class / Tolerance</label>
+                                        <input type="text" class="form-control" id="accuracyClass" name="accuracy_class" placeholder="e.g., Class III, ±0.5%, ±1°C">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="numInstruments" class="form-label required">Number of Instruments</label>
+                                        <input type="number" class="form-control" id="numInstruments" name="num_instruments" min="1" value="1" required>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Is your organisation based in Eswatini?</label>
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="local" id="localYes" value="yes" checked>
-                                        <label class="form-check-label" for="localYes">Yes</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="local" id="localNo" value="no">
-                                        <label class="form-check-label" for="localNo">No</label>
-                                    </div>
-                                </div>
+                                <label for="makeModel" class="form-label">Make and Model (if known)</label>
+                                <input type="text" class="form-control" id="makeModel" name="make_model" placeholder="e.g., Mettler Toledo PL3002, Avery Berkel XT3000">
                             </div>
 
-                            <div class="mb-3" id="localManufacturerField" style="display:none;">
-                                <label class="form-label">For Ingelo: Is the product manufactured in Eswatini?</label>
+                            <div class="mb-3">
+                                <label for="purpose" class="form-label required">Purpose of Calibration</label>
+                                <select class="form-select" id="purpose" name="purpose" required>
+                                    <option value="" disabled selected>Select purpose</option>
+                                    <option value="iso_compliance">ISO / management system compliance</option>
+                                    <option value="regulatory">Regulatory compliance</option>
+                                    <option value="trade_legal">Legal / trade metrology</option>
+                                    <option value="commissioning">Equipment commissioning</option>
+                                    <option value="periodic">Periodic / scheduled re-calibration</option>
+                                    <option value="post_repair">Post-repair verification</option>
+                                    <option value="research">Research / laboratory</option>
+                                    <option value="other">Other (describe in Additional Information)</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label required">Service Type</label>
                                 <div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="local_manufacturer" id="manuYes" value="yes">
-                                        <label class="form-check-label" for="manuYes">Yes</label>
+                                        <input class="form-check-input" type="radio" name="service_type" id="serviceLab" value="laboratory">
+                                        <label class="form-check-label" for="serviceLab">Laboratory Calibration (Bring to Matsapha)</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="local_manufacturer" id="manuNo" value="no">
-                                        <label class="form-check-label" for="manuNo">No</label>
+                                        <input class="form-check-input" type="radio" name="service_type" id="serviceOnsite" value="onsite" checked>
+                                        <label class="form-check-label" for="serviceOnsite">On-site Calibration (Field visit required)</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Additional Information -->
+                        <!-- Logistics and Requirements -->
                         <div class="form-section">
-                            <h3 class="form-section-title">Supporting Information</h3>
+                            <h3 class="form-section-title">Logistics and Requirements</h3>
                             <div class="mb-3">
-                                <label for="existingCert" class="form-label">Existing Certifications (if any)</label>
-                                <input type="text" class="form-control" id="existingCert" name="existing_certifications" placeholder="e.g., ISO 9001 (expired), SABS certified">
+                                <label for="completionDate" class="form-label">Required Completion Date</label>
+                                <input type="text" class="form-control" id="completionDate" name="completion_date" placeholder="e.g., Before 15 June 2025">
                             </div>
                             <div class="mb-3">
-                                <label for="timeline" class="form-label">Desired Certification Timeline</label>
-                                <input type="text" class="form-control" id="timeline" name="timeline" placeholder="e.g., By end of Q2 2025">
+                                <label for="prevCert" class="form-label">Previous Calibration Certificate (Optional)</label>
+                                <input type="text" class="form-control" id="prevCert" name="previous_certificate" placeholder="Reference number or expiry date">
                             </div>
                             <div class="mb-3">
                                 <label for="attachments" class="form-label">Upload Documents (Optional)</label>
                                 <input type="file" class="form-control" id="attachments" name="documents[]" multiple accept=".pdf,.doc,.docx,.jpg,.png">
-                                <div class="form-text">e.g., Process flowcharts, product specs, previous audit reports</div>
+                                <div class="form-text">e.g., User manual, previous certificate, calibration procedure</div>
                             </div>
                             <div class="mb-3">
-                                <label for="comments" class="form-label">Additional Comments</label>
-                                <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+                                <label for="additionalInfo" class="form-label">Additional Information</label>
+                                <textarea class="form-control" id="additionalInfo" name="additional_info" rows="3" placeholder="e.g., Access restrictions, special handling requirements"></textarea>
                             </div>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="text-center">
                             <button type="submit" class="btn-cta" style="cursor:pointer;">
-                                Submit Request for Quotation
+                                Submit Request for Calibration Quote
                             </button>
                         </div>
                     </form>
@@ -407,27 +418,16 @@ include_once 'includes/breadcrumb_helper.php';
     <script src="assets/js/main.js"></script>
 
     <script>
-        // Show/hide local manufacturer field when Ingelo is selected
-        document.getElementById('certType').addEventListener('change', function() {
-            const localManuField = document.getElementById('localManufacturerField');
-            if (this.value === 'ingelo') {
-                localManuField.style.display = 'block';
-            } else {
-                localManuField.style.display = 'none';
-            }
-        });
-
-        // Basic form validation (enhance with server-side)
-        document.getElementById('certQuoteForm').addEventListener('submit', function(e) {
+        document.getElementById('calQuoteForm').addEventListener('submit', function(e) {
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
-            
+
             if (!/^\S+@\S+\.\S+$/.test(email)) {
                 e.preventDefault();
                 alert('Please enter a valid email address.');
                 return false;
             }
-            
+
             if (phone.length < 8) {
                 e.preventDefault();
                 alert('Please enter a valid phone number (minimum 8 digits).');

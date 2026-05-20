@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140">
+  <rect width="140" height="140" rx="8" fill="#2B3388"/>
+  <text x="70" y="56" font-family="Arial, sans-serif" font-size="46" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="central">AB</text>
+  <text x="70" y="96" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="#fff" text-anchor="middle" letter-spacing="1">ASIPHILE</text>
+  <text x="70" y="112" font-family="Arial, sans-serif" font-size="9" font-weight="400" fill="rgba(255,255,255,0.75)" text-anchor="middle" letter-spacing="0.5">BOMAKE</text>
+</svg>

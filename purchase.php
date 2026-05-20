@@ -23,11 +23,31 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="includes/cta-section.css">
     <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
         /* Button Style */
         .btn-purchase {
-            background-color: #2E3191; /* ESWASA Primary Blue */
-            color: white;
-            border-color: #2E3191;
+            background-color: #2B3388; /* ESWASA Primary Blue */
+            color: #fff;
+            border-color: #2B3388;
             margin: 5px;
             padding: 10px 30px;
             font-weight: 600;
@@ -35,76 +55,81 @@
             transition: background-color 0.3s;
         }
         .btn-purchase:hover {
-            background-color: #1a1f71;
-            border-color: #1a1f71;
-            color: white;
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
         }
 
         /* Introduction Box (SABS Style - Clean, No Blue Lining) */
         .intro-box {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+            background-color: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 30px;
             margin: 25px 0 50px 0;
             border-radius: 4px;
         }
         .intro-box h3 {
-            color: #2E3191;
+            color: #2B3388;
             margin-top: 0;
             margin-bottom: 15px;
             font-weight: 700;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid rgba(43, 51, 136, 0.15);
             padding-bottom: 10px;
         }
-        
+
         /* Action Card Style (For Catalogue and Store Link) */
         .action-card {
-            background-color: #ffffff;
-            border: 1px solid #e9ecef;
+            background-color: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
             padding: 30px;
             margin-bottom: 20px;
             border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(43, 51, 136, 0.04);
             min-height: 220px; /* Ensure cards are visually balanced */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .action-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
         }
         .action-card h4 {
-            color: #2E3191;
+            color: #2B3388;
             font-weight: 600;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
-        
+
         /* Catalogue Link Styling */
         .catalogue-link {
             display: inline-block;
             margin-top: 15px;
             font-weight: 600;
-            color: #2E3191;
+            color: #2B3388;
             text-decoration: none;
             font-size: 1.1em;
             transition: color 0.2s;
         }
         .catalogue-link:hover {
             text-decoration: underline;
-            color: #00c6ff;
+            color: rgba(43, 51, 136, 0.85);
         }
         .catalogue-link i {
             margin-right: 8px;
             font-size: 1.2em;
         }
-        
+
         /* Coming Soon Style */
         .coming-soon-badge {
             display: inline-block;
             padding: 8px 15px;
             font-weight: 700;
-            color: #856404;
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
+            color: #2B3388;
+            background-color: rgba(43, 51, 136, 0.04);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
             margin-top: 15px;
         }
-        
+
         /* Contact List Icons */
         .contact-list li {
             margin-bottom: 8px;
@@ -113,6 +138,42 @@
             margin-right: 8px;
             width: 20px;
             text-align: center;
+        }
+
+        /* Form inputs (theme-compliant defaults) */
+        input, select, textarea {
+            border: 1px solid rgba(43, 51, 136, 0.25);
+            border-radius: 4px;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #2B3388;
+            box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.15);
+            outline: none;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 767.98px) {
+            .intro-box {
+                padding: 20px 15px;
+                margin: 20px 0 30px 0;
+            }
+            .intro-box h3 {
+                font-size: 1.1rem;
+            }
+            .action-card {
+                padding: 20px 15px;
+                min-height: auto;
+            }
+            .action-card h4 {
+                font-size: 1.1em;
+            }
+            .catalogue-link {
+                font-size: 0.95em;
+                word-break: break-word;
+            }
+            .contact-list li {
+                font-size: 0.95em;
+            }
         }
     </style>
 </head>
@@ -174,8 +235,8 @@
                     </div>
                 </div>
 
-               <div class="card" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 12px; padding: 25px;">
-                    <h3 style="color: #2E3191; font-weight: 700; margin-bottom: 20px;">Need Assistance with Purchasing?</h3>
+               <div class="card" style="border: 1px solid rgba(43, 51, 136, 0.15); box-shadow: 0 4px 12px rgba(43, 51, 136, 0.06); border-radius: 4px; padding: 25px;">
+                    <h3 style="color: #2B3388; font-weight: 700; margin-bottom: 20px;">Need Assistance with Purchasing?</h3>
 
                     <p class="lead">
                         Until our online platform is live, or if you require guidance on specific standards or bulk orders,
@@ -183,13 +244,13 @@
                     </p>
 
                     <ul class="list-unstyled mb-4 contact-list">
-                        <li><i class="fas fa-phone-alt" style="color:#2E3191;"></i> Telephone: +268 2518 4610</li>
-                        <li><i class="fas fa-fax" style="color:#2E3191;"></i> Fax: +268 2518 4526</li>
-                        <li><i class="fas fa-envelope" style="color:#2E3191;"></i> Email (General): 
-                            <a href="mailto:info@eswasa.co.sz" style="color:#000;">info@eswasa.co.sz</a>
+                        <li><i class="fas fa-phone-alt" style="color:#2B3388;"></i> Telephone: +268 2518 4610</li>
+                        <li><i class="fas fa-fax" style="color:#2B3388;"></i> Fax: +268 2518 4526</li>
+                        <li><i class="fas fa-envelope" style="color:#2B3388;"></i> Email (General):
+                            <a href="mailto:info@eswasa.co.sz" style="color:#2B3388;">info@eswasa.co.sz</a>
                         </li>
-                        <li><i class="fas fa-envelope" style="color:#2E3191;"></i> Email (Sales): 
-                            <a href="mailto:sales@eswasa.co.sz" style="color:#000;">sales@eswasa.co.sz</a>
+                        <li><i class="fas fa-envelope" style="color:#2B3388;"></i> Email (Sales):
+                            <a href="mailto:sales@eswasa.co.sz" style="color:#2B3388;">sales@eswasa.co.sz</a>
                         </li>
                     </ul>
                 </div>
