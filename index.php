@@ -721,9 +721,6 @@ if ($am_result) {
         font-size: 32px;
         font-weight: 700;
         margin: 0;
-        padding-bottom: 18px;
-        display: inline-block;
-        border-bottom: 2px solid #2B3388;
         line-height: 1.2;
         letter-spacing: -0.01em;
     }
@@ -804,7 +801,7 @@ if ($am_result) {
     @media (max-width: 575.98px) {
         .trust-eswasa-section { padding: 40px 0 48px; }
         .trust-eswasa-section .section-heading { margin-bottom: 32px; }
-        .trust-eswasa-section .section-heading h2 { font-size: 1.4rem; padding-bottom: 14px; }
+        .trust-eswasa-section .section-heading h2 { font-size: 1.4rem; }
         .marks-grid { grid-template-columns: 1fr; gap: 16px; }
         .mark-item { padding: 24px 20px 18px; }
         .mark-image { height: 170px; margin-bottom: 18px; }

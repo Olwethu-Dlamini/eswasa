@@ -60,9 +60,7 @@ include_once 'includes/breadcrumb_helper.php';
             color: #2B3388;
             font-size: 32px;
             font-weight: 700;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #2B3388;
-            padding-bottom: 15px;
+            margin-bottom: 0;
         }
         .legal-section h3 {
             color: #2B3388;
@@ -122,7 +120,7 @@ include_once 'includes/breadcrumb_helper.php';
         @media (max-width: 767.98px) {
             .legal-content { padding: 40px 0; }
             .legal-section { margin-bottom: 30px; }
-            .legal-section h2 { font-size: 1.7rem; margin-bottom: 20px; padding-bottom: 10px; }
+            .legal-section h2 { font-size: 1.7rem; margin-bottom: 0; }
             .legal-section h3 { font-size: 1.2rem; margin: 22px 0 10px 0; }
             .legal-section h4 { font-size: 1.1rem; margin: 18px 0 10px 0; }
             .legal-section p,
@@ -182,7 +180,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="col-12">
                         <div class="legal-section">
                             <h2>Privacy Policy</h2>
-                            <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
+                            <div class="section-divider mb-4" style="margin-left: 0; margin-right: 0;"></div>
 
                             <div class="highlight-box">
                                 <p><strong>Last Updated:</strong> January 2025</p>
