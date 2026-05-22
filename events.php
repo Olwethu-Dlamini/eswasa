@@ -27,7 +27,7 @@
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -84,10 +84,10 @@
             font-weight: 600;
         }
         .events__item-content .title a:hover {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
         }
         .location {
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
             font-size: 0.9rem;
         }
 
@@ -126,11 +126,11 @@
             font-weight: 600;
         }
         .rc-post-content .title a:hover {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
         }
         .rc-post-content .date {
             font-size: 0.8rem;
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
             display: block;
             margin-top: 4px;
         }

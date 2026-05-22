@@ -38,7 +38,7 @@
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -128,7 +128,7 @@
             margin-bottom: 15px;
         }
         .application-section a { color: #2B3388; }
-        .application-section a:hover { color: rgba(43, 51, 136, 0.85); }
+        .application-section a:hover { color: #2B3388; }
 
         @media (max-width: 767.98px) {
             .intro-box { padding: 20px; }

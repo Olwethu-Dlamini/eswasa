@@ -36,7 +36,7 @@
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -110,7 +110,7 @@
         }
         .catalogue-link:hover {
             text-decoration: underline;
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
         }
         .catalogue-link i {
             margin-right: 8px;

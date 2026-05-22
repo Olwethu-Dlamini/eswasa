@@ -35,7 +35,7 @@
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -70,7 +70,7 @@
         }
         .publication-meta {
             font-size: 0.875rem;
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(43, 51, 136, 0.15);
@@ -78,7 +78,7 @@
         .publication-meta span:not(:last-child)::after {
             content: " | ";
             margin: 0 8px;
-            color: rgba(43, 51, 136, 0.6);
+            color: #2B3388;
         }
         .publication-type {
             display: inline-block;
@@ -111,7 +111,7 @@
             font-weight: 500;
         }
         .publication-link a:hover {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             text-decoration: underline;
         }
 
@@ -140,7 +140,7 @@
             text-decoration: none;
         }
         .related-links-section ul li a:hover {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             text-decoration: underline;
         }
 

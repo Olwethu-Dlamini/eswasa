@@ -9927,12 +9927,13 @@ blockquote p {
 body {
   color: #2B3388;
 }
-/* Override Bootstrap's gray utilities with a softer brand-blue */
+/* Override Bootstrap's gray utilities with solid brand blue (user
+   directive 2026-05-22: body text is brand blue, no fading). */
 .text-muted,
 .form-text,
 .nav-link:not(.active):not(:hover),
 .text-secondary {
-  color: rgba(43, 51, 136, 0.70) !important;
+  color: #2B3388 !important;
 }
 /* Bootstrap accordion button text + table cell text + calendar day numbers
    default to gray; force brand blue. */

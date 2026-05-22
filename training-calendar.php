@@ -39,7 +39,7 @@
             font-family: Arial, sans-serif;
         }
         .text-muted {
-            color: rgba(43, 51, 136, 0.7) !important;
+            color: #2B3388 !important;
         }
 
         /* Breadcrumb stays white over the dark breadcrumb-bg image */
@@ -151,7 +151,7 @@
         }
         .training-count {
             font-size: 12px;
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
         }
         .training-title {
             font-size: 15px;
@@ -286,7 +286,7 @@
         }
         .calendar-legend {
             font-size: 11px;
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             margin-top: 12px;
             padding-top: 10px;
             border-top: 1px solid rgba(43, 51, 136, 0.12);
@@ -362,7 +362,7 @@
             display: inline-block;
             margin-left: 8px;
             background: rgba(43, 51, 136, 0.10);
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.3px;

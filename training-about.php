@@ -39,7 +39,7 @@
             font-family: Arial, sans-serif;
         }
         .text-muted {
-            color: rgba(43, 51, 136, 0.7) !important;
+            color: #2B3388 !important;
         }
 
         /* Breadcrumb stays white over the dark breadcrumb-bg image */
@@ -110,7 +110,7 @@
             text-decoration: none;
         }
         .add2cart_prod_name:hover {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
         }
         .add2cart_btn,
         .add2cart_btn.btn-primary,
@@ -235,7 +235,7 @@
             line-height: 1.3;
         }
         .why-train-card p {
-            color: rgba(43, 51, 136, 0.78);
+            color: #2B3388;
             font-size: 14px;
             line-height: 1.6;
             margin: 0;
@@ -249,7 +249,7 @@
             border-bottom: 1px solid rgba(43, 51, 136, 0.15);
         }
         .nav-tabs .nav-link {
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
             background: transparent;
             border: none;
             border-bottom: 2px solid transparent;
@@ -360,7 +360,7 @@
             font-size: 0.95rem;
         }
         .training-format-card .format-audience {
-            color: rgba(43, 51, 136, 0.8);
+            color: #2B3388;
             font-size: 0.92rem;
             line-height: 1.55;
             margin: 0;
@@ -391,7 +391,7 @@
             margin: 0 0 12px;
         }
         .bank-details dt {
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
             font-weight: 600;
             font-size: 0.9rem;
         }
@@ -402,7 +402,7 @@
             margin: 0;
         }
         .bank-details p {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             font-size: 0.9rem;
             margin: 0;
         }

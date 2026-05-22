@@ -37,7 +37,7 @@
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -115,12 +115,12 @@
             text-decoration: none;
         }
         .wp-title a:hover {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             text-decoration: underline;
         }
         .wp-details {
             font-size: 0.9em;
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
         }
         .wp-status {
             text-align: right;

@@ -92,7 +92,7 @@ function render_paragraphs($text) {
             font-family: Arial, sans-serif;
         }
         .text-muted {
-            color: rgba(43, 51, 136, 0.7) !important;
+            color: #2B3388 !important;
         }
 
         /* Breadcrumb stays white over the dark breadcrumb-bg image */
@@ -179,7 +179,7 @@ function render_paragraphs($text) {
         .team-figure figcaption {
             margin-top: 14px;
             text-align: center;
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             font-size: 14px;
             font-style: italic;
             line-height: 1.5;
@@ -219,7 +219,7 @@ function render_paragraphs($text) {
             font-size: 13px;
             line-height: 1.5;
             margin: 0;
-            color: rgba(43, 51, 136, 0.78);
+            color: #2B3388;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;

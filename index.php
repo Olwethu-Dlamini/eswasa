@@ -494,7 +494,7 @@ if ($am_result) {
         margin: 0 0 26px;
         font-size: 14px;
         line-height: 1.65;
-        color: rgba(43, 51, 136, 0.82);
+        color: #2B3388;
         flex: 1;
     }
     .courses-area .blog__post-content .cat {
@@ -764,7 +764,7 @@ if ($am_result) {
         margin: 0 0 14px;
     }
     .mark-desc {
-        color: rgba(43, 51, 136, 0.82);
+        color: #2B3388;
         font-size: 13.5px;
         line-height: 1.65;
         margin: 0 0 22px;

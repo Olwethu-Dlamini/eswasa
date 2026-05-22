@@ -43,7 +43,7 @@ include_once 'includes/breadcrumb_helper.php';
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -81,7 +81,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .intro-card p {
             margin: 0;
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             font-size: 15px;
             line-height: 1.7;
         }
@@ -124,7 +124,7 @@ include_once 'includes/breadcrumb_helper.php';
             font-size: 15px;
             line-height: 1.65;
             margin-bottom: 16px;
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
         }
         .btn-cert {
             background: #2B3388;
@@ -164,7 +164,7 @@ include_once 'includes/breadcrumb_helper.php';
             margin: 0;
         }
         .cert-image-item small {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             font-size: 0.9rem;
         }
         /* ── Steps to certification image section ── */
@@ -208,7 +208,7 @@ include_once 'includes/breadcrumb_helper.php';
             background: #2B3388;
         }
         .cert-split-card p {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             font-size: 15px;
             line-height: 1.65;
             margin: 0;

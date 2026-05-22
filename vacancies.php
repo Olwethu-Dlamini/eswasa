@@ -35,7 +35,7 @@
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -75,7 +75,7 @@
             font-size: 1.5rem;
         }
         .vacancy-meta {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             font-size: 0.95rem;
             margin-bottom: 15px;
             padding-bottom: 15px;
@@ -102,7 +102,7 @@
         }
         .vacancy-description ul li::before {
             content: "—";
-            color: rgba(43, 51, 136, 0.6);
+            color: #2B3388;
             font-weight: normal;
             display: inline-block;
             width: 1em;
@@ -145,7 +145,7 @@
             text-decoration: none;
         }
         .info-box p a:hover {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             text-decoration: underline;
         }
 
@@ -170,7 +170,7 @@
             padding: 30px;
         }
         #vacancyModal .modal-meta {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             font-size: 0.95rem;
             margin-bottom: 20px;
             padding-bottom: 15px;
@@ -204,7 +204,7 @@
         }
         #vacancyModal .vacancy-full-responsibilities ul li::before {
             content: "—";
-            color: rgba(43, 51, 136, 0.6);
+            color: #2B3388;
             font-weight: normal;
             display: inline-block;
             width: 1em;

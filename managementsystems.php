@@ -43,7 +43,7 @@ include_once 'includes/breadcrumb_helper.php';
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
 
         /* Breadcrumb stays white over the dark breadcrumb-bg image */
         .breadcrumb-content .breadcrumb a,
@@ -220,7 +220,7 @@ include_once 'includes/breadcrumb_helper.php';
             line-height: 1.25;
         }
         .client-tile .client-standard {
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
             font-size: 0.78rem;
             letter-spacing: 0.3px;
         }

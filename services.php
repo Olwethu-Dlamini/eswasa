@@ -39,7 +39,7 @@
             font-family: Arial, sans-serif;
         }
         .text-muted {
-            color: rgba(43, 51, 136, 0.7) !important;
+            color: #2B3388 !important;
         }
 
         /* Breadcrumb stays white over the dark breadcrumb-bg image */

@@ -44,7 +44,7 @@ include_once 'includes/breadcrumb_helper.php';
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
 
         /* Breadcrumb stays white over the dark breadcrumb-bg image */
         .breadcrumb-content .breadcrumb a,
@@ -199,7 +199,7 @@ include_once 'includes/breadcrumb_helper.php';
             line-height: 1.3;
         }
         .timeline-stage .stage-description {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             font-size: 15px;
             line-height: 1.55;
             margin: 0;
@@ -287,7 +287,7 @@ include_once 'includes/breadcrumb_helper.php';
             margin: 0 0 8px;
         }
         .tc-benefit-card p {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             font-size: 15px;
             line-height: 1.55;
             margin: 0;
@@ -325,7 +325,7 @@ include_once 'includes/breadcrumb_helper.php';
             text-decoration: none;
             font-size: 13px;
         }
-        .add2cart_prod_name:hover { color: rgba(43, 51, 136, 0.75); }
+        .add2cart_prod_name:hover { color: #2B3388; }
         .add2cart_btn,
         .add2cart_btn.btn-primary,
         .btn.add2cart_btn {
@@ -389,7 +389,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .affiliation-tile .affiliation-full {
             font-size: 0.75rem;
-            color: rgba(43, 51, 136, 0.7);
+            color: #2B3388;
             line-height: 1.35;
         }
 

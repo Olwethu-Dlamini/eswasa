@@ -130,7 +130,7 @@ $policies = [
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -152,7 +152,7 @@ $policies = [
             margin: 0 auto 36px;
         }
         .intro-card p {
-            margin: 0; color: rgba(43, 51, 136, 0.85);
+            margin: 0; color: #2B3388;
             font-size: 15px; line-height: 1.65;
         }
 
@@ -205,7 +205,7 @@ $policies = [
             line-height: 1.3;
         }
         .policy-desc {
-            color: rgba(43, 51, 136, 0.78);
+            color: #2B3388;
             font-size: 0.9rem;
             line-height: 1.55;
             margin: 0 0 10px;

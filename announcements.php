@@ -38,7 +38,7 @@
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -88,7 +88,7 @@
             font-weight: bold;
         }
         .announcement-meta {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             font-size: 0.9rem;
             margin-bottom: 10px;
         }
@@ -150,10 +150,10 @@
         .badge-policy { background: #fff; color: #2B3388; border: 1px solid rgba(43, 51, 136, 0.30); }
 
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .card-date { color: rgba(43, 51, 136, 0.6); font-size: 0.9rem; font-weight: 600; }
+        .card-date { color: #2B3388; font-size: 0.9rem; font-weight: 600; }
         .card-title { color: #2B3388; font-size: 1.3rem; font-weight: 700; margin: 15px 0; line-height: 1.4; }
         .card:hover .card-title { color: #2B3388; }
-        .card-desc { color: rgba(43, 51, 136, 0.75); line-height: 1.7; margin-bottom: 20px; }
+        .card-desc { color: #2B3388; line-height: 1.7; margin-bottom: 20px; }
 
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid rgba(43, 51, 136, 0.15); }
         .btn-action { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; background: #2B3388; color: #fff; border-radius: 4px; font-weight: 600; text-decoration: none; transition: background-color 0.2s; }
@@ -177,7 +177,7 @@
             margin-bottom: 12px;
         }
         .info-box p {
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             line-height: 1.7;
             margin: 0;
         }
@@ -189,8 +189,8 @@
         .links-box a:hover { background: #2B3388; color: #fff; border-color: #2B3388; }
 
         .empty { text-align: center; padding: 80px 20px; }
-        .empty i { font-size: 4rem; color: rgba(43, 51, 136, 0.6); margin-bottom: 20px; }
-        .empty h3 { color: rgba(43, 51, 136, 0.75); font-size: 1.6rem; font-weight: 700; }
+        .empty i { font-size: 4rem; color: #2B3388; margin-bottom: 20px; }
+        .empty h3 { color: #2B3388; font-size: 1.6rem; font-weight: 700; }
 
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .card { animation: fadeUp 0.5s ease backwards; }

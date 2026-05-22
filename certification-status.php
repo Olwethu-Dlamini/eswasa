@@ -66,7 +66,7 @@ $reduced = [
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -89,7 +89,7 @@ $reduced = [
             margin: 0 auto 40px;
         }
         .intro-card p {
-            margin: 0; color: rgba(43, 51, 136, 0.85);
+            margin: 0; color: #2B3388;
             font-size: 15px; line-height: 1.7;
         }
 
@@ -143,14 +143,14 @@ $reduced = [
             background-color: rgba(43, 51, 136, 0.03);
         }
         .status-table .cert-no { font-weight: 600; white-space: nowrap; }
-        .status-table .date    { white-space: nowrap; color: rgba(43, 51, 136, 0.8); }
+        .status-table .date    { white-space: nowrap; color: #2B3388; }
 
         .empty-state {
             background: #fff;
             border: 1px dashed rgba(43, 51, 136, 0.25);
             border-radius: 4px;
             padding: 22px 24px;
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             font-style: italic;
         }
 
@@ -161,7 +161,7 @@ $reduced = [
             border: 1px solid rgba(43, 51, 136, 0.12);
             border-radius: 4px;
             font-size: 0.95rem;
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             line-height: 1.7;
         }
         .footer-note strong { color: #2B3388; }
@@ -170,7 +170,7 @@ $reduced = [
             text-decoration: underline;
             font-weight: 600;
         }
-        .footer-note a:hover { color: rgba(43, 51, 136, 0.75); }
+        .footer-note a:hover { color: #2B3388; }
 
         @media (max-width: 767.98px) {
             body { font-size: 15px; }

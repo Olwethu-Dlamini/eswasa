@@ -36,7 +36,7 @@
             font-family: Arial, sans-serif;
         }
         .text-muted {
-            color: rgba(43, 51, 136, 0.7) !important;
+            color: #2B3388 !important;
         }
 
         /* Breadcrumb stays white over the dark breadcrumb-bg image */
@@ -64,7 +64,7 @@
             margin: 14px auto 22px;
         }
         .team-header p {
-            color: rgba(43, 51, 136, 0.78);
+            color: #2B3388;
             font-size: 15px;
             line-height: 1.65;
             max-width: 760px;
@@ -188,7 +188,7 @@
         }
         .team-role {
             font-weight: 600;
-            color: rgba(43, 51, 136, 0.75);
+            color: #2B3388;
             font-size: 13px;
             margin: 0 0 8px;
             line-height: 1.3;
@@ -203,7 +203,7 @@
             font-weight: 700;
         }
         .team-bio {
-            color: rgba(43, 51, 136, 0.78);
+            color: #2B3388;
             font-size: 14px;
             margin-bottom: 1rem;
             line-height: 1.55;

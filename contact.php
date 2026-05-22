@@ -120,7 +120,7 @@ if (isset($_SESSION['contact_error'])) {
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -234,7 +234,7 @@ if (isset($_SESSION['contact_error'])) {
             text-decoration: underline;
         }
         .contact-info-wrap .title { color: #2B3388; }
-        .contact-info-wrap p { color: rgba(43, 51, 136, 0.75); }
+        .contact-info-wrap p { color: #2B3388; }
         .form-grp input,
         .form-grp textarea {
             width: 100%;
@@ -245,7 +245,7 @@ if (isset($_SESSION['contact_error'])) {
         }
         .form-grp textarea { min-height: 140px; }
         .form-grp input::placeholder,
-        .form-grp textarea::placeholder { color: rgba(43, 51, 136, 0.6); }
+        .form-grp textarea::placeholder { color: #2B3388; }
 
         /* ========== Mobile responsive ========== */
         @media (max-width: 767.98px) {

@@ -41,7 +41,7 @@ include_once 'includes/breadcrumb_helper.php';
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -63,7 +63,7 @@ include_once 'includes/breadcrumb_helper.php';
             margin: 0 auto 40px;
         }
         .intro-card p {
-            margin: 0; color: rgba(43, 51, 136, 0.85);
+            margin: 0; color: #2B3388;
             font-size: 15px; line-height: 1.7;
         }
 
@@ -85,7 +85,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .charter-block p,
         .charter-block li {
-            color: rgba(43, 51, 136, 0.85);
+            color: #2B3388;
             font-size: 15px;
             line-height: 1.7;
             margin-bottom: 10px;
@@ -105,7 +105,7 @@ include_once 'includes/breadcrumb_helper.php';
             border-radius: 0 4px 4px 0;
         }
         .commitment-item strong { display: block; color: #2B3388; margin-bottom: 4px; font-size: 0.95rem; }
-        .commitment-item span { color: rgba(43, 51, 136, 0.82); font-size: 0.92rem; line-height: 1.5; }
+        .commitment-item span { color: #2B3388; font-size: 0.92rem; line-height: 1.5; }
 
         .contact-cta {
             background: #2B3388;

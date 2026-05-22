@@ -122,7 +122,7 @@ if (isset($_GET['success'])) {
         body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
-        .text-muted { color: rgba(43, 51, 136, 0.7) !important; }
+        .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
         .breadcrumb-content .title { color: #fff !important; }
@@ -144,7 +144,7 @@ if (isset($_GET['success'])) {
             margin: 0 auto 36px;
         }
         .intro-card p {
-            margin: 0; color: rgba(43, 51, 136, 0.85);
+            margin: 0; color: #2B3388;
             font-size: 15px; line-height: 1.65;
         }
 
@@ -191,7 +191,7 @@ if (isset($_GET['success'])) {
         .radio-row { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 6px; }
         .radio-row label {
             font-weight: 500;
-            color: rgba(43, 51, 136, 0.88);
+            color: #2B3388;
             display: inline-flex;
             align-items: center;
             gap: 6px;
