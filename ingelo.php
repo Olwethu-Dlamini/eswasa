@@ -132,7 +132,7 @@ include_once 'includes/breadcrumb_helper.php';
         .intro-section h2 {
             color: #2B3388;
             font-weight: 700;
-            font-size: 1.6rem;
+            font-size: 32px;
             margin-bottom: 15px;
             line-height: 1.3;
         }

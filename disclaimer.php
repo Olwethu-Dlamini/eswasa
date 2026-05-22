@@ -58,7 +58,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .legal-section h2 {
             color: #2B3388;
-            font-size: 2.5rem;
+            font-size: 32px;
             font-weight: 700;
             margin-bottom: 30px;
             border-bottom: 3px solid #2B3388;
@@ -71,7 +71,7 @@ include_once 'includes/breadcrumb_helper.php';
             margin: 30px 0 15px 0;
         }
         .legal-section p {
-            font-size: 1.1rem;
+            font-size: 15px;
             line-height: 1.8;
             margin-bottom: 20px;
             color: #2B3388;
@@ -81,7 +81,7 @@ include_once 'includes/breadcrumb_helper.php';
             padding-left: 20px;
         }
         .legal-section li {
-            font-size: 1.1rem;
+            font-size: 15px;
             line-height: 1.8;
             margin-bottom: 10px;
             color: #2B3388;

@@ -115,7 +115,7 @@ function render_paragraphs($text) {
         /* Page section titles — wider gap above vm-card h3 for clearer hierarchy */
         .about-eswasa-area h2.title,
         .container h2.fw-bold {
-            font-size: 2.15rem;
+            font-size: 32px;
             font-weight: 700;
             letter-spacing: -0.01em;
             margin: 0;

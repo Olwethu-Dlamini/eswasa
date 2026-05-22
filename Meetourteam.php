@@ -76,7 +76,7 @@
             margin: 60px 0 0;
             font-weight: 700;
             color: #2B3388;
-            font-size: 2.15rem;
+            font-size: 32px;
             letter-spacing: -0.01em;
             line-height: 1.2;
         }
