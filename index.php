@@ -351,192 +351,349 @@ if ($am_result) {
 <!-- announcement-strip-end -->
 
 
-<!-- discover-infographic -->
+<!-- course-area -->
 <style>
-    .discover-infographic {
-        position: relative;
-        background: rgba(43, 51, 136, 0.05);
-        padding: 80px 0 90px;
-    }
+    .coursesSlider .swiper-slide { height: auto; }
+    .coursesSlider .swiper-slide .blog__post-item { height: 100%; }
+    .coursesSlider .swiper-slide .blog__post-content { padding: 15px 20px 20px; }
+    .coursesSlider .swiper-slide .blog__post-content .title { font-size: 18px; }
+    .coursesSlider .swiper-slide .blog__post-content p { font-size: 13px; }
+    .coursesSlider .swiper-slide .blog__post-content .cat img { width: 22px; }
+    .coursesSlider .swiper-slide .blog__post-content .cat { font-size: 12px; padding: 4px 12px; }
 
-    .discover-header {
-        text-align: center;
-        margin-bottom: 56px;
-    }
-    .discover-header h2.discover-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #2B3388;
-        margin: 0;
-        line-height: 1.2;
-        letter-spacing: -0.01em;
-        display: inline-block;
-        padding-bottom: 18px;
-        border-bottom: 2px solid #2B3388;
-    }
-
-    .discover-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-    }
-    .discover-card {
-        background: #fff;
-        border: none;
-        border-radius: 6px;
-        padding: 34px 30px 30px;
-        text-decoration: none !important;
-        color: #2B3388;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
+    /* Discover section background design */
+    .courses-area.bg-gray {
         position: relative;
         overflow: hidden;
-        min-height: 220px;
-        box-shadow: 0 1px 3px rgba(43, 51, 136, 0.06);
-        transition: background .25s ease, color .25s ease, transform .25s ease, box-shadow .25s ease;
     }
-    .discover-card:hover {
-        background: #2B3388;
-        color: #fff;
-        transform: translateY(-3px);
-        box-shadow: 0 12px 28px rgba(43, 51, 136, 0.22);
-    }
-    .discover-card .icon-wrap {
-        width: 96px;
-        height: 96px;
-        margin: 0 0 22px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: none;
-    }
-    .discover-card .icon-wrap svg {
-        width: 92px;
-        height: 92px;
-        transition: color .25s ease;
-    }
-    .discover-card h4 {
-        color: inherit;
-        font-weight: 700;
-        font-size: 18px;
-        margin: 0;
-        line-height: 1.3;
-        letter-spacing: 0;
+    .courses-area.bg-gray > .container {
+        position: relative;
+        z-index: 1;
     }
 
-    @media (max-width: 1199.98px) {
-        .discover-grid { grid-template-columns: repeat(2, 1fr); }
+    .discover-bg-elements {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
     }
+    .discover-bg-elements > svg { color: #2B3388; }
+
+    .discover-bg-elements .bg-network {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 350px;
+        height: 350px;
+        opacity: 0.20;
+    }
+    .discover-bg-elements .bg-hexagons {
+        position: absolute;
+        bottom: -40px;
+        left: -20px;
+        width: 300px;
+        height: 300px;
+        opacity: 0.20;
+    }
+    .discover-bg-elements .bg-flow {
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        transform: translateY(-50%);
+        width: 160px;
+        height: 300px;
+        opacity: 0.18;
+    }
+    .discover-bg-elements .bg-molecule {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        height: 400px;
+        opacity: 0.12;
+    }
+    .discover-bg-elements .bg-barcode {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
+        width: 120px;
+        height: 80px;
+        opacity: 0.25;
+    }
+
+    /* Card icon sizing (replaces missing PNGs) */
+    .courses-area .blog__post-content .discover-icon {
+        width: 70px;
+        height: 70px;
+        color: #2B3388;
+        display: inline-block;
+    }
+
     @media (max-width: 991.98px) {
-        .discover-card { padding: 28px 24px 24px; min-height: 200px; }
-        .discover-card .icon-wrap { width: 80px; height: 80px; margin-bottom: 26px; }
-        .discover-card .icon-wrap svg { width: 76px; height: 76px; }
-        .discover-card h4 { font-size: 16px; }
-    }
-    @media (max-width: 767.98px) {
-        .discover-header h2.discover-title { font-size: 1.65rem; }
+        .discover-bg-elements .bg-molecule { width: 280px; height: 280px; }
+        .discover-bg-elements .bg-network { width: 240px; height: 240px; }
+        .discover-bg-elements .bg-hexagons { width: 220px; height: 220px; }
     }
     @media (max-width: 575.98px) {
-        .discover-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .discover-infographic { padding: 50px 0 60px; }
-        .discover-card { padding: 22px 18px 20px; min-height: 170px; }
-        .discover-card .icon-wrap { width: 64px; height: 64px; margin-bottom: 18px; }
-        .discover-card .icon-wrap svg { width: 60px; height: 60px; }
-        .discover-card h4 { font-size: 14px; }
-        .discover-header { margin-bottom: 36px; }
-        .discover-header h2.discover-title { font-size: 1.4rem; padding-bottom: 14px; }
+        .discover-bg-elements .bg-flow,
+        .discover-bg-elements .bg-barcode { display: none; }
+        .discover-bg-elements .bg-molecule { width: 220px; height: 220px; opacity: 0.10; }
+    }
+
+    /* Discover cards — refined spacing, equal heights, hover */
+    .courses-area .row > [class*="col-"] { display: flex; }
+    .courses-area .blog__post-item {
+        background: #fff;
+        border: 1px solid rgba(43, 51, 136, 0.12);
+        border-radius: 4px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+    }
+    .courses-area .blog__post-item:hover {
+        border-color: #2B3388;
+        box-shadow: 0 8px 22px rgba(43, 51, 136, 0.10);
+        transform: translateY(-3px);
+    }
+    .courses-area .blog__post-content {
+        padding: 34px 26px 26px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .courses-area .blog__post-content > a:first-child {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 88px;
+        margin-bottom: 22px;
+    }
+    .courses-area .blog__post-content .title {
+        margin: 0 0 14px;
+        font-size: 18px;
+        line-height: 1.3;
+        font-weight: 700;
+    }
+    .courses-area .blog__post-content .title a {
+        color: #2B3388;
+        text-decoration: none;
+    }
+    .courses-area .blog__post-content .card-desc {
+        margin: 0 0 26px;
+        font-size: 14px;
+        line-height: 1.65;
+        color: rgba(43, 51, 136, 0.82);
+        flex: 1;
+    }
+    .courses-area .blog__post-content .cat {
+        margin-top: auto;
+        align-self: center;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 20px;
+        border: 1px solid #2B3388;
+        color: #2B3388;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 2px;
+        background: transparent;
+        transition: background .2s ease, color .2s ease;
+    }
+    .courses-area .blog__post-content .cat:hover {
+        background: #2B3388;
+        color: #fff;
+    }
+    .courses-area .blog__post-content .cat i {
+        font-size: 12px;
+        transition: transform .2s ease;
+    }
+    .courses-area .blog__post-content .cat:hover i { transform: translateX(3px); }
+
+    @media (max-width: 767.98px) {
+        .courses-area .blog__post-content { padding: 28px 22px 22px; }
+        .courses-area .blog__post-content .title { font-size: 17px; }
+        .courses-area .blog__post-content .card-desc { font-size: 13.5px; margin-bottom: 22px; }
     }
 </style>
-<section class="discover-infographic">
+<section class="courses-area bg-gray" style="padding-top: 15px; padding-bottom: 15px;">
+    <!-- Discover section decorative background -->
+    <div class="discover-bg-elements">
+        <!-- Network / connected nodes (top right) -->
+        <svg class="bg-network" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="40" cy="40" r="6"/>
+            <circle cx="140" cy="30" r="6"/>
+            <circle cx="170" cy="100" r="6"/>
+            <circle cx="100" cy="90" r="6"/>
+            <circle cx="60" cy="140" r="6"/>
+            <circle cx="150" cy="160" r="6"/>
+            <line x1="40" y1="40" x2="100" y2="90"/>
+            <line x1="140" y1="30" x2="100" y2="90"/>
+            <line x1="170" y1="100" x2="100" y2="90"/>
+            <line x1="60" y1="140" x2="100" y2="90"/>
+            <line x1="150" y1="160" x2="100" y2="90"/>
+            <line x1="40" y1="40" x2="140" y2="30"/>
+            <line x1="60" y1="140" x2="150" y2="160"/>
+        </svg>
+
+        <!-- Honeycomb hexagons (bottom left) -->
+        <svg class="bg-hexagons" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+            <polygon points="30,40 55,25 80,40 80,70 55,85 30,70"/>
+            <polygon points="80,40 105,25 130,40 130,70 105,85 80,70"/>
+            <polygon points="130,40 155,25 180,40 180,70 155,85 130,70"/>
+            <polygon points="55,85 80,70 105,85 105,115 80,130 55,115"/>
+            <polygon points="105,85 130,70 155,85 155,115 130,130 105,115"/>
+            <polygon points="30,130 55,115 80,130 80,160 55,175 30,160"/>
+            <polygon points="80,130 105,115 130,130 130,160 105,175 80,160"/>
+            <polygon points="130,130 155,115 180,130 180,160 155,175 130,160"/>
+        </svg>
+
+        <!-- Flow process arrows (mid left) -->
+        <svg class="bg-flow" viewBox="0 0 80 200" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="20" y="10" width="40" height="28" rx="2"/>
+            <line x1="40" y1="38" x2="40" y2="60"/>
+            <polyline points="32,54 40,62 48,54"/>
+            <rect x="20" y="62" width="40" height="28" rx="2"/>
+            <line x1="40" y1="90" x2="40" y2="112"/>
+            <polyline points="32,106 40,114 48,106"/>
+            <rect x="20" y="114" width="40" height="28" rx="2"/>
+            <line x1="40" y1="142" x2="40" y2="164"/>
+            <polyline points="32,158 40,166 48,158"/>
+            <rect x="20" y="166" width="40" height="28" rx="2"/>
+        </svg>
+
+        <!-- Molecule / atom structure (center) -->
+        <svg class="bg-molecule" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2">
+            <ellipse cx="100" cy="100" rx="85" ry="32"/>
+            <ellipse cx="100" cy="100" rx="85" ry="32" transform="rotate(60 100 100)"/>
+            <ellipse cx="100" cy="100" rx="85" ry="32" transform="rotate(120 100 100)"/>
+            <circle cx="100" cy="100" r="10" fill="currentColor"/>
+            <circle cx="185" cy="100" r="6" fill="currentColor"/>
+            <circle cx="15" cy="100" r="6" fill="currentColor"/>
+            <circle cx="142.5" cy="173.6" r="6" fill="currentColor"/>
+            <circle cx="57.5" cy="26.4" r="6" fill="currentColor"/>
+            <circle cx="142.5" cy="26.4" r="6" fill="currentColor"/>
+            <circle cx="57.5" cy="173.6" r="6" fill="currentColor"/>
+        </svg>
+
+        <!-- Barcode / standards code (bottom right) -->
+        <svg class="bg-barcode" viewBox="0 0 120 80" fill="currentColor">
+            <rect x="0"   y="0" width="3" height="60"/>
+            <rect x="6"   y="0" width="1" height="60"/>
+            <rect x="10"  y="0" width="4" height="60"/>
+            <rect x="17"  y="0" width="2" height="60"/>
+            <rect x="22"  y="0" width="1" height="60"/>
+            <rect x="26"  y="0" width="3" height="60"/>
+            <rect x="32"  y="0" width="2" height="60"/>
+            <rect x="37"  y="0" width="5" height="60"/>
+            <rect x="45"  y="0" width="1" height="60"/>
+            <rect x="49"  y="0" width="3" height="60"/>
+            <rect x="55"  y="0" width="2" height="60"/>
+            <rect x="60"  y="0" width="4" height="60"/>
+            <rect x="67"  y="0" width="1" height="60"/>
+            <rect x="71"  y="0" width="3" height="60"/>
+            <rect x="77"  y="0" width="2" height="60"/>
+            <rect x="82"  y="0" width="1" height="60"/>
+            <rect x="86"  y="0" width="4" height="60"/>
+            <rect x="93"  y="0" width="2" height="60"/>
+            <rect x="98"  y="0" width="3" height="60"/>
+            <rect x="104" y="0" width="1" height="60"/>
+            <rect x="108" y="0" width="5" height="60"/>
+            <rect x="116" y="0" width="2" height="60"/>
+        </svg>
+    </div>
+
     <div class="container">
-        <div class="discover-header">
-            <h2 class="discover-title">Discover</h2>
+        <div class="section__title-wrap mb-55">
+            <div class="row align-items-center gap-4 gap-md-0">
+                <div class="col-md-8">
+                    <div class="section__title text-center text-md-start">
+                        <h2 class="title tg-svg" style="color: #2B3388;">Discover</h2>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="discover-grid">
-            <a href="services.php" class="discover-card">
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="6" y="14" width="36" height="26" rx="2"/>
-                        <path d="M18 14 V11 C18 9.9 18.9 9 20 9 H28 C29.1 9 30 9.9 30 11 V14"/>
-                        <line x1="6" y1="24" x2="42" y2="24"/>
-                        <path d="M20 28 H28"/>
-                        <circle cx="24" cy="24" r="2" fill="currentColor"/>
-                    </svg>
-                </div>
-                <h4>Services</h4>
-            </a>
 
-            <a href="training-about.php" class="discover-card">
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 20 L24 10 L44 20 L24 30 Z"/>
-                        <path d="M12 24 V34 C12 36.5 17 40 24 40 C31 40 36 36.5 36 34 V24"/>
-                        <path d="M44 20 V32"/>
-                        <circle cx="44" cy="34" r="1.6" fill="currentColor"/>
-                    </svg>
+        <div class="row g-4">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="blog__post-item shine__animate-item">
+                    <div class="blog__post-content">
+                        <a href="Certification.php">
+                            <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M24 4 L42 11 V24 C42 34 34 42 24 44 C14 42 6 34 6 24 V11 Z"/>
+                                <path d="M16 24 L22 30 L33 18"/>
+                            </svg>
+                        </a>
+                        <h4 class="title"><a href="Certification.php"><b>Certification</b></a></h4>
+                        <p class="card-desc">Independent certification of management systems and products. We help your organisation demonstrate its ability to consistently meet customer, regulatory and statutory requirements.</p>
+                        <a href="Certification.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
                 </div>
-                <h4>Training</h4>
-            </a>
-
-            <a href="Certification.php" class="discover-card">
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M24 4 L42 11 V24 C42 34 34 42 24 44 C14 42 6 34 6 24 V11 Z"/>
-                        <path d="M16 24 L22 30 L33 18"/>
-                    </svg>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="blog__post-item shine__animate-item">
+                    <div class="blog__post-content">
+                        <a href="product.php">
+                            <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 6 H30"/>
+                                <path d="M20 6 V20 L10 38 C8.5 41 10.5 44 13.5 44 H34.5 C37.5 44 39.5 41 38 38 L28 20 V6"/>
+                                <path d="M14 32 H34"/>
+                                <circle cx="20" cy="36" r="1.4" fill="currentColor"/>
+                                <circle cx="27" cy="38" r="1.4" fill="currentColor"/>
+                                <circle cx="24" cy="33" r="1.2" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <h4 class="title"><a href="product.php"><b>Product Testing</b></a></h4>
+                        <p class="card-desc">Food, microbiology and product testing carried out to international standards — giving manufacturers, regulators and consumers reliable evidence of quality and safety.</p>
+                        <a href="product.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
                 </div>
-                <h4>Certification</h4>
-            </a>
-
-            <a href="Calibration.php" class="discover-card">
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 34 A 18 18 0 0 1 42 34"/>
-                        <line x1="6" y1="34" x2="10" y2="34"/>
-                        <line x1="42" y1="34" x2="38" y2="34"/>
-                        <line x1="24" y1="16" x2="24" y2="20"/>
-                        <line x1="13" y1="22" x2="16" y2="24"/>
-                        <line x1="35" y1="22" x2="32" y2="24"/>
-                        <line x1="24" y1="34" x2="33" y2="22"/>
-                        <circle cx="24" cy="34" r="2.6" fill="currentColor"/>
-                    </svg>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="blog__post-item shine__animate-item">
+                    <div class="blog__post-content">
+                        <a href="Standards.php">
+                            <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 6 H28 L38 16 V42 H10 Z"/>
+                                <path d="M28 6 V16 H38"/>
+                                <line x1="16" y1="22" x2="32" y2="22"/>
+                                <line x1="16" y1="28" x2="32" y2="28"/>
+                                <line x1="16" y1="34" x2="26" y2="34"/>
+                            </svg>
+                        </a>
+                        <h4 class="title"><a href="Standards.php"><b>Standards Development</b></a></h4>
+                        <p class="card-desc">Bringing industry, government and consumer expertise together to develop national standards that protect health, enable trade and lift the quality of goods and services in Eswatini.</p>
+                        <a href="Standards.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
                 </div>
-                <h4>Calibration</h4>
-            </a>
-
-            <a href="Standards.php" class="discover-card">
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M10 6 H28 L38 16 V42 H10 Z"/>
-                        <path d="M28 6 V16 H38"/>
-                        <circle cx="22" cy="30" r="5"/>
-                        <path d="M22 22 V25 M22 35 V38 M14 30 H17 M27 30 H30 M16.3 24.3 L18.3 26.3 M25.7 33.7 L27.7 35.7 M16.3 35.7 L18.3 33.7 M25.7 26.3 L27.7 24.3"/>
-                    </svg>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="blog__post-item shine__animate-item">
+                    <div class="blog__post-content">
+                        <a href="training-about.php">
+                            <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 20 L24 10 L44 20 L24 30 Z"/>
+                                <path d="M12 24 V34 C12 36.5 17 40 24 40 C31 40 36 36.5 36 34 V24"/>
+                                <path d="M44 20 V32"/>
+                                <circle cx="44" cy="34" r="1.6" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <h4 class="title"><a href="training-about.php"><b>Training &amp; Development</b></a></h4>
+                        <p class="card-desc">Specialised training in quality management, internal auditing and standards application — equipping your team with skills aligned to international best practice (e.g. SZNS ISO 19011:2018).</p>
+                        <a href="training-about.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
                 </div>
-                <h4>Standards</h4>
-            </a>
-
-            <a href="product.php" class="discover-card">
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 H30"/>
-                        <path d="M20 6 V20 L10 38 C8.5 41 10.5 44 13.5 44 H34.5 C37.5 44 39.5 41 38 38 L28 20 V6"/>
-                        <path d="M14 32 H34"/>
-                        <circle cx="20" cy="36" r="1.4" fill="currentColor"/>
-                        <circle cx="27" cy="38" r="1.4" fill="currentColor"/>
-                        <circle cx="24" cy="33" r="1.2" fill="currentColor"/>
-                    </svg>
-                </div>
-                <h4>Product Testing</h4>
-            </a>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- discover-infographic-end -->
+<!-- course-area-end -->
 
 
 <!-- ESWASA Section -->

@@ -14,10 +14,10 @@
                     <img src="assets/img/logo/ESWASA2 LOGO.png" alt="ESWASA" height="120">
                 </a>
                 <div class="d-flex gap-2">
-                    <img src="assets/img/quality/eswasa01.png" alt="Quality Badge" width="36">
-                    <img src="assets/img/quality/eswasa02.png" alt="Quality Badge" width="34">
-                    <img src="assets/img/quality/eswasa03.png" alt="Quality Badge" width="36">
-                    <img src="assets/img/quality/eswasa04.png" alt="Quality Badge" width="36">
+                    <img src="assets/img/quality/management-mark.png" alt="Management Systems Certification Mark" width="36">
+                    <img src="assets/img/quality/product-certification.png" alt="Product Certification Mark" width="36">
+                    <img src="assets/img/quality/compulsory-standards.png" alt="Compulsory Standards Quality Mark" width="36">
+                    <img src="assets/img/quality/ingelo-certification.png" alt="Ingelo Certification Scheme Mark" width="36">
                 </div>
             </div>
 
