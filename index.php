@@ -67,10 +67,10 @@ if ($am_result) {
 
     <!-- Mobile Responsive Styles -->
     <style>
-    /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+    /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
     body {
         font-family: Arial, sans-serif;
-        font-size: 16px;
+        font-size: 15px;
         color: #2B3388;
     }
     body h1, body h2, body h3, body h4, body h5, body h6 {

@@ -78,10 +78,10 @@ function render_paragraphs($text) {
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
         body {
             font-family: Arial, sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             color: #2B3388;
         }
         body h1, body h2, body h3, body h4, body h5, body h6 {
@@ -327,6 +327,7 @@ function render_paragraphs($text) {
             border-radius: 4px;
             padding: 40px 36px;
             height: 100%;
+            text-align: center;
             transition: border-color .2s ease, box-shadow .2s ease;
         }
         .vm-card:hover {
@@ -337,14 +338,18 @@ function render_paragraphs($text) {
             width: 64px;
             height: 64px;
             color: #2B3388;
-            margin: 0 0 26px;
+            margin: 0 auto 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .vm-icon svg { width: 100%; height: 100%; }
+        .vm-icon svg { width: 100%; height: 100%; display: block; }
+        .vm-icon i { font-size: 56px; line-height: 1; color: #2B3388; }
         .vm-card h3 {
             color: #2B3388;
             font-weight: 700;
             font-size: 20px;
-            margin: 0 0 18px;
+            margin: 0 auto 18px;
             padding-bottom: 12px;
             border-bottom: 2px solid #2B3388;
             display: inline-block;
@@ -354,7 +359,8 @@ function render_paragraphs($text) {
             color: #2B3388;
             font-size: 15px;
             line-height: 1.7;
-            margin: 0;
+            margin: 0 auto;
+            max-width: 520px;
             font-weight: 400;
         }
 
@@ -492,12 +498,7 @@ function render_paragraphs($text) {
                 <div class="col-md-6">
                     <div class="vm-card">
                         <div class="vm-icon" aria-hidden="true">
-                            <!-- Eye — universal "vision" symbol, drawn in the homepage family -->
-                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 24 Q14 10 24 10 Q34 10 44 24 Q34 38 24 38 Q14 38 4 24 Z"/>
-                                <circle cx="24" cy="24" r="8"/>
-                                <circle cx="24" cy="24" r="4" fill="currentColor"/>
-                            </svg>
+                            <i class="fas fa-eye"></i>
                         </div>
                         <h3>Vision</h3>
                         <p><?= htmlspecialchars($pc['about_vision']) ?></p>
@@ -506,13 +507,7 @@ function render_paragraphs($text) {
                 <div class="col-md-6">
                     <div class="vm-card">
                         <div class="vm-icon" aria-hidden="true">
-                            <!-- Mountain peak with planted flag — new glyph, same drawing family -->
-                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 40 L18 22 L26 32 L34 16 L44 40 Z"/>
-                                <line x1="34" y1="16" x2="34" y2="4"/>
-                                <path d="M34 4 L44 8 L34 12 Z" fill="currentColor"/>
-                                <line x1="14" y1="40" x2="34" y2="40"/>
-                            </svg>
+                            <i class="fas fa-compass"></i>
                         </div>
                         <h3>Mission</h3>
                         <p><?= htmlspecialchars($pc['about_mission']) ?></p>
