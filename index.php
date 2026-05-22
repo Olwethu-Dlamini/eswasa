@@ -216,7 +216,7 @@ if ($am_result) {
                         data-endelementdelay="0.1"
                         style="z-index: 5;">
                         <?php if (!empty($row['url'])) { ?>
-                        <a href="<?php echo htmlspecialchars($row['url']); ?>" class="slider-btn slider-btn-1" target="_blank" rel="noopener">READ MORE</a>
+                        <a href="<?php echo htmlspecialchars($row['url']); ?>" class="slider-btn slider-btn-1" target="_blank" rel="noopener">Read More</a>
                         <?php } ?>
                     </div>
                 </li>
@@ -880,7 +880,6 @@ if ($am_result) {
         margin: 0;
         line-height: 1.2;
         letter-spacing: 0.02em;
-        text-transform: uppercase;
     }
 
     .affiliations-slider {

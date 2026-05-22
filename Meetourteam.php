@@ -196,8 +196,6 @@
             font-size: 13px;
             color: #2B3388;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
         }
         .team-bio {
             color: rgba(43, 51, 136, 0.78);
@@ -347,14 +345,14 @@
         <div class="container py-5">
             <!-- Page intro -->
             <div class="team-header">
-                <h3>Our Board and Management</h3>
+                <h3>Our Council and Management</h3>
                 <div class="section-divider"></div>
                 <p>Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini&rsquo;s industries.</p>
             </div>
 
-            <!-- Board Section -->
+            <!-- Council Section -->
             <div class="team-section">
-                <h2 class="section-title">BOARD OF DIRECTORS</h2>
+                <h2 class="section-title">Members of the Council</h2>
                 <div class="section-divider"></div>
                 <div class="team-layout">
                     <div class="team-leader">
@@ -363,7 +361,7 @@
                                 <img src="admin/uploads/dumile.png" alt="Mrs. Dumile Sibandze" class="team-img">
                             </div>
                             <h4 class="team-name">Mrs. Dumile Sibandze</h4>
-                            <p class="team-role">Board Chair</p>
+                            <p class="team-role">Council Chair</p>
                             <div class="team-social"></div>
                         </div>
                     </div>
@@ -406,7 +404,7 @@
 
             <!-- Management Section -->
             <div class="team-section">
-                <h2 class="section-title">MANAGEMENT TEAM</h2>
+                <h2 class="section-title">Management Team</h2>
                 <div class="section-divider"></div>
                 <div class="team-layout">
                     <div class="team-leader">
@@ -450,7 +448,7 @@
 
             <!-- ESWASA STAFF Section (now at bottom) -->
             <div class="team-section">
-                <h2 class="section-title">ESWASA STAFF</h2>
+                <h2 class="section-title">ESWASA Staff</h2>
                 <div class="section-divider"></div>
                 <div class="eswasa-staff-content text-center mb-4">
                     <p>

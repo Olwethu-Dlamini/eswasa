@@ -197,7 +197,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <h3>Contact Information</h3>
                                 <p>For clarification on any information provided on this website or for official documentation, please contact:</p>
                                 <ul>
-                                    <li><strong>ESWATINI STANDARDS AUTHORITY</strong></li>
+                                    <li><strong>Eswatini Standards Authority</strong></li>
                                     <li>P.O. Box 1399, Matsapha, Eswatini</li>
                                     <li>Tel: +268 2518 4610</li>
                                     <li>Fax: +268 2518 4526</li>

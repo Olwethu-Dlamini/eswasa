@@ -645,7 +645,7 @@ function render_paragraphs($text) {
     <section class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5 px-3">
-                <h2 class="fw-bold" style="color: #2B3388;">ESWASA ACCREDITATION</h2>
+                <h2 class="fw-bold" style="color: #2B3388;">ESWASA Accreditation</h2>
                 <div class="section-divider"></div>
                 <p class="text-muted mt-3">Eswatini Standards Authority is accredited by SADCAS.</p>
             </div>

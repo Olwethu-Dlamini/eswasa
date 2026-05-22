@@ -257,7 +257,6 @@ include_once 'includes/breadcrumb_helper.php';
         .producers-wrap .cw-header h3 {
             font-size: 1.3rem;
             letter-spacing: 2px;
-            text-transform: uppercase;
             color: #2B3388;
             margin-bottom: 10px;
         }
@@ -318,7 +317,6 @@ include_once 'includes/breadcrumb_helper.php';
             font-size: 0.98rem;
             letter-spacing: 0.4px;
             line-height: 1.3;
-            text-transform: uppercase;
         }
         .producer-tile .producer-product {
             color: #2B3388;

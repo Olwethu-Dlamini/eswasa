@@ -5,8 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Board of Directors - ESWASA</title>
-    <meta name="description" content="The ESWASA Board of Directors — strategic oversight and governance of the Eswatini Standards Authority.">
+    <title>Members of the Council - ESWASA</title>
+    <meta name="description" content="The ESWASA Members of the Council — strategic oversight and governance of the Eswatini Standards Authority.">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -157,9 +157,9 @@
                                     <a href="index.html">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Board of Directors</span>
+                                <span property="itemListElement" typeof="ListItem">Members of the Council</span>
                             </nav>
-                            <h3 class="title">Board of Directors</h3>
+                            <h3 class="title">Members of the Council</h3>
                         </div>
                     </div>
                 </div>
@@ -171,8 +171,8 @@
             <!-- Section Header -->
             <div class="main_title centered upper mb-5">
                 <h2 class="display-6 fw-bold text-center">
-                    Board of Directors
-                    <span class="d-block fs-5 text-muted mt-2">Strategic Oversight & Governance</span>
+                    Members of the Council
+                    <span class="d-block fs-5 text-muted mt-2">Strategic Oversight &amp; Governance</span>
                     <span class="d-block mx-auto mt-3 bg-primary rounded-pill" style="width: 100px; height: 4px;"></span>
                 </h2>
                 

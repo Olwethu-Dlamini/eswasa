@@ -127,7 +127,6 @@ include_once 'includes/breadcrumb_helper.php';
         .certified-wrap .cw-header h3 {
             font-size: 1.3rem;
             letter-spacing: 2px;
-            text-transform: uppercase;
             color: #2B3388;
             margin-bottom: 10px;
         }
@@ -219,7 +218,6 @@ include_once 'includes/breadcrumb_helper.php';
             font-size: 1rem;
             letter-spacing: 0.5px;
             line-height: 1.25;
-            text-transform: uppercase;
         }
         .client-tile .client-standard {
             color: rgba(43, 51, 136, 0.7);
@@ -299,7 +297,6 @@ include_once 'includes/breadcrumb_helper.php';
             color: #2B3388;
             font-weight: 600;
             font-size: 0.85rem;
-            text-transform: uppercase;
             line-height: 1.4;
             margin: 0;
         }
@@ -737,20 +734,20 @@ include_once 'includes/breadcrumb_helper.php';
 
         <!-- ROW 1 -->
         <div class="process-row d-flex justify-content-center flex-wrap align-items-center">
-            <div class="process-circle">STEP 1<br><span>Initial Enquiry</span></div>
+            <div class="process-circle">Step 1<br><span>Initial Enquiry</span></div>
             <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 2<br><span>Promotional Visit & Application</span></div>
+            <div class="process-circle">Step 2<br><span>Promotional Visit & Application</span></div>
             <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 3<br><span>Quote Provided, Contract & Payment Commitment</span></div>
+            <div class="process-circle">Step 3<br><span>Quote Provided, Contract & Payment Commitment</span></div>
         </div>
 
         <div class="process-divider"></div>
 
         <!-- ROW 2 -->
         <div class="process-row d-flex justify-content-center flex-wrap align-items-center">
-            <div class="process-circle">STEP 4<br><span>Stage 1 Audit — Documentation & Site Readiness</span></div>
+            <div class="process-circle">Step 4<br><span>Stage 1 Audit — Documentation & Site Readiness</span></div>
             <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 5<br><span>Stage 2 Audit — Implementation Effectiveness</span></div>
+            <div class="process-circle">Step 5<br><span>Stage 2 Audit — Implementation Effectiveness</span></div>
             <div class="process-arrow">›</div>
             <div class="process-circle highlight">Certification<br>Decision</div>
         </div>
@@ -759,11 +756,11 @@ include_once 'includes/breadcrumb_helper.php';
 
         <!-- ROW 3 -->
         <div class="process-row d-flex justify-content-center flex-wrap align-items-center">
-            <div class="process-circle">STEP 6<br><span>Issue of Certificate</span></div>
+            <div class="process-circle">Step 6<br><span>Issue of Certificate</span></div>
             <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 7<br><span>2 Surveillance Audits</span></div>
+            <div class="process-circle">Step 7<br><span>2 Surveillance Audits</span></div>
             <div class="process-arrow">›</div>
-            <div class="process-circle">STEP 8<br><span>Recertification Audit</span></div>
+            <div class="process-circle">Step 8<br><span>Recertification Audit</span></div>
         </div>
 
     </div>

@@ -292,7 +292,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <h3>Contact Information</h3>
                                 <p>If you have any questions, concerns, or requests regarding this Privacy Policy or your personal information, please contact us:</p>
                                 <ul>
-                                    <li><strong>ESWATINI STANDARDS AUTHORITY</strong></li>
+                                    <li><strong>Eswatini Standards Authority</strong></li>
                                     <li>Data Protection Officer</li>
                                     <li>P.O. Box 1399, Matsapha, Eswatini</li>
                                     <li>Tel: +268 2518 4610</li>

@@ -52,7 +52,6 @@
             margin: 5px;
             padding: 10px 30px;
             font-weight: 600;
-            text-transform: uppercase;
             transition: background-color 0.3s;
         }
         .btn-wp:hover {

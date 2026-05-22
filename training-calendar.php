@@ -517,7 +517,7 @@
                     <!-- Trainings list -->
                     <div class="trainings-col">
                         <div class="trainings-header">
-                            <span class="year-label">2026 SCHEDULE</span>
+                            <span class="year-label">2026 Schedule</span>
                             <button id="reset-filter" class="reset-filter" type="button">
                                 <i class="fas fa-times me-1"></i> Show all
                             </button>

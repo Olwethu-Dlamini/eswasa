@@ -51,7 +51,6 @@
             margin: 5px;
             padding: 10px 30px;
             font-weight: 600;
-            text-transform: uppercase;
             transition: background-color 0.3s;
         }
         .btn-purchase:hover {
@@ -229,7 +228,7 @@
                             <h4><i class="fas fa-shopping-cart me-2"></i>Online Webstore</h4>
                             <p>Purchase standards conveniently online through our webstore.</p>
                             <a href="https://estore.swasa.co.sz/" class="catalogue-link" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> WEBSTORE - https://estore.swasa.co.sz/
+                                <i class="fas fa-external-link-alt"></i> Webstore - https://estore.swasa.co.sz/
                             </a>
                         </div>
                     </div>
