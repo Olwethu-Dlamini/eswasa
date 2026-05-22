@@ -216,7 +216,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="row align-items-start g-3">
                         <!-- Image Column -->
                         <div class="col-lg-3 col-md-4 mb-3 mb-md-0">
-                            <img src="assets/img/Ingelo.png" alt="Ingelo MSME Product Certification Mark" class="img-fluid rounded img-close-to-text" style="object-fit: contain; min-width: 120px; max-width: 100%;">
+                            <img src="assets/img/quality/ingelo-certification-blue.png" alt="Ingelo MSME Product Certification Mark" class="img-fluid rounded img-close-to-text" style="object-fit: contain; min-width: 120px; max-width: 100%;">
                         </div>
 
                         <!-- Content Column -->

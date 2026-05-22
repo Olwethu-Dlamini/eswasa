@@ -721,53 +721,88 @@ if ($am_result) {
     .marks-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 24px;
+        gap: 28px;
     }
     .mark-item {
-        text-align: center;
-        padding: 28px 18px 24px;
         background: #fff;
         border: 1px solid rgba(43, 51, 136, 0.15);
         border-radius: 4px;
-        transition: border-color .2s ease, box-shadow .2s ease;
+        padding: 30px 24px 22px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
     }
     .mark-item:hover {
-        border-color: rgba(43, 51, 136, 0.45);
-        box-shadow: 0 4px 12px rgba(43, 51, 136, 0.08);
+        border-color: #2B3388;
+        box-shadow: 0 8px 22px rgba(43, 51, 136, 0.10);
+        transform: translateY(-3px);
     }
     .mark-image {
-        height: 150px;
+        height: 200px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 18px;
+        margin-bottom: 22px;
     }
     .mark-image img {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
     }
-    .mark-label {
+    .mark-title {
         color: #2B3388;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 0 0 14px;
+    }
+    .mark-desc {
+        color: rgba(43, 51, 136, 0.82);
+        font-size: 13.5px;
+        line-height: 1.65;
+        margin: 0 0 22px;
+        flex: 1;
+    }
+    .mark-actions {
+        display: flex;
+        justify-content: center;
+        gap: 22px;
+        margin-top: auto;
+        padding-top: 14px;
+        border-top: 1px solid rgba(43, 51, 136, 0.10);
+    }
+    .mark-actions a {
+        color: #2B3388;
+        text-decoration: none;
         font-size: 13px;
         font-weight: 600;
-        line-height: 1.45;
-        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: opacity .2s ease, color .2s ease;
     }
+    .mark-actions a:hover { text-decoration: underline; }
+    .mark-actions a i { font-size: 11px; transition: transform .2s ease; }
+    .mark-actions a:hover i { transform: translateX(2px); }
+
     @media (max-width: 991.98px) {
         .trust-eswasa-section { padding: 50px 0 60px; }
         .trust-eswasa-section .section-heading { margin-bottom: 40px; }
-        .marks-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
-        .mark-image { height: 130px; }
+        .marks-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+        .mark-image { height: 180px; }
     }
     @media (max-width: 575.98px) {
         .trust-eswasa-section { padding: 40px 0 48px; }
         .trust-eswasa-section .section-heading { margin-bottom: 32px; }
         .trust-eswasa-section .section-heading h2 { font-size: 1.4rem; padding-bottom: 14px; }
-        .marks-grid { gap: 12px; }
-        .mark-item { padding: 22px 12px 18px; }
-        .mark-image { height: 110px; margin-bottom: 14px; }
-        .mark-label { font-size: 12px; }
+        .marks-grid { grid-template-columns: 1fr; gap: 16px; }
+        .mark-item { padding: 24px 20px 18px; }
+        .mark-image { height: 170px; margin-bottom: 18px; }
+        .mark-title { font-size: 15px; }
+        .mark-desc { font-size: 13px; margin-bottom: 18px; }
+        .mark-actions { gap: 18px; }
+        .mark-actions a { font-size: 12.5px; }
     }
 </style>
 
@@ -779,27 +814,47 @@ if ($am_result) {
         <div class="marks-grid">
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/management.png" alt="Management Systems Certification Mark">
+                    <img src="assets/img/quality/management-mark-blue.png" alt="Management Systems Certification Mark">
                 </div>
-                <p class="mark-label">Management Systems Certification Mark</p>
+                <h3 class="mark-title">Management Systems Certification Mark</h3>
+                <p class="mark-desc">Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.</p>
+                <div class="mark-actions">
+                    <a href="managementsystems.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                </div>
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/product.png" alt="Product Certification Mark">
+                    <img src="assets/img/quality/product-certification-blue.png" alt="Product Certification Mark">
                 </div>
-                <p class="mark-label">Product Certification Mark</p>
+                <h3 class="mark-title">Product Certification Mark</h3>
+                <p class="mark-desc">A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing &mdash; giving buyers confidence in quality and safety.</p>
+                <div class="mark-actions">
+                    <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                </div>
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/compulsory.png" alt="Compulsory Standards Quality Mark">
+                    <img src="assets/img/quality/compulsory-standards-blue.png" alt="Compulsory Standards Quality Mark">
                 </div>
-                <p class="mark-label">Compulsory Standards Quality Mark</p>
+                <h3 class="mark-title">Compulsory Standards Quality Mark</h3>
+                <p class="mark-desc">A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.</p>
+                <div class="mark-actions">
+                    <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                </div>
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/Ingelo.png" alt="Ingelo Certification Scheme Mark">
+                    <img src="assets/img/quality/ingelo-certification-blue.png" alt="Ingelo MSME Product Certification Mark">
                 </div>
-                <p class="mark-label">Ingelo Certification Scheme Mark</p>
+                <h3 class="mark-title">Ingelo MSME Product Certification Mark</h3>
+                <p class="mark-desc">A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers &mdash; helping them prove product quality, access new markets and grow with credibility.</p>
+                <div class="mark-actions">
+                    <a href="ingelo.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                </div>
             </div>
         </div>
     </div>

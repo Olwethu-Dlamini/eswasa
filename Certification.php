@@ -339,22 +339,22 @@ include_once 'includes/breadcrumb_helper.php';
                 </div>
                 <div class="cert-images">
                     <div class="cert-image-item">
-                        <img src="assets/img/management.png" alt="Quality Certification Mark" class="img-fluid">
+                        <img src="assets/img/quality/management-mark-blue.png" alt="Quality Certification Mark" class="img-fluid">
                         <p>Management Systems Certification Mark</p>
                         <small>Provides for continuous systematic verification of effectiveness</small>
                     </div>
                     <div class="cert-image-item">
-                        <img src="assets/img/product.png" alt="Standards Compliance" class="img-fluid">
+                        <img src="assets/img/quality/product-certification-blue.png" alt="Standards Compliance" class="img-fluid">
                         <p>Product Certification Mark</p>
                         <small>Shows you meet national & international standards</small>
                     </div>
                     <div class="cert-image-item">
-                        <img src="assets/img/compulsory.png" alt="Rigorous Testing" class="img-fluid">
+                        <img src="assets/img/quality/compulsory-standards-blue.png" alt="Rigorous Testing" class="img-fluid">
                         <p>Compulsory Standards Quality Mark</p>
                         <small>Proven through comprehensive assessment</small>
                     </div>
                     <div class="cert-image-item">
-                        <img src="assets/img/Ingelo.png" alt="Approved Products" class="img-fluid">
+                        <img src="assets/img/quality/ingelo-certification-blue.png" alt="Approved Products" class="img-fluid">
                         <p>Ingelo MSME Product Certification Mark</p>
                         <small>Scheme for local producers</small>
                     </div>
@@ -384,7 +384,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Charge premium prices for certified quality</li>
                                 <li>Stand out from your competitors</li>
                             </ul>
-                            <img src="assets/img/product.png" alt="Product Mark" class="card-mark">
+                            <img src="assets/img/quality/product-certification-blue.png" alt="Product Mark" class="card-mark">
                             <a href="product.php" class="btn-cert">Explore Product Certification</a>
                         </div>
                     </div>
@@ -399,7 +399,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Improved employee productivity</li>
                                 <li>Better resource utilization</li>
                             </ul>
-                            <img src="assets/img/management.png" alt="Management Mark" class="card-mark">
+                            <img src="assets/img/quality/management-mark-blue.png" alt="Management Mark" class="card-mark">
                             <a href="managementsystems.php" class="btn-cert">Discover Management Systems</a>
                         </div>
                     </div>
