@@ -174,7 +174,7 @@
             <!-- Section Header -->
             <div class="main_title centered upper mb-5 text-center">
                 <h2 class="display-6 fw-bold">Request a Quote</h2>
-                <p class="text-muted mt-2 mb-0">Get a personalized quotation for our services</p>
+                <p class="text-muted mt-2 mb-0">Get a personalised quotation for our services</p>
                 <div class="section-divider"></div>
                 <p class="text-muted mt-4 mb-0">
                     Please fill out the form below with details about the services you require. We will provide you with a detailed quotation based on your specifications.

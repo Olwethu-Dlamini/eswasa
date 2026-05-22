@@ -274,7 +274,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="service-title">Certification</h3>
-                                <p class="service-description">Certification to Management Systems and products. Let us assist you in demonstrating your organization's ability to meet requirements and needs.</p>
+                                <p class="service-description">Certification to management systems and products. Let us assist you in demonstrating your organisation's ability to meet requirements and needs.</p>
                             </div>
                         </a>
                     </div>
@@ -294,7 +294,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="service-title">Product Testing</h3>
-                                <p class="service-description">Food and product testing in microbiology. Testing performed in accordance to international standards.</p>
+                                <p class="service-description">Food and product testing in microbiology. Testing performed in accordance with international standards.</p>
                             </div>
                         </a>
                     </div>
@@ -352,7 +352,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="service-title">Standards Sales</h3>
-                                <p class="service-description">Sale of National, Regional, and International Standards.</p>
+                                <p class="service-description">Sale of national, regional and international standards.</p>
                             </div>
                         </a>
                     </div>
@@ -370,7 +370,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="service-title">Training Academy</h3>
-                                <p class="service-description">We enable organizations and individuals to continuously improve, innovate, and transform.</p>
+                                <p class="service-description">We enable organisations and individuals to continuously improve, innovate and transform.</p>
                             </div>
                         </a>
                     </div>
@@ -381,13 +381,13 @@
             <!-- Information Centre Section -->
             <div class="info-section mt-5">
                 <h3>Information Centre / WTO Enquiry Point</h3>
-                <p>The ESWASA National Enquiry Point holds the collection of national, regional and international standards. We welcome Students, Researchers, Industry professionals and the general public to make use of our center. The enquiry point is a channel for mitigating problems businesses face in obtaining information on standards, technical regulations, and conformity assessment procedures for the access of their products in international markets thus eliminating Technical Barriers to Trade.</p>
+                <p>The ESWASA National Enquiry Point holds the collection of national, regional and international standards. We welcome students, researchers, industry professionals and the general public to make use of our centre. The enquiry point is a channel for mitigating problems businesses face in obtaining information on standards, technical regulations and conformity assessment procedures for the access of their products in international markets, thus eliminating technical barriers to trade.</p>
             </div>
 
             <!-- Information Centre Details Section -->
             <div class="info-section mt-4">
                 <h3>The National Enquiry Point</h3>
-                <p>The World Trade Organization (WTO) Agreement on Technical Barriers to Trade (The TBT Agreement) requires WTO members to establish a National Enquiry Point (NEP) as a way of mitigating problems business enterprises face in obtaining information on technical regulations, standards and conformity assessment procedures applicable to their products in international markets. The Eswatini Standards Authority (ESWASA) is the TBT National Enquiry Point for Eswatini.</p>
+                <p>The World Trade Organization (WTO) Agreement on Technical Barriers to Trade (the TBT Agreement) requires WTO members to establish a National Enquiry Point (NEP) as a way of mitigating problems business enterprises face in obtaining information on technical regulations, standards and conformity assessment procedures applicable to their products in international markets. The Eswatini Standards Authority (ESWASA) is the TBT National Enquiry Point for Eswatini.</p>
             </div>
 
         </div>

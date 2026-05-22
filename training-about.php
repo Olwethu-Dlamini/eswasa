@@ -459,7 +459,7 @@
             <div class="container">
                 <!-- Section Title -->
                 <div class="main_title centered upper mb-5 text-center">
-                    <h2 class="display-6 fw-bold">Our Training Programs</h2>
+                    <h2 class="display-6 fw-bold">Our Training Programmes</h2>
                     <p class="text-muted mt-2 mb-0">Empowering Excellence Through Knowledge</p>
                     <div class="section-divider"></div>
                 </div>
@@ -467,7 +467,7 @@
                 <!-- Training Introduction -->
                 <div class="row justify-content-center mb-4">
                     <div class="col-lg-10">
-                        <p class="text-muted text-center">We understand the unique needs of each business, which is why we offer tailor-made training solutions to industry, individuals, government agencies and other Institutions in Management Systems, allowing organisations to choose a convenient location or host the training at our training centre in Matsapha.</p>
+                        <p class="text-muted text-center">We understand the unique needs of each business, which is why we offer tailor-made training solutions to industry, individuals, government agencies and other institutions in Management Systems, allowing organisations to choose a convenient location or host the training at our training centre in Matsapha.</p>
                         <p class="text-muted text-center">At ESWASA Training Academy, we are proud to work with facilitators who are industry experts in various fields, Lead Auditors, and major contributors to the development of Eswatini National Standards (SZNS).</p>
                     </div>
                 </div>
@@ -602,7 +602,7 @@
                     <div class="modal-body">
                         <div class="course-details">
                             <h5>Course Overview</h5>
-                            <p>Our Quality Management System courses are designed to help organizations implement and maintain effective quality management systems based on international standards.</p>
+                            <p>Our Quality Management System courses are designed to help organisations implement and maintain effective quality management systems based on international standards.</p>
                             
                             <h5>Key Benefits</h5>
                             <ul>
@@ -621,7 +621,7 @@
                             </ul>
                             
                             <h5>Duration & Format</h5>
-                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customized training options are available for organizations.</p>
+                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -663,7 +663,7 @@
                             </ul>
                             
                             <h5>Duration & Format</h5>
-                            <p>Courses range from 1-5 days, available in both in-person and virtual formats. Customized training options are available for organizations.</p>
+                            <p>Courses range from 1-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -685,7 +685,7 @@
                     <div class="modal-body">
                         <div class="course-details">
                             <h5>Course Overview</h5>
-                            <p>Our Environmental Management courses help organizations implement sustainable practices and comply with environmental regulations.</p>
+                            <p>Our Environmental Management courses help organisations implement sustainable practices and comply with environmental regulations.</p>
                             
                             <h5>Key Benefits</h5>
                             <ul>
@@ -705,7 +705,7 @@
                             </ul>
                             
                             <h5>Duration & Format</h5>
-                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customized training options are available for organizations.</p>
+                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -746,7 +746,7 @@
                             </ul>
                             
                             <h5>Duration & Format</h5>
-                            <p>Courses range from 2-4 days, available in both in-person and virtual formats. Customized training options are available for agricultural organizations.</p>
+                            <p>Courses range from 2-4 days, available in both in-person and virtual formats. Customised training options are available for agricultural organisations.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -768,7 +768,7 @@
                     <div class="modal-body">
                         <div class="course-details">
                             <h5>Course Overview</h5>
-                            <p>Our Wellness Management courses promote holistic health approaches for individuals and organizations to improve overall well-being.</p>
+                            <p>Our Wellness Management courses promote holistic health approaches for individuals and organisations to improve overall well-being.</p>
                             
                             <h5>Key Benefits</h5>
                             <ul>
@@ -783,11 +783,11 @@
                                 <li>Workplace Wellness Foundation</li>
                                 <li>Stress Management Techniques</li>
                                 <li>Health Promotion Strategies</li>
-                                <li>Wellness Program Implementation</li>
+                                <li>Wellness Programme Implementation</li>
                             </ul>
                             
                             <h5>Duration & Format</h5>
-                            <p>Courses range from 1-3 days, available in both in-person and virtual formats. Customized training options are available for organizations.</p>
+                            <p>Courses range from 1-3 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -828,7 +828,7 @@
                             </ul>
                             
                             <h5>Duration & Format</h5>
-                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customized training options are available for food industry organizations.</p>
+                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for food industry organisations.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -869,7 +869,7 @@
                             </ul>
                             
                             <h5>Duration & Format</h5>
-                            <p>Courses range from 3-5 days, available in both in-person and virtual formats. Customized training options are available for organizations.</p>
+                            <p>Courses range from 3-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
                         </div>
                     </div>
                     <div class="modal-footer">

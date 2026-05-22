@@ -283,7 +283,7 @@ include_once 'includes/breadcrumb_helper.php';
                         <!-- Contact Information Box -->
                         <div class="contact-info-box">
                             <h4>Still Have Questions?</h4>
-                            <p>If you couldn't find the answer to your question, please don't hesitate to contact us directly. Our team is ready to assist you with any inquiries regarding our services, training programs, or certification processes.</p>
+                            <p>If you couldn't find the answer to your question, please don't hesitate to contact us directly. Our team is ready to assist you with any inquiries regarding our services, training programmes, or certification processes.</p>
                             <p><strong>Contact Us:</strong><br>
                             Tel: +268 2518 4610 | Email: info@eswasa.co.sz</p>
                         </div>

@@ -210,7 +210,7 @@
             <div class="container">
                 <div class="intro-box">
                     <h3>Standard Sales</h3>
-                    <p>SZNS Standard Sales through the Authority's office assistance or conveniently Online.</p>
+                    <p>SZNS Standard Sales through the Authority's office assistance or conveniently online.</p>
                     <p>ESWASA sells Eswatini National Standards (SZNS) as well as related documents and specifications. Our services extend to sourcing other international and/or foreign standards for you, such as SANS, ARSO, ISO and IEC standards.</p>
                 </div>
 

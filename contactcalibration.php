@@ -209,7 +209,7 @@
                     <div class="col-lg-5">
                         <div class="contact-info-wrap">
                             <h2 class="title">Get In Touch With Us</h2>
-                            <p>Contact us anytime for support, we are always just 1 click away from you.</p>
+                            <p>Contact us anytime for support. We are always just 1 click away from you.</p>
                             <ul class="list-wrap">
                                 <li>
                                     <div class="icon">

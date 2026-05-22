@@ -171,7 +171,7 @@ include_once 'includes/breadcrumb_helper.php';
                             
                             <div class="highlight-box">
                                 <p><strong>Last Updated:</strong> January 2025</p>
-                                <p>These Terms and Conditions govern your use of ESWASA services, training programs, and website. By accessing our services, you agree to be bound by these terms.</p>
+                                <p>These Terms and Conditions govern your use of ESWASA services, training programmes, and website. By accessing our services, you agree to be bound by these terms.</p>
                             </div>
 
                             <h3>1. Training Applications and Registration</h3>
@@ -207,7 +207,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <p>All training materials, documents, and content provided during ESWASA courses are the intellectual property of ESWASA and may not be reproduced or distributed without prior written consent.</p>
 
                             <h3>8. In-House Training</h3>
-                            <p>Organizations may request in-house training for groups of 5-20 participants. The organization must provide suitable training facilities with audio-visual equipment and refreshments.</p>
+                            <p>Organisations may request in-house training for groups of 5-20 participants. The organisation must provide suitable training facilities with audio-visual equipment and refreshments.</p>
 
                             <h3>9. Governing Law</h3>
                             <p>These terms and conditions are governed by and construed in accordance with the laws of the Kingdom of Eswatini.</p>

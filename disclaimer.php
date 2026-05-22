@@ -173,25 +173,25 @@ include_once 'includes/breadcrumb_helper.php';
                             </div>
 
                             <h3>1. General Information</h3>
-                            <p>The information contained on this website is for general information purposes only. The information is provided by the Eswatini Standards Authority (ESWASA) and while we endeavor to keep the information up to date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
+                            <p>The information contained on this website is for general information purposes only. The information is provided by the Eswatini Standards Authority (ESWASA) and while we endeavour to keep the information up to date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
 
                             <h3>2. Limitation of Liability</h3>
                             <p>In no event will ESWASA be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of, or in connection with, the use of this website.</p>
 
                             <h3>3. External Links</h3>
-                            <p>Through this website you are able to link to other websites which are not under the control of ESWASA. We have no control over the nature, content and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.</p>
+                            <p>Through this website you are able to link to other websites which are not under the control of ESWASA. We have no control over the nature, content and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorsement of the views expressed within them.</p>
 
                             <h3>4. Website Availability</h3>
                             <p>Every effort is made to keep the website up and running smoothly. However, ESWASA takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.</p>
 
                             <h3>5. Training Information</h3>
-                            <p>While we strive to provide accurate and current information about our training programs, course details, schedules, and fees are subject to change without notice. Please contact our training department for the most up-to-date information.</p>
+                            <p>While we strive to provide accurate and current information about our training programmes, course details, schedules, and fees are subject to change without notice. Please contact our training department for the most up-to-date information.</p>
 
                             <h3>6. Standards and Certification</h3>
                             <p>Information regarding standards, certification processes, and requirements is provided for general guidance. For official standards documents and certification procedures, please consult the relevant official publications or contact ESWASA directly.</p>
 
                             <h3>7. Copyright and Intellectual Property</h3>
-                            <p>All content on this website, including text, graphics, logos, and images, is the property of ESWASA unless otherwise stated. Unauthorized use of any materials may violate copyright, trademark, and other laws.</p>
+                            <p>All content on this website, including text, graphics, logos, and images, is the property of ESWASA unless otherwise stated. Unauthorised use of any materials may violate copyright, trademark, and other laws.</p>
 
                             <div class="contact-box">
                                 <h3>Contact Information</h3>

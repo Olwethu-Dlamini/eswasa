@@ -194,7 +194,7 @@
             <div class="container">
                 <div class="intro-box">
                     <h3>ESWASA Standards Development Work Programmes</h3>
-                    <p>The **ESWASA Work Programme** details all current and scheduled standards development and revision projects. This program is derived from national needs assessments and stakeholder requests, ensuring that the standards developed align with Eswatini's economic and regulatory priorities.</p>
+                    <p>The **ESWASA Work Programme** details all current and scheduled standards development and revision projects. This programme is derived from national needs assessments and stakeholder requests, ensuring that the standards developed align with Eswatini's economic and regulatory priorities.</p>
                     <p>Interested stakeholders are invited to review the programme and provide feedback. For more information on specific projects, please contact us directly.</p>
                 </div>
 

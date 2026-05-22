@@ -346,7 +346,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="cert-image-item">
                         <img src="assets/img/quality/product-certification-blue.png" alt="Standards Compliance" class="img-fluid">
                         <p>Product Certification Mark</p>
-                        <small>Shows you meet national & international standards</small>
+                        <small>Shows you meet national and international standards</small>
                     </div>
                     <div class="cert-image-item">
                         <img src="assets/img/quality/compulsory-standards-blue.png" alt="Rigorous Testing" class="img-fluid">
@@ -397,7 +397,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Reduced product defects and returns</li>
                                 <li>Faster response to customer needs</li>
                                 <li>Improved employee productivity</li>
-                                <li>Better resource utilization</li>
+                                <li>Better resource utilisation</li>
                             </ul>
                             <img src="assets/img/quality/management-mark-blue.png" alt="Management Mark" class="card-mark">
                             <a href="managementsystems.php" class="btn-cert">Discover Management Systems</a>

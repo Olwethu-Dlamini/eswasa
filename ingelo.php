@@ -222,7 +222,7 @@ include_once 'includes/breadcrumb_helper.php';
                         <!-- Content Column -->
                         <div class="col-lg-9 col-md-8">
                             <h2>Eswatini Standards Authority (ESWASA) Invites MSMEs to Participate</h2>
-                            <p>The Eswatini Standards Authority (ESWASA) invites Micro, Small & Medium Enterprises (MSMEs) to apply for participation in the <strong>Ingelo Certification Scheme</strong> - a program developed to support local businesses in achieving product and system certification.</p>
+                            <p>The Eswatini Standards Authority (ESWASA) invites Micro, Small and Medium Enterprises (MSMEs) to apply for participation in the <strong>Ingelo Certification Scheme</strong> &mdash; a programme developed to support local businesses in achieving product and system certification.</p>
                             <p>This initiative is designed to empower Emaswati entrepreneurs by providing them with the tools and recognition needed to compete effectively in both local and international markets.</p>
                         </div>
                     </div>
@@ -244,7 +244,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="benefits-grid">
                         <div class="benefit-card">
                             <h4>Improved Product Quality & Safety</h4>
-                            <p>Enhance your product quality and safety through standardized processes and compliance with national and international standards.</p>
+                            <p>Enhance your product quality and safety through standardised processes and compliance with national and international standards.</p>
                         </div>
                         <div class="benefit-card">
                             <h4>Market Access & Growth</h4>
@@ -252,7 +252,7 @@ include_once 'includes/breadcrumb_helper.php';
                         </div>
                         <div class="benefit-card">
                             <h4>Recognition Through ESWASA Approved Mark</h4>
-                            <p>Display the trusted ESWASA Approved mark on your products, signaling compliance and quality to consumers and business partners.</p>
+                            <p>Display the trusted ESWASA Approved mark on your products, signalling compliance and quality to consumers and business partners.</p>
                         </div>
                         <div class="benefit-card">
                             <h4>Technical Support</h4>
@@ -260,11 +260,11 @@ include_once 'includes/breadcrumb_helper.php';
                         </div>
                         <div class="benefit-card">
                             <h4>Customer Trust & Brand Value</h4>
-                            <p>Certifications provide independent validation, signaling reliability and safety to customers. They strengthen brand reputation and can differentiate SMEs from uncertified competitors.</p>
+                            <p>Certifications provide independent validation, signalling reliability and safety to customers. They strengthen brand reputation and can differentiate SMEs from uncertified competitors.</p>
                         </div>
                         <div class="benefit-card">
                             <h4>Risk Management & Compliance</h4>
-                            <p>Certifications help SMEs minimize legal and regulatory risks. They serve as documented proof of compliance in case of disputes, audits, or liability claims.</p>
+                            <p>Certifications help SMEs minimise legal and regulatory risks. They serve as documented proof of compliance in case of disputes, audits or liability claims.</p>
                         </div>
                         <div class="benefit-card">
                             <h4>Financing & Investment Appeal</h4>
@@ -272,7 +272,7 @@ include_once 'includes/breadcrumb_helper.php';
                         </div>
                         <div class="benefit-card">
                             <h4>Building Long-Term Competitive Advantage</h4>
-                            <p>Unlike machinery or stock, certifications don't depreciate overnight-they compound business credibility over time. When integrated into IP and brand strategy, certifications become part of the SME's unique intangible asset portfolio.</p>
+                            <p>Unlike machinery or stock, certifications don't depreciate overnight &mdash; they compound business credibility over time. When integrated into IP and brand strategy, certifications become part of the SME's unique intangible asset portfolio.</p>
                         </div>
                     </div>
                 </div>
@@ -281,9 +281,9 @@ include_once 'includes/breadcrumb_helper.php';
                 <div class="highlighted-section">
                     <h3>Who Can Apply?</h3>
                     <ul>
-                        <li><strong>Emaswati (Swazi citizens)</strong> - Local entrepreneurs and business owners</li>
-                        <li><strong>Local MSMEs</strong> involved in the production of any products or offering services</li>
-                        <li><strong>Producers willing to scale up</strong> - Those who are willing to increase production to meet export quota requirements by local and regional markets, through compliance with certification requirements</li>
+                        <li><strong>Emaswati (Swazi citizens)</strong> &mdash; local entrepreneurs and business owners.</li>
+                        <li><strong>Local MSMEs</strong> involved in the production of any products or offering services.</li>
+                        <li><strong>Producers willing to scale up</strong> &mdash; those who are willing to increase production to meet export quota requirements by local and regional markets, through compliance with certification requirements.</li>
                     </ul>
                 </div>
 
@@ -291,15 +291,15 @@ include_once 'includes/breadcrumb_helper.php';
                 <div class="highlighted-section">
                     <h3>Available Standards</h3>
                     <ul class="standards-list">
-                        <li>SZNS 025: Poultry processing - Hygiene requirements</li>
-                        <li>SZNS 058: Sweet potato - Grading requirements</li>
-                        <li>SZNS 049: Maize grains - Specification</li>
-                        <li>SZNS BOS 43: Onion - Grading requirements</li>
-                        <li>SZNS 037: Organic fertilizer - Specification</li>
-                        <li>SZNS 060: Banana - Grading Requirements</li>
-                        <li>SZNS KS 052: Fresh Courgettes/Baby marrow - Specification and grading</li>
-                        <li>SZNS 031: Cattle feeds - Specification</li>
-                        <li>SZNS 035: Peanut butter - Specification</li>
+                        <li>SZNS 025: Poultry processing &mdash; Hygiene requirements</li>
+                        <li>SZNS 058: Sweet potato &mdash; Grading requirements</li>
+                        <li>SZNS 049: Maize grains &mdash; Specification</li>
+                        <li>SZNS BOS 43: Onion &mdash; Grading requirements</li>
+                        <li>SZNS 037: Organic fertiliser &mdash; Specification</li>
+                        <li>SZNS 060: Banana &mdash; Grading requirements</li>
+                        <li>SZNS KS 052: Fresh courgettes/baby marrow &mdash; Specification and grading</li>
+                        <li>SZNS 031: Cattle feeds &mdash; Specification</li>
+                        <li>SZNS 035: Peanut butter &mdash; Specification</li>
                         <li>SZNS SANS 1199: Production of Mageu</li>
                         <li>SZNS SANS 1679: Pasteurised Milk</li>
                         <li>SZNS CODEX STAN 296: Jam</li>
@@ -312,8 +312,8 @@ include_once 'includes/breadcrumb_helper.php';
                     <h3>How to Apply</h3>
                     <p>To begin the Ingelo Certification process, please:</p>
                     <ol>
-                        <li>Download and complete the official application form</li>
-                        <li>Submit via email to <strong>certification@swasa.co.sz</strong> or in person at ESWASA offices, Matsapha</li>
+                        <li>Download and complete the official application form.</li>
+                        <li>Submit via email to <strong>certification@swasa.co.sz</strong> or in person at ESWASA offices, Matsapha.</li>
                     </ol>
                     <div class="mt-3">
                         <a href="admin/uploads/ingelo_application_form.pdf" class="btn-cta" target="_blank">

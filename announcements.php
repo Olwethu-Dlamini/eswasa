@@ -371,7 +371,7 @@
                 <div class="empty">
                     <i class="fas fa-inbox"></i>
                     <h3>No Announcements Yet</h3>
-                    <p>Check back soon for updates</p>
+                    <p>Check back soon for updates.</p>
                 </div>
                 <?php endif; ?>
                 

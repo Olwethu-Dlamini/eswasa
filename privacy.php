@@ -185,7 +185,7 @@ include_once 'includes/breadcrumb_helper.php';
                             
                             <div class="highlight-box">
                                 <p><strong>Last Updated:</strong> January 2025</p>
-                                <p>At Eswatini Standards Authority (ESWASA), we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services, website, and training programs.</p>
+                                <p>At Eswatini Standards Authority (ESWASA), we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services, website, and training programmes.</p>
                             </div>
 
                             <h3>1. Information We Collect</h3>
@@ -196,7 +196,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <ul>
                                     <li>Full name, identification number, and contact details</li>
                                     <li>Email address, phone number, and physical address</li>
-                                    <li>Organization name and position</li>
+                                    <li>Organisation name and position</li>
                                     <li>Payment information for training courses</li>
                                     <li>Educational and professional background</li>
                                 </ul>
@@ -224,7 +224,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <h3>3. Legal Basis for Processing</h3>
                             <p>We process your personal information based on:</p>
                             <ul>
-                                <li><strong>Contractual Necessity:</strong> To fulfill our training and certification services</li>
+                                <li><strong>Contractual Necessity:</strong> To fulfil our training and certification services</li>
                                 <li><strong>Legal Obligations:</strong> To comply with Eswatini laws and regulations</li>
                                 <li><strong>Legitimate Interests:</strong> To improve our services and operations</li>
                                 <li><strong>Consent:</strong> Where required by law, we obtain your explicit consent</li>
@@ -243,7 +243,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <h3>5. Data Retention</h3>
                             <p>We retain your personal information for as long as necessary to:</p>
                             <ul>
-                                <li>Fulfill the purposes for which it was collected</li>
+                                <li>Fulfil the purposes for which it was collected</li>
                                 <li>Comply with legal and regulatory requirements</li>
                                 <li>Maintain accurate certification records</li>
                                 <li>Resolve disputes and enforce our agreements</li>
@@ -251,7 +251,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <p>Training and certification records are typically retained for a minimum of 7 years.</p>
 
                             <h3>6. Data Security</h3>
-                            <p>We implement appropriate technical and organizational measures to protect your personal information, including:</p>
+                            <p>We implement appropriate technical and organisational measures to protect your personal information, including:</p>
                             <ul>
                                 <li>Secure servers and encrypted data storage</li>
                                 <li>Access controls and authentication procedures</li>
@@ -274,7 +274,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <p>Our website uses cookies to:</p>
                             <ul>
                                 <li>Enhance user experience and website functionality</li>
-                                <li>Analyze website traffic and usage patterns</li>
+                                <li>Analyse website traffic and usage patterns</li>
                                 <li>Remember your preferences and settings</li>
                             </ul>
                             <p>You can control cookie settings through your browser preferences.</p>

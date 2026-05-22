@@ -572,7 +572,7 @@
                                         <input type="tel" class="form-control" id="phone">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="company" class="form-label">Company/Organization</label>
+                                        <label for="company" class="form-label">Company/Organisation</label>
                                         <input type="text" class="form-control" id="company">
                                     </div>
                                     <div class="mb-3">
