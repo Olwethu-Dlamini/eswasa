@@ -258,7 +258,7 @@
                 <div class="main_title centered upper mb-5 text-center">
                     <h2 class="display-6 fw-bold">Our Services</h2>
                     <div class="section-divider"></div>
-                    <p class="text-muted mt-3 mb-0">Empowering Excellence Through Standards</p>
+                    <p class="mt-3 mb-0" style="color: #2B3388;">Empowering Excellence Through Standards</p>
                 </div>
 
                 <!-- Services Grid – FULL CARD CLICKABLE -->
@@ -400,7 +400,7 @@
                 <div class="text-center mb-5">
                     <h2 class="display-6 fw-bold">Our Affiliations</h2>
                     <div class="section-divider"></div>
-                    <p class="text-muted mt-3 mb-0">Partnering for Excellence</p>
+                    <p class="mt-3 mb-0" style="color: #2B3388;">Partnering for Excellence</p>
                 </div>
 
                 <!-- Horizontal Slider -->
