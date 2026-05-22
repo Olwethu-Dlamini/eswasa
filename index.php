@@ -866,6 +866,202 @@ if ($am_result) {
 </section>
 <!-- End ESWASA Section -->
 
+<!-- Our Affiliations -->
+<style>
+    .affiliations-area { background-color: rgba(43, 51, 136, 0.04); padding: 56px 0 64px; }
+    .affiliations-area .section-heading { text-align: center; margin-bottom: 32px; }
+    .affiliations-area .section-heading h2 {
+        color: #2B3388;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        line-height: 1.2;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .affiliations-slider {
+        overflow: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        position: relative;
+    }
+    .affiliations-slider::-webkit-scrollbar { display: none; }
+    .affiliations-slider .slider-track {
+        animation: affiliationsScroll 36s linear infinite;
+        min-width: 100%;
+    }
+    .affiliations-slider:hover .slider-track {
+        animation-play-state: paused;
+        -webkit-animation-play-state: paused;
+    }
+    .affiliations-slider .slider-item {
+        flex: 0 0 auto;
+        width: 220px;
+        text-align: center;
+    }
+    .affiliations-slider .slider-item a { display: block; text-decoration: none; }
+    .affiliations-slider .affiliation-logo {
+        width: 180px;
+        height: 130px;
+        object-fit: contain;
+        background: #fff;
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(43, 51, 136, 0.08);
+        border: 1px solid rgba(43, 51, 136, 0.10);
+        display: block;
+        margin: 0 auto;
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .affiliations-slider .slider-item:hover .affiliation-logo {
+        transform: scale(1.06);
+        box-shadow: 0 8px 20px rgba(43, 51, 136, 0.16);
+        border-color: rgba(43, 51, 136, 0.30);
+    }
+    @keyframes affiliationsScroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 767.98px) {
+        .affiliations-area { padding: 44px 0 52px; }
+        .affiliations-area .section-heading { margin-bottom: 26px; }
+        .affiliations-area .section-heading h2 { font-size: 1rem; }
+        .affiliations-slider .slider-item { width: 180px; }
+        .affiliations-slider .affiliation-logo { width: 150px; height: 110px; padding: 16px; }
+    }
+    @media (max-width: 575.98px) {
+        .affiliations-slider .slider-item { width: 150px; }
+        .affiliations-slider .affiliation-logo { width: 120px; height: 90px; padding: 12px; }
+    }
+</style>
+
+<section class="affiliations-area">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Our Affiliations</h2>
+        </div>
+
+        <div class="affiliations-slider">
+            <div class="slider-track d-flex flex-nowrap">
+                <div class="slider-item px-3">
+                    <a href="https://www.iso.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/iso.png" alt="ISO" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.iec.ch/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/iec.png" alt="IEC" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/itu.png" alt="ITU" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://iaf.nu/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/iaf.webp" alt="IAF" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://ilac.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/ILAC.jpg" alt="ILAC" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sadcas.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/SADCAS.png" alt="SADCAS" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sadc.int/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/sadc.webp" alt="SADC" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sadcstan.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/sadcstan.jpg" alt="SADCSTAN" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.arso-org.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/arso.png" alt="ARSO" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.astm.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/astm.png" alt="ASTM" class="affiliation-logo">
+                    </a>
+                </div>
+                <!-- Duplicate set for seamless infinite scroll -->
+                <div class="slider-item px-3">
+                    <a href="https://www.iso.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/iso.png" alt="ISO" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.iec.ch/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/iec.png" alt="IEC" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/itu.png" alt="ITU" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://iaf.nu/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/iaf.webp" alt="IAF" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://ilac.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/ILAC.jpg" alt="ILAC" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sadcas.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/SADCAS.png" alt="SADCAS" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sadc.int/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/sadc.webp" alt="SADC" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sadcstan.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/sadcstan.jpg" alt="SADCSTAN" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.arso-org.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/arso.png" alt="ARSO" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
+                    <a href="https://www.astm.org/" target="_blank" rel="noopener noreferrer">
+                        <img src="admin/uploads/astm.png" alt="ASTM" class="affiliation-logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Affiliations -->
+
     </main>
     <!-- main-area-end -->
  <!-- Sticky Facebook Feed Toggle -->
