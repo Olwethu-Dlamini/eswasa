@@ -9906,4 +9906,85 @@ blockquote p {
   }
 }
 
+/* ============================================================
+   BRAND TEXT POLICY — site directive (added 2026-05-22)
+   - All body text in brand blue (#2B3388).
+   - No bold text in body content — only headings (h1-h6) and links (a)
+     may render at >400. <strong>, <b>, .fw-bold, .fw-semibold, and
+     ad-hoc bold labels are reset to 400.
+   - Bold IS allowed inside links (the link itself can be bold and the
+     bold tag inside inherits link weight).
+   This block is intentionally placed at end-of-file with !important
+   flags because it enforces a site-wide design rule and must beat
+   earlier per-page declarations.
+   ============================================================ */
+
+/* Set brand blue as the canonical text color */
+:root {
+  --tg-body-color: #2B3388;
+  --tg-heading-color: #2B3388;
+}
+body {
+  color: #2B3388;
+}
+/* Override Bootstrap's gray utilities with a softer brand-blue */
+.text-muted,
+.form-text,
+.nav-link:not(.active):not(:hover),
+.text-secondary {
+  color: rgba(43, 51, 136, 0.70) !important;
+}
+/* Bootstrap accordion button text + table cell text + calendar day numbers
+   default to gray; force brand blue. */
+.accordion-button,
+.accordion-button:not(.collapsed),
+.table,
+.table > :not(caption) > * > *,
+#calendar-body .day,
+.events__item-content .location {
+  color: #2B3388 !important;
+}
+
+/* No bold in body content. Hammer with !important to beat per-page rules. */
+body p,
+body li,
+body span,
+body div,
+body td,
+body th,
+body dd,
+body dt,
+body label,
+body button,
+body strong,
+body b,
+body em,
+body small,
+body i,
+body .fw-bold,
+body .fw-semibold {
+  font-weight: 400 !important;
+}
+
+/* Bold IS allowed on hyperlinks and anything inside them */
+body a,
+body a strong,
+body a b,
+body a span,
+body a div,
+body a * {
+  font-weight: 600 !important;
+}
+
+/* Headings keep their bold via their own rules — make extra sure
+   nothing above accidentally clobbered them. */
+body h1, body h2, body h3, body h4, body h5, body h6 {
+  font-weight: 700;
+}
+body h1 strong, body h2 strong, body h3 strong,
+body h4 strong, body h5 strong, body h6 strong,
+body h1 b, body h2 b, body h3 b, body h4 b, body h5 b, body h6 b {
+  font-weight: inherit !important;
+}
+
 /*# sourceMappingURL=main.css.map */
