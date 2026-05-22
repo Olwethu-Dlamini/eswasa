@@ -378,15 +378,16 @@ if ($am_result) {
         pointer-events: none;
         overflow: hidden;
     }
-    .discover-bg-elements > svg { color: #2B3388; }
 
+    /* Decorative infographic palette — muted complementary hues at low opacity */
     .discover-bg-elements .bg-network {
         position: absolute;
         top: -20px;
         right: -20px;
         width: 350px;
         height: 350px;
-        opacity: 0.20;
+        color: #0E7C7B;          /* teal */
+        opacity: 0.22;
     }
     .discover-bg-elements .bg-hexagons {
         position: absolute;
@@ -394,6 +395,7 @@ if ($am_result) {
         left: -20px;
         width: 300px;
         height: 300px;
+        color: #2B3388;          /* brand blue */
         opacity: 0.20;
     }
     .discover-bg-elements .bg-flow {
@@ -403,7 +405,8 @@ if ($am_result) {
         transform: translateY(-50%);
         width: 160px;
         height: 300px;
-        opacity: 0.18;
+        color: #C28B1F;          /* amber */
+        opacity: 0.22;
     }
     .discover-bg-elements .bg-molecule {
         position: absolute;
@@ -412,7 +415,8 @@ if ($am_result) {
         transform: translate(-50%, -50%);
         width: 400px;
         height: 400px;
-        opacity: 0.12;
+        color: #5B6478;          /* slate (keeps centre quiet) */
+        opacity: 0.14;
     }
     .discover-bg-elements .bg-barcode {
         position: absolute;
@@ -420,7 +424,8 @@ if ($am_result) {
         right: 40px;
         width: 120px;
         height: 80px;
-        opacity: 0.25;
+        color: #1F7A4D;          /* forest green */
+        opacity: 0.30;
     }
 
     /* Card icon sizing (replaces missing PNGs) */
@@ -630,7 +635,7 @@ if ($am_result) {
                             </svg>
                         </a>
                         <h4 class="title"><a href="Certification.php"><b>Certification</b></a></h4>
-                        <p class="card-desc">Independent certification of management systems and products. We help your organisation demonstrate its ability to consistently meet customer, regulatory and statutory requirements.</p>
+                        <p class="card-desc">Independent certification of management systems and products, audited to recognised international standards.</p>
                         <a href="Certification.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -649,7 +654,7 @@ if ($am_result) {
                             </svg>
                         </a>
                         <h4 class="title"><a href="product.php"><b>Product Testing</b></a></h4>
-                        <p class="card-desc">Food, microbiology and product testing carried out to international standards — giving manufacturers, regulators and consumers reliable evidence of quality and safety.</p>
+                        <p class="card-desc">Food, microbiology and product testing carried out to recognised international standards.</p>
                         <a href="product.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -667,7 +672,7 @@ if ($am_result) {
                             </svg>
                         </a>
                         <h4 class="title"><a href="Standards.php"><b>Standards Development</b></a></h4>
-                        <p class="card-desc">Bringing industry, government and consumer expertise together to develop national standards that protect health, enable trade and lift the quality of goods and services in Eswatini.</p>
+                        <p class="card-desc">National standards developed with industry, government and consumer input to protect health and enable trade.</p>
                         <a href="Standards.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -684,7 +689,7 @@ if ($am_result) {
                             </svg>
                         </a>
                         <h4 class="title"><a href="training-about.php"><b>Training &amp; Development</b></a></h4>
-                        <p class="card-desc">Specialised training in quality management, internal auditing and standards application — equipping your team with skills aligned to international best practice (e.g. SZNS ISO 19011:2018).</p>
+                        <p class="card-desc">Quality management, internal auditing and standards training aligned to international best practice.</p>
                         <a href="training-about.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -814,7 +819,7 @@ if ($am_result) {
         <div class="marks-grid">
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/management-mark-blue.png" alt="Management Systems Certification Mark">
+                    <img src="assets/img/quality/management-mark-black.png" alt="Management Systems Certification Mark">
                 </div>
                 <h3 class="mark-title">Management Systems Certification Mark</h3>
                 <p class="mark-desc">Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.</p>
@@ -825,7 +830,7 @@ if ($am_result) {
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/product-certification-blue.png" alt="Product Certification Mark">
+                    <img src="assets/img/quality/product-certification-black.png" alt="Product Certification Mark">
                 </div>
                 <h3 class="mark-title">Product Certification Mark</h3>
                 <p class="mark-desc">A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing &mdash; giving buyers confidence in quality and safety.</p>
@@ -836,7 +841,7 @@ if ($am_result) {
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/compulsory-standards-blue.png" alt="Compulsory Standards Quality Mark">
+                    <img src="assets/img/quality/compulsory-standards-black.png" alt="Compulsory Standards Quality Mark">
                 </div>
                 <h3 class="mark-title">Compulsory Standards Quality Mark</h3>
                 <p class="mark-desc">A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.</p>
@@ -847,7 +852,7 @@ if ($am_result) {
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/ingelo-certification-blue.png" alt="Ingelo MSME Product Certification Mark">
+                    <img src="assets/img/quality/ingelo-certification-black.png" alt="Ingelo MSME Product Certification Mark">
                 </div>
                 <h3 class="mark-title">Ingelo MSME Product Certification Mark</h3>
                 <p class="mark-desc">A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers &mdash; helping them prove product quality, access new markets and grow with credibility.</p>
