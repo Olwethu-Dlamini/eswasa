@@ -170,7 +170,27 @@ h1 {
 }
 
 h2 {
-  font-size: 35px;
+  font-size: 32px;
+}
+
+/* === Locked title / subtitle sizing (2026-05-22) ===
+   Section titles (Bootstrap .display-6 and h2-class titles) standardized to 32px.
+   Subtitles (descriptive line under a section title) standardized to 16px.
+   Page-level inline <style> overrides still win by specificity. */
+body .display-6,
+body .section-heading h2,
+body .main_title h2,
+body .section__title h2,
+body .section__title .title {
+  font-size: 32px;
+  line-height: 1.2;
+}
+body .section-subtitle,
+body .section-heading p,
+body .main_title p,
+body .section__title .sub-title,
+body .section__title .desc {
+  font-size: 16px;
 }
 
 h3 {
