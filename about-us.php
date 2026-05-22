@@ -78,7 +78,7 @@ function render_paragraphs($text) {
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 12px) ========== */
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
         body {
             font-family: Arial, sans-serif;
             font-size: 16px;
@@ -88,7 +88,7 @@ function render_paragraphs($text) {
             font-family: Arial, sans-serif;
             color: #2B3388;
         }
-        body p, body li, body span, body a, body div {
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
             font-family: Arial, sans-serif;
         }
         .text-muted {

@@ -67,7 +67,7 @@ if ($am_result) {
 
     <!-- Mobile Responsive Styles -->
     <style>
-    /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 12px) ========== */
+    /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 16px) ========== */
     body {
         font-family: Arial, sans-serif;
         font-size: 16px;
@@ -76,6 +76,9 @@ if ($am_result) {
     body h1, body h2, body h3, body h4, body h5, body h6 {
         font-family: Arial, sans-serif;
         color: #2B3388;
+    }
+    body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
+        font-family: Arial, sans-serif;
     }
     /* Slider captions stay white over the dark image overlay */
     .slider-area, .slider-area .tp-caption,
