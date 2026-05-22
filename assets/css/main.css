@@ -9968,14 +9968,27 @@ body .fw-semibold {
   font-weight: 400 !important;
 }
 
-/* Bold IS allowed on hyperlinks and anything inside them */
+/* Bold IS allowed on hyperlinks themselves and on inline emphasis tags
+   nested in a link. We deliberately do NOT cascade to block-level
+   descendants — when an <a> wraps a whole card (common pattern for
+   clickable cards) the paragraph/li/h* inside should keep their own
+   weight, not become bold just because the card is clickable. */
 body a,
 body a strong,
 body a b,
-body a span,
-body a div,
-body a * {
+body a em,
+body a span:not([class*="fa-"]) {
   font-weight: 600 !important;
+}
+/* Explicit revert: block-level content inside a clickable card-link
+   should follow normal body-text rules. */
+body a p,
+body a li,
+body a td,
+body a th,
+body a dd,
+body a dt {
+  font-weight: 400 !important;
 }
 
 /* Headings keep their bold. !important ensures .fw-bold / .fw-semibold

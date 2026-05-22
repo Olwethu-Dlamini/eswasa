@@ -104,9 +104,10 @@
         }
         .service-description {
             color: rgba(43, 51, 136, 0.78);
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.55;
             margin: 0;
+            font-weight: 400;
         }
 
         /* Info sections — Information Centre / WTO Enquiry Point */
@@ -197,7 +198,7 @@
         @media (max-width: 767.98px) {
             .service-card { padding: 1.5rem !important; }
             .service-title { font-size: 1.05rem; }
-            .service-description { font-size: 13px; }
+            .service-description { font-size: 14px; }
             .info-section { padding: 24px 20px; }
             .info-section h3 { font-size: 16px; }
             .info-section p { font-size: 14px; }
