@@ -103,7 +103,7 @@
             line-height: 1.3;
         }
         .service-description {
-            color: rgba(43, 51, 136, 0.78);
+            color: #2B3388;
             font-size: 15px;
             line-height: 1.55;
             margin: 0;
