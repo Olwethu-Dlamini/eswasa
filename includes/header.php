@@ -121,7 +121,15 @@
                                                 <li><a href="publications.php">Publications</a></li>
                                                 <li><a href="announcements.php">Announcements</a></li>
                                                 <li><a href="faq.php">FAQ</a></li>
-                                                
+
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children"><a href="customer-care.php">Customer Care</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="customer-care.php">Customer Care</a></li>
+                                                <li><a href="service-charter.php">Service Charter</a></li>
+                                                <li><a href="customer-feedback.php">Customer Feedback / Complaint</a></li>
+                                                <li><a href="policies.php">Policies</a></li>
                                             </ul>
                                         </li>
                                         <li><a href="contact.php">Contact Us</a></li>
