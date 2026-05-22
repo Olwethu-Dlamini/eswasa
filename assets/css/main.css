@@ -9290,8 +9290,8 @@ blockquote p {
 ===============================*/
 .contact-info-wrap .title {
   margin-bottom: 0;
-  font-weight: 600;
-  font-size: 30px;
+  font-weight: 700;
+  font-size: 32px;
   position: relative;
   padding-bottom: 15px;
   margin-bottom: 15px;
@@ -9303,7 +9303,7 @@ blockquote p {
 }
 @media only screen and (min-width: 576px) and (max-width: 767px) {
   .contact-info-wrap .title {
-    font-size: 30px;
+    font-size: 26px;
   }
 }
 .contact-info-wrap .title::before {

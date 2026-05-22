@@ -389,7 +389,7 @@ function render_paragraphs($text) {
         .info-section p strong { font-weight: 700; }
 
         /* Bootstrap `lead` class — scale relative to our 12px base */
-        body .lead { font-size: 18px; line-height: 1.7; font-weight: 400; }
+        body .lead { font-size: 16px; line-height: 1.7; font-weight: 400; }
 
         /* Slider keyframes — translate by exactly half so the duplicated set loops seamlessly */
         @keyframes scroll {

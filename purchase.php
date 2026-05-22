@@ -174,6 +174,9 @@
                 font-size: 0.95em;
             }
         }
+
+        /* Subtitle / lead — align with site spec (16px) */
+        body .lead { font-size: 16px; line-height: 1.7; font-weight: 400; }
     </style>
 </head>
 

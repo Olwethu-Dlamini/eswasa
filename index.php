@@ -875,8 +875,8 @@ if ($am_result) {
     .affiliations-area .section-heading { text-align: center; margin-bottom: 32px; }
     .affiliations-area .section-heading h2 {
         color: #2B3388;
-        font-size: 1.25rem;
-        font-weight: 600;
+        font-size: 32px;
+        font-weight: 700;
         margin: 0;
         line-height: 1.2;
         letter-spacing: 0.02em;
@@ -929,7 +929,7 @@ if ($am_result) {
     @media (max-width: 767.98px) {
         .affiliations-area { padding: 44px 0 52px; }
         .affiliations-area .section-heading { margin-bottom: 26px; }
-        .affiliations-area .section-heading h2 { font-size: 1rem; }
+        .affiliations-area .section-heading h2 { font-size: 24px; }
         .affiliations-slider .slider-item { width: 180px; }
         .affiliations-slider .affiliation-logo { width: 150px; height: 110px; padding: 16px; }
     }
