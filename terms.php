@@ -168,7 +168,8 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="col-12">
                         <div class="legal-section">
                             <h2>Terms & Conditions</h2>
-                            
+                            <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
+
                             <div class="highlight-box">
                                 <p><strong>Last Updated:</strong> January 2025</p>
                                 <p>These Terms and Conditions govern your use of ESWASA services, training programmes, and website. By accessing our services, you agree to be bound by these terms.</p>

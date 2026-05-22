@@ -178,7 +178,8 @@
                     <p>TCs are responsible for developing, maintaining, and revising **Eswatini National Standards (SZNS)** within their specific technical areas. They ensure that standards are developed through a consensus-based process, reflecting the needs and expertise of all relevant parties.</p>
                 </div>
 
-                <h2 class="text-center mt-5 mb-4" style="color: #2B3388; font-weight: 700;">Key Benefits of Joining an ESWASA TC</h2>
+                <h2 class="text-center mt-5" style="color: #2B3388; font-weight: 700;">Key Benefits of Joining an ESWASA TC</h2>
+                <div class="section-divider mb-4"></div>
 
                 <div class="row my-5">
                     <div class="col-lg-6 col-md-12">

@@ -498,7 +498,8 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="col-12">
                         <div class="cert-card">
                             <h2 class="section-title">Management Systems Certification</h2>
-                            <p>Our certification services enable you to demonstrate that your products, processes, systems or services conform to national and international standards.</p>
+                            <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
+                            <p class="mt-3">Our certification services enable you to demonstrate that your products, processes, systems or services conform to national and international standards.</p>
                             <p>By gaining recognition from an international certification body relevant to your industry, you ensure your compliance with regulatory bodies and nurture a culture of continuous improvement.</p>
                             <p>Prove your commitment to quality through ESWASA's certification.</p>
                         </div>
@@ -511,7 +512,8 @@ include_once 'includes/breadcrumb_helper.php';
         <section class="cert-section bg-light">
             <div class="container">
                 <h2 class="section-title text-center">Certification Schemes Offered</h2>
-                <div class="row g-4 justify-content-center">
+                <div class="section-divider"></div>
+                <div class="row g-4 justify-content-center mt-4">
                     <div class="col-lg col-md-4 col-sm-6">
                         <div class="scheme-card">
                             <img src="iso9001.png" alt="SZNS ISO 9001">
@@ -715,7 +717,8 @@ include_once 'includes/breadcrumb_helper.php';
     <div class="container">
         <div class="text-center mb-4">
             <h2 class="section-title">Why Certify with ESWASA?</h2>
-            <p class="section-subtitle">We provide reliable, efficient and results-driven certification services.</p>
+            <div class="section-divider"></div>
+            <p class="section-subtitle mt-3">We provide reliable, efficient and results-driven certification services.</p>
         </div>
         <div class="text-center">
             <img src="whycertify.webp" alt="Why Certify with ESWASA - Demonstrate Competence, Prompt Support, Competitive Price, Integrated Approach, Committed, Local Expertise Global Standards" class="img-fluid" style="max-width: 900px;">
@@ -729,7 +732,7 @@ include_once 'includes/breadcrumb_helper.php';
 
         <div class="text-center mb-5">
             <h2 class="section-title">How Certification Works</h2>
-          
+            <div class="section-divider"></div>
         </div>
 
         <!-- ROW 1 -->

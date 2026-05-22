@@ -167,6 +167,11 @@
         }
 
         @media (max-width: 767.98px) {
+            .main-area h2 {
+                font-size: 26px;
+                line-height: 1.25;
+                overflow-wrap: anywhere;
+            }
             .publication-card {
                 padding: 15px;
             }
@@ -249,7 +254,8 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <h2 class="mb-4">Available Publications</h2>
+                        <h2>Available Publications</h2>
+                        <div class="section-divider mb-4" style="margin-left: 0; margin-right: 0;"></div>
                         
                         <?php if ($result && $result->num_rows > 0): ?>
                             <?php while ($pub = $result->fetch_assoc()): ?>

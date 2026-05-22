@@ -170,6 +170,7 @@ include_once 'includes/breadcrumb_helper.php';
                 <div class="row justify-content-center">
                     <div class="col-xl-10 col-lg-12">
                         <h2 class="category-title">Training & Certification FAQs</h2>
+                        <div class="section-divider"></div>
                         <div class="faq-wrap">
                             <div class="accordion" id="trainingAccordion">
                                 <?php if (!empty($faqs['training'])): ?>
@@ -210,6 +211,7 @@ include_once 'includes/breadcrumb_helper.php';
                 <div class="row justify-content-center">
                     <div class="col-xl-10 col-lg-12">
                         <h2 class="category-title">Standards & Certification FAQs</h2>
+                        <div class="section-divider"></div>
                         <div class="faq-wrap">
                             <div class="accordion" id="standardsAccordion">
                                 <?php if (!empty($faqs['standards'])): ?>
@@ -250,6 +252,7 @@ include_once 'includes/breadcrumb_helper.php';
                 <div class="row justify-content-center">
                     <div class="col-xl-10 col-lg-12">
                         <h2 class="category-title">General Information</h2>
+                        <div class="section-divider"></div>
                         <div class="faq-wrap">
                             <div class="accordion" id="generalAccordion">
                                 <?php if (!empty($faqs['general'])): ?>

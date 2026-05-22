@@ -182,7 +182,8 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="col-12">
                         <div class="legal-section">
                             <h2>Privacy Policy</h2>
-                            
+                            <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
+
                             <div class="highlight-box">
                                 <p><strong>Last Updated:</strong> January 2025</p>
                                 <p>At Eswatini Standards Authority (ESWASA), we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services, website, and training programmes.</p>

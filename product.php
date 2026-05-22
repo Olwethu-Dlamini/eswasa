@@ -536,7 +536,8 @@ include_once 'includes/breadcrumb_helper.php';
         <!-- ESWASA Certified Products -->
         <section class="py-5" style="background: rgba(43, 51, 136, 0.04);">
             <div class="container">
-                <h2 class="text-center mb-5" style="color: #2B3388; font-weight: 700;">ESWASA Certified Products</h2>
+                <h2 class="text-center" style="color: #2B3388; font-weight: 700;">ESWASA Certified Products</h2>
+                <div class="section-divider mb-5"></div>
                 <div class="row g-3">
                     <div class="col-6">
                         <img src="admin/uploads/image28.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">

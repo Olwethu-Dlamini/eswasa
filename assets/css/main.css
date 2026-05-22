@@ -185,6 +185,17 @@ body .section__title .title {
   font-size: 32px;
   line-height: 1.2;
 }
+
+/* Canonical section-title underline — 60x2 brand-blue accent.
+   Used as <h2>...</h2><div class="section-divider"></div>. */
+.section-divider {
+  width: 60px;
+  height: 2px;
+  background: #2B3388;
+  margin: 16px auto 0;
+  border-radius: 0;
+}
+
 body .section-subtitle,
 body .section-heading p,
 body .main_title p,
@@ -9311,10 +9322,10 @@ blockquote p {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 28px;
-  height: 4px;
-  border-radius: 2px;
-  background: #2B3289;
+  width: 60px;
+  height: 2px;
+  border-radius: 0;
+  background: #2B3388;
 }
 .contact-info-wrap > p {
   margin-bottom: 25px;

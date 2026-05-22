@@ -415,7 +415,8 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <div class="text-center mb-4">
                     <h2 style="color: #2B3388;">Your Certification Journey Made Simple</h2>
-                    <p class="lead">We guide you every step of the way - no stress, no surprises</p>
+                    <div class="section-divider"></div>
+                    <p class="lead mt-3">We guide you every step of the way - no stress, no surprises</p>
                 </div>
                 <div class="steps-img-section">
                     <img src="assets/img/steps-to-certification.jpg" alt="Steps to Certification: Gap Analysis, Training and Documentation, Internal Audit and MRM, Audit and Certification, ISO Certified">

@@ -167,7 +167,8 @@ include_once 'includes/breadcrumb_helper.php';
                     <div class="col-12">
                         <div class="legal-section">
                             <h2>Website Disclaimer</h2>
-                            
+                            <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
+
                             <div class="highlight-box">
                                 <p><strong>Important Notice:</strong> Please read this disclaimer carefully before using our website. By using this website, you accept this disclaimer in full.</p>
                             </div>

@@ -173,7 +173,7 @@
                 <h2 class="display-6 fw-bold text-center">
                     Members of the Council
                     <span class="d-block fs-5 text-muted mt-2">Strategic Oversight &amp; Governance</span>
-                    <span class="d-block mx-auto mt-3 bg-primary rounded-pill" style="width: 100px; height: 4px;"></span>
+                    <span class="section-divider d-block" style="margin-top: 14px;"></span>
                 </h2>
                 
             </div>

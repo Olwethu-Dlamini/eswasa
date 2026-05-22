@@ -317,7 +317,8 @@
                             <p>We offer competitive packages and a supportive work environment. Find our available positions below.</p>
                         </div>
 
-                        <h2 style="margin-bottom: 25px;">Available Positions</h2>
+                        <h2>Available Positions</h2>
+                        <div class="section-divider" style="margin-left: 0; margin-right: 0; margin-bottom: 25px;"></div>
                         
                         <?php if ($vacancies && $vacancies->num_rows > 0): ?>
                             <?php while ($v = $vacancies->fetch_assoc()): ?>

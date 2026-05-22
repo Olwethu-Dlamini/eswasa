@@ -622,6 +622,7 @@ if ($am_result) {
                 <div class="col-md-8">
                     <div class="section__title text-center text-md-start">
                         <h2 class="title tg-svg" style="color: #2B3388;">Discover</h2>
+                        <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
                     </div>
                 </div>
             </div>
@@ -818,6 +819,7 @@ if ($am_result) {
     <div class="container">
         <div class="section-heading">
             <h2>Certification Marks</h2>
+            <div class="section-divider"></div>
         </div>
         <div class="marks-grid">
             <div class="mark-item">
@@ -943,6 +945,7 @@ if ($am_result) {
     <div class="container">
         <div class="section-heading">
             <h2>Our Affiliations</h2>
+            <div class="section-divider"></div>
         </div>
 
         <div class="affiliations-slider">

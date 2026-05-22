@@ -222,7 +222,8 @@ include_once 'includes/breadcrumb_helper.php';
                         <!-- Content Column -->
                         <div class="col-lg-9 col-md-8">
                             <h2>Eswatini Standards Authority (ESWASA) Invites MSMEs to Participate</h2>
-                            <p>The Eswatini Standards Authority (ESWASA) invites Micro, Small and Medium Enterprises (MSMEs) to apply for participation in the <strong>Ingelo Certification Scheme</strong> &mdash; a programme developed to support local businesses in achieving product and system certification.</p>
+                            <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
+                            <p class="mt-3">The Eswatini Standards Authority (ESWASA) invites Micro, Small and Medium Enterprises (MSMEs) to apply for participation in the <strong>Ingelo Certification Scheme</strong> &mdash; a programme developed to support local businesses in achieving product and system certification.</p>
                             <p>This initiative is designed to empower Emaswati entrepreneurs by providing them with the tools and recognition needed to compete effectively in both local and international markets.</p>
                         </div>
                     </div>
