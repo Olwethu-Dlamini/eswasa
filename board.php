@@ -233,12 +233,12 @@
                         <div class="board-img-container">
                             <img 
                                 src="admin/uploads/Dladla.jpg" 
-                                alt="Ms Nompumelelo Dladla" 
+                                alt="Ms. Nompumelelo Dladla" 
                                 class="board-img"
                             >
                         </div>
                         <div class="board-member-info">
-                            <h4 class="board-member-name">Ms Nompumelelo Dladla</h4>
+                            <h4 class="board-member-name">Ms. Nompumelelo Dladla</h4>
                             <p class="board-member-role">Council Member</p>
                             
                             <div class="board-member-social">

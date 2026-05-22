@@ -382,9 +382,9 @@
                         </div>
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="admin/uploads/Dladla.jpg" alt="Ms Nompumelelo Dladla" class="team-img">
+                                <img src="admin/uploads/Dladla.jpg" alt="Ms. Nompumelelo Dladla" class="team-img">
                             </div>
-                            <h4 class="team-name">Ms Nompumelelo Dladla</h4>
+                            <h4 class="team-name">Ms. Nompumelelo Dladla</h4>
                             <p class="team-role">Council Member</p>
                             <div class="team-social"></div>
                         </div>
@@ -416,9 +416,9 @@
                     <div class="team-leader">
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="admin/uploads/Ncamiso.jpg" alt="Mr Ncamiso K. Mhlanga" class="team-img">
+                                <img src="admin/uploads/Ncamiso.jpg" alt="Mr. Ncamiso K. Mhlanga" class="team-img">
                             </div>
-                            <h4 class="team-name">Mr Ncamiso K. Mhlanga</h4>
+                            <h4 class="team-name">Mr. Ncamiso K. Mhlanga</h4>
                             <p class="team-role">Executive Director</p>
                             <div class="team-social"></div>
                         </div>
@@ -426,17 +426,17 @@
                     <div class="team-members">
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="admin/uploads/masina.jpg" alt="Ms Dumsile Masina" class="team-img">
+                                <img src="admin/uploads/masina.jpg" alt="Ms. Dumsile Masina" class="team-img">
                             </div>
-                            <h4 class="team-name">Ms Dumsile Masina</h4>
+                            <h4 class="team-name">Ms. Dumsile Masina</h4>
                             <p class="team-role">CFO</p>
                             <div class="team-social"></div>
                         </div>
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="admin/uploads/philip.jpg" alt="Mr Phillip G. Mndawe" class="team-img">
+                                <img src="admin/uploads/philip.jpg" alt="Mr. Phillip G. Mndawe" class="team-img">
                             </div>
-                            <h4 class="team-name">Mr Phillip G. Mndawe</h4>
+                            <h4 class="team-name">Mr. Phillip G. Mndawe</h4>
                             <p class="team-role">Technical Manager</p>
                             <div class="team-social"></div>
                         </div>
