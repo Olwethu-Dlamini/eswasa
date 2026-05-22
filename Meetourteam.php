@@ -52,12 +52,13 @@
             text-align: center;
             margin-bottom: 56px;
         }
-        .team-header h3 {
+        .team-header h2 {
             color: #2B3388;
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 40px;
             margin: 0;
             letter-spacing: -0.01em;
+            line-height: 1.2;
         }
         .team-header .section-divider {
             margin: 14px auto 22px;
@@ -299,7 +300,7 @@
             .team-leader .team-name { font-size: 17px; }
             .section-title { font-size: 1.55rem; margin: 40px 0 0; }
             .staff-photo-container { padding-bottom: 50%; }
-            .team-header h3 { font-size: 1.3rem; }
+            .team-header h2 { font-size: 28px; }
             .team-header p { font-size: 15px; }
         }
         @media (max-width: 575.98px) {
@@ -348,7 +349,7 @@
         <div class="container py-5">
             <!-- Page intro -->
             <div class="team-header">
-                <h3>Our Council and Management</h3>
+                <h2>Our Council and Management</h2>
                 <div class="section-divider"></div>
                 <p>Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini&rsquo;s industries.</p>
             </div>
