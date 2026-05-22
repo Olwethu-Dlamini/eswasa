@@ -1024,7 +1024,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="fw-bold">Application</h3>
-                                <p class="text-muted">Application forms and course-related information can be accessed through this website under <strong>Training</strong>, or requested from the Training Unit — call <a href="tel:+26876027306" style="color:#2B3388; text-decoration:underline; font-weight:600;">7602 7306</a> or email <a href="mailto:info@swasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@swasa.co.sz</a> / <a href="mailto:training@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">training@eswasa.co.sz</a>. Applications should reach ESWASA at least <strong>10 working days</strong> before the course commencement date. If the number of paid applicants has not reached the minimum required for a class (<strong>5 delegates</strong>), ESWASA reserves the right to postpone the course but undertakes to inform participants promptly of such developments.</p>
+                                <p>Application forms and course-related information can be accessed through this website under <strong>Training</strong>, or requested from the Training Unit — call <a href="tel:+26876027306" style="color:#2B3388; text-decoration:underline; font-weight:600;">7602 7306</a> or email <a href="mailto:info@swasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@swasa.co.sz</a> / <a href="mailto:training@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">training@eswasa.co.sz</a>. Applications should reach ESWASA at least <strong>10 working days</strong> before the course commencement date. If the number of paid applicants has not reached the minimum required for a class (<strong>5 delegates</strong>), ESWASA reserves the right to postpone the course but undertakes to inform participants promptly of such developments.</p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="acceptance" role="tabpanel" aria-labelledby="acceptance-tab">
@@ -1038,7 +1038,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="fw-bold">Acceptance</h3>
-                                <p class="text-muted">Applicants will be notified of the outcome of their applications soon thereafter. Acceptance of the offer has to be acknowledged by the participant in writing and sent by email or fax to the office as soon as possible or 7 days before the start of the training for registration.</p>
+                                <p>Applicants will be notified of the outcome of their applications soon thereafter. Acceptance of the offer has to be acknowledged by the participant in writing and sent by email or fax to the office as soon as possible or 7 days before the start of the training for registration.</p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="cancellations" role="tabpanel" aria-labelledby="cancellations-tab">
@@ -1054,7 +1054,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="fw-bold">Cancellations</h3>
-                                <p class="text-muted">A cancellation fee of <strong>50%</strong> of the course fee will be deducted from participants who cancel after registration / confirmation or on the date of commencement of the training course. ESWASA reserves the right to postpone any course (typically due to insufficient enrolment — see Application for class minimums) and undertakes to inform participants promptly of such developments.</p>
+                                <p>A cancellation fee of <strong>50%</strong> of the course fee will be deducted from participants who cancel after registration / confirmation or on the date of commencement of the training course. ESWASA reserves the right to postpone any course (typically due to insufficient enrolment — see Application for class minimums) and undertakes to inform participants promptly of such developments.</p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="fees" role="tabpanel" aria-labelledby="fees-tab">
@@ -1070,7 +1070,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="fw-bold">Course Fees and Payments</h3>
-                                <p class="text-muted">Course fees are charged per person and are inclusive of meals and refreshments for the duration of the training. Applicants should pay in full and submit <strong>proof of payment or a purchase order</strong> at least <strong>7 working days</strong> before the course commencement date.</p>
+                                <p>Course fees are charged per person and are inclusive of meals and refreshments for the duration of the training. Applicants should pay in full and submit <strong>proof of payment or a purchase order</strong> at least <strong>7 working days</strong> before the course commencement date.</p>
                                 <div class="bank-details">
                                     <h4>Banking Details</h4>
                                     <dl>
@@ -1095,7 +1095,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="fw-bold">Travel and Accommodation</h3>
-                                <p class="text-muted">Participants are responsible for their own travel and accommodation arrangements. All courses offered are day courses.</p>
+                                <p>Participants are responsible for their own travel and accommodation arrangements. All courses offered are day courses.</p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="inhouse" role="tabpanel" aria-labelledby="inhouse-tab">
@@ -1111,7 +1111,7 @@
                                     </svg>
                                 </span>
                                 <h3 class="fw-bold">Training Venues</h3>
-                                <p class="text-muted">The venue for most courses is the <strong>ESWASA Training Academy</strong>, unless prior arrangements are made for in-house and/or customised training. In-house training will be presented to a <strong>minimum of 11 delegates</strong>. The organisation shall be responsible for providing a suitable training room with audiovisual equipment as well as refreshments.</p>
+                                <p>The venue for most courses is the <strong>ESWASA Training Academy</strong>, unless prior arrangements are made for in-house and/or customised training. In-house training will be presented to a <strong>minimum of 11 delegates</strong>. The organisation shall be responsible for providing a suitable training room with audiovisual equipment as well as refreshments.</p>
                             </div>
                         </div>
                     </div>
