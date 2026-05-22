@@ -190,7 +190,7 @@ body .section-heading p,
 body .main_title p,
 body .section__title .sub-title,
 body .section__title .desc {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 h3 {
@@ -717,7 +717,7 @@ textarea {
 }
 .breadcrumb-content .breadcrumb-separator {
   line-height: 1;
-  font-size: 16px;
+  font-size: 15px;
   margin-top: 1px;
   font-weight: 700;
   margin-top: 2px;
@@ -833,7 +833,7 @@ textarea {
   position: fixed;
   bottom: -10%;
   right: 50px;
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 4px;
   z-index: 99;
   color: #2b3388;
@@ -1267,7 +1267,7 @@ textarea {
   list-style: none;
 }
 .tgmenu__navbar-wrap ul li a {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   text-transform: capitalize;
   color: #2b3389;
@@ -1695,7 +1695,7 @@ textarea {
 }
 .tgmenu__action > ul .header-btn .btn {
   color: var(--tg-common-color-white);
-  font-size: 16px;
+  font-size: 15px;
   text-transform: capitalize;
   padding: 16px 20px 14px 20px;
 }
@@ -1940,7 +1940,7 @@ li.js-scroll-trigger {
   width: 32px;
   height: 32px;
   text-align: center;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 32px;
   color: var(--tg-heading-color);
   background: var(--tg-common-color-gray);
@@ -1996,7 +1996,7 @@ li.js-scroll-trigger {
   display: block;
   line-height: 1.5;
   padding: 10px 60px 10px 25px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--tg-heading-color);
   text-transform: capitalize;
@@ -2041,7 +2041,7 @@ li.js-scroll-trigger {
   display: block;
 }
 .tgmobile__menu .navigation ul li ul li > a {
-  font-size: 16px;
+  font-size: 15px;
   margin-left: 20px;
   text-transform: capitalize;
 }
@@ -2117,7 +2117,7 @@ li.js-scroll-trigger {
   height: 40px;
   position: relative;
   line-height: 32px;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--tg-body-color);
   -webkit-transition: all 500ms ease;
   -o-transition: all 500ms ease;
@@ -2724,7 +2724,7 @@ li.js-scroll-trigger {
 }
 .banner__search-form form input::placeholder {
   opacity: 0.7;
-  font-size: 16px;
+  font-size: 15px;
 }
 .banner__search-form form button {
   position: absolute;
@@ -3859,7 +3859,7 @@ li.js-scroll-trigger {
   }
 }
 .courses__item-bottom .price del {
-  font-size: 16px;
+  font-size: 15px;
   color: #8D9DB5;
   margin-right: 4px;
 }
@@ -5030,7 +5030,7 @@ li.js-scroll-trigger {
 }
 @media (max-width: 767.98px) {
   .categories__item a .name {
-    font-size: 16px;
+    font-size: 15px;
     margin: 0 0 8px;
     line-height: 1.5;
   }
@@ -5462,7 +5462,7 @@ li.js-scroll-trigger {
   }
 }
 .enrolled__students p {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.4;
   color: var(--tg-heading-color);
   font-weight: var(--tg-fw-medium);
@@ -6176,7 +6176,7 @@ li.js-scroll-trigger {
 .instructor-details-content .left-side-content span {
   display: block;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--tg-theme-primary);
   font-family: var(--tg-heading-font-family);
 }
@@ -6208,7 +6208,7 @@ li.js-scroll-trigger {
   border: 1px solid #DADADA;
   border-radius: 50%;
   color: var(--tg-body-color);
-  font-size: 16px;
+  font-size: 15px;
   line-height: 0;
 }
 .instructor-details-social .list-wrap li a:hover {
@@ -6239,7 +6239,7 @@ li.js-scroll-trigger {
   display: flex;
   align-items: center;
   color: #5A7093;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1;
 }
@@ -6249,7 +6249,7 @@ li.js-scroll-trigger {
 }
 .instructor-info-wrap .list-wrap > li a {
   color: #5A7093;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
 }
 .instructor-info-wrap .list-wrap > li a:hover {
@@ -6988,7 +6988,7 @@ li.js-scroll-trigger {
   transform: translateY(-50%);
   right: 15px;
   color: #5A7093;
-  font-size: 16px;
+  font-size: 15px;
 }
 .events__sidebar-filter .form-grp i.fa-flip-horizontal {
   -webkit-transform: translateY(-50%) scaleX(-1);
@@ -7187,7 +7187,7 @@ li.js-scroll-trigger {
   }
 }
 .event-meta .list-wrap li {
-  font-size: 16px;
+  font-size: 15px;
   color: #5A7093;
   line-height: 1;
   display: -webkit-box;
@@ -7245,7 +7245,7 @@ li.js-scroll-trigger {
 }
 .event-cost-wrap .price strong {
   font-weight: 400;
-  font-size: 16px;
+  font-size: 15px;
   color: #5A7093;
   margin-right: 15px;
 }
@@ -7262,7 +7262,7 @@ li.js-scroll-trigger {
 }
 .event-information-wrap .title {
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
   margin-bottom: 10px;
 }
 .event-information-wrap .list-wrap > li {
@@ -7300,7 +7300,7 @@ li.js-scroll-trigger {
 }
 .event-information-wrap .event-social li a {
   color: #5A7093;
-  font-size: 16px;
+  font-size: 15px;
 }
 .event-information-wrap .event-social li a:hover {
   color: var(--tg-theme-primary);
@@ -7568,7 +7568,7 @@ li.js-scroll-trigger {
   border: none;
   color: var(--tg-body-color);
   font-weight: 400;
-  font-size: 16px;
+  font-size: 15px;
   text-transform: capitalize;
   border-radius: 4px;
   outline: none;
@@ -7735,7 +7735,7 @@ li.js-scroll-trigger {
 }
 .shop-widget .form-check-label {
   flex-grow: 1;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   color: var(--tg-body-color);
   user-select: none;
@@ -7905,7 +7905,7 @@ li.js-scroll-trigger {
 }
 .shop-details-bottom .list-wrap li .title {
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
   display: block;
   color: var(--tg-theme-secondary);
 }
@@ -8741,7 +8741,7 @@ blockquote p {
   align-items: flex-start;
 }
 .tg-post-tag .tag-title {
-  font-size: 16px;
+  font-size: 15px;
   margin-right: 20px;
   margin-top: 7px;
   margin-bottom: 7px;
@@ -8785,7 +8785,7 @@ blockquote p {
   }
 }
 .tg-post-social .social-title {
-  font-size: 16px;
+  font-size: 15px;
   margin-right: 20px;
   margin-top: 7px;
   margin-bottom: 7px;
@@ -8805,7 +8805,7 @@ blockquote p {
 .tg-post-social ul li a {
   display: block;
   line-height: 1;
-  font-size: 16px;
+  font-size: 15px;
 }
 .tg-post-social ul li a:hover {
   color: var(--tg-theme-primary);
@@ -9024,7 +9024,7 @@ blockquote p {
 }
 .blog-widget .form-check-label {
   flex-grow: 1;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   color: var(--tg-body-color);
   user-select: none;
@@ -9103,7 +9103,7 @@ blockquote p {
   border-radius: 4px;
 }
 .rc-post-content .title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: var(--tg-fw-medium);
   line-height: 1.35;
   margin: 0 0 5px;

@@ -215,7 +215,7 @@ include_once 'includes/breadcrumb_helper.php';
         .client-tile .client-wordmark {
             color: #2B3388;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 15px;
             letter-spacing: 0.5px;
             line-height: 1.25;
         }
@@ -312,7 +312,7 @@ include_once 'includes/breadcrumb_helper.php';
             padding: 10px 0 10px 22px;
             position: relative;
             color: #2B3388;
-            font-size: 1rem;
+            font-size: 15px;
             line-height: 1.5;
             break-inside: avoid;
             border-bottom: 1px solid rgba(43, 51, 136, 0.10);

@@ -153,7 +153,7 @@ $policies = [
         }
         .intro-card p {
             margin: 0; color: rgba(43, 51, 136, 0.85);
-            font-size: 1rem; line-height: 1.65;
+            font-size: 15px; line-height: 1.65;
         }
 
         .policies-section { padding: 60px 0 80px; }

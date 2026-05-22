@@ -77,7 +77,7 @@
             padding-bottom: 15px;
         }
         .intro-box p {
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.6;
             color: #2B3388;
         }

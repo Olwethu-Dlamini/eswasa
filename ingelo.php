@@ -138,7 +138,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
 
         .intro-section p {
-            font-size: 1rem;
+            font-size: 15px;
             line-height: 1.6;
             color: #2B3388;
         }

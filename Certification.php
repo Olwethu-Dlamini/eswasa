@@ -82,7 +82,7 @@ include_once 'includes/breadcrumb_helper.php';
         .intro-card p {
             margin: 0;
             color: rgba(43, 51, 136, 0.85);
-            font-size: 1rem;
+            font-size: 15px;
             line-height: 1.7;
         }
 
@@ -121,7 +121,7 @@ include_once 'includes/breadcrumb_helper.php';
             font-weight: 700;
         }
         .cert-card p {
-            font-size: 1rem;
+            font-size: 15px;
             line-height: 1.65;
             margin-bottom: 16px;
             color: rgba(43, 51, 136, 0.85);
@@ -209,7 +209,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .cert-split-card p {
             color: rgba(43, 51, 136, 0.85);
-            font-size: 1rem;
+            font-size: 15px;
             line-height: 1.65;
             margin: 0;
         }

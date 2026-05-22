@@ -9,7 +9,7 @@
     margin: 8px 10px;
     border: 2px solid #2B3388;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 15px;
     transition: background-color .2s ease, border-color .2s ease, color .2s ease;
     cursor: pointer;
 }
@@ -37,7 +37,7 @@
 }
 .cta-journey-section .cta-subtitle {
     color: rgba(43, 51, 136, 0.75);
-    font-size: 1rem;
+    font-size: 15px;
     margin-bottom: 35px;
 }
 
@@ -50,7 +50,7 @@
     }
     .btn-cta {
         padding: 12px 22px;
-        font-size: 0.85rem;
+        font-size: 14px;
         margin: 6px 5px;
     }
 }

@@ -145,7 +145,7 @@ $recentEvents = $recentStmt->get_result();
                 font-size: 1.4rem;
             }
             .event-content {
-                font-size: 1rem !important;
+                font-size: 15px !important;
             }
             .blog-widget {
                 margin-top: 30px;

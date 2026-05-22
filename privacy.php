@@ -126,7 +126,7 @@ include_once 'includes/breadcrumb_helper.php';
             .legal-section h3 { font-size: 1.2rem; margin: 22px 0 10px 0; }
             .legal-section h4 { font-size: 1.1rem; margin: 18px 0 10px 0; }
             .legal-section p,
-            .legal-section li { font-size: 1rem; line-height: 1.7; }
+            .legal-section li { font-size: 15px; line-height: 1.7; }
             .highlight-box,
             .contact-box,
             .data-types { padding: 16px; margin: 18px 0; }

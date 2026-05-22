@@ -200,7 +200,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .timeline-stage .stage-description {
             color: rgba(43, 51, 136, 0.85);
-            font-size: 0.93rem;
+            font-size: 15px;
             line-height: 1.55;
             margin: 0;
         }
@@ -288,7 +288,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .tc-benefit-card p {
             color: rgba(43, 51, 136, 0.85);
-            font-size: 0.95rem;
+            font-size: 15px;
             line-height: 1.55;
             margin: 0;
         }

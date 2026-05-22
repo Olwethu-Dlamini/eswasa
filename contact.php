@@ -240,7 +240,7 @@ if (isset($_SESSION['contact_error'])) {
             width: 100%;
             padding: 12px 16px;
             margin-bottom: 16px;
-            font-size: 16px;
+            font-size: 15px;
             font-family: Arial, sans-serif;
         }
         .form-grp textarea { min-height: 140px; }

@@ -381,7 +381,7 @@ function render_paragraphs($text) {
         }
         .info-section p {
             color: #2B3388;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.65;
             margin: 0 0 10px;
         }
@@ -424,7 +424,7 @@ function render_paragraphs($text) {
             .value-card-custom p { font-size: 13px; }
             .value-icon-circle { width: 60px; height: 60px; margin-bottom: 10px; }
             .value-icon-circle svg { width: 34px; height: 34px; }
-            body .lead { font-size: 16px; }
+            body .lead { font-size: 15px; }
             .vm-card { padding: 28px 22px; }
             .vm-icon { width: 52px; height: 52px; margin-bottom: 20px; }
             .vm-card h3 { font-size: 18px; margin-bottom: 14px; }

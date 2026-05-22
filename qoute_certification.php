@@ -126,7 +126,7 @@ include_once 'includes/breadcrumb_helper.php';
             padding: 14px 40px;
             font-weight: 600;
             font-family: Arial, sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             transition: background-color 0.2s ease;
         }
         .btn-cta:hover {

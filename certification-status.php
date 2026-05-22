@@ -90,7 +90,7 @@ $reduced = [
         }
         .intro-card p {
             margin: 0; color: rgba(43, 51, 136, 0.85);
-            font-size: 1rem; line-height: 1.7;
+            font-size: 15px; line-height: 1.7;
         }
 
         .status-block { margin-bottom: 42px; }

@@ -64,7 +64,7 @@
         }
         .team-header p {
             color: rgba(43, 51, 136, 0.78);
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.65;
             max-width: 760px;
             margin: 0 auto;
@@ -226,7 +226,7 @@
         /* ESWASA staff intro paragraph */
         .eswasa-staff-content p {
             color: #2B3388;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.65;
             max-width: 820px;
             margin: 0 auto;

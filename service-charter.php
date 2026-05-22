@@ -64,7 +64,7 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .intro-card p {
             margin: 0; color: rgba(43, 51, 136, 0.85);
-            font-size: 1rem; line-height: 1.7;
+            font-size: 15px; line-height: 1.7;
         }
 
         .charter-section { padding: 60px 0 80px; }
@@ -86,7 +86,7 @@ include_once 'includes/breadcrumb_helper.php';
         .charter-block p,
         .charter-block li {
             color: rgba(43, 51, 136, 0.85);
-            font-size: 1rem;
+            font-size: 15px;
             line-height: 1.7;
             margin-bottom: 10px;
         }
