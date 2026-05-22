@@ -974,6 +974,11 @@ if ($am_result) {
                     </a>
                 </div>
                 <div class="slider-item px-3">
+                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
                     <a href="https://www.sadcas.org/" target="_blank" rel="noopener noreferrer">
                         <img src="assets/img/SADCAS.png" alt="SADCAS" class="affiliation-logo">
                     </a>
@@ -986,11 +991,6 @@ if ($am_result) {
                 <div class="slider-item px-3">
                     <a href="https://www.sadcstan.org/" target="_blank" rel="noopener noreferrer">
                         <img src="assets/img/sadcstan.jpg" alt="SADCSTAN" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
                     </a>
                 </div>
                 <div class="slider-item px-3">
@@ -1030,6 +1030,11 @@ if ($am_result) {
                     </a>
                 </div>
                 <div class="slider-item px-3">
+                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
+                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
+                    </a>
+                </div>
+                <div class="slider-item px-3">
                     <a href="https://www.sadcas.org/" target="_blank" rel="noopener noreferrer">
                         <img src="assets/img/SADCAS.png" alt="SADCAS" class="affiliation-logo">
                     </a>
@@ -1042,11 +1047,6 @@ if ($am_result) {
                 <div class="slider-item px-3">
                     <a href="https://www.sadcstan.org/" target="_blank" rel="noopener noreferrer">
                         <img src="assets/img/sadcstan.jpg" alt="SADCSTAN" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
                     </a>
                 </div>
                 <div class="slider-item px-3">

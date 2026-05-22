@@ -241,6 +241,22 @@ function render_paragraphs($text) {
             width: 44px;
             height: 44px;
         }
+        .value-icon-circle i.fa-icon,
+        .value-icon-circle i.fas,
+        .value-icon-circle .fa-stack {
+            font-size: 40px;
+            line-height: 1;
+            color: #2B3388;
+        }
+        .value-icon-circle .fa-stack {
+            width: 1.5em;
+            height: 1.5em;
+            font-size: 22px;
+        }
+        .value-icon-circle .fa-stack .fa-globe {
+            font-size: 0.85em;
+            margin-top: -0.35em;
+        }
 
         /* Section backgrounds — bg_color3 (affiliations) + Bootstrap bg-light (accreditation) */
         .bg_color3 { background-color: rgba(43, 51, 136, 0.04) !important; }
@@ -516,10 +532,9 @@ function render_paragraphs($text) {
                     <div class="col-lg-3">
                         <div class="value-card-custom">
                             <div class="value-icon-circle" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="20" cy="20" r="12"/>
-                                    <circle cx="20" cy="20" r="4" fill="currentColor"/>
-                                    <line x1="29" y1="29" x2="40" y2="40" stroke-width="3"/>
+                                <svg viewBox="0 0 48 48" fill="currentColor">
+                                    <path d="M24 4 L40 10 V22 C40 32 33 40 24 44 C15 40 8 32 8 22 V10 Z"/>
+                                    <polyline points="16 24 22 30 33 18" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </div>
                             <h4>Transparency</h4>
@@ -532,17 +547,7 @@ function render_paragraphs($text) {
                     <div class="col-lg-3">
                         <div class="value-card-custom">
                             <div class="value-icon-circle" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="22" cy="26" r="14"/>
-                                    <circle cx="22" cy="26" r="2.5" fill="currentColor"/>
-                                    <line x1="22" y1="14" x2="22" y2="16"/>
-                                    <line x1="34" y1="26" x2="32" y2="26"/>
-                                    <line x1="22" y1="38" x2="22" y2="36"/>
-                                    <line x1="10" y1="26" x2="12" y2="26"/>
-                                    <line x1="22" y1="26" x2="22" y2="19"/>
-                                    <line x1="22" y1="26" x2="29" y2="26"/>
-                                    <polygon points="34 8 44 4 40 14" fill="currentColor"/>
-                                </svg>
+                                <i class="fas fa-handshake fa-icon"></i>
                             </div>
                             <h4>Responsiveness</h4>
                             <p><?= htmlspecialchars($pc['about_val_responsiveness']) ?></p>
@@ -554,13 +559,14 @@ function render_paragraphs($text) {
                     <div class="col-lg-3">
                         <div class="value-card-custom">
                             <div class="value-icon-circle" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="24" cy="14" r="5" fill="currentColor"/>
-                                    <circle cx="12" cy="18" r="4" fill="currentColor"/>
-                                    <circle cx="36" cy="18" r="4" fill="currentColor"/>
-                                    <path d="M14 38 V34 C14 30 18 27 24 27 C30 27 34 30 34 34 V38"/>
-                                    <path d="M4 38 V34 C4 31 7 29 11 28.7"/>
-                                    <path d="M44 38 V34 C44 31 41 29 37 28.7"/>
+                                <svg viewBox="0 0 48 48" fill="currentColor">
+                                    <!-- Circular ring (the joined-hands loop) -->
+                                    <circle cx="24" cy="24" r="13" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <!-- 4 prominent figures sitting on the ring at the diagonals -->
+                                    <circle cx="34" cy="14" r="5.5"/>
+                                    <circle cx="34" cy="34" r="5.5"/>
+                                    <circle cx="14" cy="34" r="5.5"/>
+                                    <circle cx="14" cy="14" r="5.5"/>
                                 </svg>
                             </div>
                             <h4>People-Centricity</h4>
@@ -570,14 +576,10 @@ function render_paragraphs($text) {
                     <div class="col-lg-6 text-center">
                         <div class="value-card-custom mx-auto">
                             <div class="value-icon-circle" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="24" cy="24" r="5" fill="currentColor"/>
-                                    <ellipse cx="24" cy="24" rx="20" ry="8"/>
-                                    <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(60 24 24)"/>
-                                    <ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(-60 24 24)"/>
-                                    <circle cx="44" cy="24" r="2" fill="currentColor"/>
-                                    <circle cx="4" cy="24" r="2" fill="currentColor"/>
-                                </svg>
+                                <span class="fa-stack">
+                                    <i class="fas fa-hand-holding fa-stack-2x"></i>
+                                    <i class="fas fa-globe fa-stack-1x"></i>
+                                </span>
                             </div>
                             <h4>Innovation</h4>
                             <p><?= htmlspecialchars($pc['about_val_innovation']) ?></p>
@@ -586,13 +588,13 @@ function render_paragraphs($text) {
                     <div class="col-lg-3">
                         <div class="value-card-custom">
                             <div class="value-icon-circle" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 8 H34 V18 C34 24 30 28 24 28 C18 28 14 24 14 18 Z" fill="currentColor"/>
-                                    <path d="M14 10 H8 V14 C8 18 11 20 14 20"/>
-                                    <path d="M34 10 H40 V14 C40 18 37 20 34 20"/>
-                                    <line x1="24" y1="28" x2="24" y2="36"/>
-                                    <line x1="18" y1="36" x2="30" y2="36"/>
-                                    <path d="M16 42 L18 36 L30 36 L32 42 Z" fill="currentColor"/>
+                                <svg viewBox="0 0 48 48" fill="currentColor">
+                                    <circle cx="24" cy="10" r="5"/>
+                                    <path d="M14 40 V24 C14 19 18 16 24 16 C30 16 34 19 34 24 V40 Z"/>
+                                    <circle cx="8" cy="16" r="3.5"/>
+                                    <path d="M1 40 V28 C1 24 3 22 8 22 C10 22 12 23 13 24 V40 Z"/>
+                                    <circle cx="40" cy="16" r="3.5"/>
+                                    <path d="M47 40 V28 C47 24 45 22 40 22 C38 22 36 23 35 24 V40 Z"/>
                                 </svg>
                             </div>
                             <h4>Professionalism</h4>
@@ -626,6 +628,7 @@ function render_paragraphs($text) {
                         ['src'=>'admin/uploads/iso.png',  'alt'=>'ISO',  'href'=>'https://www.iso.org/'],
                         ['src'=>'admin/uploads/iec.png',  'alt'=>'IEC',  'href'=>'https://www.iec.ch/'],
                         ['src'=>'admin/uploads/arso.png', 'alt'=>'ARSO', 'href'=>'https://www.arso-org.org/'],
+                        ['src'=>'assets/img/SABS.png',   'alt'=>'SABS', 'href'=>'https://www.sabs.co.za'],
                         ['src'=>'admin/uploads/astm.png', 'alt'=>'ASTM', 'href'=>'https://www.astm.org/'],
                         ['src'=>'assets/img/WTO.png',    'alt'=>'WTO',  'href'=>'https://www.wto.org'],
                         ['src'=>'assets/img/AP.png',    'alt'=>'AP',  'href'=>''],
@@ -656,11 +659,8 @@ function render_paragraphs($text) {
                     <?php
                     $accs = [
                         ['src'=>'assets/img/SADCAS.png', 'href'=>'https://www.sadcas.org', 'alt'=>'SADCAS'],
-                        ['src'=>'assets/img/SABS.png',   'href'=>'https://www.sabs.co.za', 'alt'=>'SABS'],
                         ['src'=>'assets/img/ILAC.JPG',  'href'=>'', 'alt'=>'ILAC'],
                         ['src'=>'assets/img/iaf.webp',   'href'=>'https://www.iaf.nu/', 'alt'=>'IAF'],
-
-
                     ];
                     foreach (array_merge($accs, $accs) as $a): ?>
                     <div class="slider-item">

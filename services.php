@@ -421,6 +421,11 @@
                             </a>
                         </div>
                         <div class="slider-item px-3">
+                            <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
+                                <img src="assets/img/SABS.png" alt="SABS" class="img-fluid affiliation-logo">
+                            </a>
+                        </div>
+                        <div class="slider-item px-3">
                             <a href="https://www.arso-org.org/" target="_blank" rel="noopener noreferrer">
                                 <img src="admin/uploads/arso.png" alt="ARSO" class="img-fluid affiliation-logo">
                             </a>
@@ -444,6 +449,11 @@
                         <div class="slider-item px-3">
                             <a href="https://www.iec.ch/" target="_blank" rel="noopener noreferrer">
                                 <img src="admin/uploads/iec.png" alt="IEC" class="img-fluid affiliation-logo">
+                            </a>
+                        </div>
+                        <div class="slider-item px-3">
+                            <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
+                                <img src="assets/img/SABS.png" alt="SABS" class="img-fluid affiliation-logo">
                             </a>
                         </div>
                         <div class="slider-item px-3">
