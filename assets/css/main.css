@@ -9945,10 +9945,13 @@ body {
   color: #2B3388 !important;
 }
 
-/* No bold in body content. Hammer with !important to beat per-page rules. */
+/* No bold in body content. Hammer with !important to beat per-page rules.
+   IMPORTANT: <i> is intentionally NOT in this list — Font Awesome icons
+   (e.g. <i class="fas fa-globe">) need font-weight 900 to render their
+   solid glyph. Touching <i> font-weight breaks every fas/far/fab icon. */
 body p,
 body li,
-body span,
+body span:not(.fa):not(.fas):not(.far):not(.fab):not(.fa-stack):not([class*="fa-"]),
 body div,
 body td,
 body th,
@@ -9960,7 +9963,6 @@ body strong,
 body b,
 body em,
 body small,
-body i,
 body .fw-bold,
 body .fw-semibold {
   font-weight: 400 !important;
@@ -9976,14 +9978,20 @@ body a * {
   font-weight: 600 !important;
 }
 
-/* Headings keep their bold via their own rules — make extra sure
-   nothing above accidentally clobbered them. */
-body h1, body h2, body h3, body h4, body h5, body h6 {
-  font-weight: 700;
+/* Headings keep their bold. !important ensures .fw-bold / .fw-semibold
+   utility classes don't accidentally clobber a heading via the unbold rule
+   above (e.g. <h2 class="fw-bold">). */
+body h1, body h2, body h3, body h4, body h5, body h6,
+body h1.fw-bold, body h2.fw-bold, body h3.fw-bold,
+body h4.fw-bold, body h5.fw-bold, body h6.fw-bold,
+body h1.fw-semibold, body h2.fw-semibold, body h3.fw-semibold,
+body h4.fw-semibold, body h5.fw-semibold, body h6.fw-semibold {
+  font-weight: 700 !important;
 }
 body h1 strong, body h2 strong, body h3 strong,
 body h4 strong, body h5 strong, body h6 strong,
-body h1 b, body h2 b, body h3 b, body h4 b, body h5 b, body h6 b {
+body h1 b, body h2 b, body h3 b, body h4 b, body h5 b, body h6 b,
+body h1 span, body h2 span, body h3 span, body h4 span, body h5 span, body h6 span {
   font-weight: inherit !important;
 }
 
