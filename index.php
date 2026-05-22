@@ -717,7 +717,7 @@ if ($am_result) {
     }
     .trust-eswasa-section .section-heading h2 {
         color: #2B3388;
-        font-size: 2rem;
+        font-size: 32px;
         font-weight: 700;
         margin: 0;
         padding-bottom: 18px;
