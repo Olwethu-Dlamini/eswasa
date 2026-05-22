@@ -90,6 +90,9 @@
 
         /* Pyramid layout — featured leader on top, members in a centered grid below */
         .team-section { margin-bottom: 60px; }
+        /* Breathing room between the section-divider underline and the
+           first team-card / staff content below. */
+        .team-section .section-divider { margin-bottom: 36px; }
         .team-layout {
             display: flex;
             flex-direction: column;
