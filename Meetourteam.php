@@ -55,7 +55,7 @@
         .team-header h2 {
             color: #2B3388;
             font-weight: 700;
-            font-size: 40px;
+            font-size: 32px;
             margin: 0;
             letter-spacing: -0.01em;
             line-height: 1.2;
@@ -71,13 +71,14 @@
             margin: 0 auto;
         }
 
-        /* Section title — same pattern as index/about-us (separate divider div) */
+        /* Sub-section title — sits BELOW the .team-header h2 parent, so
+           uses h3 markup at canonical 24px to keep parent > child hierarchy. */
         .section-title {
             text-align: center;
             margin: 60px 0 0;
             font-weight: 700;
             color: #2B3388;
-            font-size: 32px;
+            font-size: 24px;
             letter-spacing: -0.01em;
             line-height: 1.2;
         }
@@ -286,7 +287,8 @@
             .team-layout { gap: 28px; }
             .team-img-container { width: 120px; padding-top: 120px; }
             .team-leader .team-img-container { width: 160px; padding-top: 160px; }
-            .section-title { font-size: 1.8rem; }
+            .team-header h2 { font-size: 28px; }
+            .section-title { font-size: 22px; }
         }
         @media (max-width: 767.98px) {
             .team-layout { gap: 28px; }
@@ -298,9 +300,9 @@
             .team-leader .team-img-container { width: 150px; padding-top: 150px; }
             .team-leader .team-card { max-width: 240px; padding: 24px 18px 22px; }
             .team-leader .team-name { font-size: 17px; }
-            .section-title { font-size: 1.55rem; margin: 40px 0 0; }
+            .team-header h2 { font-size: 24px; }
+            .section-title { font-size: 20px; margin: 40px 0 0; }
             .staff-photo-container { padding-bottom: 50%; }
-            .team-header h2 { font-size: 28px; }
             .team-header p { font-size: 15px; }
         }
         @media (max-width: 575.98px) {
@@ -356,7 +358,7 @@
 
             <!-- Council Section -->
             <div class="team-section">
-                <h2 class="section-title">Members of the Council</h2>
+                <h3 class="section-title">Members of the Council</h3>
                 <div class="section-divider"></div>
                 <div class="team-layout">
                     <div class="team-leader">
@@ -408,7 +410,7 @@
 
             <!-- Management Section -->
             <div class="team-section">
-                <h2 class="section-title">Management Team</h2>
+                <h3 class="section-title">Management Team</h3>
                 <div class="section-divider"></div>
                 <div class="team-layout">
                     <div class="team-leader">
@@ -452,7 +454,7 @@
 
             <!-- ESWASA STAFF Section (now at bottom) -->
             <div class="team-section">
-                <h2 class="section-title">ESWASA Staff</h2>
+                <h3 class="section-title">ESWASA Staff</h3>
                 <div class="section-divider"></div>
                 <div class="eswasa-staff-content text-center mb-4">
                     <p>
