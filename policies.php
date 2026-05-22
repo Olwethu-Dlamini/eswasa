@@ -256,9 +256,7 @@ $policies = [
                                     <a href="index.php">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">
-                                    <a href="customer-care.php">Customer Care</a>
-                                </span>
+                                <span property="itemListElement" typeof="ListItem">Customer Care</span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Policies</span>
                             </nav>

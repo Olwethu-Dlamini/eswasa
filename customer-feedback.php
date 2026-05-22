@@ -7,9 +7,9 @@ include_once 'includes/breadcrumb_helper.php';
 $success = false;
 $error = '';
 $prefill = [
-    'name' => '', 'email' => '', 'phone' => '',
-    'department' => '', 'feedback_type' => '', 'service' => '',
-    'resolved' => '', 'issue' => '', 'rating' => '', 'suggestion' => '',
+    'service' => '', 'feedback_type' => '', 'resolved' => '',
+    'issue' => '', 'rating' => '',
+    'suggestion' => '', 'email' => '',
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,59 +17,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $prefill[$k] = trim($_POST[$k] ?? '');
     }
 
-    // Required: feedback_type + issue + at least one identifier (email or phone)
-    if (!$prefill['feedback_type']) {
+    if (!$prefill['service']) {
+        $error = 'Please select the service you were seeking.';
+    } elseif (!$prefill['feedback_type']) {
         $error = 'Please select the type of feedback.';
+    } elseif (!$prefill['resolved']) {
+        $error = 'Please tell us whether your issue was resolved.';
     } elseif (!$prefill['issue']) {
-        $error = 'Please tell us what the issue or comment is.';
-    } elseif (!$prefill['email'] && !$prefill['phone']) {
-        $error = 'Please provide either an email address or a phone number so we can respond.';
+        $error = 'Please tell us what the issue was.';
+    } elseif (!$prefill['rating']) {
+        $error = 'Please rate our service.';
     } elseif ($prefill['email'] && !filter_var($prefill['email'], FILTER_VALIDATE_EMAIL)) {
         $error = 'Invalid email address.';
     } else {
-        // Attempt to store. Table is created lazily on first use.
         @mysqli_query($conn, "CREATE TABLE IF NOT EXISTS eswasa_customer_feedback (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(150),
-            email VARCHAR(150),
-            phone VARCHAR(50),
-            department VARCHAR(100),
-            feedback_type VARCHAR(50),
             service VARCHAR(150),
+            feedback_type VARCHAR(50),
             resolved VARCHAR(20),
             issue TEXT,
             rating TINYINT,
             suggestion TEXT,
+            email VARCHAR(150),
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )");
 
         $stmt = $conn->prepare("INSERT INTO eswasa_customer_feedback
-            (name, email, phone, department, feedback_type, service, resolved, issue, rating, suggestion)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $rating_i = (int)($prefill['rating'] ?: 0);
+            (service, feedback_type, resolved, issue, rating, suggestion, email)
+            VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $rating_i = (int)$prefill['rating'];
         $stmt->bind_param(
-            'sssssssiis',
-            $prefill['name'], $prefill['email'], $prefill['phone'],
-            $prefill['department'], $prefill['feedback_type'], $prefill['service'],
-            $prefill['resolved'], $prefill['issue'], $rating_i, $prefill['suggestion']
+            'ssssiss',
+            $prefill['service'], $prefill['feedback_type'], $prefill['resolved'],
+            $prefill['issue'], $rating_i, $prefill['suggestion'], $prefill['email']
         );
 
         if ($stmt && $stmt->execute()) {
-            // Send notification email
             $to = 'info@swasa.co.sz';
             $email_subject = "Customer Feedback: " . $prefill['feedback_type'];
             $body  = "<h3>New Customer Feedback</h3>";
-            $body .= "<p><strong>Name:</strong> " . htmlspecialchars($prefill['name'] ?: '(not provided)') . "</p>";
-            $body .= "<p><strong>Email:</strong> " . htmlspecialchars($prefill['email'] ?: '(not provided)') . "</p>";
-            $body .= "<p><strong>Phone:</strong> " . htmlspecialchars($prefill['phone'] ?: '(not provided)') . "</p>";
-            $body .= "<p><strong>Department:</strong> " . htmlspecialchars($prefill['department']) . "</p>";
-            $body .= "<p><strong>Type:</strong> " . htmlspecialchars($prefill['feedback_type']) . "</p>";
             $body .= "<p><strong>Service:</strong> " . htmlspecialchars($prefill['service']) . "</p>";
-            $body .= "<p><strong>Issue resolved:</strong> " . htmlspecialchars($prefill['resolved'] ?: 'N/A') . "</p>";
+            $body .= "<p><strong>Type:</strong> " . htmlspecialchars($prefill['feedback_type']) . "</p>";
+            $body .= "<p><strong>Issue resolved:</strong> " . htmlspecialchars($prefill['resolved']) . "</p>";
             $body .= "<p><strong>Rating:</strong> " . $rating_i . " / 5</p>";
             $body .= "<p><strong>Issue:</strong><br>" . nl2br(htmlspecialchars($prefill['issue'])) . "</p>";
             if ($prefill['suggestion']) {
                 $body .= "<p><strong>Suggestions:</strong><br>" . nl2br(htmlspecialchars($prefill['suggestion'])) . "</p>";
+            }
+            if ($prefill['email']) {
+                $body .= "<p><strong>Email (for reply):</strong> " . htmlspecialchars($prefill['email']) . "</p>";
             }
             $body .= "<hr><p><em>" . date('F j, Y \a\t g:i A') . "</em></p>";
             $headers  = "MIME-Version: 1.0\r\n";
@@ -95,7 +91,7 @@ if (isset($_GET['success'])) {
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Customer Feedback &amp; Complaints - ESWASA</title>
-    <meta name="description" content="Share feedback, file a complaint, lodge a compliment or appeal a decision. The Eswatini Standards Authority listens to every submission.">
+    <meta name="description" content="Share feedback, file a complaint, or lodge a compliment with the Eswatini Standards Authority.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -162,13 +158,13 @@ if (isset($_GET['success'])) {
             max-width: 920px;
             margin: 0 auto;
         }
-        .feedback-card .form-group { margin-bottom: 20px; }
+        .feedback-card .form-group { margin-bottom: 22px; }
         .feedback-card label {
             display: block;
             color: #2B3388;
             font-weight: 600;
-            font-size: 0.92rem;
-            margin-bottom: 6px;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
         }
         .feedback-card label .req { color: #b00; margin-left: 2px; }
         .feedback-card .form-control,
@@ -190,9 +186,9 @@ if (isset($_GET['success'])) {
             border-color: #2B3388;
             box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.12);
         }
-        .feedback-card textarea { min-height: 110px; resize: vertical; }
+        .feedback-card textarea { min-height: 120px; resize: vertical; }
 
-        .radio-row { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 6px; }
+        .radio-row { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 6px; }
         .radio-row label {
             font-weight: 500;
             color: rgba(43, 51, 136, 0.88);
@@ -204,7 +200,6 @@ if (isset($_GET['success'])) {
         }
         .radio-row input[type="radio"] { accent-color: #2B3388; transform: scale(1.1); }
 
-        /* Rating stars */
         .rating-row {
             display: inline-flex;
             flex-direction: row-reverse;
@@ -214,7 +209,7 @@ if (isset($_GET['success'])) {
         .rating-row input[type="radio"] { display: none; }
         .rating-row label {
             color: rgba(43, 51, 136, 0.30);
-            font-size: 1.8rem;
+            font-size: 1.85rem;
             cursor: pointer;
             margin-bottom: 0;
             transition: color .15s ease, transform .15s ease;
@@ -258,16 +253,9 @@ if (isset($_GET['success'])) {
             color: #b00;
         }
 
-        .form-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
         @media (max-width: 767.98px) {
             .feedback-section { padding: 40px 0 50px; }
             .feedback-card { padding: 26px 22px 24px; }
-            .form-grid-2 { grid-template-columns: 1fr; gap: 0; }
             .breadcrumb-content .title { font-size: 1.6rem; }
             .rating-row label { font-size: 1.55rem; }
         }
@@ -299,13 +287,11 @@ if (isset($_GET['success'])) {
                                     <a href="index.php">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">
-                                    <a href="customer-care.php">Customer Care</a>
-                                </span>
+                                <span property="itemListElement" typeof="ListItem">Customer Care</span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Feedback &amp; Complaints</span>
                             </nav>
-                            <h3 class="title">Customer Feedback &amp; Complaint Form</h3>
+                            <h3 class="title">Customer Feedback / Complaint Form</h3>
                         </div>
                     </div>
                 </div>
@@ -314,13 +300,9 @@ if (isset($_GET['success'])) {
 
         <section class="feedback-section">
             <div class="container">
-                <div class="main_title centered upper mb-4 text-center">
-                    <h2 class="display-6 fw-bold">Tell Us How We're Doing</h2>
-                    <div class="section-divider"></div>
-                </div>
 
                 <div class="intro-card">
-                    <p>Kindly fill in the fields below. Every submission is logged, reviewed and routed to the relevant department. We acknowledge feedback within 3 working days and aim to provide a substantive response within 14 working days, in line with our <a href="service-charter.php">Service Charter</a>.</p>
+                    <p>Kindly fill in all the fields below.</p>
                 </div>
 
                 <div class="feedback-card">
@@ -337,78 +319,38 @@ if (isset($_GET['success'])) {
 
                     <form method="post" novalidate>
 
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label for="name">Your Name <span class="text-muted" style="font-weight:400;">(optional)</span></label>
-                                <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($prefill['name']) ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <input type="text" class="form-control" id="phone" name="phone" value="<?= htmlspecialchars($prefill['phone']) ?>" placeholder="e.g. +268 7612 3456">
-                            </div>
-                        </div>
-
                         <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($prefill['email']) ?>" placeholder="name@example.com">
-                            <small class="text-muted" style="display:block; margin-top:4px;">Provide email or phone so we can respond.</small>
-                        </div>
-
-                        <div class="form-grid-2">
-                            <div class="form-group">
-                                <label for="department">Department</label>
-                                <select id="department" name="department">
-                                    <option value="">— Select department —</option>
-                                    <?php
-                                    $depts = [
-                                        'Standards Development',
-                                        'Quality Assurance & Inspection',
-                                        'Testing Services',
-                                        'Calibration & Metrology',
-                                        'Certification',
-                                        'Training',
-                                        'Customer Service / Reception',
-                                        'Not sure',
-                                    ];
-                                    foreach ($depts as $d) {
-                                        $sel = $prefill['department'] === $d ? 'selected' : '';
-                                        echo "<option value=\"$d\" $sel>$d</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="service">Service Sought</label>
-                                <select id="service" name="service">
-                                    <option value="">— Select service —</option>
-                                    <?php
-                                    $services = [
-                                        'Standards Purchase',
-                                        'Standards Development / Comment',
-                                        'Management Systems Certification',
-                                        'Product Certification (ESWASA Mark)',
-                                        'Ingelo MSME Certification',
-                                        'Testing Services',
-                                        'Calibration / Metrology',
-                                        'Training Programme',
-                                        'Information Request',
-                                        'Other',
-                                    ];
-                                    foreach ($services as $s) {
-                                        $sel = $prefill['service'] === $s ? 'selected' : '';
-                                        echo "<option value=\"$s\" $sel>$s</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
+                            <label for="service">Which services were you seeking from ESWASA?<span class="req">*</span></label>
+                            <select id="service" name="service" required>
+                                <option value="">— Select —</option>
+                                <?php
+                                $services = [
+                                    'Purchase of Standards',
+                                    'Standards Development',
+                                    'Management Systems Certification',
+                                    'Product Certification (ESWASA Mark)',
+                                    'Ingelo MSME Certification',
+                                    'Testing Services',
+                                    'Calibration / Metrology Services',
+                                    'Training',
+                                    'Information Request',
+                                    'Finance',
+                                    'Administration Services',
+                                    'Other',
+                                ];
+                                foreach ($services as $s) {
+                                    $sel = $prefill['service'] === $s ? 'selected' : '';
+                                    echo "<option value=\"$s\" $sel>$s</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label>What type of feedback is this?<span class="req">*</span></label>
                             <div class="radio-row">
                                 <?php
-                                $types = ['Complaint', 'Compliment', 'Suggestion', 'Appeal'];
+                                $types = ['Complaint', 'Compliment', 'Suggestion'];
                                 foreach ($types as $t) {
                                     $chk = $prefill['feedback_type'] === $t ? 'checked' : '';
                                     echo "<label><input type=\"radio\" name=\"feedback_type\" value=\"$t\" $chk> $t</label>";
@@ -418,10 +360,10 @@ if (isset($_GET['success'])) {
                         </div>
 
                         <div class="form-group">
-                            <label>Was your issue resolved?</label>
+                            <label>Was your issue resolved?<span class="req">*</span></label>
                             <div class="radio-row">
                                 <?php
-                                $resolved = ['Yes', 'No', 'Partially', 'N/A'];
+                                $resolved = ['Yes', 'No', 'Partially'];
                                 foreach ($resolved as $r) {
                                     $chk = $prefill['resolved'] === $r ? 'checked' : '';
                                     echo "<label><input type=\"radio\" name=\"resolved\" value=\"$r\" $chk> $r</label>";
@@ -431,18 +373,17 @@ if (isset($_GET['success'])) {
                         </div>
 
                         <div class="form-group">
-                            <label for="issue">Please tell us what the issue, compliment or suggestion is<span class="req">*</span></label>
-                            <textarea id="issue" name="issue" rows="5" placeholder="Describe in your own words..."><?= htmlspecialchars($prefill['issue']) ?></textarea>
+                            <label for="issue">Please tell us what the issue was:<span class="req">*</span></label>
+                            <textarea id="issue" name="issue" rows="5" required><?= htmlspecialchars($prefill['issue']) ?></textarea>
                         </div>
 
                         <div class="form-group">
-                            <label>How would you rate our service?</label>
+                            <label>How would you rate our service?<span class="req">*</span></label>
                             <div class="rating-row">
                                 <?php
-                                // Reversed (5 first in markup so CSS sibling-selector hover works).
                                 for ($i = 5; $i >= 1; $i--) {
                                     $chk = (string)$prefill['rating'] === (string)$i ? 'checked' : '';
-                                    echo "<input type=\"radio\" id=\"r$i\" name=\"rating\" value=\"$i\" $chk>";
+                                    echo "<input type=\"radio\" id=\"r$i\" name=\"rating\" value=\"$i\" $chk required>";
                                     echo "<label for=\"r$i\" title=\"$i star".($i>1?'s':'')."\">&#9733;</label>";
                                 }
                                 ?>
@@ -450,11 +391,16 @@ if (isset($_GET['success'])) {
                         </div>
 
                         <div class="form-group">
-                            <label for="suggestion">Suggest other ways we can improve <span class="text-muted" style="font-weight:400;">(optional)</span></label>
-                            <textarea id="suggestion" name="suggestion" rows="3" placeholder="Anything else you would like us to know..."><?= htmlspecialchars($prefill['suggestion']) ?></textarea>
+                            <label for="suggestion">Suggest other ways through which we can improve our services (please specify)</label>
+                            <textarea id="suggestion" name="suggestion" rows="3"><?= htmlspecialchars($prefill['suggestion']) ?></textarea>
                         </div>
 
-                        <button type="submit" class="btn-submit">Submit Feedback</button>
+                        <div class="form-group">
+                            <label for="email">Your email <span class="text-muted" style="font-weight:400;">(optional — if you would like a reply)</span></label>
+                            <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($prefill['email']) ?>" placeholder="name@example.com">
+                        </div>
+
+                        <button type="submit" class="btn-submit">Submit</button>
                     </form>
                 </div>
 

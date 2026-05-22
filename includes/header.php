@@ -124,9 +124,8 @@
 
                                             </ul>
                                         </li>
-                                        <li class="menu-item-has-children"><a href="customer-care.php">Customer Care</a>
+                                        <li class="menu-item-has-children"><a href="service-charter.php">Customer Care</a>
                                             <ul class="sub-menu">
-                                                <li><a href="customer-care.php">Customer Care</a></li>
                                                 <li><a href="service-charter.php">Service Charter</a></li>
                                                 <li><a href="customer-feedback.php">Customer Feedback / Complaint</a></li>
                                                 <li><a href="policies.php">Policies</a></li>
