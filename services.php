@@ -266,7 +266,7 @@
                     <!-- Certification -->
                     <div class="col">
                         <a href="Certification.php" class="text-decoration-none">
-                            <div class="card service-card border-0 shadow-sm rounded-3 p-4 h-100">
+                            <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M24 4 L42 11 V24 C42 34 34 42 24 44 C14 42 6 34 6 24 V11 Z"/>
@@ -282,7 +282,7 @@
                     <!-- Product Testing -->
                     <div class="col">
                         <a href="product.php" class="text-decoration-none">
-                            <div class="card service-card border-0 shadow-sm rounded-3 p-4 h-100">
+                            <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M18 6 H30"/>
@@ -302,7 +302,7 @@
                     <!-- Calibration Services -->
                     <div class="col">
                         <a href="Calibration.php" class="text-decoration-none">
-                            <div class="card service-card border-0 shadow-sm rounded-3 p-4 h-100">
+                            <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M6 34 A 18 18 0 0 1 42 34"/>
@@ -324,7 +324,7 @@
                     <!-- Standards Development -->
                     <div class="col">
                         <a href="Standards.php" class="text-decoration-none">
-                            <div class="card service-card border-0 shadow-sm rounded-3 p-4 h-100">
+                            <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M10 6 H28 L38 16 V42 H10 Z"/>
@@ -343,7 +343,7 @@
                     <!-- Standards Sales -->
                     <div class="col">
                         <a href="Standards.php" class="text-decoration-none">
-                            <div class="card service-card border-0 shadow-sm rounded-3 p-4 h-100">
+                            <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <line x1="24" y1="10" x2="24" y2="40"/>
@@ -360,7 +360,7 @@
                     <!-- Training Academy -->
                     <div class="col">
                         <a href="training-about.php" class="text-decoration-none">
-                            <div class="card service-card border-0 shadow-sm rounded-3 p-4 h-100">
+                            <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M4 20 L24 10 L44 20 L24 30 Z"/>
