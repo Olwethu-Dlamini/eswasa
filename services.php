@@ -68,12 +68,12 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: 0 1px 3px rgba(43, 51, 136, 0.06);
+            box-shadow: 0 6px 16px rgba(43, 51, 136, 0.12);
         }
         .service-card:hover {
             transform: translateY(-3px);
             border-color: rgba(43, 51, 136, 0.40) !important;
-            box-shadow: 0 8px 20px rgba(43, 51, 136, 0.12);
+            box-shadow: 0 14px 32px rgba(43, 51, 136, 0.22);
         }
         .service-icon {
             width: 68px;
