@@ -74,9 +74,16 @@ include_once 'includes/breadcrumb_helper.php';
             border-radius: 4px !important;
         }
         .accordion-button:not(.collapsed) {
-            background: #2B3388;
-            color: #fff;
-            border-color: #2B3388;
+            background-color: #2B3388 !important;
+            color: #fff !important;
+            border-color: #2B3388 !important;
+            box-shadow: none;
+        }
+        /* Bootstrap's open-state chevron icon defaults to dark blue, which
+           vanishes on our brand-blue button background. Replace it with a
+           white SVG via the Bootstrap CSS variable. */
+        .accordion-button:not(.collapsed)::after {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") !important;
         }
         .accordion-button:focus {
             border-color: #2B3388;
