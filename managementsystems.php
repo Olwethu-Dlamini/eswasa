@@ -419,6 +419,7 @@ include_once 'includes/breadcrumb_helper.php';
     color: #2B3388;
     border: 3px solid #2B3388;
     font-weight: 700;
+    font-size: 18px;
 }
 
 .process-arrow {
