@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if ($stmt && $stmt->execute()) {
-            $to = 'info@swasa.co.sz';
+            $to = 'info@eswasa.co.sz';
             $email_subject = "Customer Feedback: " . $prefill['feedback_type'];
             $body  = "<h3>New Customer Feedback</h3>";
             $body .= "<p><strong>Service:</strong> " . htmlspecialchars($prefill['service']) . "</p>";
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: customer-feedback.php?success=1");
             exit;
         } else {
-            $error = 'Sorry — we could not save your feedback. Please try again or email info@swasa.co.sz directly.';
+            $error = 'Sorry — we could not save your feedback. Please try again or email info@eswasa.co.sz directly.';
         }
     }
 }

@@ -253,7 +253,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <p>If our service does not meet the standards set out in this charter, we want to know. You can:</p>
                             <ul>
                                 <li>Submit feedback or a complaint through our online <a href="customer-feedback.php">Customer Feedback form</a>.</li>
-                                <li>Write to us at <a href="mailto:info@swasa.co.sz">info@swasa.co.sz</a>.</li>
+                                <li>Write to us at <a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a>.</li>
                                 <li>Call us on <strong>(+268) 2518 4633 / 4610</strong>.</li>
                                 <li>Visit our offices in Matsapha during working hours.</li>
                             </ul>

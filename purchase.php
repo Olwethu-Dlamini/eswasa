@@ -230,8 +230,8 @@
                         <div class="action-card">
                             <h4><i class="fas fa-shopping-cart me-2"></i>Online Webstore</h4>
                             <p>Purchase standards conveniently online through our webstore.</p>
-                            <a href="https://estore.swasa.co.sz/" class="catalogue-link" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> Webstore - https://estore.swasa.co.sz/
+                            <a href="https://estore.eswasa.co.sz/" class="catalogue-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> Webstore - https://estore.eswasa.co.sz/
                             </a>
                         </div>
                     </div>

@@ -28,7 +28,7 @@
                     <div class="col-md-6">
                         <ul class="tg-header__top-info list-wrap">
                             <li><i class="fas fa-phone-alt"></i> <span>(+268) 2518 4633/ 4610</span></li>
-                            <li><i class="far fa-envelope"></i> <a href="mailto:info@swasa.co.sz">info@swasa.co.sz</a></li>
+                            <li><i class="far fa-envelope"></i> <a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a></li>
                         </ul>
                     </div>
                     <div class="col-md-6">

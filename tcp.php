@@ -217,7 +217,7 @@
                     <p>Becoming a member of an **ESWASA** Technical Committee is a great way to contribute to the development of standards that impact your industry and society. Members gain valuable insights, network with experts, and help shape the future of their technical field.</p>
                     <p><strong>Eligibility:</strong> Membership is open to individuals with relevant expertise and a commitment to the standards development process.</p>
                     <a href="admin/uploads/tc_membership_application.pdf" class="btn btn-tc mt-2" target="_blank">Download TC Membership Application (PDF)</a>
-                    <p class="mt-3">Please submit the completed form to <a href="mailto:info@swasa.co.sz">info@swasa.co.sz</a>.</p>
+                    <p class="mt-3">Please submit the completed form to <a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a>.</p>
                 </div>
 
                 <div class="text-center my-5">

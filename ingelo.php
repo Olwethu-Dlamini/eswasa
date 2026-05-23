@@ -314,7 +314,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <p>To begin the Ingelo Certification process, please:</p>
                     <ol>
                         <li>Download and complete the official application form.</li>
-                        <li>Submit via email to <strong>certification@swasa.co.sz</strong> or in person at ESWASA offices, Matsapha.</li>
+                        <li>Submit via email to <strong>certification@eswasa.co.sz</strong> or in person at ESWASA offices, Matsapha.</li>
                     </ol>
                     <div class="mt-3">
                         <a href="admin/uploads/ingelo_application_form.pdf" class="btn-cta" target="_blank">

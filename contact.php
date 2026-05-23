@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($stmt->execute()) {
             // Send email
-            $to = 'info@swasa.co.sz';
+            $to = 'info@eswasa.co.sz';
             $email_subject = "New Contact Form Submission: $subject";
             $email_body = "
                 <h3>New Message from ESWASA Website</h3>
@@ -328,8 +328,8 @@ if (isset($_SESSION['contact_error'])) {
                             </div>
                             <div class="col-sm-6">
                                 <h6><i class="fas fa-globe me-2"></i>Website:</h6>
-                                <p><a href="https://www.swasa.co.sz" target="_blank">www.swasa.co.sz</a></p>
-                                <p><a href="mailto:info@swasa.co.sz">info@swasa.co.sz</a></p>
+                                <p><a href="https://www.eswasa.co.sz" target="_blank">www.eswasa.co.sz</a></p>
+                                <p><a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a></p>
                             </div>
                         </div>
                     </div>

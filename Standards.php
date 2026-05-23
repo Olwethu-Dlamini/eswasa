@@ -624,8 +624,8 @@ include_once 'includes/breadcrumb_helper.php';
                         <h3>Submitting a Standards Proposal</h3>
                         <p>To propose a new standard or revision of an existing SZNS, please:</p>
                         <ol>
-                            <li>Complete the official <strong>Standards Development Proposal Form</strong> — either the downloadable form below, or via the online portal: <a href="https://tc.swasa.co.sz/proposal.php" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">tc.swasa.co.sz/proposal.php</a></li>
-                            <li>Email the completed form to <a href="mailto:standards@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">standards@eswasa.co.sz</a> or <a href="mailto:info@swasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@swasa.co.sz</a></li>
+                            <li>Complete the official <strong>Standards Development Proposal Form</strong> — either the downloadable form below, or via the online portal: <a href="https://tc.eswasa.co.sz/proposal.php" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">tc.eswasa.co.sz/proposal.php</a></li>
+                            <li>Email the completed form to <a href="mailto:standards@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">standards@eswasa.co.sz</a> or <a href="mailto:info@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@eswasa.co.sz</a></li>
                         </ol>
                         <div class="mt-3">
                             <a href="admin/uploads/standards_proposal_form.pdf" class="btn btn-primary" target="_blank">
@@ -692,10 +692,10 @@ include_once 'includes/breadcrumb_helper.php';
                             <strong>Eligibility:</strong> Membership is open to Eswatini citizens with relevant expertise and a commitment to the standards development process.
                         </p>
                         <p>
-                            Submit completed applications to <a href="mailto:info@swasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@swasa.co.sz</a> or <a href="mailto:standards@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">standards@eswasa.co.sz</a>.
+                            Submit completed applications to <a href="mailto:info@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@eswasa.co.sz</a> or <a href="mailto:standards@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">standards@eswasa.co.sz</a>.
                         </p>
                         <div class="mt-3">
-                            <a href="https://tc.swasa.co.sz/" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-external-link-alt me-2"></i>Visit the TC Portal</a>
+                            <a href="https://tc.eswasa.co.sz/" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-external-link-alt me-2"></i>Visit the TC Portal</a>
                             <a href="tcp.php" class="btn btn-primary"><i class="fas fa-user-plus me-2"></i>Register Interest</a>
                         </div>
                     </div>
@@ -706,7 +706,7 @@ include_once 'includes/breadcrumb_helper.php';
                             The ESWASA Work Programme details all current and scheduled standards development and revision projects. The programme is derived from national needs assessments and stakeholder requests, ensuring the standards developed align with Eswatini's economic and regulatory priorities. Interested stakeholders are invited to review the programme and provide feedback.
                         </p>
                         <div class="mt-3">
-                            <a href="https://tc.swasa.co.sz/work-programme.php" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-calendar-alt me-2"></i>View Work Programme</a>
+                            <a href="https://tc.eswasa.co.sz/work-programme.php" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-calendar-alt me-2"></i>View Work Programme</a>
                         </div>
                     </div>
                 </div>
@@ -725,7 +725,7 @@ include_once 'includes/breadcrumb_helper.php';
                             ESWASA sells SZNS as well as related documents and specifications. Our services extend to sourcing other international and regional standards for you, such as <strong>ISO, IEC, ARSO, SADCSTAN, SANS and ASTM</strong>.
                         </p>
                         <div class="mt-3">
-                            <a href="https://estore.swasa.co.sz/" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-shopping-cart me-2"></i>Visit the ESWASA estore</a>
+                            <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-shopping-cart me-2"></i>Visit the ESWASA estore</a>
                             <a href="purchase.php" class="btn btn-primary"><i class="fas fa-book me-2"></i>View Standards Catalogue</a>
                         </div>
                     </div>
@@ -755,7 +755,7 @@ include_once 'includes/breadcrumb_helper.php';
                                         <div class="con_cont">
                                             <span class="popular-code"><?= htmlspecialchars($s['code']) ?></span>
                                             <a class="add2cart_prod_name d-block mb-3 fw-bold"><?= $s['name'] ?></a>
-                                            <a href="https://estore.swasa.co.sz/" target="_blank" rel="noopener" class="add2cart_btn btn btn-primary btn-sm">
+                                            <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" class="add2cart_btn btn btn-primary btn-sm">
                                                 <i class="fas fa-shopping-cart me-1"></i>Purchase
                                             </a>
                                         </div>
@@ -765,7 +765,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <?php endforeach; ?>
                         </div>
                         <p class="small text-muted mt-4 mb-0 text-center">
-                            For the complete list, browse the <a href="purchase.php" style="color:#2B3388; text-decoration:underline; font-weight:600;">Standards Catalogue</a> or visit the <a href="https://estore.swasa.co.sz/" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">estore</a>.
+                            For the complete list, browse the <a href="purchase.php" style="color:#2B3388; text-decoration:underline; font-weight:600;">Standards Catalogue</a> or visit the <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">estore</a>.
                         </p>
                     </div>
 
@@ -843,7 +843,7 @@ include_once 'includes/breadcrumb_helper.php';
                         <p class="cta-subtitle">Contact our Standards Unit, register for a Technical Committee, or purchase a standard online.</p>
                         <a href="contact.php" class="btn-cta">Contact Standards Unit</a>
                         <a href="#technical-committees" class="btn-cta">Join a Technical Committee</a>
-                        <a href="https://estore.swasa.co.sz/" target="_blank" rel="noopener" class="btn-cta">Visit estore</a>
+                        <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" class="btn-cta">Visit estore</a>
                     </div>
                 </div>
             </div>

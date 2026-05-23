@@ -247,9 +247,9 @@
                                         <i class="far fa-envelope"></i>
                                     </div>
                                     <div class="content">
-                                        <a href="mailto:pmkhwanazi@swasa.co.sz">	pmkhwanazi@swasa.co.sz </a>
-                                        <a href="mailto:info@swasa.co.sz">	info@swasa.co.sz</a>
-                                        <a href="http://www.swasa.co.sz">	www.swasa.co.sz</a>
+                                        <a href="mailto:pmkhwanazi@eswasa.co.sz">	pmkhwanazi@eswasa.co.sz </a>
+                                        <a href="mailto:info@eswasa.co.sz">	info@eswasa.co.sz</a>
+                                        <a href="http://www.eswasa.co.sz">	www.eswasa.co.sz</a>
 
                                     </div>
                                 </li>
