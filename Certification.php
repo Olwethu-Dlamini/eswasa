@@ -79,6 +79,18 @@ include_once 'includes/breadcrumb_helper.php';
             border-color: #2B3388;
             box-shadow: 0 4px 14px rgba(43, 51, 136, 0.08);
         }
+
+        /* Featured intro card — first card under the title.
+           Drops the blue left accent and uses a stronger always-on shadow. */
+        .intro-card.intro-card-featured {
+            border: 1px solid rgba(43, 51, 136, 0.10);
+            border-left: 1px solid rgba(43, 51, 136, 0.10);
+            box-shadow: 0 10px 28px rgba(43, 51, 136, 0.22);
+        }
+        .intro-card.intro-card-featured:hover {
+            border-color: rgba(43, 51, 136, 0.25);
+            box-shadow: 0 16px 36px rgba(43, 51, 136, 0.28);
+        }
         .intro-card p {
             margin: 0;
             color: #2B3388;
@@ -320,7 +332,7 @@ include_once 'includes/breadcrumb_helper.php';
                     <h2 class="display-6 fw-bold">Your Path to Quality Excellence</h2>
                     <div class="section-divider"></div>
                 </div>
-                <div class="intro-card mb-5">
+                <div class="intro-card intro-card-featured mb-5">
                     <p>The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.</p>
                 </div>
                 <div class="row mb-4 cert-split g-3">
