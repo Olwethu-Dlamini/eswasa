@@ -247,15 +247,17 @@ include_once 'includes/breadcrumb_helper.php';
         /* Cert-split cards — "Why Certify" + "Our Focus Areas" */
         .cert-split-card {
             background: #fff;
-            border: 1px solid rgba(43, 51, 136, 0.15);
+            border: 1px solid rgba(43, 51, 136, 0.08);
             border-radius: 4px;
             padding: 26px 26px 24px;
             height: 100%;
-            transition: border-color .25s ease, box-shadow .25s ease;
+            box-shadow: 0 10px 28px rgba(43, 51, 136, 0.22);
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
         }
         .cert-split-card:hover {
-            border-color: #2B3388;
-            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.08);
+            border-color: rgba(43, 51, 136, 0.20);
+            box-shadow: 0 16px 36px rgba(43, 51, 136, 0.28);
+            transform: translateY(-3px);
         }
         .cert-split-card-title {
             color: #2B3388;
