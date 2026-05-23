@@ -588,7 +588,7 @@ include_once 'includes/breadcrumb_helper.php';
                             ['n'=>'3', 'icon'=>'fa-users',           'title'=>'Committee Stage',
                              'desc'=>'Comments from members are received, consensus is built and voting is requested for progression of the draft to the Enquiry stage. The cycle may repeat if the CD needs further significant development.'],
                             ['n'=>'4', 'icon'=>'fa-bullhorn',        'title'=>'Enquiry Stage',
-                             'desc'=>'Comments are sought from individuals or organisations not participating directly in the ESWASA committee — i.e. from the <strong>wider public</strong>. Availability of the text for enquiry is notified to the appropriate authorities.'],
+                             'desc'=>'Comments are sought from individuals or organisations not participating directly in the ESWASA committee — i.e. from the <strong>wider public</strong>. Availability of the text for enquiry is notified to the appropriate authorities. Public review allows stakeholders and the public to review draft standards and submit comments before approval, ensuring transparency, inclusiveness, consensus, and national relevance.'],
                             ['n'=>'5', 'icon'=>'fa-comment-dots',    'title'=>'Disposal of Comments Stage',
                              'desc'=>'Within <strong>30 days</strong> of the end of the voting period, the Committee Secretariat prepares a report indicating comments received and the response on each. Every attempt is made to resolve negative votes.', 'pill'=>'within 30 days'],
                             ['n'=>'6', 'icon'=>'fa-clipboard-check', 'title'=>'Approval Stage',
