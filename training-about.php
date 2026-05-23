@@ -1129,18 +1129,29 @@
                                     </svg>
                                 </span>
                                 <h3 class="fw-bold">Assessments</h3>
-                                <p>Participant performance is evaluated through:</p>
-                                <ul class="text-start mx-auto" style="max-width: 520px;">
-                                    <li>Continuous assessments.</li>
-                                    <li>Practical exercises.</li>
-                                    <li>Group activities.</li>
-                                    <li>Final examinations.</li>
-                                </ul>
-                                <p>The minimum passing mark is generally <strong>70%</strong>. Participants may receive:</p>
-                                <ul class="text-start mx-auto" style="max-width: 520px;">
-                                    <li><strong>Certificate of Competence</strong> &mdash; on successful completion and passing of assessments.</li>
-                                    <li><strong>Certificate of Attendance</strong> &mdash; for awareness trainings or participation-only sessions.</li>
-                                </ul>
+
+                                <div class="row g-4 mt-2 text-start" style="max-width: 880px; margin: 0 auto;">
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold mb-3" style="text-align: center;">How performance is evaluated</h5>
+                                        <ul class="mb-0" style="padding-left: 22px;">
+                                            <li>Continuous assessments.</li>
+                                            <li>Practical exercises.</li>
+                                            <li>Group activities.</li>
+                                            <li>Final examinations.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold mb-3" style="text-align: center;">Certificates awarded</h5>
+                                        <ul class="mb-0" style="padding-left: 22px;">
+                                            <li>Certificate of Competence &mdash; for successful completion and passing of all assessments.</li>
+                                            <li>Certificate of Attendance &mdash; for awareness trainings or participation-only sessions.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 mx-auto" style="max-width: 360px; padding: 10px 18px; background: rgba(43, 51, 136, 0.06); border: 1px solid rgba(43, 51, 136, 0.18); border-radius: 4px;">
+                                    Minimum passing mark: 70%
+                                </div>
                             </div>
                         </div>
                     </div>
