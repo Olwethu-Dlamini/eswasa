@@ -403,14 +403,15 @@ include_once 'includes/breadcrumb_helper.php';
     text-align: center;
     padding: 15px;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 12px;
     line-height: 1.3;
     margin: 10px;
 }
 
 .process-circle span {
     font-weight: 400;
-    font-size: 13px;
+    font-size: 15px;
+    margin-top: 4px;
 }
 
 .process-circle.highlight {
@@ -564,7 +565,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <p>Scopes: Quality Management Systems to ISO/IEC 17021-1:2015 and ISO/IEC 17021-3:2017 (Certification to ISO 9001:2015), IAF Codes 3, 12, 13 and 38</p>
                             <div class="mt-3 d-flex flex-wrap align-items-center gap-3">
                                 <img src="admin/uploads/image12.png" alt="SADCAS Accreditation" class="img-fluid" style="max-height: 90px; width: auto;">
-                                <img src="assets/img/SABS.png" alt="SABS Accreditation" class="img-fluid" style="max-height: 90px; width: auto;">
+                                
                             </div>
                         </div>
                     </div>
@@ -603,8 +604,7 @@ include_once 'includes/breadcrumb_helper.php';
                         ['slug'=>'phocweni-clinic',       'name'=>'Phocweni Clinic',       'standard'=>'SZNS ISO 9001:2015'],
                         ['slug'=>'mp-foods',              'name'=>'MP Foods',              'standard'=>'SZNS SANS 10330:2020 — HACCP'],
                         ['slug'=>'eagles-nest',           'name'=>'Eagles Nest',           'standard'=>'SZNS SANS 10330:2020 — HACCP'],
-                        ['slug'=>'dd-williamson',         'name'=>'DD Williamson',         'standard'=>'SZNS ISO 45001:2018'],
-                        ['slug'=>'dd-williamson',         'name'=>'DD Williamson',         'standard'=>'SZNS ISO 14001:2015'],
+                       
                     ];
                     ?>
                     <div class="client-grid">
