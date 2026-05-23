@@ -353,9 +353,36 @@ include_once 'includes/breadcrumb_helper.php';
     </div>
 </div>
 
-                
+                <!-- 6. Calibration FAQ -->
+                <div class="highlighted-section">
+                    <h2 style="text-align: center;">Calibration FAQ</h2>
+                    <div class="section-divider mb-4"></div>
 
-              
+                    <h4 class="mt-3">1. What are the benefits of ESWASA calibration services?</h4>
+                    <p>Calibration services help organisations to:</p>
+                    <ul>
+                        <li>Improve measurement accuracy and reliability.</li>
+                        <li>Ensure compliance with applicable standards and regulatory requirements.</li>
+                        <li>Reduce product rejection and process errors.</li>
+                        <li>Enhance customer confidence and product quality.</li>
+                        <li>Support traceability to recognised measurement standards.</li>
+                        <li>Improve operational efficiency and safety.</li>
+                    </ul>
+
+                    <h4 class="mt-4">2. Who can use ESWASA calibration services?</h4>
+                    <p>Calibration services are available to:</p>
+                    <ul>
+                        <li>Industry and manufacturers.</li>
+                        <li>Laboratories.</li>
+                        <li>Retailers and wholesalers.</li>
+                        <li>Government institutions.</li>
+                        <li>Energy and petroleum sectors.</li>
+                        <li>SMEs and commercial enterprises.</li>
+                        <li>Any organisation requiring reliable and traceable measurements.</li>
+                    </ul>
+                </div>
+
+
         <section class="cta-journey-section">
             <div class="container">
                 <div class="row">
