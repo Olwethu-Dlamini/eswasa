@@ -398,8 +398,9 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <!-- 1. About Product Certification -->
                 <div class="highlighted-section">
-                    <h3>About Product Certification</h3>
-                    <p>ESWASA implemented the ISO 17021 and 17065 Standards on our management systems and product certification schemes in order to provide trusted certification services and assurance that products and services meet customer expectations.</p>
+                    <h3 style="text-align: center;">About Product Certification</h3>
+                    <div class="section-divider"></div>
+                    <p class="mt-3">ESWASA implemented the ISO 17021 and 17065 Standards on our management systems and product certification schemes in order to provide trusted certification services and assurance that products and services meet customer expectations.</p>
                     <p>Product certification demonstrates commitment to safety, quality and performance standards set at an organisational, local or international level.</p>
             </div>
 
