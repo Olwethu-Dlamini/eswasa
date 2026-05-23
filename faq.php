@@ -83,11 +83,25 @@ include_once 'includes/breadcrumb_helper.php';
             box-shadow: 0 0 0 3px rgba(43, 51, 136, 0.15);
         }
         .accordion-body {
-            background: rgba(43, 51, 136, 0.04);
+            background: #fff;
             border: 1px solid rgba(43, 51, 136, 0.15);
             border-top: none;
             border-radius: 0 0 4px 4px;
-            color: #2B3388;
+            color: #2B3388 !important;
+            padding: 18px 22px;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        /* Force any inline element inside the accordion-body to stay brand blue
+           — prevents Bootstrap defaults or inherited colors from making the
+           answer text washed-out / invisible. */
+        .accordion-body,
+        .accordion-body p,
+        .accordion-body li,
+        .accordion-body span,
+        .accordion-body strong,
+        .accordion-body br + * {
+            color: #2B3388 !important;
         }
         .contact-info-box {
             background: rgba(43, 51, 136, 0.04);
