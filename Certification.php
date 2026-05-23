@@ -103,12 +103,12 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .cert-card {
             background: #fff;
-            border: 1px solid rgba(43, 51, 136, 0.15);
+            border: 1px solid rgba(43, 51, 136, 0.08);
             border-radius: 4px;
             padding: 32px 28px;
             margin: 10px 0;
-            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.06);
-            transition: border-color .25s ease, box-shadow .25s ease;
+            box-shadow: 0 10px 28px rgba(43, 51, 136, 0.22);
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
             position: relative;
             overflow: hidden;
         }
@@ -123,8 +123,9 @@ include_once 'includes/breadcrumb_helper.php';
             pointer-events: none;
         }
         .cert-card:hover {
-            border-color: #2B3388;
-            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
+            border-color: rgba(43, 51, 136, 0.20);
+            box-shadow: 0 16px 36px rgba(43, 51, 136, 0.28);
+            transform: translateY(-3px);
         }
         .cert-card h3 {
             color: #2B3388;
@@ -478,7 +479,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Charge premium prices for certified quality</li>
                                 <li>Stand out from your competitors</li>
                             </ul>
-                            <img src="assets/img/quality/product-certification-blue.png" alt="Product Mark" class="card-mark">
+                            <img src="assets/img/quality/product-certification-black.png" alt="Product Mark" class="card-mark">
                             <a href="product.php" class="btn-cert">Explore Product Certification</a>
                         </div>
                     </div>
@@ -493,7 +494,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Improved employee productivity</li>
                                 <li>Better resource utilisation</li>
                             </ul>
-                            <img src="assets/img/quality/management-mark-blue.png" alt="Management Mark" class="card-mark">
+                            <img src="assets/img/quality/management-mark-black.png" alt="Management Mark" class="card-mark">
                             <a href="managementsystems.php" class="btn-cert">Discover Management Systems</a>
                         </div>
                     </div>
