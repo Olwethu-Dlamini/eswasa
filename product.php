@@ -468,56 +468,56 @@ include_once 'includes/breadcrumb_helper.php';
 
                 <!-- Step 1 -->
                 <circle cx="200" cy="180" r="80" fill="#fff" stroke="#2B3388" stroke-width="7"/>
-                <text x="200" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#2B3388">1</text>
-                <text x="200" y="188" text-anchor="middle" font-family="Arial, sans-serif" font-size="11.5" font-weight="600" fill="#2B3388">
+                <text x="200" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#2B3388">1</text>
+                <text x="200" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="400" fill="#2B3388">
                     <tspan x="200" dy="0">Application /</tspan>
-                    <tspan x="200" dy="14">Quote / Planning</tspan>
-                    <tspan x="200" dy="14">and Scheduling</tspan>
+                    <tspan x="200" dy="18">Quote / Planning</tspan>
+                    <tspan x="200" dy="18">and Scheduling</tspan>
                 </text>
 
                 <!-- Step 2 -->
                 <circle cx="600" cy="180" r="80" fill="#fff" stroke="#2B3388" stroke-width="7"/>
-                <text x="600" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#2B3388">2</text>
-                <text x="600" y="188" text-anchor="middle" font-family="Arial, sans-serif" font-size="11.5" font-weight="600" fill="#2B3388">
+                <text x="600" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#2B3388">2</text>
+                <text x="600" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="400" fill="#2B3388">
                     <tspan x="600" dy="0">Initial Assessment</tspan>
-                    <tspan x="600" dy="14">(Process &amp; Systems</tspan>
-                    <tspan x="600" dy="14">at Factory / Plant)</tspan>
+                    <tspan x="600" dy="18">(Process &amp; Systems</tspan>
+                    <tspan x="600" dy="18">at Factory / Plant)</tspan>
                 </text>
 
                 <!-- Step 3 -->
                 <circle cx="1000" cy="180" r="80" fill="#fff" stroke="#2B3388" stroke-width="7"/>
-                <text x="1000" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#2B3388">3</text>
-                <text x="1000" y="188" text-anchor="middle" font-family="Arial, sans-serif" font-size="11.5" font-weight="600" fill="#2B3388">
+                <text x="1000" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#2B3388">3</text>
+                <text x="1000" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="400" fill="#2B3388">
                     <tspan x="1000" dy="0">Sampling &amp; Testing</tspan>
-                    <tspan x="1000" dy="14">of Product</tspan>
-                    <tspan x="1000" dy="14">(Accredited Lab)</tspan>
+                    <tspan x="1000" dy="18">of Product</tspan>
+                    <tspan x="1000" dy="18">(Accredited Lab)</tspan>
                 </text>
 
                 <!-- Step 4 -->
                 <circle cx="1000" cy="540" r="80" fill="#fff" stroke="#2B3388" stroke-width="7"/>
-                <text x="1000" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#2B3388">4</text>
-                <text x="1000" y="548" text-anchor="middle" font-family="Arial, sans-serif" font-size="11.5" font-weight="600" fill="#2B3388">
+                <text x="1000" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#2B3388">4</text>
+                <text x="1000" y="535" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="400" fill="#2B3388">
                     <tspan x="1000" dy="0">Submission to</tspan>
-                    <tspan x="1000" dy="14">Certification Approval</tspan>
-                    <tspan x="1000" dy="14">Committee (CAC)</tspan>
+                    <tspan x="1000" dy="18">Certification Approval</tspan>
+                    <tspan x="1000" dy="18">Committee (CAC)</tspan>
                 </text>
 
                 <!-- Step 5 -->
                 <circle cx="600" cy="540" r="80" fill="#fff" stroke="#2B3388" stroke-width="7"/>
-                <text x="600" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#2B3388">5</text>
-                <text x="600" y="548" text-anchor="middle" font-family="Arial, sans-serif" font-size="11.5" font-weight="600" fill="#2B3388">
+                <text x="600" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#2B3388">5</text>
+                <text x="600" y="535" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="400" fill="#2B3388">
                     <tspan x="600" dy="0">Awarding of Permit /</tspan>
-                    <tspan x="600" dy="14">Certification</tspan>
-                    <tspan x="600" dy="14">for 3 years</tspan>
+                    <tspan x="600" dy="18">Certification</tspan>
+                    <tspan x="600" dy="18">for 3 years</tspan>
                 </text>
 
                 <!-- Step 6 -->
                 <circle cx="200" cy="540" r="80" fill="#fff" stroke="#2B3388" stroke-width="7"/>
-                <text x="200" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#2B3388">6</text>
-                <text x="200" y="548" text-anchor="middle" font-family="Arial, sans-serif" font-size="11.5" font-weight="600" fill="#2B3388">
+                <text x="200" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#2B3388">6</text>
+                <text x="200" y="535" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="400" fill="#2B3388">
                     <tspan x="200" dy="0">Post-permit Inspection,</tspan>
-                    <tspan x="200" dy="14">Audits &amp; Sampling,</tspan>
-                    <tspan x="200" dy="14">Product Testing</tspan>
+                    <tspan x="200" dy="18">Audits &amp; Sampling,</tspan>
+                    <tspan x="200" dy="18">Product Testing</tspan>
                 </text>
             </svg>
         </div>
