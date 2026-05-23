@@ -413,6 +413,71 @@
             .bank-details dl { grid-template-columns: 1fr; gap: 2px 0; }
             .bank-details dt { font-size: 0.82rem; margin-top: 8px; }
         }
+
+        /* === Assessments tab — How evaluated + Certificates cards === */
+        .assessment-card {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.10);
+            border-radius: 8px;
+            padding: 26px 24px 22px;
+            height: 100%;
+            box-shadow: 0 8px 22px rgba(43, 51, 136, 0.10);
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+            text-align: left;
+        }
+        .assessment-card:hover {
+            border-color: rgba(43, 51, 136, 0.30);
+            box-shadow: 0 14px 30px rgba(43, 51, 136, 0.16);
+            transform: translateY(-2px);
+        }
+        .assessment-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #2B3388;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+        .assessment-card-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+        .assessment-card-title {
+            color: #2B3388;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 14px;
+            line-height: 1.3;
+        }
+        .assessment-list {
+            margin: 0;
+            padding-left: 20px;
+            color: #2B3388;
+            line-height: 1.65;
+        }
+        .assessment-list li + li { margin-top: 6px; }
+        .assessment-list li::marker { color: #2B3388; }
+
+        .passing-mark-pill {
+            display: inline-block;
+            margin: 28px auto 0;
+            padding: 12px 24px;
+            background: #2B3388;
+            color: #fff !important;
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            box-shadow: 0 6px 16px rgba(43, 51, 136, 0.20);
+        }
+
+        @media (max-width: 767.98px) {
+            .assessment-card { padding: 22px 20px 20px; }
+            .assessment-card-title { font-size: 17px; }
+            .passing-mark-pill { padding: 10px 20px; }
+        }
     </style>
 </head>
 
@@ -1130,26 +1195,42 @@
                                 </span>
                                 <h3 class="fw-bold">Assessments</h3>
 
-                                <div class="row g-4 mt-2 text-start" style="max-width: 880px; margin: 0 auto;">
+                                <div class="row g-4 mt-2 text-start assessments-grid" style="max-width: 920px; margin: 0 auto;">
                                     <div class="col-md-6">
-                                        <h5 class="fw-bold mb-3" style="text-align: center;">How performance is evaluated</h5>
-                                        <ul class="mb-0" style="padding-left: 22px;">
-                                            <li>Continuous assessments.</li>
-                                            <li>Practical exercises.</li>
-                                            <li>Group activities.</li>
-                                            <li>Final examinations.</li>
-                                        </ul>
+                                        <div class="assessment-card">
+                                            <span class="assessment-card-icon" aria-hidden="true">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M9 11l3 3L22 4"/>
+                                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                                </svg>
+                                            </span>
+                                            <h5 class="assessment-card-title">How performance is evaluated</h5>
+                                            <ul class="assessment-list">
+                                                <li>Continuous assessments.</li>
+                                                <li>Practical exercises.</li>
+                                                <li>Group activities.</li>
+                                                <li>Final examinations.</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <h5 class="fw-bold mb-3" style="text-align: center;">Certificates awarded</h5>
-                                        <ul class="mb-0" style="padding-left: 22px;">
-                                            <li>Certificate of Competence &mdash; for successful completion and passing of all assessments.</li>
-                                            <li>Certificate of Attendance &mdash; for awareness trainings or participation-only sessions.</li>
-                                        </ul>
+                                        <div class="assessment-card">
+                                            <span class="assessment-card-icon" aria-hidden="true">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="8" r="6"/>
+                                                    <path d="M15.5 13.5L17 22l-5-3-5 3 1.5-8.5"/>
+                                                </svg>
+                                            </span>
+                                            <h5 class="assessment-card-title">Certificates awarded</h5>
+                                            <ul class="assessment-list">
+                                                <li>Certificate of Competence &mdash; for successful completion and passing of all assessments.</li>
+                                                <li>Certificate of Attendance &mdash; for awareness trainings or participation-only sessions.</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="mt-4 mx-auto" style="max-width: 360px; padding: 10px 18px; background: rgba(43, 51, 136, 0.06); border: 1px solid rgba(43, 51, 136, 0.18); border-radius: 4px;">
+                                <div class="passing-mark-pill">
                                     Minimum passing mark: 70%
                                 </div>
                             </div>
