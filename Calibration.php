@@ -80,11 +80,12 @@ include_once 'includes/breadcrumb_helper.php';
             border: 1px solid rgba(43, 51, 136, 0.12);
             border-radius: 4px;
         }
-        .highlighted-section h3 {
+        .highlighted-section h2 {
             color: #2B3388;
             margin-top: 0;
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 32px;
+            line-height: 1.2;
         }
         .service-process-steps {
             list-style-type: none;
@@ -248,7 +249,7 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <!-- 1. Introduction & Commitment -->
                 <div class="highlighted-section">
-                    <h3 style="text-align: center;">About Us</h3>
+                    <h2 style="text-align: center;">About Us</h2>
                     <div class="section-divider"></div>
                     <p class="mt-3">
                         We understand the importance of accurate and reliable measurements for your business. That is why we strive to provide the best calibration services available.
@@ -263,7 +264,7 @@ include_once 'includes/breadcrumb_helper.php';
 
                 <!-- 2. Our Products and Services -->
                 <div class="highlighted-section">
-                    <h3 style="text-align: center;">Our Products and Services Include:</h3>
+                    <h2 style="text-align: center;">Our Products and Services Include:</h2>
                     <div class="section-divider mb-3"></div>
                     <ul>
                         <li><strong>Scale Sales</strong>: Supplying high-quality scales, hoppers, and weighbridges for any application.</li>
@@ -276,7 +277,7 @@ include_once 'includes/breadcrumb_helper.php';
 
                 <!-- 3. What is Calibration? -->
                 <div class="highlighted-section">
-                    <h3 style="text-align: center;">What is Calibration?</h3>
+                    <h2 style="text-align: center;">What is Calibration?</h2>
                     <div class="section-divider"></div>
                     <p class="mt-3">
                         Calibration is the process of checking, by comparison with a standard, the accuracy of measuring instruments of any type, such as a pressure gauge or an industrial thermometer. It may also include adjustments to the instrument to match the standard.
@@ -288,7 +289,7 @@ include_once 'includes/breadcrumb_helper.php';
 
                 <!-- 4. Purpose of Calibration -->
                 <div class="highlighted-section">
-                    <h3 style="text-align: center;">Purpose of Calibration</h3>
+                    <h2 style="text-align: center;">Purpose of Calibration</h2>
                     <div class="section-divider"></div>
                     <p class="mt-3">
                         Correct and reliable measurements are prerequisites for all high-quality industrial production.
@@ -305,7 +306,7 @@ include_once 'includes/breadcrumb_helper.php';
 
                <!-- 5. Brands We Supply and Service -->
 <div class="highlighted-section">
-    <h3 style="text-align: center;">We Also Supply and Service the Following Brands:</h3>
+    <h2 style="text-align: center;">We Also Supply and Service the Following Brands:</h2>
     <div class="section-divider mb-4"></div>
     <div class="row g-4 justify-content-center">
         <!-- Row 1 -->
