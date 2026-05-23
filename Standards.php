@@ -772,6 +772,17 @@ include_once 'includes/breadcrumb_helper.php';
                         </p>
                     </div>
 
+                    <!-- Copyrights -->
+                    <div class="highlighted-section">
+                        <h3>Copyrights</h3>
+                        <p>
+                            Standards and publications are copyright-protected. Reproduction, copying, scanning, distribution, or unauthorised sharing without written permission from ESWASA is prohibited.
+                        </p>
+                        <p>
+                            Copyright protection preserves the integrity and authenticity of standards and protects intellectual property rights.
+                        </p>
+                    </div>
+
                     <!-- Our Affiliations -->
                     <div class="highlighted-section">
                         <h3>Our Affiliations</h3>
