@@ -66,12 +66,14 @@ include_once 'includes/breadcrumb_helper.php';
             padding: 60px 0;
         }
         .accordion-button {
+            font-size: 16px !important;
             font-weight: 600;
             color: #2B3388;
             background: #fff;
             border: 1px solid rgba(43, 51, 136, 0.15);
             margin-bottom: 10px;
             border-radius: 4px !important;
+            line-height: 1.4;
         }
         .accordion-button:not(.collapsed) {
             background-color: #2B3388 !important;
