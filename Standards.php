@@ -246,10 +246,13 @@ include_once 'includes/breadcrumb_helper.php';
 
         .section-anchor { scroll-margin-top: 100px; }
 
-        /* Canonical title pattern reused for new section headers */
+        /* Canonical section h2 — locked to spec 32px (overrides Bootstrap's
+           responsive .display-6 default which lands at 40px on desktop). */
         .display-6 {
             color: #2B3388;
             font-weight: 700;
+            font-size: 32px !important;
+            line-height: 1.2;
             letter-spacing: -0.01em;
         }
         .section-divider {
@@ -447,7 +450,7 @@ include_once 'includes/breadcrumb_helper.php';
             .standards-nav a { font-size: 0.8rem; padding: 5px 10px; }
             .sectors-list { columns: 1; }
             .tc-benefit-card { padding: 14px 16px; }
-            .display-6 { font-size: 1.55rem !important; }
+            .display-6 { font-size: 26px !important; }
             .add2cart_image img { max-height: 160px; }
             .add2cart_image img[src$=".svg"] { height: 160px; padding: 12px; }
             .affiliation-grid { grid-template-columns: repeat(2, 1fr); }
