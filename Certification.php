@@ -154,30 +154,86 @@ include_once 'includes/breadcrumb_helper.php';
             background: rgba(43, 51, 136, 0.85);
             color: #fff;
         }
-        .cert-images {
+        /* Certification Marks grid — mirrors index.php pattern */
+        .marks-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 28px;
+        }
+        .mark-item {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            padding: 30px 24px 22px;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+        }
+        .mark-item:hover {
+            border-color: #2B3388;
+            box-shadow: 0 8px 22px rgba(43, 51, 136, 0.10);
+            transform: translateY(-3px);
+        }
+        .mark-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+        .mark-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .mark-title {
+            color: #2B3388;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin: 0 0 14px;
+        }
+        .mark-desc {
+            color: #2B3388;
+            font-size: 13.5px;
+            line-height: 1.65;
+            margin: 0 0 22px;
+            flex: 1;
+        }
+        .mark-actions {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin: 25px 0 10px;
+            gap: 22px;
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid rgba(43, 51, 136, 0.10);
         }
-        .cert-image-item {
-            text-align: center;
-            max-width: 200px;
-        }
-        .cert-image-item img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 15px;
-        }
-        .cert-image-item p {
+        .mark-actions a {
+            color: #2B3388;
+            text-decoration: none;
+            font-size: 13px;
             font-weight: 600;
-            color: #2B3388;
-            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity .2s ease, color .2s ease;
         }
-        .cert-image-item small {
-            color: #2B3388;
-            font-size: 0.9rem;
+        .mark-actions a:hover { text-decoration: underline; }
+        .mark-actions a i { font-size: 11px; transition: transform .2s ease; }
+        .mark-actions a:hover i { transform: translateX(2px); }
+        @media (max-width: 991.98px) {
+            .marks-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+            .mark-image { height: 180px; }
+        }
+        @media (max-width: 575.98px) {
+            .marks-grid { grid-template-columns: 1fr; gap: 16px; }
+            .mark-item { padding: 24px 20px 18px; }
+            .mark-image { height: 170px; margin-bottom: 18px; }
+            .mark-title { font-size: 15px; }
+            .mark-desc { font-size: 13px; margin-bottom: 18px; }
+            .mark-actions { gap: 18px; }
+            .mark-actions a { font-size: 12.5px; }
         }
         /* ── Steps to certification image section ── */
         .steps-img-section {
@@ -349,29 +405,50 @@ include_once 'includes/breadcrumb_helper.php';
                         </div>
                     </div>
                 </div>
-                <div class="text-center mb-3">
-                    <h4 style="color: #2B3388; font-weight: 600;">Each ESWASA mark represents a commitment to quality, trust, and excellence in Eswatini</h4>
-                </div>
-                <div class="cert-images">
-                    <div class="cert-image-item">
-                        <img src="assets/img/quality/management-mark-blue.png" alt="Quality Certification Mark" class="img-fluid">
-                        <p>Management Systems Certification Mark</p>
-                        <small>Provides for continuous systematic verification of effectiveness</small>
+                <div class="marks-grid">
+                    <div class="mark-item">
+                        <div class="mark-image">
+                            <img src="assets/img/quality/management-mark-black.png" alt="Management Systems Certification Mark">
+                        </div>
+                        <h3 class="mark-title">Management Systems Certification Mark</h3>
+                        <p class="mark-desc">Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.</p>
+                        <div class="mark-actions">
+                            <a href="managementsystems.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                        </div>
                     </div>
-                    <div class="cert-image-item">
-                        <img src="assets/img/quality/product-certification-blue.png" alt="Standards Compliance" class="img-fluid">
-                        <p>Product Certification Mark</p>
-                        <small>Shows you meet national and international standards</small>
+                    <div class="mark-item">
+                        <div class="mark-image">
+                            <img src="assets/img/quality/product-certification-black.png" alt="Product Certification Mark">
+                        </div>
+                        <h3 class="mark-title">Product Certification Mark</h3>
+                        <p class="mark-desc">A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing &mdash; giving buyers confidence in quality and safety.</p>
+                        <div class="mark-actions">
+                            <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                        </div>
                     </div>
-                    <div class="cert-image-item">
-                        <img src="assets/img/quality/compulsory-standards-blue.png" alt="Rigorous Testing" class="img-fluid">
-                        <p>Compulsory Standards Quality Mark</p>
-                        <small>Proven through comprehensive assessment</small>
+                    <div class="mark-item">
+                        <div class="mark-image">
+                            <img src="assets/img/quality/compulsory-standards-black.png" alt="Compulsory Standards Quality Mark">
+                        </div>
+                        <h3 class="mark-title">Compulsory Standards Quality Mark</h3>
+                        <p class="mark-desc">A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.</p>
+                        <div class="mark-actions">
+                            <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                        </div>
                     </div>
-                    <div class="cert-image-item">
-                        <img src="assets/img/quality/ingelo-certification-blue.png" alt="Approved Products" class="img-fluid">
-                        <p>Ingelo MSME Product Certification Mark</p>
-                        <small>Scheme for local producers</small>
+                    <div class="mark-item">
+                        <div class="mark-image">
+                            <img src="assets/img/quality/ingelo-certification-black.png" alt="Ingelo MSME Product Certification Mark">
+                        </div>
+                        <h3 class="mark-title">Ingelo MSME Product Certification Mark</h3>
+                        <p class="mark-desc">A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers &mdash; helping them prove product quality, access new markets and grow with credibility.</p>
+                        <div class="mark-actions">
+                            <a href="ingelo.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
