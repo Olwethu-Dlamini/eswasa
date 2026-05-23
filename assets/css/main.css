@@ -9937,8 +9937,7 @@ body {
 }
 /* Bootstrap accordion button text + table cell text + calendar day numbers
    default to gray; force brand blue. */
-.accordion-button,
-.accordion-button:not(.collapsed),
+.accordion-button.collapsed,
 .table,
 .table > :not(caption) > * > *,
 #calendar-body .day,
