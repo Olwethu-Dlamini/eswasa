@@ -496,9 +496,9 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <div class="cert-card">
-                            <h2 class="section-title">Management Systems Certification</h2>
-                            <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
+                        <div class="cert-card text-center">
+                            <h2 class="section-title" style="text-align: center;">Management Systems Certification</h2>
+                            <div class="section-divider"></div>
                             <p class="mt-3">Our certification services enable you to demonstrate that your products, processes, systems or services conform to national and international standards.</p>
                             <p>By gaining recognition from an international certification body relevant to your industry, you ensure your compliance with regulatory bodies and nurture a culture of continuous improvement.</p>
                             <p>Prove your commitment to quality through ESWASA's certification.</p>
