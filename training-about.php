@@ -1006,6 +1006,9 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="inhouse-tab" data-bs-toggle="tab" data-bs-target="#inhouse" type="button" role="tab" aria-controls="inhouse" aria-selected="false">Training Venues</button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="assessments-tab" data-bs-toggle="tab" data-bs-target="#assessments" type="button" role="tab" aria-controls="assessments" aria-selected="false">Assessments</button>
+                        </li>
                     </ul>
 
                     <!-- Tabs Content -->
@@ -1112,6 +1115,32 @@
                                 </span>
                                 <h3 class="fw-bold">Training Venues</h3>
                                 <p>The venue for most courses is the <strong>ESWASA Training Academy</strong>, unless prior arrangements are made for in-house and/or customised training. In-house training will be presented to a <strong>minimum of 11 delegates</strong>. The organisation shall be responsible for providing a suitable training room with audiovisual equipment as well as refreshments.</p>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="assessments" role="tabpanel" aria-labelledby="assessments-tab">
+                            <div class="card border-0 shadow-sm rounded-3 p-4 text-center">
+                                <span class="policy-icon d-inline-block mb-3" aria-hidden="true">
+                                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10 6 H32 L40 14 V42 H10 Z"/>
+                                        <path d="M32 6 V14 H40"/>
+                                        <path d="M16 22 H34"/>
+                                        <path d="M16 28 H34"/>
+                                        <path d="M16 34 H26"/>
+                                    </svg>
+                                </span>
+                                <h3 class="fw-bold">Assessments</h3>
+                                <p>Participant performance is evaluated through:</p>
+                                <ul class="text-start mx-auto" style="max-width: 520px;">
+                                    <li>Continuous assessments.</li>
+                                    <li>Practical exercises.</li>
+                                    <li>Group activities.</li>
+                                    <li>Final examinations.</li>
+                                </ul>
+                                <p>The minimum passing mark is generally <strong>70%</strong>. Participants may receive:</p>
+                                <ul class="text-start mx-auto" style="max-width: 520px;">
+                                    <li><strong>Certificate of Competence</strong> &mdash; on successful completion and passing of assessments.</li>
+                                    <li><strong>Certificate of Attendance</strong> &mdash; for awareness trainings or participation-only sessions.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
