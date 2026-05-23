@@ -407,6 +407,14 @@ include_once 'includes/breadcrumb_helper.php';
                     <p>Product certification demonstrates commitment to safety, quality and performance standards set at an organisational, local or international level.</p>
             </div>
 
+                <!-- 2. Product Testing Services -->
+                <div class="highlighted-section">
+                    <h3 style="text-align: center;">Product Testing Services</h3>
+                    <div class="section-divider"></div>
+                    <p class="mt-3">ESWASA facilitates testing of various products and commodities in accredited laboratories in the areas of Chemistry, Microbiology, Textiles, Mechanical, Civil and Electrical Engineering, among others. The testing is performed to verify the quality of the product and conformity to the specified standards requirements.</p>
+                    <p>ESWASA testing services are available to the public, the industry, and various sectors of the economy.</p>
+                </div>
+
                 
 
                 <!-- 3. Certification Process -->
