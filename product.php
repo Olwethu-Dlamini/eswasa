@@ -86,24 +86,26 @@ include_once 'includes/breadcrumb_helper.php';
         .prod-process-steps li {
             counter-increment: step-counter;
             margin-bottom: 22px;
-            padding-left: 45px;
+            padding-left: 36px;
             position: relative;
+            font-size: 15px;
+            line-height: 1.6;
         }
         .prod-process-steps li::before {
             content: counter(step-counter);
             position: absolute;
             left: 0;
-            top: 2px;
+            top: 4px;
             background-color: #2B3388;
             color: #fff;
-            width: 32px;
-            height: 32px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 11px;
         }
         .prod-schemes-table {
             width: 100%;
@@ -212,12 +214,13 @@ include_once 'includes/breadcrumb_helper.php';
                 font-size: 1.2rem;
             }
             .prod-process-steps li {
-                padding-left: 40px;
+                padding-left: 32px;
+                font-size: 15px;
             }
             .prod-process-steps li::before {
-                width: 28px;
-                height: 28px;
-                font-size: 0.85rem;
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
             }
             /* Process images stack on mobile */
             .col-lg-7.mb-4.mb-lg-0,
