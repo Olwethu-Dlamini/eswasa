@@ -25,16 +25,19 @@ requireLogin();
 // Constant for includes security check
 define('ESWASA_ADMIN', true);
 
-// Allowed pages
+// Allowed pages — must match actual files in admin/pages/.
+// Stub pages (added by P2) cover sidebar links that previously 404'd.
 $allowed_pages = [
     'dashboard.php',
     'about_edit.php',
+    'about_team.php',
     'services_edit.php',
     'standards_edit.php',
     'certification_edit.php',
     'calibration_edit.php',
     'training_edit.php',
-    'updates_edit.php',
+    'training_about.php',
+    'training_calendar.php',
     'contact_edit.php',
     'events_edit.php',
     'vacancies_edit.php',
@@ -42,6 +45,17 @@ $allowed_pages = [
     'faq_edit.php',
     'publications_edit.php',
     'breadcrumbs_edit.php',
+    'managementsystems.php',
+    'product.php',
+    'ingelo.php',
+    'tcp.php',
+    'work.php',
+    'purchase.php',
+    'qoute_training.php',
+    'qoute_certification.php',
+    'qoute_calibration.php',
+    'users.php',
+    'posts.php',
 ];
 
 // Resolve page
@@ -63,21 +77,34 @@ $content = ob_get_clean();
 
 // Page title
 $page_titles = [
-    'dashboard.php'          => 'Dashboard',
-    'about_edit.php'         => 'About Us',
-    'services_edit.php'      => 'Our Services',
-    'standards_edit.php'     => 'Standards',
-    'certification_edit.php' => 'Certification',
-    'calibration_edit.php'   => 'Calibration',
-    'training_edit.php'      => 'Training',
-    'updates_edit.php'       => 'Updates',
-    'contact_edit.php'       => 'Contact Us',
-    'events_edit.php'        => 'Events',
-    'vacancies_edit.php'     => 'Vacancies',
-    'announcements_edit.php' => 'Announcements',
-    'faq_edit.php'           => 'FAQ',
-    'publications_edit.php'  => 'Publications',
-    'breadcrumbs_edit.php'   => 'Breadcrumb Images',
+    'dashboard.php'             => 'Dashboard',
+    'about_edit.php'            => 'About Us',
+    'about_team.php'            => 'Meet Our Team',
+    'services_edit.php'         => 'Our Services',
+    'standards_edit.php'        => 'Standards Development',
+    'certification_edit.php'    => 'ESWASA Certification',
+    'calibration_edit.php'      => 'Scales & Metrology',
+    'training_edit.php'         => 'Training',
+    'training_about.php'        => 'About Trainings',
+    'training_calendar.php'     => 'Training Calendar',
+    'contact_edit.php'          => 'Contact Us',
+    'events_edit.php'           => 'Events',
+    'vacancies_edit.php'        => 'Vacancies',
+    'announcements_edit.php'    => 'Announcements',
+    'faq_edit.php'              => 'FAQ',
+    'publications_edit.php'     => 'Publications',
+    'breadcrumbs_edit.php'      => 'Breadcrumb Images',
+    'managementsystems.php'     => 'Management Systems',
+    'product.php'               => 'Product Certification',
+    'ingelo.php'                => 'Ingelo Certification',
+    'tcp.php'                   => 'Technical Committee',
+    'work.php'                  => 'Work Programmes',
+    'purchase.php'              => 'Purchase Standards',
+    'qoute_training.php'        => 'Training Quote Requests',
+    'qoute_certification.php'   => 'Certification Quote Requests',
+    'qoute_calibration.php'     => 'Calibration Quote Requests',
+    'users.php'                 => 'Users',
+    'posts.php'                 => 'Posts',
 ];
 $page_title = $page_titles[$page] ?? ucfirst(str_replace(['.php','_'], ['', ' '], $page));
 
