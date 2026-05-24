@@ -1,16 +1,86 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+include_once 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+$work_keys = [
+    'work_page_title',
+    'work_meta_description',
+    'work_breadcrumb_crumb_1',
+    'work_breadcrumb_crumb_2',
+    'work_breadcrumb_title',
+    'work_intro_title',
+    'work_intro_body',
+    'work_section_title',
+    'work_item_1_title', 'work_item_1_url', 'work_item_1_details', 'work_item_1_status_label', 'work_item_1_status_class',
+    'work_item_2_title', 'work_item_2_url', 'work_item_2_details', 'work_item_2_status_label', 'work_item_2_status_class',
+    'work_item_3_title', 'work_item_3_url', 'work_item_3_details', 'work_item_3_status_label', 'work_item_3_status_class',
+    'work_item_4_title', 'work_item_4_url', 'work_item_4_details', 'work_item_4_status_label', 'work_item_4_status_class',
+    'work_item_5_title', 'work_item_5_url', 'work_item_5_details', 'work_item_5_status_label', 'work_item_5_status_class',
+    'work_cta_1_text', 'work_cta_1_url',
+    'work_cta_2_text', 'work_cta_2_url',
+];
+
+$work_defaults = [
+    'work_page_title'         => 'Work Programmes - ESWASA',
+    'work_meta_description'   => "View ESWASA's current and past Work Programmes for Standards Development.",
+    'work_breadcrumb_crumb_1' => 'Standards',
+    'work_breadcrumb_crumb_2' => 'Work Programmes',
+    'work_breadcrumb_title'   => 'Standards Work Programmes',
+    'work_intro_title'        => 'ESWASA Standards Development Work Programmes',
+    'work_intro_body'         => "The **ESWASA Work Programme** details all current and scheduled standards development and revision projects. This programme is derived from national needs assessments and stakeholder requests, ensuring that the standards developed align with Eswatini's economic and regulatory priorities.\n\nInterested stakeholders are invited to review the programme and provide feedback. For more information on specific projects, please contact us directly.",
+    'work_section_title'      => 'Current and Recent Projects',
+
+    'work_item_1_title'        => 'Development of SZNS for Non-Medical Face Masks',
+    'work_item_1_url'          => 'standard-detail-2552.php',
+    'work_item_1_details'      => 'Approved: 2020 | Reference: **SZNS US 2552: 2020**',
+    'work_item_1_status_label' => 'Published',
+    'work_item_1_status_class' => 'status-published',
+
+    'work_item_2_title'        => 'Revision of SZNS for Solid Waste Disposal Sites',
+    'work_item_2_url'          => 'standard-detail-revision.php',
+    'work_item_2_details'      => 'Approved: 2019 | Technical Committee: **TC 03 Environment**',
+    'work_item_2_status_label' => 'Published',
+    'work_item_2_status_class' => 'status-published',
+
+    'work_item_3_title'        => 'New Standard for Hand Sanitizers (Alcohol-Based)',
+    'work_item_3_url'          => 'standard-detail-1470.php',
+    'work_item_3_details'      => 'Approved: 2019 | Reference: **SZNS ARS 1470: 2019**',
+    'work_item_3_status_label' => 'Published',
+    'work_item_3_status_class' => 'status-published',
+
+    'work_item_4_title'        => 'Adoption of ISO 45001 for Occupational Health and Safety',
+    'work_item_4_url'          => 'standard-detail-45001.php',
+    'work_item_4_details'      => 'Approved: 2018 | Reference: **SZNS ISO 45001: 2018**',
+    'work_item_4_status_label' => 'Published',
+    'work_item_4_status_class' => 'status-published',
+
+    'work_item_5_title'        => 'Revision of SZNS for Packaged Water',
+    'work_item_5_url'          => 'standard-detail-033.php',
+    'work_item_5_details'      => 'Approved: 2014 | Reference: **SZNS 033: 2014**',
+    'work_item_5_status_label' => 'Published',
+    'work_item_5_status_class' => 'status-published',
+
+    'work_cta_1_text' => 'Propose a Standard Project',
+    'work_cta_1_url'  => 'Standards.php',
+    'work_cta_2_text' => 'General Enquiries',
+    'work_cta_2_url'  => 'contact.php',
+];
+
+$pc = pc_get_many($conn, $work_keys, $work_defaults);
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Work Programmes - ESWASA</title>
-    <meta name="description" content="View ESWASA's current and past Work Programmes for Standards Development.">
+    <title><?= pc_h($pc['work_page_title']) ?></title>
+    <meta name="description" content="<?= pc_h($pc['work_meta_description']) ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-    
+
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/animate.min.css">
     <link rel="stylesheet" href="assets/css/magnific-popup.css">
@@ -179,11 +249,11 @@
                                     <a href="index.html">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Standards</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['work_breadcrumb_crumb_1']) ?></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Work Programmes</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['work_breadcrumb_crumb_2']) ?></span>
                             </nav>
-                            <h3 class="title">Standards Work Programmes</h3>
+                            <h3 class="title"><?= pc_h($pc['work_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -192,74 +262,38 @@
         <section class="py-5">
             <div class="container">
                 <div class="intro-box">
-                    <h3>ESWASA Standards Development Work Programmes</h3>
-                    <p>The **ESWASA Work Programme** details all current and scheduled standards development and revision projects. This programme is derived from national needs assessments and stakeholder requests, ensuring that the standards developed align with Eswatini's economic and regulatory priorities.</p>
-                    <p>Interested stakeholders are invited to review the programme and provide feedback. For more information on specific projects, please contact us directly.</p>
+                    <h3><?= pc_h($pc['work_intro_title']) ?></h3>
+                    <?= pc_paragraphs_html($pc['work_intro_body']) ?>
                 </div>
 
-                <h4 class="mb-4" style="color: #2B3388; font-weight: 600;">Current and Recent Projects</h4>
+                <h4 class="mb-4" style="color: #2B3388; font-weight: 600;"><?= pc_h($pc['work_section_title']) ?></h4>
 
                 <div class="wp-list-container">
+                    <?php for ($i = 1; $i <= 5; $i++):
+                        $t   = $pc["work_item_{$i}_title"];
+                        $u   = $pc["work_item_{$i}_url"];
+                        $d   = $pc["work_item_{$i}_details"];
+                        $sl  = $pc["work_item_{$i}_status_label"];
+                        $sc  = $pc["work_item_{$i}_status_class"];
+                        if ($t === '' && $u === '' && $d === '' && $sl === '') continue;
+                    ?>
                     <div class="wp-list-item">
                         <div class="wp-content">
                             <div class="wp-title">
-                                <a href="standard-detail-2552.php">Development of SZNS for Non-Medical Face Masks</a>
+                                <a href="<?= pc_h($u) ?>"><?= pc_h($t) ?></a>
                             </div>
-                            <div class="wp-details">Approved: 2020 | Reference: **SZNS US 2552: 2020**</div>
+                            <div class="wp-details"><?= pc_h($d) ?></div>
                         </div>
                         <div class="wp-status">
-                            <span class="status-badge status-published">Published</span>
+                            <span class="status-badge <?= pc_h($sc) ?>"><?= pc_h($sl) ?></span>
                         </div>
                     </div>
-                    <div class="wp-list-item">
-                        <div class="wp-content">
-                            <div class="wp-title">
-                                <a href="standard-detail-revision.php">Revision of SZNS for Solid Waste Disposal Sites</a>
-                            </div>
-                            <div class="wp-details">Approved: 2019 | Technical Committee: **TC 03 Environment**</div>
-                        </div>
-                        <div class="wp-status">
-                            <span class="status-badge status-published">Published</span>
-                        </div>
-                    </div>
-                    <div class="wp-list-item">
-                        <div class="wp-content">
-                            <div class="wp-title">
-                                <a href="standard-detail-1470.php">New Standard for Hand Sanitizers (Alcohol-Based)</a>
-                            </div>
-                            <div class="wp-details">Approved: 2019 | Reference: **SZNS ARS 1470: 2019**</div>
-                        </div>
-                        <div class="wp-status">
-                            <span class="status-badge status-published">Published</span>
-                        </div>
-                    </div>
-                    <div class="wp-list-item">
-                        <div class="wp-content">
-                            <div class="wp-title">
-                                <a href="standard-detail-45001.php">Adoption of ISO 45001 for Occupational Health and Safety</a>
-                            </div>
-                            <div class="wp-details">Approved: 2018 | Reference: **SZNS ISO 45001: 2018**</div>
-                        </div>
-                        <div class="wp-status">
-                            <span class="status-badge status-published">Published</span>
-                        </div>
-                    </div>
-                    <div class="wp-list-item">
-                        <div class="wp-content">
-                            <div class="wp-title">
-                                <a href="standard-detail-033.php">Revision of SZNS for Packaged Water</a>
-                            </div>
-                            <div class="wp-details">Approved: 2014 | Reference: **SZNS 033: 2014**</div>
-                        </div>
-                        <div class="wp-status">
-                            <span class="status-badge status-published">Published</span>
-                        </div>
-                    </div>
-                    </div>
+                    <?php endfor; ?>
+                </div>
 
                 <div class="text-center my-5 pt-4">
-                    <a href="Standards.php" class="btn-cta">Propose a Standard Project</a>
-                    <a href="contact.php" class="btn-cta">General Enquiries</a>
+                    <a href="<?= pc_h($pc['work_cta_1_url']) ?>" class="btn-cta"><?= pc_h($pc['work_cta_1_text']) ?></a>
+                    <a href="<?= pc_h($pc['work_cta_2_url']) ?>" class="btn-cta"><?= pc_h($pc['work_cta_2_text']) ?></a>
                 </div>
 
             </div>

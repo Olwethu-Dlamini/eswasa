@@ -1,4 +1,72 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+include_once 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+$news_keys = [
+    // Page-level
+    'news_meta_description',
+    'news_breadcrumb_label',
+    'news_hero_title',
+
+    // Item 1
+    'news_item_1_title', 'news_item_1_date', 'news_item_1_body', 'news_item_1_image', 'news_item_1_url',
+    // Item 2
+    'news_item_2_title', 'news_item_2_date', 'news_item_2_body', 'news_item_2_image', 'news_item_2_url',
+    // Item 3
+    'news_item_3_title', 'news_item_3_date', 'news_item_3_body', 'news_item_3_image', 'news_item_3_url',
+    // Item 4
+    'news_item_4_title', 'news_item_4_date', 'news_item_4_body', 'news_item_4_image', 'news_item_4_url',
+    // Item 5
+    'news_item_5_title', 'news_item_5_date', 'news_item_5_body', 'news_item_5_image', 'news_item_5_url',
+    // Item 6
+    'news_item_6_title', 'news_item_6_date', 'news_item_6_body', 'news_item_6_image', 'news_item_6_url',
+];
+
+$news_defaults = [
+    'news_meta_description' => 'Latest news and updates from the Eswatini Standards Authority.',
+    'news_breadcrumb_label' => 'News',
+    'news_hero_title'       => 'News',
+
+    'news_item_1_title' => 'Forrester Business for The Intelligence and News',
+    'news_item_1_date'  => '21 Dec, 2023',
+    'news_item_1_body'  => 'Corporate',
+    'news_item_1_image' => 'assets/img/blog/blog_thumb01.jpg',
+    'news_item_1_url'   => '#',
+
+    'news_item_2_title' => 'Green created first moving abundantly great',
+    'news_item_2_date'  => '15 Dec, 2023',
+    'news_item_2_body'  => 'Finance',
+    'news_item_2_image' => 'assets/img/blog/blog_thumb02.jpg',
+    'news_item_2_url'   => '#',
+
+    'news_item_3_title' => 'Grow Fast Your Business Organic life Style Man',
+    'news_item_3_date'  => '11 Dec, 2023',
+    'news_item_3_body'  => 'Advertise',
+    'news_item_3_image' => 'assets/img/blog/blog_thumb03.jpg',
+    'news_item_3_url'   => '#',
+
+    'news_item_4_title' => 'Bring Organic gathering together godess divide life Man',
+    'news_item_4_date'  => '29 Oct, 2023',
+    'news_item_4_body'  => 'Gallery',
+    'news_item_4_image' => 'assets/img/blog/blog_thumb04.jpg',
+    'news_item_4_url'   => '#',
+
+    'news_item_5_title' => 'Forrester Business for The Intelligence and News',
+    'news_item_5_date'  => '24 Dec, 2023',
+    'news_item_5_body'  => 'Corporate',
+    'news_item_5_image' => 'assets/img/blog/blog_thumb05.jpg',
+    'news_item_5_url'   => '#',
+
+    'news_item_6_title' => 'All You Need to Know About YouTube Video Specs - Learn How',
+    'news_item_6_date'  => '12 Sep, 2023',
+    'news_item_6_body'  => 'Digital',
+    'news_item_6_image' => 'assets/img/blog/blog_thumb06.jpg',
+    'news_item_6_url'   => '#',
+];
+
+$pc = pc_get_many($conn, $news_keys, $news_defaults);
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -8,7 +76,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>News - ESWASA</title>
-    <meta name="description" content="Latest news and updates from the Eswatini Standards Authority.">
+    <meta name="description" content="<?= pc_h($pc['news_meta_description']) ?>">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -239,9 +307,9 @@
                                     <a href="index.html">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Blog Grid</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['news_breadcrumb_label']) ?></span>
                             </nav>
-                            <h3 class="title">Blog Grid Layout</h3>
+                            <h3 class="title"><?= pc_h($pc['news_hero_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -253,141 +321,31 @@
         <section class="blog-grid-area section-py-120">
             <div class="container">
                 <div class="row justify-content-center">
+                    <?php for ($i = 1; $i <= 6; $i++):
+                        $t_title = $pc["news_item_{$i}_title"] ?? '';
+                        $t_date  = $pc["news_item_{$i}_date"]  ?? '';
+                        $t_body  = $pc["news_item_{$i}_body"]  ?? '';
+                        $t_image = $pc["news_item_{$i}_image"] ?? '';
+                        $t_url   = $pc["news_item_{$i}_url"]   ?? '#';
+                        if ($t_title === '' && $t_image === '') continue;
+                        $href = $t_url !== '' ? $t_url : '#';
+                    ?>
                     <div class="col-lg-4 col-md-6 col-sm-9">
                         <div class="blog__post-item shine__animate-item">
                             <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb01.jpg" alt="img"></a>
+                                <a href="<?= pc_h($href) ?>" class="shine__animate-link"><img src="<?= pc_h(pc_image_src($t_image, 'assets/img/blog/blog_thumb01.jpg')) ?>" alt="<?= pc_h($t_title) ?>"></a>
                             </div>
                             <div class="blog__post-content">
-                                <a href="#" class="cat">Corporate</a>
-                                <h4 class="title"><a href="blog-details.html">Forrester Business for The Intelligence and News</a></h4>
+                                <?php if ($t_body !== ''): ?><a href="<?= pc_h($href) ?>" class="cat"><?= pc_h($t_body) ?></a><?php endif; ?>
+                                <h4 class="title"><a href="<?= pc_h($href) ?>"><?= pc_h($t_title) ?></a></h4>
                                 <ul class="list-wrap blog__post-meta">
                                     <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 21 Dec, 2023</li>
+                                    <li><i class="far fa-calendar-alt"></i> <?= pc_h($t_date) ?></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb02.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat">Finance</a>
-                                <h4 class="title"><a href="blog-details.html">Green created first moving abundantly great</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 15 Dec, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb03.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat">Advertise</a>
-                                <h4 class="title"><a href="blog-details.html">Grow Fast Your Business Organic life Style Man</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 11 Dec, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb04.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat">Gallery</a>
-                                <h4 class="title"><a href="blog-details.html">Bring Organic gathering together godess divide life Man</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 29 Oct, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb05.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat">Corporate</a>
-                                <h4 class="title"><a href="blog-details.html">Forrester Business for The Intelligence and News</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 24 Dec, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb06.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat">Degital</a>
-                                <h4 class="title"><a href="blog-details.html">All You Need to Know About YouTube Video Specs - Learn How</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 12 Sep, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb07.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat">Marketing</a>
-                                <h4 class="title"><a href="blog-details.html">The Trends in Social Media Optimization & SEO Marketing</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 12 Sep, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb08.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat">Marketing</a>
-                                <h4 class="title"><a href="blog-details.html">The Basics of Blogging Search Engine Optimization</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 12 Aug, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-9">
-                        <div class="blog__post-item shine__animate-item">
-                            <div class="blog__post-thumb">
-                                <a href="blog-details.html" class="shine__animate-link"><img src="assets/img/blog/blog_thumb09.jpg" alt="img"></a>
-                            </div>
-                            <div class="blog__post-content">
-                                <a href="#" class="cat"> Development</a>
-                                <h4 class="title"><a href="blog-details.html">Simple Ways To Optimize Your Website For SEO</a></h4>
-                                <ul class="list-wrap blog__post-meta">
-                                    <li><i class="far fa-user"></i> by <a href="#">Admin</a></li>
-                                    <li><i class="far fa-calendar-alt"></i> 24 Sep, 2023</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endfor; ?>
                 </div>
                 <div class="row">
                     <div class="col-12">

@@ -3,6 +3,56 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'includes/db_connect.php';
 include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+$prod_keys = [
+    'prod_hero_title',
+    'prod_about_title', 'prod_about_body',
+    'prod_testing_title', 'prod_testing_body',
+    'prod_process_title',
+    'prod_step_1_text', 'prod_step_2_text', 'prod_step_3_text',
+    'prod_step_4_text', 'prod_step_5_text', 'prod_step_6_text',
+    'prod_certified_title',
+    'prod_img_1', 'prod_img_1_alt',
+    'prod_img_2', 'prod_img_2_alt',
+    'prod_img_3', 'prod_img_3_alt',
+    'prod_img_4', 'prod_img_4_alt',
+    'prod_producers_title',
+    'prod_cta_title', 'prod_cta_subtitle',
+    'prod_cta_btn1_label', 'prod_cta_btn1_url',
+    'prod_cta_btn2_label', 'prod_cta_btn2_url',
+];
+$prod_defaults = [
+    'prod_hero_title'       => 'Product Certification',
+    'prod_about_title'      => 'About Product Certification',
+    'prod_about_body'       => "ESWASA implemented the ISO 17021 and 17065 Standards on our management systems and product certification schemes in order to provide trusted certification services and assurance that products and services meet customer expectations.\n\nProduct certification demonstrates commitment to safety, quality and performance standards set at an organisational, local or international level.",
+    'prod_testing_title'    => 'Product Testing Services',
+    'prod_testing_body'     => "ESWASA facilitates testing of various products and commodities in accredited laboratories in the areas of Chemistry, Microbiology, Textiles, Mechanical, Civil and Electrical Engineering, among others. The testing is performed to verify the quality of the product and conformity to the specified standards requirements.\n\nESWASA testing services are available to the public, the industry, and various sectors of the economy.",
+    'prod_process_title'    => 'Product Certification Process',
+    'prod_step_1_text'      => 'Application, Quote, Planning & Scheduling',
+    'prod_step_2_text'      => 'Initial Assessment (Process & Systems at Factory / Plant)',
+    'prod_step_3_text'      => 'Sampling & Testing of Product (Accredited Laboratory)',
+    'prod_step_4_text'      => 'Submission to Certification Approval Committee (CAC)',
+    'prod_step_5_text'      => 'Awarding of Permit / Certification (valid 3 years)',
+    'prod_step_6_text'      => 'Post-permit Inspection, Audits & Sampling, Product Testing',
+    'prod_certified_title'  => 'ESWASA Certified Products',
+    'prod_img_1'            => 'admin/uploads/image28.jpg',
+    'prod_img_1_alt'        => 'Certified Product',
+    'prod_img_2'            => 'admin/uploads/image29.jpg',
+    'prod_img_2_alt'        => 'Certified Product',
+    'prod_img_3'            => 'admin/uploads/image30.jpg',
+    'prod_img_3_alt'        => 'Certified Product',
+    'prod_img_4'            => 'admin/uploads/image31.jpg',
+    'prod_img_4_alt'        => 'Certified Product',
+    'prod_producers_title'  => 'Some of the Certified Product Producers',
+    'prod_cta_title'        => 'Begin Your Product Certification Journey',
+    'prod_cta_subtitle'     => 'Get your Product ESWASA Certified today!',
+    'prod_cta_btn1_label'   => 'Submit Application',
+    'prod_cta_btn1_url'     => 'qoute_certification.php',
+    'prod_cta_btn2_label'   => 'Contact Certification Team',
+    'prod_cta_btn2_url'     => 'contact.php',
+];
+$pc = pc_get_many($conn, $prod_keys, $prod_defaults);
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -389,7 +439,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Product Certification</span>
                             </nav>
-                            <h3 class="title">Product Certification</h3>
+                            <h3 class="title"><?= pc_h($pc['prod_hero_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -401,18 +451,16 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <!-- 1. About Product Certification -->
                 <div class="highlighted-section">
-                    <h3 style="text-align: center;">About Product Certification</h3>
+                    <h3 style="text-align: center;"><?= pc_h($pc['prod_about_title']) ?></h3>
                     <div class="section-divider"></div>
-                    <p class="mt-3">ESWASA implemented the ISO 17021 and 17065 Standards on our management systems and product certification schemes in order to provide trusted certification services and assurance that products and services meet customer expectations.</p>
-                    <p>Product certification demonstrates commitment to safety, quality and performance standards set at an organisational, local or international level.</p>
+                    <div class="mt-3"><?= pc_paragraphs_html($pc['prod_about_body']) ?></div>
             </div>
 
                 <!-- 2. Product Testing Services -->
                 <div class="highlighted-section">
-                    <h3 style="text-align: center;">Product Testing Services</h3>
+                    <h3 style="text-align: center;"><?= pc_h($pc['prod_testing_title']) ?></h3>
                     <div class="section-divider"></div>
-                    <p class="mt-3">ESWASA facilitates testing of various products and commodities in accredited laboratories in the areas of Chemistry, Microbiology, Textiles, Mechanical, Civil and Electrical Engineering, among others. The testing is performed to verify the quality of the product and conformity to the specified standards requirements.</p>
-                    <p>ESWASA testing services are available to the public, the industry, and various sectors of the economy.</p>
+                    <div class="mt-3"><?= pc_paragraphs_html($pc['prod_testing_body']) ?></div>
                 </div>
 
                 
@@ -422,7 +470,7 @@ include_once 'includes/breadcrumb_helper.php';
 <section class="py-5" style="background: #fff;">
     <div class="container">
         <div class="main_title centered upper mb-4 text-center">
-            <h2 class="display-6 fw-bold">Product Certification Process</h2>
+            <h2 class="display-6 fw-bold"><?= pc_h($pc['prod_process_title']) ?></h2>
             <div class="section-divider"></div>
         </div>
 
@@ -532,12 +580,12 @@ include_once 'includes/breadcrumb_helper.php';
 
         <!-- Stacked list: mobile -->
         <ol class="prod-process-steps cert-process-list d-md-none">
-            <li>Application, Quote, Planning &amp; Scheduling</li>
-            <li>Initial Assessment (Process &amp; Systems at Factory / Plant)</li>
-            <li>Sampling &amp; Testing of Product (Accredited Laboratory)</li>
-            <li>Submission to Certification Approval Committee (CAC)</li>
-            <li>Awarding of Permit / Certification (valid 3 years)</li>
-            <li>Post-permit Inspection, Audits &amp; Sampling, Product Testing</li>
+            <li><?= pc_h($pc['prod_step_1_text']) ?></li>
+            <li><?= pc_h($pc['prod_step_2_text']) ?></li>
+            <li><?= pc_h($pc['prod_step_3_text']) ?></li>
+            <li><?= pc_h($pc['prod_step_4_text']) ?></li>
+            <li><?= pc_h($pc['prod_step_5_text']) ?></li>
+            <li><?= pc_h($pc['prod_step_6_text']) ?></li>
         </ol>
     </div>
 </section>
@@ -548,20 +596,20 @@ include_once 'includes/breadcrumb_helper.php';
         <!-- ESWASA Certified Products -->
         <section class="py-5" style="background: rgba(43, 51, 136, 0.04);">
             <div class="container">
-                <h2 class="text-center" style="color: #2B3388; font-weight: 700;">ESWASA Certified Products</h2>
+                <h2 class="text-center" style="color: #2B3388; font-weight: 700;"><?= pc_h($pc['prod_certified_title']) ?></h2>
                 <div class="section-divider mb-5"></div>
                 <div class="row g-3">
                     <div class="col-6">
-                        <img src="admin/uploads/image28.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                        <img src="<?= pc_h(pc_image_src($pc['prod_img_1'], 'admin/uploads/image28.jpg')) ?>" alt="<?= pc_h($pc['prod_img_1_alt']) ?>" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
                     </div>
                     <div class="col-6">
-                        <img src="admin/uploads/image29.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                        <img src="<?= pc_h(pc_image_src($pc['prod_img_2'], 'admin/uploads/image29.jpg')) ?>" alt="<?= pc_h($pc['prod_img_2_alt']) ?>" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
                     </div>
                     <div class="col-6">
-                        <img src="admin/uploads/image30.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                        <img src="<?= pc_h(pc_image_src($pc['prod_img_3'], 'admin/uploads/image30.jpg')) ?>" alt="<?= pc_h($pc['prod_img_3_alt']) ?>" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
                     </div>
                     <div class="col-6">
-                        <img src="admin/uploads/image31.jpg" alt="Certified Product" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
+                        <img src="<?= pc_h(pc_image_src($pc['prod_img_4'], 'admin/uploads/image31.jpg')) ?>" alt="<?= pc_h($pc['prod_img_4_alt']) ?>" class="certified-products-img" style="width: 100%; height: 280px; object-fit: cover;">
                     </div>
                 </div>
             </div>
@@ -572,7 +620,7 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <div class="producers-wrap">
                     <div class="cw-header">
-                        <h3>Some of the Certified Product Producers</h3>
+                        <h3><?= pc_h($pc['prod_producers_title']) ?></h3>
                         <div class="cw-divider"></div>
                     </div>
                     <?php
@@ -610,10 +658,10 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h2 class="cta-title">Begin Your Product Certification Journey</h2>
-                        <p class="cta-subtitle">Get your Product ESWASA Certified today!</p>
-                        <a href="qoute_certification.php" class="btn-cta">Submit Application</a>
-                        <a href="contact.php" class="btn-cta">Contact Certification Team</a>
+                        <h2 class="cta-title"><?= pc_h($pc['prod_cta_title']) ?></h2>
+                        <p class="cta-subtitle"><?= pc_h($pc['prod_cta_subtitle']) ?></p>
+                        <a href="<?= pc_h($pc['prod_cta_btn1_url']) ?>" class="btn-cta"><?= pc_h($pc['prod_cta_btn1_label']) ?></a>
+                        <a href="<?= pc_h($pc['prod_cta_btn2_url']) ?>" class="btn-cta"><?= pc_h($pc['prod_cta_btn2_label']) ?></a>
                     </div>
                 </div>
             </div>

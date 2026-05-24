@@ -1,4 +1,30 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+include_once 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+// Page-level text via page_content
+$pc = pc_get_many($conn, [
+    'team_hero_title',
+    'team_intro_body',
+], [
+    'team_hero_title' => 'Meet Our Team',
+    'team_intro_body' => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
+]);
+
+// Team members from dedicated table (live rows only — is_vacant = 0)
+$management = [];
+$staff = [];
+if ($res = $conn->query("SELECT * FROM eswasa_team_members WHERE is_vacant = 0 ORDER BY sort_order ASC, name ASC")) {
+    while ($r = $res->fetch_assoc()) {
+        if ($r['section'] === 'staff') {
+            $staff[] = $r;
+        } else {
+            $management[] = $r;
+        }
+    }
+}
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -339,9 +365,9 @@
                                     <a href="index.php">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Meet Our Team</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['team_hero_title']) ?></span>
                             </nav>
-                            <h1 class="title">Meet Our Team</h1>
+                            <h1 class="title"><?= pc_h($pc['team_hero_title']) ?></h1>
                         </div>
                     </div>
                 </div>
@@ -353,7 +379,7 @@
             <div class="team-header">
                 <h2>Our Council and Management</h2>
                 <div class="section-divider"></div>
-                <p>Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini&rsquo;s industries.</p>
+                <p><?= pc_h($pc['team_intro_body']) ?></p>
             </div>
 
             <!-- Council Section -->
@@ -409,48 +435,57 @@
             </div>
 
             <!-- Management Section -->
+            <?php if (!empty($management)): ?>
             <div class="team-section">
                 <h3 class="section-title">Management Team</h3>
                 <div class="section-divider"></div>
                 <div class="team-layout">
+                    <?php
+                        // First row (lowest sort_order) is the featured leader; the rest are members.
+                        $mgmt_leader = $management[0];
+                        $mgmt_members = array_slice($management, 1);
+                    ?>
                     <div class="team-leader">
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="admin/uploads/Ncamiso.jpg" alt="Mr. Ncamiso K. Mhlanga" class="team-img">
+                                <img src="<?= pc_h(pc_image_src($mgmt_leader['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($mgmt_leader['name']) ?>" class="team-img">
                             </div>
-                            <h4 class="team-name">Mr. Ncamiso K. Mhlanga</h4>
-                            <p class="team-role">Executive Director</p>
-                            <div class="team-social"></div>
+                            <h4 class="team-name"><?= pc_h($mgmt_leader['name']) ?></h4>
+                            <p class="team-role"><?= pc_h($mgmt_leader['role']) ?></p>
+                            <?php if (!empty($mgmt_leader['bio'])): ?>
+                                <p class="team-bio"><?= pc_h($mgmt_leader['bio']) ?></p>
+                            <?php endif; ?>
+                            <div class="team-social">
+                                <?php if (!empty($mgmt_leader['social_linkedin'])): ?>
+                                    <a href="<?= pc_h($mgmt_leader['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
+                    <?php if (!empty($mgmt_members)): ?>
                     <div class="team-members">
-                        <div class="team-card">
-                            <div class="team-img-container">
-                                <img src="admin/uploads/masina.jpg" alt="Ms. Dumsile Masina" class="team-img">
+                        <?php foreach ($mgmt_members as $m): ?>
+                            <div class="team-card">
+                                <div class="team-img-container">
+                                    <img src="<?= pc_h(pc_image_src($m['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($m['name']) ?>" class="team-img">
+                                </div>
+                                <h4 class="team-name"><?= pc_h($m['name']) ?></h4>
+                                <p class="team-role"><?= pc_h($m['role']) ?></p>
+                                <?php if (!empty($m['bio'])): ?>
+                                    <p class="team-bio"><?= pc_h($m['bio']) ?></p>
+                                <?php endif; ?>
+                                <div class="team-social">
+                                    <?php if (!empty($m['social_linkedin'])): ?>
+                                        <a href="<?= pc_h($m['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                            <h4 class="team-name">Ms. Dumsile Masina</h4>
-                            <p class="team-role">CFO</p>
-                            <div class="team-social"></div>
-                        </div>
-                        <div class="team-card">
-                            <div class="team-img-container">
-                                <img src="admin/uploads/philip.jpg" alt="Mr. Phillip G. Mndawe" class="team-img">
-                            </div>
-                            <h4 class="team-name">Mr. Phillip G. Mndawe</h4>
-                            <p class="team-role">Technical Manager</p>
-                            <div class="team-social"></div>
-                        </div>
-                        <div class="team-card">
-                            <div class="team-img-container">
-                                <img src="admin/uploads/management/director_finance.jpg" alt="Vacant" class="team-img">
-                            </div>
-                            <h4 class="team-name">Vacant</h4>
-                            <p class="team-role">Quality Assurance Manager</p>
-                            <div class="team-social"></div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- ESWASA STAFF Section (now at bottom) -->
             <div class="team-section">
@@ -461,6 +496,30 @@
                         The Eswatini Standards Authority (ESWASA) operates through a dedicated team of professionals committed to upholding national and international standards. Our staff spans disciplines in standardisation, metrology, testing, certification, and quality assurance—working collaboratively to support industry growth, consumer protection, and regional trade compliance.
                     </p>
                 </div>
+
+                <?php if (!empty($staff)): ?>
+                <div class="team-layout">
+                    <div class="team-members">
+                        <?php foreach ($staff as $s): ?>
+                            <div class="team-card">
+                                <div class="team-img-container">
+                                    <img src="<?= pc_h(pc_image_src($s['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($s['name']) ?>" class="team-img">
+                                </div>
+                                <h4 class="team-name"><?= pc_h($s['name']) ?></h4>
+                                <p class="team-role"><?= pc_h($s['role']) ?></p>
+                                <?php if (!empty($s['bio'])): ?>
+                                    <p class="team-bio"><?= pc_h($s['bio']) ?></p>
+                                <?php endif; ?>
+                                <div class="team-social">
+                                    <?php if (!empty($s['social_linkedin'])): ?>
+                                        <a href="<?= pc_h($s['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
 
                 <!-- Rectangular Group Photo -->
                 <div class="text-center">

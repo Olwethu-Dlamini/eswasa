@@ -1,4 +1,216 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+require_once __DIR__ . '/includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+
+// All editable keys for the Training Academy (About) page.
+$train_about_keys = [
+    // breadcrumb
+    'train_about_breadcrumb_title',
+    // intro section
+    'train_about_hero_title','train_about_hero_subtitle','train_about_intro_body',
+    // training formats
+    'train_about_format_1_tag','train_about_format_1_duration','train_about_format_1_audience',
+    'train_about_format_2_tag','train_about_format_2_duration','train_about_format_2_audience',
+    'train_about_format_note',
+    // 7 course cards (name, image, alt) and their modal content
+    'train_about_course_1_name','train_about_course_1_image','train_about_course_1_alt',
+    'train_about_course_1_modal_title','train_about_course_1_overview','train_about_course_1_benefits','train_about_course_1_courses','train_about_course_1_duration',
+    'train_about_course_2_name','train_about_course_2_image','train_about_course_2_alt',
+    'train_about_course_2_modal_title','train_about_course_2_overview','train_about_course_2_benefits','train_about_course_2_courses','train_about_course_2_duration',
+    'train_about_course_3_name','train_about_course_3_image','train_about_course_3_alt',
+    'train_about_course_3_modal_title','train_about_course_3_overview','train_about_course_3_benefits','train_about_course_3_courses','train_about_course_3_duration',
+    'train_about_course_4_name','train_about_course_4_image','train_about_course_4_alt',
+    'train_about_course_4_modal_title','train_about_course_4_overview','train_about_course_4_benefits','train_about_course_4_courses','train_about_course_4_duration',
+    'train_about_course_5_name','train_about_course_5_image','train_about_course_5_alt',
+    'train_about_course_5_modal_title','train_about_course_5_overview','train_about_course_5_benefits','train_about_course_5_courses','train_about_course_5_duration',
+    'train_about_course_6_name','train_about_course_6_image','train_about_course_6_alt',
+    'train_about_course_6_modal_title','train_about_course_6_overview','train_about_course_6_benefits','train_about_course_6_courses','train_about_course_6_duration',
+    'train_about_course_7_name','train_about_course_7_image','train_about_course_7_alt',
+    'train_about_course_7_modal_title','train_about_course_7_overview','train_about_course_7_benefits','train_about_course_7_courses','train_about_course_7_duration',
+    // Why Train With ESWASA
+    'train_about_why_title','train_about_why_subtitle',
+    'train_about_why_1_title','train_about_why_1_body',
+    'train_about_why_2_title','train_about_why_2_body',
+    'train_about_why_3_title','train_about_why_3_body',
+    'train_about_why_4_title','train_about_why_4_body',
+    'train_about_why_5_title','train_about_why_5_body',
+    'train_about_why_6_title','train_about_why_6_body',
+    // Policies
+    'train_about_policies_title','train_about_policies_subtitle',
+    'train_about_policy_application_tab','train_about_policy_application_title','train_about_policy_application_body',
+    'train_about_policy_acceptance_tab','train_about_policy_acceptance_title','train_about_policy_acceptance_body',
+    'train_about_policy_cancellations_tab','train_about_policy_cancellations_title','train_about_policy_cancellations_body',
+    'train_about_policy_fees_tab','train_about_policy_fees_title','train_about_policy_fees_body',
+    'train_about_bank_title',
+    'train_about_bank_name','train_about_bank_account_name','train_about_bank_account_number','train_about_bank_branch_code','train_about_bank_branch_name','train_about_bank_note',
+    'train_about_policy_travel_tab','train_about_policy_travel_title','train_about_policy_travel_body',
+    'train_about_policy_inhouse_tab','train_about_policy_inhouse_title','train_about_policy_inhouse_body',
+    'train_about_policy_assessments_tab','train_about_policy_assessments_title',
+    'train_about_assess_eval_title','train_about_assess_eval_list',
+    'train_about_assess_cert_title','train_about_assess_cert_list',
+    'train_about_assess_pass_mark',
+];
+
+$train_about_defaults = [
+    'train_about_breadcrumb_title' => 'About Our Training',
+    'train_about_hero_title' => 'Our Training Programmes',
+    'train_about_hero_subtitle' => 'Empowering Excellence Through Knowledge',
+    'train_about_intro_body' => "We understand the unique needs of each business, which is why we offer tailor-made training solutions to industry, individuals, government agencies and other institutions in Management Systems, allowing organisations to choose a convenient location or host the training at our training centre in Matsapha.\n\nAt ESWASA Training Academy, we are proud to work with facilitators who are industry experts in various fields, Lead Auditors, and major contributors to the development of Eswatini National Standards (SZNS).",
+
+    'train_about_format_1_tag' => 'Awareness Training',
+    'train_about_format_1_duration' => '½ day · 1 day · 2 days',
+    'train_about_format_1_audience' => 'Suitable for management, supervisors and teams needing a working introduction to a standard.',
+    'train_about_format_2_tag' => 'Full Training',
+    'train_about_format_2_duration' => '3 – 5 days',
+    'train_about_format_2_audience' => 'Understanding & Implementation, Auditing and Customised training for practitioners taking the standard into operation.',
+    'train_about_format_note' => 'Both formats are delivered as standard-based courses across all sectors — see the full course catalogue below.',
+
+    // Course 1 — Quality Management
+    'train_about_course_1_name' => 'Quality Management System Courses',
+    'train_about_course_1_image' => 'admin/uploads/certificate-iso-9001-colored.svg',
+    'train_about_course_1_alt' => 'ISO 9001 — Quality Management System',
+    'train_about_course_1_modal_title' => 'Quality Management System Courses',
+    'train_about_course_1_overview' => 'Our Quality Management System courses are designed to help organisations implement and maintain effective quality management systems based on international standards.',
+    'train_about_course_1_benefits' => "Improved product and service quality\nEnhanced customer satisfaction\nStreamlined processes and reduced waste\nIncreased operational efficiency",
+    'train_about_course_1_courses' => "ISO 9001:2015 Foundation\nISO 9001:2015 Internal Auditor\nISO 9001:2015 Lead Auditor\nQuality Management System Implementation",
+    'train_about_course_1_duration' => 'Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.',
+
+    // Course 2 — Health & Safety
+    'train_about_course_2_name' => 'Health and Safety Management',
+    'train_about_course_2_image' => 'admin/uploads/certificate-iso-45001-colored.svg',
+    'train_about_course_2_alt' => 'ISO 45001 — Health and Safety Management',
+    'train_about_course_2_modal_title' => 'Health and Safety Management',
+    'train_about_course_2_overview' => 'Our Health and Safety Management courses provide comprehensive training on occupational health and safety standards to create safer work environments.',
+    'train_about_course_2_benefits' => "Reduced workplace accidents and incidents\nCompliance with legal requirements\nImproved employee morale and productivity\nEnhanced corporate reputation",
+    'train_about_course_2_courses' => "ISO 45001:2018 Foundation\nISO 45001:2018 Internal Auditor\nISO 45001:2018 Lead Auditor\nRisk Assessment and Management\nIncident Investigation and Reporting",
+    'train_about_course_2_duration' => 'Courses range from 1-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.',
+
+    // Course 3 — Environmental
+    'train_about_course_3_name' => 'Environmental Management',
+    'train_about_course_3_image' => 'admin/uploads/certificate-iso-14001-colored.svg',
+    'train_about_course_3_alt' => 'ISO 14001 — Environmental Management',
+    'train_about_course_3_modal_title' => 'Environmental Management',
+    'train_about_course_3_overview' => 'Our Environmental Management courses help organisations implement sustainable practices and comply with environmental regulations.',
+    'train_about_course_3_benefits' => "Reduced environmental impact\nCompliance with environmental regulations\nCost savings through resource efficiency\nEnhanced corporate social responsibility",
+    'train_about_course_3_courses' => "ISO 14001:2015 Foundation\nISO 14001:2015 Internal Auditor\nISO 14001:2015 Lead Auditor\nEnvironmental Impact Assessment\nSustainability Reporting",
+    'train_about_course_3_duration' => 'Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.',
+
+    // Course 4 — GAP
+    'train_about_course_4_name' => 'Good Agricultural Practices',
+    'train_about_course_4_image' => 'admin/uploads/course-globalgap.svg',
+    'train_about_course_4_alt' => 'GLOBALG.A.P. — Good Agricultural Practices',
+    'train_about_course_4_modal_title' => 'Good Agricultural Practices',
+    'train_about_course_4_overview' => 'Our Good Agricultural Practices courses focus on sustainable farming methods to ensure food safety, environmental protection, and worker welfare.',
+    'train_about_course_4_benefits' => "Improved crop quality and yield\nReduced environmental impact in agriculture\nEnhanced food safety standards\nBetter market access and compliance",
+    'train_about_course_4_courses' => "GLOBALG.A.P. Foundation\nFarm Assurance Implementation\nSustainable Farming Practices\nAgricultural Risk Management",
+    'train_about_course_4_duration' => 'Courses range from 2-4 days, available in both in-person and virtual formats. Customised training options are available for agricultural organisations.',
+
+    // Course 5 — Wellness
+    'train_about_course_5_name' => 'Wellness Management',
+    'train_about_course_5_image' => 'admin/uploads/course-wellness.svg',
+    'train_about_course_5_alt' => 'Wellness Management',
+    'train_about_course_5_modal_title' => 'Wellness Management',
+    'train_about_course_5_overview' => 'Our Wellness Management courses promote holistic health approaches for individuals and organisations to improve overall well-being.',
+    'train_about_course_5_benefits' => "Improved employee health and productivity\nReduced absenteeism and healthcare costs\nEnhanced work-life balance\nStronger organizational culture",
+    'train_about_course_5_courses' => "Workplace Wellness Foundation\nStress Management Techniques\nHealth Promotion Strategies\nWellness Programme Implementation",
+    'train_about_course_5_duration' => 'Courses range from 1-3 days, available in both in-person and virtual formats. Customised training options are available for organisations.',
+
+    // Course 6 — Food Safety
+    'train_about_course_6_name' => 'Food Safety Management',
+    'train_about_course_6_image' => 'admin/uploads/course-iso-22000.svg',
+    'train_about_course_6_alt' => 'ISO 22000 — Food Safety Management',
+    'train_about_course_6_modal_title' => 'Food Safety Management',
+    'train_about_course_6_overview' => 'Our Food Safety Management courses provide essential training on maintaining hygiene and safety standards in food production and handling.',
+    'train_about_course_6_benefits' => "Prevention of foodborne illnesses\nCompliance with food safety regulations\nImproved product quality and shelf life\nEnhanced consumer trust",
+    'train_about_course_6_courses' => "ISO 22000:2018 Foundation\nHACCP Principles and Application\nFood Safety Internal Auditor\nFood Hygiene Management",
+    'train_about_course_6_duration' => 'Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for food industry organisations.',
+
+    // Course 7 — Auditing
+    'train_about_course_7_name' => 'Auditing',
+    'train_about_course_7_image' => 'admin/uploads/course-iso-19011.svg',
+    'train_about_course_7_alt' => 'ISO 19011 — Auditing',
+    'train_about_course_7_modal_title' => 'Auditing',
+    'train_about_course_7_overview' => 'Our Auditing courses train professionals in effective auditing techniques for various management systems to ensure compliance and continuous improvement.',
+    'train_about_course_7_benefits' => "Improved system compliance and effectiveness\nIdentification of improvement opportunities\nEnhanced risk management\nProfessional certification pathways",
+    'train_about_course_7_courses' => "ISO 19011:2018 Auditing Guidelines\nIntegrated Management System Auditor\nLead Auditor Training\nAudit Reporting and Follow-up",
+    'train_about_course_7_duration' => 'Courses range from 3-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.',
+
+    // Why train
+    'train_about_why_title' => 'Why Train With ESWASA?',
+    'train_about_why_subtitle' => 'Discover the unique advantages of choosing ESWASA for your professional development',
+    'train_about_why_1_title' => 'Standard-based Training',
+    'train_about_why_1_body' => 'Our training courses are based on international standards, ensuring high-quality content and delivery. Course modules are developed in cooperation with recognised standards experts to provide current, relevant knowledge.',
+    'train_about_why_2_title' => 'Highly Interactive Sessions',
+    'train_about_why_2_body' => 'Individualised attention through small interactive training sessions. Hands-on courses designed to help you acquire skills quickly and in depth, with room for questions and practical exercises.',
+    'train_about_why_3_title' => 'Quality Training',
+    'train_about_why_3_body' => 'Quality training that is relevant to the needs of our society, delivered by experienced instructors across every course we offer, ensuring practical knowledge that can be immediately applied.',
+    'train_about_why_4_title' => 'Flexibility of Course Content',
+    'train_about_why_4_body' => 'We tailor course content to your specific needs to meet your business objectives, whether customised training for your team or specialised content for your industry.',
+    'train_about_why_5_title' => 'Return on Investment',
+    'train_about_why_5_body' => 'Our courses help industry, commerce and the public sector maximise return on investment, with practical skills that deliver measurable improvements in performance and efficiency.',
+    'train_about_why_6_title' => 'Certified Facilitators',
+    'train_about_why_6_body' => 'We are passionate about sharing knowledge and skills on the principles and practices of standards. Our facilitators are not just experts in their fields — they are dedicated, certified, and committed to your success.',
+
+    // Policies
+    'train_about_policies_title' => 'Training Academy — General Information',
+    'train_about_policies_subtitle' => 'Ensuring a Smooth Training Experience',
+
+    'train_about_policy_application_tab' => 'Application',
+    'train_about_policy_application_title' => 'Application',
+    'train_about_policy_application_body' => 'Application forms and course-related information can be accessed through this website under Training, or requested from the Training Unit — call 7602 7306 or email info@eswasa.co.sz / training@eswasa.co.sz. Applications should reach ESWASA at least 10 working days before the course commencement date. If the number of paid applicants has not reached the minimum required for a class (5 delegates), ESWASA reserves the right to postpone the course but undertakes to inform participants promptly of such developments.',
+
+    'train_about_policy_acceptance_tab' => 'Acceptance',
+    'train_about_policy_acceptance_title' => 'Acceptance',
+    'train_about_policy_acceptance_body' => 'Applicants will be notified of the outcome of their applications soon thereafter. Acceptance of the offer has to be acknowledged by the participant in writing and sent by email or fax to the office as soon as possible or 7 days before the start of the training for registration.',
+
+    'train_about_policy_cancellations_tab' => 'Cancellations',
+    'train_about_policy_cancellations_title' => 'Cancellations',
+    'train_about_policy_cancellations_body' => 'A cancellation fee of 50% of the course fee will be deducted from participants who cancel after registration / confirmation or on the date of commencement of the training course. ESWASA reserves the right to postpone any course (typically due to insufficient enrolment — see Application for class minimums) and undertakes to inform participants promptly of such developments.',
+
+    'train_about_policy_fees_tab' => 'Course Fees',
+    'train_about_policy_fees_title' => 'Course Fees and Payments',
+    'train_about_policy_fees_body' => 'Course fees are charged per person and are inclusive of meals and refreshments for the duration of the training. Applicants should pay in full and submit proof of payment or a purchase order at least 7 working days before the course commencement date.',
+    'train_about_bank_title' => 'Banking Details',
+    'train_about_bank_name' => 'Standard Bank Eswatini',
+    'train_about_bank_account_name' => 'Eswatini Standards Authority — ESWASA',
+    'train_about_bank_account_number' => '9110002956732',
+    'train_about_bank_branch_code' => '663164',
+    'train_about_bank_branch_name' => 'Matsapha',
+    'train_about_bank_note' => 'Mobile Money and a Speedpoint machine are also available at the ESWASA office for ease of payment.',
+
+    'train_about_policy_travel_tab' => 'Travel',
+    'train_about_policy_travel_title' => 'Travel and Accommodation',
+    'train_about_policy_travel_body' => 'Participants are responsible for their own travel and accommodation arrangements. All courses offered are day courses.',
+
+    'train_about_policy_inhouse_tab' => 'Training Venues',
+    'train_about_policy_inhouse_title' => 'Training Venues',
+    'train_about_policy_inhouse_body' => 'The venue for most courses is the ESWASA Training Academy, unless prior arrangements are made for in-house and/or customised training. In-house training will be presented to a minimum of 11 delegates. The organisation shall be responsible for providing a suitable training room with audiovisual equipment as well as refreshments.',
+
+    'train_about_policy_assessments_tab' => 'Assessments',
+    'train_about_policy_assessments_title' => 'Assessments',
+    'train_about_assess_eval_title' => 'How performance is evaluated',
+    'train_about_assess_eval_list' => "Continuous assessments.\nPractical exercises.\nGroup activities.\nFinal examinations.",
+    'train_about_assess_cert_title' => 'Certificates awarded',
+    'train_about_assess_cert_list' => "Certificate of Competence — for successful completion and passing of all assessments.\nCertificate of Attendance — for awareness trainings or participation-only sessions.",
+    'train_about_assess_pass_mark' => 'Minimum passing mark: 70%',
+];
+
+$pc = pc_get_many($conn, $train_about_keys, $train_about_defaults);
+
+// Helper to render a newline-separated list as <li> items (used for benefits/courses/eval/cert lists).
+if (!function_exists('train_about_list_items')) {
+    function train_about_list_items(string $text): string {
+        $out = '';
+        foreach (preg_split("/\n+/", trim($text)) as $line) {
+            $line = trim($line);
+            if ($line === '') continue;
+            $out .= '<li>' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</li>';
+        }
+        return $out;
+    }
+}
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -509,9 +721,9 @@
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Training</span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                             
+
                             </nav>
-                            <h1 class="title">About Our Training</h1>
+                            <h1 class="title"><?= pc_h($pc['train_about_breadcrumb_title']) ?></h1>
                         </div>
                     </div>
                 </div>
@@ -524,16 +736,22 @@
             <div class="container">
                 <!-- Section Title -->
                 <div class="main_title centered upper mb-5 text-center">
-                    <h2 class="display-6 fw-bold">Our Training Programmes</h2>
-                    <p class="text-muted mt-2 mb-0">Empowering Excellence Through Knowledge</p>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['train_about_hero_title']) ?></h2>
+                    <p class="text-muted mt-2 mb-0"><?= pc_h($pc['train_about_hero_subtitle']) ?></p>
                     <div class="section-divider"></div>
                 </div>
 
                 <!-- Training Introduction -->
                 <div class="row justify-content-center mb-4">
                     <div class="col-lg-10">
-                        <p class="text-muted text-center">We understand the unique needs of each business, which is why we offer tailor-made training solutions to industry, individuals, government agencies and other institutions in Management Systems, allowing organisations to choose a convenient location or host the training at our training centre in Matsapha.</p>
-                        <p class="text-muted text-center">At ESWASA Training Academy, we are proud to work with facilitators who are industry experts in various fields, Lead Auditors, and major contributors to the development of Eswatini National Standards (SZNS).</p>
+                        <?php
+                        // Render intro paragraphs centered+muted (preserves original look)
+                        foreach (preg_split("/\n{2,}/", trim((string)$pc['train_about_intro_body'])) as $para):
+                            $para = trim($para);
+                            if ($para === '') continue;
+                        ?>
+                        <p class="text-muted text-center"><?= pc_h($para) ?></p>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
@@ -541,277 +759,91 @@
                 <div class="row g-3 justify-content-center mb-4">
                     <div class="col-md-5">
                         <div class="training-format-card">
-                            <div class="format-tag">Awareness Training</div>
-                            <p class="format-duration">½ day · 1 day · 2 days</p>
-                            <p class="format-audience">Suitable for management, supervisors and teams needing a working introduction to a standard.</p>
+                            <div class="format-tag"><?= pc_h($pc['train_about_format_1_tag']) ?></div>
+                            <p class="format-duration"><?= pc_h($pc['train_about_format_1_duration']) ?></p>
+                            <p class="format-audience"><?= pc_h($pc['train_about_format_1_audience']) ?></p>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="training-format-card">
-                            <div class="format-tag">Full Training</div>
-                            <p class="format-duration">3 – 5 days</p>
-                            <p class="format-audience">Understanding &amp; Implementation, Auditing and Customised training for practitioners taking the standard into operation.</p>
+                            <div class="format-tag"><?= pc_h($pc['train_about_format_2_tag']) ?></div>
+                            <p class="format-duration"><?= pc_h($pc['train_about_format_2_duration']) ?></p>
+                            <p class="format-audience"><?= pc_h($pc['train_about_format_2_audience']) ?></p>
                         </div>
                     </div>
                 </div>
                 <p class="text-muted text-center small mb-5">
-                    Both formats are delivered as <strong>standard-based courses across all sectors</strong> — see the full course catalogue below.
+                    <?= pc_h($pc['train_about_format_note']) ?>
                 </p>
 
                 <!-- Training Grid -->
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+                    <?php
+                    $course_modal_targets = [
+                        1 => 'qualityModal',
+                        2 => 'healthModal',
+                        3 => 'environmentModal',
+                        4 => 'agricultureModal',
+                        5 => 'wellnessModal',
+                        6 => 'foodModal',
+                        7 => 'auditingModal',
+                    ];
+                    foreach ($course_modal_targets as $i => $modal_id):
+                        $img_key = 'train_about_course_' . $i . '_image';
+                        $alt_key = 'train_about_course_' . $i . '_alt';
+                        $name_key = 'train_about_course_' . $i . '_name';
+                        $img_default = $train_about_defaults[$img_key];
+                    ?>
                     <div class="col">
                         <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift">
                             <div class="add2cart_image">
-                                <img src="admin/uploads/certificate-iso-9001-colored.svg" alt="ISO 9001 — Quality Management System" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#qualityModal">
+                                <img src="<?= pc_h(pc_image_src($pc[$img_key], $img_default)) ?>" alt="<?= pc_h($pc[$alt_key]) ?>" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#<?= $modal_id ?>">
                             </div>
                             <div class="add2cart_details p-4">
                                 <div class="con_cont">
-                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#qualityModal" class="add2cart_prod_name d-block mb-2 fw-bold">Quality Management System Courses</a>
-                                    <a data-bs-toggle="modal" data-bs-target="#qualityModal" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
+                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#<?= $modal_id ?>" class="add2cart_prod_name d-block mb-2 fw-bold"><?= pc_h($pc[$name_key]) ?></a>
+                                    <a data-bs-toggle="modal" data-bs-target="#<?= $modal_id ?>" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift">
-                            <div class="add2cart_image">
-                                <img src="admin/uploads/certificate-iso-45001-colored.svg" alt="ISO 45001 — Health and Safety Management" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#healthModal">
-                            </div>
-                            <div class="add2cart_details p-4">
-                                <div class="con_cont">
-                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#healthModal" class="add2cart_prod_name d-block mb-2 fw-bold">Health and Safety Management</a>
-                                    <a data-bs-toggle="modal" data-bs-target="#healthModal" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift">
-                            <div class="add2cart_image">
-                                <img src="admin/uploads/certificate-iso-14001-colored.svg" alt="ISO 14001 — Environmental Management" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#environmentModal">
-                            </div>
-                            <div class="add2cart_details p-4">
-                                <div class="con_cont">
-                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#environmentModal" class="add2cart_prod_name d-block mb-2 fw-bold">Environmental Management</a>
-                                    <a data-bs-toggle="modal" data-bs-target="#environmentModal" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift">
-                            <div class="add2cart_image">
-                                <img src="admin/uploads/course-globalgap.svg" alt="GLOBALG.A.P. — Good Agricultural Practices" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#agricultureModal">
-                            </div>
-                            <div class="add2cart_details p-4">
-                                <div class="con_cont">
-                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#agricultureModal" class="add2cart_prod_name d-block mb-2 fw-bold">Good Agricultural Practices</a>
-                                    <a data-bs-toggle="modal" data-bs-target="#agricultureModal" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift">
-                            <div class="add2cart_image">
-                                <img src="admin/uploads/course-wellness.svg" alt="Wellness Management" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#wellnessModal">
-                            </div>
-                            <div class="add2cart_details p-4">
-                                <div class="con_cont">
-                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#wellnessModal" class="add2cart_prod_name d-block mb-2 fw-bold">Wellness Management</a>
-                                    <a data-bs-toggle="modal" data-bs-target="#wellnessModal" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift">
-                            <div class="add2cart_image">
-                                <img src="admin/uploads/course-iso-22000.svg" alt="ISO 22000 — Food Safety Management" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#foodModal">
-                            </div>
-                            <div class="add2cart_details p-4">
-                                <div class="con_cont">
-                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#foodModal" class="add2cart_prod_name d-block mb-2 fw-bold">Food Safety Management</a>
-                                    <a data-bs-toggle="modal" data-bs-target="#foodModal" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift">
-                            <div class="add2cart_image">
-                                <img src="admin/uploads/course-iso-19011.svg" alt="ISO 19011 — Auditing" class="img-fluid rounded-top" data-bs-toggle="modal" data-bs-target="#auditingModal">
-                            </div>
-                            <div class="add2cart_details p-4">
-                                <div class="con_cont">
-                                    <a style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#auditingModal" class="add2cart_prod_name d-block mb-2 fw-bold">Auditing</a>
-                                    <a data-bs-toggle="modal" data-bs-target="#auditingModal" class="add2cart_btn btn btn-primary btn-sm"><i class="ico-cart me-1"></i>View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>
 
         <!-- Training Modals -->
-        <!-- Quality Management Modal -->
-        <div class="modal fade" id="qualityModal" tabindex="-1" aria-labelledby="qualityModalLabel" aria-hidden="true">
+        <?php foreach ($course_modal_targets as $i => $modal_id):
+            $title_key    = 'train_about_course_' . $i . '_modal_title';
+            $overview_key = 'train_about_course_' . $i . '_overview';
+            $benefits_key = 'train_about_course_' . $i . '_benefits';
+            $courses_key  = 'train_about_course_' . $i . '_courses';
+            $duration_key = 'train_about_course_' . $i . '_duration';
+        ?>
+        <div class="modal fade" id="<?= $modal_id ?>" tabindex="-1" aria-labelledby="<?= $modal_id ?>Label" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="qualityModalLabel">Quality Management System Courses</h5>
+                        <h5 class="modal-title" id="<?= $modal_id ?>Label"><?= pc_h($pc[$title_key]) ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="course-details">
                             <h5>Course Overview</h5>
-                            <p>Our Quality Management System courses are designed to help organisations implement and maintain effective quality management systems based on international standards.</p>
-                            
-                            <h5>Key Benefits</h5>
-                            <ul>
-                                <li>Improved product and service quality</li>
-                                <li>Enhanced customer satisfaction</li>
-                                <li>Streamlined processes and reduced waste</li>
-                                <li>Increased operational efficiency</li>
-                            </ul>
-                            
-                            <h5>Available Courses</h5>
-                            <ul>
-                                <li>ISO 9001:2015 Foundation</li>
-                                <li>ISO 9001:2015 Internal Auditor</li>
-                                <li>ISO 9001:2015 Lead Auditor</li>
-                                <li>Quality Management System Implementation</li>
-                            </ul>
-                            
-                            <h5>Duration & Format</h5>
-                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-enroll">Enroll Now</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            <p><?= pc_h($pc[$overview_key]) ?></p>
 
-        <!-- Health and Safety Modal -->
-        <div class="modal fade" id="healthModal" tabindex="-1" aria-labelledby="healthModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="healthModalLabel">Health and Safety Management</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="course-details">
-                            <h5>Course Overview</h5>
-                            <p>Our Health and Safety Management courses provide comprehensive training on occupational health and safety standards to create safer work environments.</p>
-                            
                             <h5>Key Benefits</h5>
                             <ul>
-                                <li>Reduced workplace accidents and incidents</li>
-                                <li>Compliance with legal requirements</li>
-                                <li>Improved employee morale and productivity</li>
-                                <li>Enhanced corporate reputation</li>
+                                <?= train_about_list_items($pc[$benefits_key]) ?>
                             </ul>
-                            
-                            <h5>Available Courses</h5>
-                            <ul>
-                                <li>ISO 45001:2018 Foundation</li>
-                                <li>ISO 45001:2018 Internal Auditor</li>
-                                <li>ISO 45001:2018 Lead Auditor</li>
-                                <li>Risk Assessment and Management</li>
-                                <li>Incident Investigation and Reporting</li>
-                            </ul>
-                            
-                            <h5>Duration & Format</h5>
-                            <p>Courses range from 1-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-enroll">Enroll Now</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Environmental Management Modal -->
-        <div class="modal fade" id="environmentModal" tabindex="-1" aria-labelledby="environmentModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="environmentModalLabel">Environmental Management</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="course-details">
-                            <h5>Course Overview</h5>
-                            <p>Our Environmental Management courses help organisations implement sustainable practices and comply with environmental regulations.</p>
-                            
-                            <h5>Key Benefits</h5>
-                            <ul>
-                                <li>Reduced environmental impact</li>
-                                <li>Compliance with environmental regulations</li>
-                                <li>Cost savings through resource efficiency</li>
-                                <li>Enhanced corporate social responsibility</li>
-                            </ul>
-                            
                             <h5>Available Courses</h5>
                             <ul>
-                                <li>ISO 14001:2015 Foundation</li>
-                                <li>ISO 14001:2015 Internal Auditor</li>
-                                <li>ISO 14001:2015 Lead Auditor</li>
-                                <li>Environmental Impact Assessment</li>
-                                <li>Sustainability Reporting</li>
+                                <?= train_about_list_items($pc[$courses_key]) ?>
                             </ul>
-                            
-                            <h5>Duration & Format</h5>
-                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-enroll">Enroll Now</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Good Agricultural Practices Modal -->
-        <div class="modal fade" id="agricultureModal" tabindex="-1" aria-labelledby="agricultureModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="agricultureModalLabel">Good Agricultural Practices</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="course-details">
-                            <h5>Course Overview</h5>
-                            <p>Our Good Agricultural Practices courses focus on sustainable farming methods to ensure food safety, environmental protection, and worker welfare.</p>
-                            
-                            <h5>Key Benefits</h5>
-                            <ul>
-                                <li>Improved crop quality and yield</li>
-                                <li>Reduced environmental impact in agriculture</li>
-                                <li>Enhanced food safety standards</li>
-                                <li>Better market access and compliance</li>
-                            </ul>
-                            
-                            <h5>Available Courses</h5>
-                            <ul>
-                                <li>GLOBALG.A.P. Foundation</li>
-                                <li>Farm Assurance Implementation</li>
-                                <li>Sustainable Farming Practices</li>
-                                <li>Agricultural Risk Management</li>
-                            </ul>
-                            
-                            <h5>Duration & Format</h5>
-                            <p>Courses range from 2-4 days, available in both in-person and virtual formats. Customised training options are available for agricultural organisations.</p>
+                            <h5>Duration &amp; Format</h5>
+                            <p><?= pc_h($pc[$duration_key]) ?></p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -821,136 +853,14 @@
                 </div>
             </div>
         </div>
-
-        <!-- Wellness Management Modal -->
-        <div class="modal fade" id="wellnessModal" tabindex="-1" aria-labelledby="wellnessModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="wellnessModalLabel">Wellness Management</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="course-details">
-                            <h5>Course Overview</h5>
-                            <p>Our Wellness Management courses promote holistic health approaches for individuals and organisations to improve overall well-being.</p>
-                            
-                            <h5>Key Benefits</h5>
-                            <ul>
-                                <li>Improved employee health and productivity</li>
-                                <li>Reduced absenteeism and healthcare costs</li>
-                                <li>Enhanced work-life balance</li>
-                                <li>Stronger organizational culture</li>
-                            </ul>
-                            
-                            <h5>Available Courses</h5>
-                            <ul>
-                                <li>Workplace Wellness Foundation</li>
-                                <li>Stress Management Techniques</li>
-                                <li>Health Promotion Strategies</li>
-                                <li>Wellness Programme Implementation</li>
-                            </ul>
-                            
-                            <h5>Duration & Format</h5>
-                            <p>Courses range from 1-3 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-enroll">Enroll Now</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Food Safety Management Modal -->
-        <div class="modal fade" id="foodModal" tabindex="-1" aria-labelledby="foodModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="foodModalLabel">Food Safety Management</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="course-details">
-                            <h5>Course Overview</h5>
-                            <p>Our Food Safety Management courses provide essential training on maintaining hygiene and safety standards in food production and handling.</p>
-                            
-                            <h5>Key Benefits</h5>
-                            <ul>
-                                <li>Prevention of foodborne illnesses</li>
-                                <li>Compliance with food safety regulations</li>
-                                <li>Improved product quality and shelf life</li>
-                                <li>Enhanced consumer trust</li>
-                            </ul>
-                            
-                            <h5>Available Courses</h5>
-                            <ul>
-                                <li>ISO 22000:2018 Foundation</li>
-                                <li>HACCP Principles and Application</li>
-                                <li>Food Safety Internal Auditor</li>
-                                <li>Food Hygiene Management</li>
-                            </ul>
-                            
-                            <h5>Duration & Format</h5>
-                            <p>Courses range from 2-5 days, available in both in-person and virtual formats. Customised training options are available for food industry organisations.</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-enroll">Enroll Now</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Auditing Modal -->
-        <div class="modal fade" id="auditingModal" tabindex="-1" aria-labelledby="auditingModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="auditingModalLabel">Auditing</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="course-details">
-                            <h5>Course Overview</h5>
-                            <p>Our Auditing courses train professionals in effective auditing techniques for various management systems to ensure compliance and continuous improvement.</p>
-                            
-                            <h5>Key Benefits</h5>
-                            <ul>
-                                <li>Improved system compliance and effectiveness</li>
-                                <li>Identification of improvement opportunities</li>
-                                <li>Enhanced risk management</li>
-                                <li>Professional certification pathways</li>
-                            </ul>
-                            
-                            <h5>Available Courses</h5>
-                            <ul>
-                                <li>ISO 19011:2018 Auditing Guidelines</li>
-                                <li>Integrated Management System Auditor</li>
-                                <li>Lead Auditor Training</li>
-                                <li>Audit Reporting and Follow-up</li>
-                            </ul>
-                            
-                            <h5>Duration & Format</h5>
-                            <p>Courses range from 3-5 days, available in both in-person and virtual formats. Customised training options are available for organisations.</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-enroll">Enroll Now</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php endforeach; ?>
 
         <!-- Why Train With ESWASA Section -->
         <section class="why-train-section">
             <div class="container">
                 <div class="text-center mb-5">
-                    <h2 class="display-6 fw-bold">Why Train With ESWASA?</h2>
-                    <p class="text-muted mt-2 mb-0">Discover the unique advantages of choosing ESWASA for your professional development</p>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['train_about_why_title']) ?></h2>
+                    <p class="text-muted mt-2 mb-0"><?= pc_h($pc['train_about_why_subtitle']) ?></p>
                     <div class="section-divider"></div>
                 </div>
 
@@ -964,8 +874,8 @@
                                 <path d="M30 6 L33 9 L38 4" stroke-width="2.5"/>
                             </svg>
                         </div>
-                        <h4>Standard-based Training</h4>
-                        <p>Our training courses are based on international standards, ensuring high-quality content and delivery. Course modules are developed in cooperation with recognised standards experts to provide current, relevant knowledge.</p>
+                        <h4><?= pc_h($pc['train_about_why_1_title']) ?></h4>
+                        <p><?= pc_h($pc['train_about_why_1_body']) ?></p>
                     </div>
                     <div class="why-train-card">
                         <div class="why-train-icon" aria-hidden="true">
@@ -978,8 +888,8 @@
                                 <line x1="15" y1="32" x2="33" y2="32"/>
                             </svg>
                         </div>
-                        <h4>Highly Interactive Sessions</h4>
-                        <p>Individualised attention through small interactive training sessions. Hands-on courses designed to help you acquire skills quickly and in depth, with room for questions and practical exercises.</p>
+                        <h4><?= pc_h($pc['train_about_why_2_title']) ?></h4>
+                        <p><?= pc_h($pc['train_about_why_2_body']) ?></p>
                     </div>
                     <div class="why-train-card">
                         <div class="why-train-icon" aria-hidden="true">
@@ -992,8 +902,8 @@
                                 <polygon points="24,22 26,27 31,27 27,30 28,35 24,33 20,35 21,30 17,27 22,27" fill="currentColor"/>
                             </svg>
                         </div>
-                        <h4>Quality Training</h4>
-                        <p>Quality training that is relevant to the needs of our society, delivered by experienced instructors across every course we offer, ensuring practical knowledge that can be immediately applied.</p>
+                        <h4><?= pc_h($pc['train_about_why_3_title']) ?></h4>
+                        <p><?= pc_h($pc['train_about_why_3_body']) ?></p>
                     </div>
                     <div class="why-train-card">
                         <div class="why-train-icon" aria-hidden="true">
@@ -1006,8 +916,8 @@
                                 <circle cx="26" cy="34" r="3.5" fill="currentColor"/>
                             </svg>
                         </div>
-                        <h4>Flexibility of Course Content</h4>
-                        <p>We tailor course content to your specific needs to meet your business objectives, whether customised training for your team or specialised content for your industry.</p>
+                        <h4><?= pc_h($pc['train_about_why_4_title']) ?></h4>
+                        <p><?= pc_h($pc['train_about_why_4_body']) ?></p>
                     </div>
                     <div class="why-train-card">
                         <div class="why-train-icon" aria-hidden="true">
@@ -1020,8 +930,8 @@
                                 <circle cx="26" cy="28" r="2" fill="currentColor"/>
                             </svg>
                         </div>
-                        <h4>Return on Investment</h4>
-                        <p>Our courses help industry, commerce and the public sector maximise return on investment, with practical skills that deliver measurable improvements in performance and efficiency.</p>
+                        <h4><?= pc_h($pc['train_about_why_5_title']) ?></h4>
+                        <p><?= pc_h($pc['train_about_why_5_body']) ?></p>
                     </div>
                     <div class="why-train-card">
                         <div class="why-train-icon" aria-hidden="true">
@@ -1033,8 +943,8 @@
                                 <path d="M8 18 Q4 24 8 30"/>
                             </svg>
                         </div>
-                        <h4>Certified Facilitators</h4>
-                        <p>We are passionate about sharing knowledge and skills on the principles and practices of standards. Our facilitators are not just experts in their fields — they are dedicated, certified, and committed to your success.</p>
+                        <h4><?= pc_h($pc['train_about_why_6_title']) ?></h4>
+                        <p><?= pc_h($pc['train_about_why_6_body']) ?></p>
                     </div>
                 </div>
             </div>
@@ -1045,8 +955,8 @@
             <div class="content row_spacer clearfix">
                 <!-- Section Title -->
                 <div class="main_title centered upper mb-5 text-center">
-                    <h2 class="display-6 fw-bold">Training Academy — General Information</h2>
-                    <p class="text-muted mt-2 mb-0">Ensuring a Smooth Training Experience</p>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['train_about_policies_title']) ?></h2>
+                    <p class="text-muted mt-2 mb-0"><?= pc_h($pc['train_about_policies_subtitle']) ?></p>
                     <div class="section-divider"></div>
                 </div>
 
@@ -1054,25 +964,25 @@
                 <div class="container">
                     <ul class="nav nav-tabs justify-content-center mb-4" id="policiesTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="true">Application</button>
+                            <button class="nav-link active" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="true"><?= pc_h($pc['train_about_policy_application_tab']) ?></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="acceptance-tab" data-bs-toggle="tab" data-bs-target="#acceptance" type="button" role="tab" aria-controls="acceptance" aria-selected="false">Acceptance</button>
+                            <button class="nav-link" id="acceptance-tab" data-bs-toggle="tab" data-bs-target="#acceptance" type="button" role="tab" aria-controls="acceptance" aria-selected="false"><?= pc_h($pc['train_about_policy_acceptance_tab']) ?></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="cancellations-tab" data-bs-toggle="tab" data-bs-target="#cancellations" type="button" role="tab" aria-controls="cancellations" aria-selected="false">Cancellations</button>
+                            <button class="nav-link" id="cancellations-tab" data-bs-toggle="tab" data-bs-target="#cancellations" type="button" role="tab" aria-controls="cancellations" aria-selected="false"><?= pc_h($pc['train_about_policy_cancellations_tab']) ?></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="fees-tab" data-bs-toggle="tab" data-bs-target="#fees" type="button" role="tab" aria-controls="fees" aria-selected="false">Course Fees</button>
+                            <button class="nav-link" id="fees-tab" data-bs-toggle="tab" data-bs-target="#fees" type="button" role="tab" aria-controls="fees" aria-selected="false"><?= pc_h($pc['train_about_policy_fees_tab']) ?></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="travel-tab" data-bs-toggle="tab" data-bs-target="#travel" type="button" role="tab" aria-controls="travel" aria-selected="false">Travel</button>
+                            <button class="nav-link" id="travel-tab" data-bs-toggle="tab" data-bs-target="#travel" type="button" role="tab" aria-controls="travel" aria-selected="false"><?= pc_h($pc['train_about_policy_travel_tab']) ?></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="inhouse-tab" data-bs-toggle="tab" data-bs-target="#inhouse" type="button" role="tab" aria-controls="inhouse" aria-selected="false">Training Venues</button>
+                            <button class="nav-link" id="inhouse-tab" data-bs-toggle="tab" data-bs-target="#inhouse" type="button" role="tab" aria-controls="inhouse" aria-selected="false"><?= pc_h($pc['train_about_policy_inhouse_tab']) ?></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="assessments-tab" data-bs-toggle="tab" data-bs-target="#assessments" type="button" role="tab" aria-controls="assessments" aria-selected="false">Assessments</button>
+                            <button class="nav-link" id="assessments-tab" data-bs-toggle="tab" data-bs-target="#assessments" type="button" role="tab" aria-controls="assessments" aria-selected="false"><?= pc_h($pc['train_about_policy_assessments_tab']) ?></button>
                         </li>
                     </ul>
 
@@ -1091,8 +1001,8 @@
                                         <circle cx="36" cy="30" r="1.5" fill="currentColor"/>
                                     </svg>
                                 </span>
-                                <h3 class="fw-bold">Application</h3>
-                                <p>Application forms and course-related information can be accessed through this website under <strong>Training</strong>, or requested from the Training Unit — call <a href="tel:+26876027306" style="color:#2B3388; text-decoration:underline; font-weight:600;">7602 7306</a> or email <a href="mailto:info@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@eswasa.co.sz</a> / <a href="mailto:training@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">training@eswasa.co.sz</a>. Applications should reach ESWASA at least <strong>10 working days</strong> before the course commencement date. If the number of paid applicants has not reached the minimum required for a class (<strong>5 delegates</strong>), ESWASA reserves the right to postpone the course but undertakes to inform participants promptly of such developments.</p>
+                                <h3 class="fw-bold"><?= pc_h($pc['train_about_policy_application_title']) ?></h3>
+                                <p><?= pc_h($pc['train_about_policy_application_body']) ?></p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="acceptance" role="tabpanel" aria-labelledby="acceptance-tab">
@@ -1105,8 +1015,8 @@
                                         <path d="M20 30 L23 33 L29 26" stroke-width="2.5"/>
                                     </svg>
                                 </span>
-                                <h3 class="fw-bold">Acceptance</h3>
-                                <p>Applicants will be notified of the outcome of their applications soon thereafter. Acceptance of the offer has to be acknowledged by the participant in writing and sent by email or fax to the office as soon as possible or 7 days before the start of the training for registration.</p>
+                                <h3 class="fw-bold"><?= pc_h($pc['train_about_policy_acceptance_title']) ?></h3>
+                                <p><?= pc_h($pc['train_about_policy_acceptance_body']) ?></p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="cancellations" role="tabpanel" aria-labelledby="cancellations-tab">
@@ -1121,8 +1031,8 @@
                                         <line x1="30" y1="26" x2="18" y2="36" stroke-width="2.5"/>
                                     </svg>
                                 </span>
-                                <h3 class="fw-bold">Cancellations</h3>
-                                <p>A cancellation fee of <strong>50%</strong> of the course fee will be deducted from participants who cancel after registration / confirmation or on the date of commencement of the training course. ESWASA reserves the right to postpone any course (typically due to insufficient enrolment — see Application for class minimums) and undertakes to inform participants promptly of such developments.</p>
+                                <h3 class="fw-bold"><?= pc_h($pc['train_about_policy_cancellations_title']) ?></h3>
+                                <p><?= pc_h($pc['train_about_policy_cancellations_body']) ?></p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="fees" role="tabpanel" aria-labelledby="fees-tab">
@@ -1137,18 +1047,18 @@
                                         <path d="M27 21 Q25 20 22.5 22 Q23 24 25 24 Q27 24 27.5 26 Q26 28 21 27"/>
                                     </svg>
                                 </span>
-                                <h3 class="fw-bold">Course Fees and Payments</h3>
-                                <p>Course fees are charged per person and are inclusive of meals and refreshments for the duration of the training. Applicants should pay in full and submit <strong>proof of payment or a purchase order</strong> at least <strong>7 working days</strong> before the course commencement date.</p>
+                                <h3 class="fw-bold"><?= pc_h($pc['train_about_policy_fees_title']) ?></h3>
+                                <p><?= pc_h($pc['train_about_policy_fees_body']) ?></p>
                                 <div class="bank-details">
-                                    <h4>Banking Details</h4>
+                                    <h4><?= pc_h($pc['train_about_bank_title']) ?></h4>
                                     <dl>
-                                        <dt>Bank Name</dt><dd>Standard Bank Eswatini</dd>
-                                        <dt>Account Name</dt><dd>Eswatini Standards Authority — ESWASA</dd>
-                                        <dt>Account Number</dt><dd>9110002956732</dd>
-                                        <dt>Branch Code</dt><dd>663164</dd>
-                                        <dt>Branch Name</dt><dd>Matsapha</dd>
+                                        <dt>Bank Name</dt><dd><?= pc_h($pc['train_about_bank_name']) ?></dd>
+                                        <dt>Account Name</dt><dd><?= pc_h($pc['train_about_bank_account_name']) ?></dd>
+                                        <dt>Account Number</dt><dd><?= pc_h($pc['train_about_bank_account_number']) ?></dd>
+                                        <dt>Branch Code</dt><dd><?= pc_h($pc['train_about_bank_branch_code']) ?></dd>
+                                        <dt>Branch Name</dt><dd><?= pc_h($pc['train_about_bank_branch_name']) ?></dd>
                                     </dl>
-                                    <p class="mb-0"><strong>Mobile Money</strong> and a <strong>Speedpoint machine</strong> are also available at the ESWASA office for ease of payment.</p>
+                                    <p class="mb-0"><?= pc_h($pc['train_about_bank_note']) ?></p>
                                 </div>
                             </div>
                         </div>
@@ -1162,8 +1072,8 @@
                                         <rect x="22" y="24" width="4" height="4" fill="currentColor"/>
                                     </svg>
                                 </span>
-                                <h3 class="fw-bold">Travel and Accommodation</h3>
-                                <p>Participants are responsible for their own travel and accommodation arrangements. All courses offered are day courses.</p>
+                                <h3 class="fw-bold"><?= pc_h($pc['train_about_policy_travel_title']) ?></h3>
+                                <p><?= pc_h($pc['train_about_policy_travel_body']) ?></p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="inhouse" role="tabpanel" aria-labelledby="inhouse-tab">
@@ -1178,8 +1088,8 @@
                                         <rect x="21" y="34" width="6" height="8"/>
                                     </svg>
                                 </span>
-                                <h3 class="fw-bold">Training Venues</h3>
-                                <p>The venue for most courses is the <strong>ESWASA Training Academy</strong>, unless prior arrangements are made for in-house and/or customised training. In-house training will be presented to a <strong>minimum of 11 delegates</strong>. The organisation shall be responsible for providing a suitable training room with audiovisual equipment as well as refreshments.</p>
+                                <h3 class="fw-bold"><?= pc_h($pc['train_about_policy_inhouse_title']) ?></h3>
+                                <p><?= pc_h($pc['train_about_policy_inhouse_body']) ?></p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="assessments" role="tabpanel" aria-labelledby="assessments-tab">
@@ -1193,7 +1103,7 @@
                                         <path d="M16 34 H26"/>
                                     </svg>
                                 </span>
-                                <h3 class="fw-bold">Assessments</h3>
+                                <h3 class="fw-bold"><?= pc_h($pc['train_about_policy_assessments_title']) ?></h3>
 
                                 <div class="row g-4 mt-2 text-start assessments-grid" style="max-width: 920px; margin: 0 auto;">
                                     <div class="col-md-6">
@@ -1204,12 +1114,9 @@
                                                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                                                 </svg>
                                             </span>
-                                            <h5 class="assessment-card-title">How performance is evaluated</h5>
+                                            <h5 class="assessment-card-title"><?= pc_h($pc['train_about_assess_eval_title']) ?></h5>
                                             <ul class="assessment-list">
-                                                <li>Continuous assessments.</li>
-                                                <li>Practical exercises.</li>
-                                                <li>Group activities.</li>
-                                                <li>Final examinations.</li>
+                                                <?= train_about_list_items($pc['train_about_assess_eval_list']) ?>
                                             </ul>
                                         </div>
                                     </div>
@@ -1221,17 +1128,16 @@
                                                     <path d="M15.5 13.5L17 22l-5-3-5 3 1.5-8.5"/>
                                                 </svg>
                                             </span>
-                                            <h5 class="assessment-card-title">Certificates awarded</h5>
+                                            <h5 class="assessment-card-title"><?= pc_h($pc['train_about_assess_cert_title']) ?></h5>
                                             <ul class="assessment-list">
-                                                <li>Certificate of Competence &mdash; for successful completion and passing of all assessments.</li>
-                                                <li>Certificate of Attendance &mdash; for awareness trainings or participation-only sessions.</li>
+                                                <?= train_about_list_items($pc['train_about_assess_cert_list']) ?>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="passing-mark-pill">
-                                    Minimum passing mark: 70%
+                                    <?= pc_h($pc['train_about_assess_pass_mark']) ?>
                                 </div>
                             </div>
                         </div>

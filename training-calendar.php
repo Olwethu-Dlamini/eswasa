@@ -1,11 +1,140 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+include_once __DIR__ . '/includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+
+// ── Structural training schedule (code/family/intakes/colours) ───────────────
+// Titles are CMS-driven; the rest is structural data the JS calendar needs.
+$train_cal_structural = [
+    1  => ['code' => 'QMS 02',  'family' => 'Quality',         'sessions' => [
+            ['start' => '2026-05-18', 'end' => '2026-05-22', 'label' => '18–22 May'],
+            ['start' => '2026-07-13', 'end' => '2026-07-17', 'label' => '13–17 July'],
+            ['start' => '2026-10-05', 'end' => '2026-10-09', 'label' => '5–9 October'],
+            ['start' => '2026-12-07', 'end' => '2026-12-11', 'label' => '7–11 December'],
+        ]],
+    2  => ['code' => 'QMS 03',  'family' => 'Auditing',        'sessions' => [
+            ['start' => '2026-07-20', 'end' => '2026-07-24', 'label' => '20–24 July'],
+            ['start' => '2026-09-07', 'end' => '2026-09-11', 'label' => '7–11 September'],
+        ]],
+    3  => ['code' => 'FSMS 02', 'family' => 'Food Safety',     'sessions' => [
+            ['start' => '2026-06-01', 'end' => '2026-06-05', 'label' => '1–5 June'],
+            ['start' => '2026-08-17', 'end' => '2026-08-21', 'label' => '17–21 August'],
+            ['start' => '2026-10-26', 'end' => '2026-10-30', 'label' => '26–30 October'],
+            ['start' => '2026-12-14', 'end' => '2026-12-18', 'label' => '14–18 December'],
+        ]],
+    4  => ['code' => 'FSMS 03', 'family' => 'Auditing',        'sessions' => [
+            ['start' => '2026-07-27', 'end' => '2026-07-31', 'label' => '27–31 July'],
+            ['start' => '2026-11-30', 'end' => '2026-12-04', 'label' => '30 November – 4 December'],
+        ]],
+    5  => ['code' => 'FS 01',   'family' => 'Food Safety',     'sessions' => [
+            ['start' => '2026-08-03', 'end' => '2026-08-07', 'label' => '3–7 August'],
+        ]],
+    6  => ['code' => 'OHS 02',  'family' => 'Health & Safety', 'sessions' => [
+            ['start' => '2026-06-08', 'end' => '2026-06-12', 'label' => '8–12 June'],
+            ['start' => '2026-08-24', 'end' => '2026-08-28', 'label' => '24–28 August'],
+            ['start' => '2026-11-02', 'end' => '2026-11-06', 'label' => '2–6 November'],
+        ]],
+    7  => ['code' => 'OHS 01',  'family' => 'Health & Safety', 'sessions' => [
+            ['start' => '2026-09-21', 'end' => '2026-09-25', 'label' => '21–25 September'],
+        ]],
+    8  => ['code' => 'RCA 02',  'family' => 'Health & Safety', 'sessions' => [
+            ['start' => '2026-08-10', 'end' => '2026-08-14', 'label' => '10–14 August'],
+        ]],
+    9  => ['code' => 'HM 02',   'family' => 'Hazmat',          'sessions' => [
+            ['start' => '2026-05-25', 'end' => '2026-05-29', 'label' => '25–29 May'],
+            ['start' => '2026-11-09', 'end' => '2026-11-13', 'label' => '9–13 November'],
+        ]],
+    10 => ['code' => 'EMS 02',  'family' => 'Environmental',   'sessions' => [
+            ['start' => '2026-06-15', 'end' => '2026-06-19', 'label' => '15–19 June'],
+            ['start' => '2026-09-14', 'end' => '2026-09-18', 'label' => '14–18 September'],
+            ['start' => '2026-11-23', 'end' => '2026-11-27', 'label' => '23–27 November'],
+        ]],
+    11 => ['code' => 'ERM 02',  'family' => 'Risk',            'sessions' => [
+            ['start' => '2026-06-22', 'end' => '2026-06-26', 'label' => '22–26 June'],
+            ['start' => '2026-10-19', 'end' => '2026-10-23', 'label' => '19–23 October'],
+        ]],
+    12 => ['code' => 'WDM 02',  'family' => 'Wellness',        'sessions' => [
+            ['start' => '2026-06-29', 'end' => '2026-07-03', 'label' => '29 June – 3 July'],
+        ]],
+    13 => ['code' => 'GAP 02',  'family' => 'Agriculture',     'sessions' => [
+            ['start' => '2026-07-06', 'end' => '2026-07-10', 'label' => '6–10 July'],
+            ['start' => '2026-10-12', 'end' => '2026-10-16', 'label' => '12–16 October'],
+        ]],
+];
+
+// ── CMS keys + defaults ─────────────────────────────────────────────────────
+$train_cal_defaults = [
+    // Breadcrumb / hero
+    'train_cal_breadcrumb_home'        => 'Home',
+    'train_cal_breadcrumb_parent'      => 'Training',
+    'train_cal_breadcrumb_current'     => 'Calendar',
+    'train_cal_hero_title'             => 'Training Calendar',
+
+    // Section heading
+    'train_cal_section_title'          => 'Upcoming Training Sessions',
+    'train_cal_section_subtitle'       => 'Plan Your Learning Journey',
+
+    // Action buttons (Prospectus / Application / E-Learning)
+    'train_cal_prospectus_label'       => 'Prospectus',
+    'train_cal_prospectus_url'         => 'admin/downloads/ESWASA TRAINING PROSPECTUS 2025-26.pdf',
+    'train_cal_application_label'      => 'Application Form',
+    'train_cal_application_url'        => 'qoute_training.php',
+    'train_cal_elearning_label'        => 'E-Learning Platform',
+    'train_cal_elearning_soon_badge'   => 'Coming soon',
+
+    // Trainings list header
+    'train_cal_year_label'             => '2026 Schedule',
+    'train_cal_reset_filter_label'     => 'Show all',
+
+    // Apply modal
+    'train_cal_modal_title_prefix'     => 'Apply for Training:',
+    'train_cal_modal_title_on'         => 'on',
+    'train_cal_modal_intro'            => 'Please complete the form below to apply for the selected training session.',
+    'train_cal_modal_label_name'       => 'Full Name *',
+    'train_cal_modal_label_email'      => 'Email Address *',
+    'train_cal_modal_label_phone'      => 'Phone Number',
+    'train_cal_modal_label_company'    => 'Company/Organisation',
+    'train_cal_modal_label_position'   => 'Position/Title',
+    'train_cal_modal_label_comments'   => 'Comments or Questions',
+    'train_cal_modal_consent'          => 'I agree to the Training Policies and consent to the processing of my personal data as described in the prospectus.',
+    'train_cal_modal_submit_label'     => 'Submit Application',
+];
+
+// Session slot defaults (13 slots — date/title/location/duration/price each)
+$train_cal_session_titles = [
+    1  => 'Quality Management Systems — SZNS ISO 9001:2015 — Understanding & Implementation',
+    2  => 'Quality Management Systems — Internal Auditing — SZNS ISO 19011:2018',
+    3  => 'Food Safety Management Systems — SZNS ISO 22000:2018 — Understanding & Implementation',
+    4  => 'Food Safety Management Systems — Internal Auditing — SZNS ISO 19011:2018',
+    5  => 'Hazard Analysis & Critical Control Points (HACCP) — SZNS ISO 10330:2020 — Understanding & Implementation',
+    6  => 'Occupational Health & Safety Management Systems — SZNS ISO 45001:2018 — Understanding & Implementation',
+    7  => 'SHE Rep — Safety, Health and Environment Representative',
+    8  => 'Root Cause Analysis / Incident Investigation — Understanding & Implementation',
+    9  => 'Hazmat — Hazardous Material — Understanding & Implementation',
+    10 => 'Environmental Management Systems — SZNS ISO 14001:2015 — Understanding & Implementation',
+    11 => 'Enterprise Risk Management — SZNS ISO 31000:2018 — Understanding & Implementation',
+    12 => 'Wellness and Disease Management Systems — SZNS SANS 16001:2013 — Understanding & Implementation',
+    13 => 'Global GAP — Integrated Farm Assurance',
+];
+foreach ($train_cal_session_titles as $n => $title) {
+    // Build a human-readable composite date from the structural intakes
+    $intake_labels = array_map(function ($s) { return $s['label']; }, $train_cal_structural[$n]['sessions']);
+    $train_cal_defaults["train_cal_session_{$n}_title"]    = $title;
+    $train_cal_defaults["train_cal_session_{$n}_date"]     = implode('; ', $intake_labels) . ' 2026';
+    $train_cal_defaults["train_cal_session_{$n}_location"] = 'Mbabane';
+    $train_cal_defaults["train_cal_session_{$n}_duration"] = '5 days';
+    $train_cal_defaults["train_cal_session_{$n}_price"]    = '';
+}
+
+$pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Training - Calendar - SWASA</title>
+    <title><?= pc_h($pc['train_cal_hero_title']) ?> - SWASA</title>
     <meta name="description" content="View the upcoming training calendar for SWASA. Access the prospectus and apply for courses.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -473,14 +602,14 @@
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
                                 <span property="itemListElement" typeof="ListItem">
-                                    <a href="index.php">Home</a>
+                                    <a href="index.php"><?= pc_h($pc['train_cal_breadcrumb_home']) ?></a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Training</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['train_cal_breadcrumb_parent']) ?></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Calendar</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['train_cal_breadcrumb_current']) ?></span>
                             </nav>
-                            <h1 class="title">Training Calendar</h1>
+                            <h1 class="title"><?= pc_h($pc['train_cal_hero_title']) ?></h1>
                         </div>
                     </div>
                 </div>
@@ -493,21 +622,21 @@
             <div class="container">
                 <!-- Section Title -->
                 <div class="main_title centered upper mb-5 text-center">
-                    <h2 class="display-6 fw-bold">Upcoming Training Sessions</h2>
-                    <p class="text-muted mt-2 mb-0">Plan Your Learning Journey</p>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['train_cal_section_title']) ?></h2>
+                    <p class="text-muted mt-2 mb-0"><?= pc_h($pc['train_cal_section_subtitle']) ?></p>
                     <div class="section-divider"></div>
                 </div>
 
                 <!-- Calendar Action Tabs (Prospectus / Application / E-Learning) -->
                 <div class="calendar-actions text-center mb-4">
-                    <a href="admin/downloads/ESWASA TRAINING PROSPECTUS 2025-26.pdf" class="prospectus-link" target="_blank">
-                        <i class="fas fa-file-pdf"></i> Prospectus
+                    <a href="<?= pc_h($pc['train_cal_prospectus_url']) ?>" class="prospectus-link" target="_blank">
+                        <i class="fas fa-file-pdf"></i> <?= pc_h($pc['train_cal_prospectus_label']) ?>
                     </a>
-                    <a href="qoute_training.php" class="prospectus-link">
-                        <i class="fas fa-file-signature"></i> Application Form
+                    <a href="<?= pc_h($pc['train_cal_application_url']) ?>" class="prospectus-link">
+                        <i class="fas fa-file-signature"></i> <?= pc_h($pc['train_cal_application_label']) ?>
                     </a>
                     <a href="#" class="prospectus-link is-soon" aria-disabled="true" title="Coming soon">
-                        <i class="fas fa-laptop"></i> E-Learning Platform <span class="soon-badge">Coming soon</span>
+                        <i class="fas fa-laptop"></i> <?= pc_h($pc['train_cal_elearning_label']) ?> <span class="soon-badge"><?= pc_h($pc['train_cal_elearning_soon_badge']) ?></span>
                     </a>
                 </div>
 
@@ -517,9 +646,9 @@
                     <!-- Trainings list -->
                     <div class="trainings-col">
                         <div class="trainings-header">
-                            <span class="year-label">2026 Schedule</span>
+                            <span class="year-label"><?= pc_h($pc['train_cal_year_label']) ?></span>
                             <button id="reset-filter" class="reset-filter" type="button">
-                                <i class="fas fa-times me-1"></i> Show all
+                                <i class="fas fa-times me-1"></i> <?= pc_h($pc['train_cal_reset_filter_label']) ?>
                             </button>
                         </div>
                         <div id="trainings-list"></div>
@@ -553,41 +682,41 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Apply for Training: <span id="modal-event"></span> on <span id="modal-date"></span></h5>
+                                <h5 class="modal-title"><?= pc_h($pc['train_cal_modal_title_prefix']) ?> <span id="modal-event"></span> <?= pc_h($pc['train_cal_modal_title_on']) ?> <span id="modal-date"></span></h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p class="text-muted mb-3">Please complete the form below to apply for the selected training session.</p>
+                                <p class="text-muted mb-3"><?= pc_h($pc['train_cal_modal_intro']) ?></p>
                                 <form id="applyForm">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Full Name *</label>
+                                        <label for="name" class="form-label"><?= pc_h($pc['train_cal_modal_label_name']) ?></label>
                                         <input type="text" class="form-control" id="name" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email Address *</label>
+                                        <label for="email" class="form-label"><?= pc_h($pc['train_cal_modal_label_email']) ?></label>
                                         <input type="email" class="form-control" id="email" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <label for="phone" class="form-label"><?= pc_h($pc['train_cal_modal_label_phone']) ?></label>
                                         <input type="tel" class="form-control" id="phone">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="company" class="form-label">Company/Organisation</label>
+                                        <label for="company" class="form-label"><?= pc_h($pc['train_cal_modal_label_company']) ?></label>
                                         <input type="text" class="form-control" id="company">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="position" class="form-label">Position/Title</label>
+                                        <label for="position" class="form-label"><?= pc_h($pc['train_cal_modal_label_position']) ?></label>
                                         <input type="text" class="form-control" id="position">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="comments" class="form-label">Comments or Questions</label>
+                                        <label for="comments" class="form-label"><?= pc_h($pc['train_cal_modal_label_comments']) ?></label>
                                         <textarea class="form-control" id="comments" rows="3"></textarea>
                                     </div>
                                     <div class="mb-3 form-check">
                                         <input type="checkbox" class="form-check-input" id="consentCheck" required>
-                                        <label class="form-check-label" for="consentCheck">I agree to the <a href="training_about.php#policiesTabContent">Training Policies</a> and consent to the processing of my personal data as described in the prospectus.</label>
+                                        <label class="form-check-label" for="consentCheck"><?= pc_h($pc['train_cal_modal_consent']) ?></label>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100"><i class="ico-check3 me-2"></i>Submit Application</button>
+                                    <button type="submit" class="btn btn-primary w-100"><i class="ico-check3 me-2"></i><?= pc_h($pc['train_cal_modal_submit_label']) ?></button>
                                 </form>
                             </div>
                         </div>
@@ -636,62 +765,22 @@
             'Agriculture':     '#2E7D32'  // Global GAP
         };
 
-        // 2026 ESWASA training schedule — each training has 1–4 weekly intakes (start → end)
+        // 2026 ESWASA training schedule — titles CMS-driven, intakes structural
+        // Slots with an empty title are skipped (admin can blank a slot to hide it)
         const trainings = [
-            { code: 'QMS 02',  family: 'Quality',         title: 'Quality Management Systems — SZNS ISO 9001:2015 — Understanding & Implementation', sessions: [
-                { start: '2026-05-18', end: '2026-05-22', label: '18–22 May' },
-                { start: '2026-07-13', end: '2026-07-17', label: '13–17 July' },
-                { start: '2026-10-05', end: '2026-10-09', label: '5–9 October' },
-                { start: '2026-12-07', end: '2026-12-11', label: '7–11 December' }
+<?php foreach ($train_cal_structural as $n => $row):
+    $title    = trim((string)($pc["train_cal_session_{$n}_title"] ?? ''));
+    if ($title === '') continue;
+    $code     = $row['code'];
+    $family   = $row['family'];
+    $sessions = $row['sessions'];
+?>
+            { code: <?= json_encode($code, JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($family, JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($title, JSON_UNESCAPED_UNICODE) ?>, sessions: [
+<?php foreach ($sessions as $s): ?>
+                { start: <?= json_encode($s['start']) ?>, end: <?= json_encode($s['end']) ?>, label: <?= json_encode($s['label'], JSON_UNESCAPED_UNICODE) ?> },
+<?php endforeach; ?>
             ]},
-            { code: 'QMS 03',  family: 'Auditing',        title: 'Quality Management Systems — Internal Auditing — SZNS ISO 19011:2018', sessions: [
-                { start: '2026-07-20', end: '2026-07-24', label: '20–24 July' },
-                { start: '2026-09-07', end: '2026-09-11', label: '7–11 September' }
-            ]},
-            { code: 'FSMS 02', family: 'Food Safety',     title: 'Food Safety Management Systems — SZNS ISO 22000:2018 — Understanding & Implementation', sessions: [
-                { start: '2026-06-01', end: '2026-06-05', label: '1–5 June' },
-                { start: '2026-08-17', end: '2026-08-21', label: '17–21 August' },
-                { start: '2026-10-26', end: '2026-10-30', label: '26–30 October' },
-                { start: '2026-12-14', end: '2026-12-18', label: '14–18 December' }
-            ]},
-            { code: 'FSMS 03', family: 'Auditing',        title: 'Food Safety Management Systems — Internal Auditing — SZNS ISO 19011:2018', sessions: [
-                { start: '2026-07-27', end: '2026-07-31', label: '27–31 July' },
-                { start: '2026-11-30', end: '2026-12-04', label: '30 November – 4 December' }
-            ]},
-            { code: 'FS 01',   family: 'Food Safety',     title: 'Hazard Analysis & Critical Control Points (HACCP) — SZNS ISO 10330:2020 — Understanding & Implementation', sessions: [
-                { start: '2026-08-03', end: '2026-08-07', label: '3–7 August' }
-            ]},
-            { code: 'OHS 02',  family: 'Health & Safety', title: 'Occupational Health & Safety Management Systems — SZNS ISO 45001:2018 — Understanding & Implementation', sessions: [
-                { start: '2026-06-08', end: '2026-06-12', label: '8–12 June' },
-                { start: '2026-08-24', end: '2026-08-28', label: '24–28 August' },
-                { start: '2026-11-02', end: '2026-11-06', label: '2–6 November' }
-            ]},
-            { code: 'OHS 01',  family: 'Health & Safety', title: 'SHE Rep — Safety, Health and Environment Representative', sessions: [
-                { start: '2026-09-21', end: '2026-09-25', label: '21–25 September' }
-            ]},
-            { code: 'RCA 02',  family: 'Health & Safety', title: 'Root Cause Analysis / Incident Investigation — Understanding & Implementation', sessions: [
-                { start: '2026-08-10', end: '2026-08-14', label: '10–14 August' }
-            ]},
-            { code: 'HM 02',   family: 'Hazmat',          title: 'Hazmat — Hazardous Material — Understanding & Implementation', sessions: [
-                { start: '2026-05-25', end: '2026-05-29', label: '25–29 May' },
-                { start: '2026-11-09', end: '2026-11-13', label: '9–13 November' }
-            ]},
-            { code: 'EMS 02',  family: 'Environmental',   title: 'Environmental Management Systems — SZNS ISO 14001:2015 — Understanding & Implementation', sessions: [
-                { start: '2026-06-15', end: '2026-06-19', label: '15–19 June' },
-                { start: '2026-09-14', end: '2026-09-18', label: '14–18 September' },
-                { start: '2026-11-23', end: '2026-11-27', label: '23–27 November' }
-            ]},
-            { code: 'ERM 02',  family: 'Risk',            title: 'Enterprise Risk Management — SZNS ISO 31000:2018 — Understanding & Implementation', sessions: [
-                { start: '2026-06-22', end: '2026-06-26', label: '22–26 June' },
-                { start: '2026-10-19', end: '2026-10-23', label: '19–23 October' }
-            ]},
-            { code: 'WDM 02',  family: 'Wellness',        title: 'Wellness and Disease Management Systems — SZNS SANS 16001:2013 — Understanding & Implementation', sessions: [
-                { start: '2026-06-29', end: '2026-07-03', label: '29 June – 3 July' }
-            ]},
-            { code: 'GAP 02',  family: 'Agriculture',     title: 'Global GAP — Integrated Farm Assurance', sessions: [
-                { start: '2026-07-06', end: '2026-07-10', label: '6–10 July' },
-                { start: '2026-10-12', end: '2026-10-16', label: '12–16 October' }
-            ]}
+<?php endforeach; ?>
         ];
         // Resolve colour per training from the family map
         trainings.forEach(t => { t.color = FAMILY_COLOURS[t.family]; });

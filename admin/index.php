@@ -38,10 +38,12 @@ $allowed_pages = [
     'training_edit.php',
     'training_about.php',
     'training_calendar.php',
+    'cert_status_edit.php',
     'contact_edit.php',
     'events_edit.php',
     'vacancies_edit.php',
     'announcements_edit.php',
+    'news_edit.php',
     'faq_edit.php',
     'publications_edit.php',
     'breadcrumbs_edit.php',
@@ -56,6 +58,10 @@ $allowed_pages = [
     'qoute_calibration.php',
     'users.php',
     'posts.php',
+    'board_edit.php',
+    'index_edit.php',
+    'banners_edit.php',
+    'statistics_edit.php',
 ];
 
 // Resolve page
@@ -87,10 +93,12 @@ $page_titles = [
     'training_edit.php'         => 'Training',
     'training_about.php'        => 'About Trainings',
     'training_calendar.php'     => 'Training Calendar',
+    'cert_status_edit.php'      => 'Certification Status Page',
     'contact_edit.php'          => 'Contact Us',
     'events_edit.php'           => 'Events',
     'vacancies_edit.php'        => 'Vacancies',
     'announcements_edit.php'    => 'Announcements',
+    'news_edit.php'             => 'News',
     'faq_edit.php'              => 'FAQ',
     'publications_edit.php'     => 'Publications',
     'breadcrumbs_edit.php'      => 'Breadcrumb Images',
@@ -105,6 +113,10 @@ $page_titles = [
     'qoute_calibration.php'     => 'Calibration Quote Requests',
     'users.php'                 => 'Users',
     'posts.php'                 => 'Posts',
+    'board_edit.php'            => 'Board Members',
+    'index_edit.php'            => 'Home Page',
+    'banners_edit.php'          => 'Banner Slider',
+    'statistics_edit.php'       => 'Statistics',
 ];
 $page_title = $page_titles[$page] ?? ucfirst(str_replace(['.php','_'], ['', ' '], $page));
 

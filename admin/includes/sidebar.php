@@ -25,6 +25,21 @@ function submenu_open($pages, $current) {
                 <?= nav_link('dashboard.php', $current_page, 'fa-home', 'Dashboard') ?>
             </li>
 
+            <!-- Home Page -->
+            <?php $home_pages = ['index_edit.php','banners_edit.php','statistics_edit.php']; ?>
+            <li class="nav-item">
+                <a class="nav-link <?= is_active_group($home_pages, $current_page) ?> d-flex justify-content-between"
+                   href="#submenu-home" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $home_pages) ? 'true' : 'false' ?>">
+                    <span><i class="fas fa-house-user fa-fw me-2"></i>Home Page</span>
+                    <i class="fas fa-chevron-down small mt-1"></i>
+                </a>
+                <ul class="nav flex-column ms-3 collapse <?= submenu_open($home_pages, $current_page) ?>" id="submenu-home">
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='index_edit.php'?'active':'' ?>" href="index.php?page=index_edit.php">Home Sections</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='banners_edit.php'?'active':'' ?>" href="index.php?page=banners_edit.php">Banner Slider</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='statistics_edit.php'?'active':'' ?>" href="index.php?page=statistics_edit.php">Statistics</a></li>
+                </ul>
+            </li>
+
             <li class="nav-item">
                 <?= nav_link('breadcrumbs_edit.php', $current_page, 'fa-image', 'Breadcrumb Images') ?>
             </li>
@@ -34,15 +49,17 @@ function submenu_open($pages, $current) {
             </li>
 
             <!-- About Us -->
+            <?php $about_pages = ['about_edit.php','about_team.php','board_edit.php']; ?>
             <li class="nav-item">
-                <a class="nav-link <?= is_active_group(['about_edit.php','about_team.php'], $current_page) ?> d-flex justify-content-between"
-                   href="#submenu-about" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, ['about_edit.php','about_team.php']) ? 'true' : 'false' ?>">
+                <a class="nav-link <?= is_active_group($about_pages, $current_page) ?> d-flex justify-content-between"
+                   href="#submenu-about" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $about_pages) ? 'true' : 'false' ?>">
                     <span><i class="fas fa-info-circle fa-fw me-2"></i>About Us</span>
                     <i class="fas fa-chevron-down small mt-1"></i>
                 </a>
-                <ul class="nav flex-column ms-3 collapse <?= submenu_open(['about_edit.php','about_team.php'], $current_page) ?>" id="submenu-about">
+                <ul class="nav flex-column ms-3 collapse <?= submenu_open($about_pages, $current_page) ?>" id="submenu-about">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='about_edit.php'?'active':'' ?>" href="index.php?page=about_edit.php">Who Are We</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='about_team.php'?'active':'' ?>" href="index.php?page=about_team.php">Meet Our Team</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='board_edit.php'?'active':'' ?>" href="index.php?page=board_edit.php">Board Members</a></li>
                 </ul>
             </li>
 
@@ -61,7 +78,7 @@ function submenu_open($pages, $current) {
             </li>
 
             <!-- Certification -->
-            <?php $cert_pages = ['certification_edit.php','managementsystems.php','product.php','ingelo.php','qoute_certification.php']; ?>
+            <?php $cert_pages = ['certification_edit.php','managementsystems.php','product.php','ingelo.php','cert_status_edit.php','qoute_certification.php']; ?>
             <li class="nav-item">
                 <a class="nav-link <?= is_active_group($cert_pages, $current_page) ?> d-flex justify-content-between"
                    href="#submenu-cert" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $cert_pages) ? 'true' : 'false' ?>">
@@ -73,6 +90,7 @@ function submenu_open($pages, $current) {
                     <li class="nav-item"><a class="nav-link <?= $current_page==='managementsystems.php'?'active':'' ?>" href="index.php?page=managementsystems.php">Management Systems</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='product.php'?'active':'' ?>" href="index.php?page=product.php">Product Certification</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='ingelo.php'?'active':'' ?>" href="index.php?page=ingelo.php">Ingelo Certification</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='cert_status_edit.php'?'active':'' ?>" href="index.php?page=cert_status_edit.php">Certification Status Page</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='qoute_certification.php'?'active':'' ?>" href="index.php?page=qoute_certification.php">Request Quotation</a></li>
                 </ul>
             </li>
@@ -107,7 +125,7 @@ function submenu_open($pages, $current) {
             </li>
 
             <!-- Updates -->
-            <?php $upd_pages = ['events_edit.php','vacancies_edit.php','publications_edit.php','announcements_edit.php','faq_edit.php']; ?>
+            <?php $upd_pages = ['events_edit.php','vacancies_edit.php','publications_edit.php','announcements_edit.php','news_edit.php','faq_edit.php']; ?>
             <li class="nav-item">
                 <a class="nav-link <?= is_active_group($upd_pages, $current_page) ?> d-flex justify-content-between"
                    href="#submenu-updates" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $upd_pages) ? 'true' : 'false' ?>">
@@ -119,6 +137,7 @@ function submenu_open($pages, $current) {
                     <li class="nav-item"><a class="nav-link <?= $current_page==='vacancies_edit.php'?'active':'' ?>" href="index.php?page=vacancies_edit.php">Vacancies</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='publications_edit.php'?'active':'' ?>" href="index.php?page=publications_edit.php">Publications</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='announcements_edit.php'?'active':'' ?>" href="index.php?page=announcements_edit.php">Announcements</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='news_edit.php'?'active':'' ?>" href="index.php?page=news_edit.php">News</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='faq_edit.php'?'active':'' ?>" href="index.php?page=faq_edit.php">FAQ</a></li>
                 </ul>
             </li>

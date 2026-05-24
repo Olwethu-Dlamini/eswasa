@@ -1,8 +1,278 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include 'includes/db_connect.php';
+require_once __DIR__ . '/includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
 include_once 'includes/breadcrumb_helper.php';
+
+// ── CMS keys for the Standards page ──────────────────────────────────────────
+// Reused legacy keys (already present in DB from older editor):
+//   standards_mandate, standards_process_desc, standards_proposal
+// All new keys use the `std_` prefix per pagebase convention.
+$std_keys = [
+    // Breadcrumb / page title
+    'std_breadcrumb_title',
+    'std_meta_description',
+
+    // Section 1 — Standards Development (intro)
+    'std_about_title',
+    'standards_mandate',                 // reused legacy key — opening paragraphs
+    'std_sectors_title',
+    'std_sectors_intro',
+    'std_sector_1', 'std_sector_2', 'std_sector_3', 'std_sector_4',
+    'std_sector_5', 'std_sector_6', 'std_sector_7', 'std_sector_8',
+    'std_catalogue_note',
+
+    // What is a Standard
+    'std_what_title',
+    'std_what_body',
+
+    // Benefits of Standards
+    'std_benefits_title',
+    'std_benefit_1', 'std_benefit_2', 'std_benefit_3', 'std_benefit_4', 'std_benefit_5',
+
+    // Process
+    'std_process_title',
+    'standards_process_desc',            // reused legacy key — process intro line
+
+    // 9-stage process cards (stages 0–8)
+    'std_process_step_0_title', 'std_process_step_0_body',
+    'std_process_step_1_title', 'std_process_step_1_body',
+    'std_process_step_2_title', 'std_process_step_2_body',
+    'std_process_step_3_title', 'std_process_step_3_body',
+    'std_process_step_4_title', 'std_process_step_4_body',
+    'std_process_step_5_title', 'std_process_step_5_body', 'std_process_step_5_pill',
+    'std_process_step_6_title', 'std_process_step_6_body',
+    'std_process_step_7_title', 'std_process_step_7_body', 'std_process_step_7_pill',
+    'std_process_step_8_title', 'std_process_step_8_body', 'std_process_step_8_pill',
+
+    // Proposal Form
+    'std_proposal_title',
+    'standards_proposal',                // reused legacy key — proposal lead
+    'std_proposal_portal_url',
+    'std_proposal_email_primary',
+    'std_proposal_email_secondary',
+    'std_proposal_form_url',
+    'std_proposal_form_label',
+    'std_proposal_note',
+
+    // ─── Technical Committees & Work Programmes ───
+    'std_tc_section_title',
+    'std_tc_about_title',
+    'std_tc_about_body',
+    'std_tc_benefits_title',
+    'std_tc_benefit_1_title', 'std_tc_benefit_1_body',
+    'std_tc_benefit_2_title', 'std_tc_benefit_2_body',
+    'std_tc_benefit_3_title', 'std_tc_benefit_3_body',
+    'std_tc_benefit_4_title', 'std_tc_benefit_4_body',
+    'std_tc_apply_title',
+    'std_tc_apply_body',
+    'std_tc_portal_url',
+    'std_tc_register_url',
+    'std_workprog_title',
+    'std_workprog_body',
+    'std_workprog_url',
+
+    // ─── Purchase Standards ───
+    'std_purchase_section_title',
+    'std_sales_title',
+    'std_sales_body',
+    'std_estore_url',
+    'std_catalogue_url',
+
+    'std_popular_title',
+    'std_popular_intro',
+    'std_popular_1_code', 'std_popular_1_name', 'std_popular_1_image',
+    'std_popular_2_code', 'std_popular_2_name', 'std_popular_2_image',
+    'std_popular_3_code', 'std_popular_3_name', 'std_popular_3_image',
+    'std_popular_4_code', 'std_popular_4_name', 'std_popular_4_image',
+    'std_popular_5_code', 'std_popular_5_name', 'std_popular_5_image',
+    'std_popular_6_code', 'std_popular_6_name', 'std_popular_6_image',
+
+    'std_copyright_title',
+    'std_copyright_body',
+
+    'std_affiliations_title',
+    'std_affiliations_intro',
+    'std_aff_1_name', 'std_aff_1_full', 'std_aff_1_image', 'std_aff_1_url',
+    'std_aff_2_name', 'std_aff_2_full', 'std_aff_2_image', 'std_aff_2_url',
+    'std_aff_3_name', 'std_aff_3_full', 'std_aff_3_image', 'std_aff_3_url',
+    'std_aff_4_name', 'std_aff_4_full', 'std_aff_4_image', 'std_aff_4_url',
+    'std_aff_5_name', 'std_aff_5_full', 'std_aff_5_image', 'std_aff_5_url',
+    'std_aff_6_name', 'std_aff_6_full', 'std_aff_6_image', 'std_aff_6_url',
+
+    // ─── Information Centre ───
+    'std_info_section_title',
+    'std_info_about_title',
+    'std_info_about_intro',
+    'std_info_item_1', 'std_info_item_2', 'std_info_item_3', 'std_info_item_4',
+    'std_info_about_outro',
+
+    'std_afcfta_title',
+    'std_afcfta_body',
+
+    'std_nep_title',
+    'std_nep_body',
+    'std_nep_image',
+    'std_nep_image_alt',
+
+    // CTA
+    'std_cta_title',
+    'std_cta_subtitle',
+    'std_cta_btn_1_label', 'std_cta_btn_1_url',
+    'std_cta_btn_2_label', 'std_cta_btn_2_url',
+    'std_cta_btn_3_label', 'std_cta_btn_3_url',
+];
+
+$std_defaults = [
+    'std_breadcrumb_title' => 'Standards Development',
+    'std_meta_description' => 'ESWASA standards development under the Standards and Quality Act No. 10 of 2003 — Eswatini National Standards (SZNS), Technical Committees, standards purchase via the ESWASA estore, and the National Enquiry Point (WTO/TBT).',
+
+    'std_about_title' => 'Standards Development',
+    'standards_mandate' => "The Standards Development Unit, in accordance with the Standards and Quality Act No. 10 of 2003, as amended, is mandated to facilitate the development of standards for the different sectors of the economy, publish, and maintain the Eswatini National Standards (SZNS) and related normative publications serving the standardisation needs for Eswatini.\n\nThese standards are developed to help industry produce quality products that meet the expectations of consumers and comply with environmental, health and safety regulations.",
+    'std_sectors_title' => 'Industry Sectors',
+    'std_sectors_intro' => 'ESWASA has developed standards across the following sectors:',
+    'std_sector_1' => 'Food and Agriculture',
+    'std_sector_2' => 'Building and Construction',
+    'std_sector_3' => 'Information Communication Technology',
+    'std_sector_4' => 'Chemicals and Textiles',
+    'std_sector_5' => 'Electrical and Mechanical Engineering',
+    'std_sector_6' => 'Health and Safety',
+    'std_sector_7' => 'Environment',
+    'std_sector_8' => 'General and Services',
+    'std_catalogue_note' => 'See the full Standards Catalogue.',
+
+    'std_what_title' => 'What is a Standard?',
+    'std_what_body' => "Standards are the outcome of a consultative process involving the experience and knowledge of interested parties — key industry stakeholders, consumers and their relevant associations, academic and research institutions, government ministries and regulators — who are brought together to agree on the technical contents of a standard through consensus.\n\nThey are developed on a need basis, and the need for a new standard can be initiated by industry stakeholders, an individual, a manufacturer, or a government institution through a standards proposal.\n\nStandards are designed for voluntary use and do not impose any regulations. However, laws and regulations may reference certain standards and make compliance with them mandatory.",
+
+    'std_benefits_title' => 'Benefits of Standards',
+    'std_benefit_1' => 'Increased profitability through cost reduction and increased sales.',
+    'std_benefit_2' => 'Ensure consumers are protected from hazards to their health and safety.',
+    'std_benefit_3' => 'Inspire trust and consumer confidence in your business.',
+    'std_benefit_4' => 'Assist businesses in meeting regulatory requirements and provide access to national and international markets.',
+    'std_benefit_5' => 'Create a competitive advantage by improving the quality of goods and services.',
+
+    'std_process_title' => 'Standards Development Process',
+    'standards_process_desc' => 'The Standards Development Process follows 9 stages — from an early idea to a published Eswatini National Standard.',
+
+    'std_process_step_0_title' => 'Preliminary Stage',
+    'std_process_step_0_body'  => 'An opportunity to introduce proposals (Preliminary Work Items, or PWIs) for projects that are not yet mature enough for processing — for example, an emerging-technology standard for which no reference document yet exists.',
+    'std_process_step_1_title' => 'Proposal Stage',
+    'std_process_step_1_body'  => 'ESWASA / SAC receives — and accepts or rejects — a New Work Item Proposal (NWIP) for: a new standard, a new part of an existing standard, a revision, or an amendment.',
+    'std_process_step_2_title' => 'Preparatory Stage',
+    'std_process_step_2_body'  => 'Preparation of a Working Draft (WD), if necessary. The stage concludes when the first Committee Draft (CD) is available for submission to the full Technical Committee or Sub-Committee.',
+    'std_process_step_3_title' => 'Committee Stage',
+    'std_process_step_3_body'  => 'Comments from members are received, consensus is built and voting is requested for progression of the draft to the Enquiry stage. The cycle may repeat if the CD needs further significant development.',
+    'std_process_step_4_title' => 'Enquiry Stage',
+    'std_process_step_4_body'  => 'Comments are sought from individuals or organisations not participating directly in the ESWASA committee — i.e. from the wider public. Availability of the text for enquiry is notified to the appropriate authorities. Public review allows stakeholders and the public to review draft standards and submit comments before approval, ensuring transparency, inclusiveness, consensus, and national relevance.',
+    'std_process_step_5_title' => 'Disposal of Comments Stage',
+    'std_process_step_5_body'  => 'Within 30 days of the end of the voting period, the Committee Secretariat prepares a report indicating comments received and the response on each. Every attempt is made to resolve negative votes.',
+    'std_process_step_5_pill'  => 'within 30 days',
+    'std_process_step_6_title' => 'Approval Stage',
+    'std_process_step_6_body'  => 'The ESWASA Standards Approvals Committee (SAC) reviews the Final Draft Standard (FDS) on technical grounds and determines whether it may advance to publication.',
+    'std_process_step_7_title' => 'Endorsement Stage',
+    'std_process_step_7_body'  => 'Final approval as an Eswatini National Standard rests with the ESWASA Council. The availability of the approved standard is notified in the Government Gazette.',
+    'std_process_step_7_pill'  => '≤ 30 days',
+    'std_process_step_8_title' => 'Publication Stage',
+    'std_process_step_8_body'  => 'Once endorsed by the ESWASA Council, the text is ready for publication as a published Eswatini National Standard (SZNS).',
+    'std_process_step_8_pill'  => '≤ 60 days',
+
+    'std_proposal_title'             => 'Submitting a Standards Proposal',
+    'standards_proposal'             => 'To propose a new standard or revision of an existing SZNS, please:',
+    'std_proposal_portal_url'        => 'https://tc.eswasa.co.sz/proposal.php',
+    'std_proposal_email_primary'     => 'standards@eswasa.co.sz',
+    'std_proposal_email_secondary'   => 'info@eswasa.co.sz',
+    'std_proposal_form_url'          => 'admin/uploads/standards_proposal_form.pdf',
+    'std_proposal_form_label'        => 'Download Proposal Form (PDF)',
+    'std_proposal_note'              => 'Note: Proposals should include the title and scope of the standard, socio-economic impacts, intended uses, and justification. Priority is given to standards supporting national priorities (e.g. food security, infrastructure, MSME competitiveness, emerging technologies).',
+
+    'std_tc_section_title'           => 'Technical Committees & Work Programmes',
+    'std_tc_about_title'             => 'About Technical Committees (TCs)',
+    'std_tc_about_body'              => "Technical Committees (TCs) are the cornerstone of the ESWASA standards development process. They are composed of volunteers who are qualified in the subject matter and represent a balance of interested parties — including producers, users, consumers, government, and other relevant stakeholders.\n\nTCs are responsible for developing, maintaining, and revising Eswatini National Standards (SZNS) within their specific technical areas. They ensure that standards are developed through a consensus-based process, reflecting the needs and expertise of all relevant parties.",
+    'std_tc_benefits_title'          => 'Key Benefits of Joining an ESWASA TC',
+    'std_tc_benefit_1_title'         => 'Market Expansion',
+    'std_tc_benefit_1_body'          => 'Contribute to standards that facilitate trade and regional integration. Participation ensures your products and services meet international benchmarks, opening doors to new domestic and global markets.',
+    'std_tc_benefit_2_title'         => 'Operational Optimisation',
+    'std_tc_benefit_2_body'          => 'Gain early access to best practices in Quality & Management Systems (e.g. ISO 9001, ISO 45001). Implement efficient, safety-focused processes before they become mandatory — reducing waste and costs.',
+    'std_tc_benefit_3_title'         => 'Customer Trust Building',
+    'std_tc_benefit_3_body'          => 'Shape standards for critical areas like Food Safety and Product Quality. Demonstrating commitment to Eswatini National Standards (SZNS) strengthens brand reputation and consumer confidence.',
+    'std_tc_benefit_4_title'         => 'Regulatory Compliance',
+    'std_tc_benefit_4_body'          => 'Influence the technical requirements that may become government regulations. By contributing, you ensure standards are practical and achievable for your sector, easing future compliance burdens.',
+    'std_tc_apply_title'             => 'Apply to be a TC Member',
+    'std_tc_apply_body'              => "Becoming a member of an ESWASA Technical Committee is a great way to contribute to the development of standards that impact your industry and society. Members gain valuable insights, network with experts, and help shape the future of their technical field.\n\nEligibility: Membership is open to Eswatini citizens with relevant expertise and a commitment to the standards development process.\n\nSubmit completed applications to info@eswasa.co.sz or standards@eswasa.co.sz.",
+    'std_tc_portal_url'              => 'https://tc.eswasa.co.sz/',
+    'std_tc_register_url'            => 'tcp.php',
+    'std_workprog_title'             => 'ESWASA Work Programmes',
+    'std_workprog_body'              => "The ESWASA Work Programme details all current and scheduled standards development and revision projects. The programme is derived from national needs assessments and stakeholder requests, ensuring the standards developed align with Eswatini's economic and regulatory priorities. Interested stakeholders are invited to review the programme and provide feedback.",
+    'std_workprog_url'               => 'https://tc.eswasa.co.sz/work-programme.php',
+
+    'std_purchase_section_title'     => 'Purchase Standards',
+    'std_sales_title'                => 'Standards Sales',
+    'std_sales_body'                 => "Purchase your SZNS Standards through the ESWASA office or conveniently online via the ESWASA estore.\n\nESWASA sells SZNS as well as related documents and specifications. Our services extend to sourcing other international and regional standards for you, such as ISO, IEC, ARSO, SADCSTAN, SANS and ASTM.",
+    'std_estore_url'                 => 'https://estore.eswasa.co.sz/',
+    'std_catalogue_url'              => 'purchase.php',
+
+    'std_popular_title'              => 'Most Popular Standards',
+    'std_popular_intro'              => 'The standards most frequently purchased from ESWASA across our certification client base:',
+    'std_popular_1_code'             => 'SZNS ISO 9001:2015',
+    'std_popular_1_name'             => 'Quality Management Systems',
+    'std_popular_1_image'            => 'admin/uploads/certificate-iso-9001-colored.svg',
+    'std_popular_2_code'             => 'SZNS ISO 14001:2015',
+    'std_popular_2_name'             => 'Environmental Management Systems',
+    'std_popular_2_image'            => 'admin/uploads/certificate-iso-14001-colored.svg',
+    'std_popular_3_code'             => 'SZNS ISO 22000:2018',
+    'std_popular_3_name'             => 'Food Safety Management Systems',
+    'std_popular_3_image'            => 'admin/uploads/course-iso-22000.svg',
+    'std_popular_4_code'             => 'SZNS ISO 45001:2018',
+    'std_popular_4_name'             => 'Occupational Health & Safety',
+    'std_popular_4_image'            => 'admin/uploads/certificate-iso-45001-colored.svg',
+    'std_popular_5_code'             => 'SZNS ISO 19011:2018',
+    'std_popular_5_name'             => 'Guidelines for Auditing Management Systems',
+    'std_popular_5_image'            => 'admin/uploads/course-iso-19011.svg',
+    'std_popular_6_code'             => 'SZNS ISO 27001',
+    'std_popular_6_name'             => 'Information Security Management Systems',
+    'std_popular_6_image'            => 'admin/uploads/certificate-iso-27001-colored.svg',
+
+    'std_copyright_title'            => 'Copyrights',
+    'std_copyright_body'             => "Standards and publications are copyright-protected. Reproduction, copying, scanning, distribution, or unauthorised sharing without written permission from ESWASA is prohibited.\n\nCopyright protection preserves the integrity and authenticity of standards and protects intellectual property rights.",
+
+    'std_affiliations_title'         => 'Our Affiliations',
+    'std_affiliations_intro'         => 'ESWASA collaborates with international and regional standards bodies to source standards and harmonise national requirements with global best practice.',
+    'std_aff_1_name'  => 'ISO',      'std_aff_1_full' => 'International Organization for Standardization', 'std_aff_1_image' => 'admin/uploads/iso.png',  'std_aff_1_url' => 'https://www.iso.org',
+    'std_aff_2_name'  => 'IEC',      'std_aff_2_full' => 'International Electrotechnical Commission',      'std_aff_2_image' => 'admin/uploads/iec.png',  'std_aff_2_url' => 'https://www.iec.ch',
+    'std_aff_3_name'  => 'ARSO',     'std_aff_3_full' => 'African Organisation for Standardisation',       'std_aff_3_image' => 'admin/uploads/arso.png', 'std_aff_3_url' => '#',
+    'std_aff_4_name'  => 'SADCSTAN', 'std_aff_4_full' => 'SADC Cooperation in Standardization',            'std_aff_4_image' => 'assets/img/sadcstan.jpg','std_aff_4_url' => '#',
+    'std_aff_5_name'  => 'SANS / SABS', 'std_aff_5_full' => 'South African National Standards',           'std_aff_5_image' => 'assets/img/SABS.png',    'std_aff_5_url' => 'https://www.sabs.co.za',
+    'std_aff_6_name'  => 'ASTM',     'std_aff_6_full' => 'ASTM International',                             'std_aff_6_image' => 'admin/uploads/astm.png', 'std_aff_6_url' => 'https://www.astm.org',
+
+    'std_info_section_title'         => 'Information Centre',
+    'std_info_about_title'           => 'About the Information Centre',
+    'std_info_about_intro'           => 'The Information Unit holds the database of:',
+    'std_info_item_1'                => 'Information on technical specifications to manufacturers and traders.',
+    'std_info_item_2'                => 'Information relating to national, regional and international standards.',
+    'std_info_item_3'                => 'Information to exporters and importers on the technical regulations and requirements of importing and exporting countries.',
+    'std_info_item_4'                => 'Information on ESWASA Certified Products and Services.',
+    'std_info_about_outro'           => 'Students, researchers, industry professionals and the general public are welcome to make use of our centre.',
+
+    'std_afcfta_title'               => 'AfCFTA Annex 6 — Technical Barriers to Trade',
+    'std_afcfta_body'                => 'The African Continental Free Trade Area (AfCFTA) Annex 6 on Technical Barriers to Trade facilitates trade through cooperation in the areas of standards, technical regulations, conformity assessment, accreditation and metrology.',
+
+    'std_nep_title'                  => 'National Enquiry Point (WTO/TBT)',
+    'std_nep_body'                   => 'ESWASA serves as the National Enquiry Point (NEP) for Technical Barriers to Trade (WTO/TBT) information. ESWASA receives notifications on technical regulations from the WTO and disseminates them to stakeholders.',
+    'std_nep_image'                  => 'assets/img/WTO.png',
+    'std_nep_image_alt'              => 'World Trade Organization — Technical Barriers to Trade',
+
+    'std_cta_title'                  => 'Get Involved in Standards Development',
+    'std_cta_subtitle'                => 'Contact our Standards Unit, register for a Technical Committee, or purchase a standard online.',
+    'std_cta_btn_1_label'            => 'Contact Standards Unit',
+    'std_cta_btn_1_url'              => 'contact.php',
+    'std_cta_btn_2_label'            => 'Join a Technical Committee',
+    'std_cta_btn_2_url'              => '#technical-committees',
+    'std_cta_btn_3_label'            => 'Visit estore',
+    'std_cta_btn_3_url'              => 'https://estore.eswasa.co.sz/',
+];
+
+$pc = pc_get_many($conn, $std_keys, $std_defaults);
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -10,8 +280,8 @@ include_once 'includes/breadcrumb_helper.php';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x ua-compatible" content="ie=edge">
-    <title>Standards Development - ESWASA</title>
-    <meta name="description" content="ESWASA standards development under the Standards and Quality Act No. 10 of 2003 — Eswatini National Standards (SZNS), Technical Committees, standards purchase via the ESWASA estore, and the National Enquiry Point (WTO/TBT).">
+    <title><?= pc_h($pc['std_breadcrumb_title']) ?> - ESWASA</title>
+    <meta name="description" content="<?= pc_h($pc['std_meta_description']) ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
@@ -455,7 +725,6 @@ include_once 'includes/breadcrumb_helper.php';
             .add2cart_image img[src$=".svg"] { height: 160px; padding: 12px; }
             .affiliation-grid { grid-template-columns: repeat(2, 1fr); }
             .affiliation-tile { padding: 14px 10px 12px; }
-            .affiliation-tile img { max-height: 44px; }
             .affiliation-tile .affiliation-full { font-size: 0.7rem; }
         }
     </style>
@@ -498,7 +767,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Development</span>
                             </nav>
-                            <h3 class="title">Standards Development</h3>
+                            <h3 class="title"><?= pc_h($pc['std_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -521,82 +790,60 @@ include_once 'includes/breadcrumb_helper.php';
 
                     <!-- 1. About Standards Development -->
                     <div class="highlighted-section">
-                        <h3>Standards Development</h3>
-                        <p>
-                            The Standards Development Unit, in accordance with the <strong>Standards and Quality Act No. 10 of 2003, as amended</strong>, is mandated to facilitate the development of standards for the different sectors of the economy, publish, and maintain the <strong>Eswatini National Standards (SZNS)</strong> and related normative publications serving the standardisation needs for Eswatini.
-                        </p>
-                        <p>
-                            These standards are developed to help industry produce quality products that meet the expectations of consumers and comply with environmental, health and safety regulations.
-                        </p>
+                        <h3><?= pc_h($pc['std_about_title']) ?></h3>
+                        <?= pc_paragraphs_html($pc['standards_mandate']) ?>
 
-                        <h4 class="mt-4">Industry Sectors</h4>
-                        <p>ESWASA has developed standards across the following sectors:</p>
+                        <h4 class="mt-4"><?= pc_h($pc['std_sectors_title']) ?></h4>
+                        <p><?= pc_h($pc['std_sectors_intro']) ?></p>
                         <ul class="sectors-list">
-                            <li>Food and Agriculture</li>
-                            <li>Building and Construction</li>
-                            <li>Information Communication Technology</li>
-                            <li>Chemicals and Textiles</li>
-                            <li>Electrical and Mechanical Engineering</li>
-                            <li>Health and Safety</li>
-                            <li>Environment</li>
-                            <li>General and Services</li>
+                            <li><?= pc_h($pc['std_sector_1']) ?></li>
+                            <li><?= pc_h($pc['std_sector_2']) ?></li>
+                            <li><?= pc_h($pc['std_sector_3']) ?></li>
+                            <li><?= pc_h($pc['std_sector_4']) ?></li>
+                            <li><?= pc_h($pc['std_sector_5']) ?></li>
+                            <li><?= pc_h($pc['std_sector_6']) ?></li>
+                            <li><?= pc_h($pc['std_sector_7']) ?></li>
+                            <li><?= pc_h($pc['std_sector_8']) ?></li>
                         </ul>
                         <p class="small text-muted mt-2">
-                            See the full <a href="purchase.php" style="color:#2B3388; text-decoration:underline;">Standards Catalogue</a>.
+                            <?= pc_h($pc['std_catalogue_note']) ?> <a href="purchase.php" style="color:#2B3388; text-decoration:underline;">Standards Catalogue</a>.
                         </p>
                     </div>
 
                     <!-- What is a Standard -->
                     <div class="highlighted-section">
-                        <h3>What is a Standard?</h3>
-                        <p>
-                            Standards are the outcome of a consultative process involving the experience and knowledge of interested parties — key industry stakeholders, consumers and their relevant associations, academic and research institutions, government ministries and regulators — who are brought together to agree on the technical contents of a standard through <strong>consensus</strong>.
-                        </p>
-                        <p>
-                            They are developed on a need basis, and the need for a new standard can be initiated by industry stakeholders, an individual, a manufacturer, or a government institution through a standards proposal.
-                        </p>
-                        <p>
-                            Standards are designed for <strong>voluntary use</strong> and do not impose any regulations. However, laws and regulations may reference certain standards and make compliance with them mandatory.
-                        </p>
+                        <h3><?= pc_h($pc['std_what_title']) ?></h3>
+                        <?= pc_paragraphs_html($pc['std_what_body']) ?>
                     </div>
 
                     <!-- Benefits -->
                     <div class="highlighted-section">
-                        <h3>Benefits of Standards</h3>
+                        <h3><?= pc_h($pc['std_benefits_title']) ?></h3>
                         <ul>
-                            <li>Increased profitability through cost reduction and increased sales.</li>
-                            <li>Ensure consumers are protected from hazards to their health and safety.</li>
-                            <li>Inspire trust and consumer confidence in your business.</li>
-                            <li>Assist businesses in meeting regulatory requirements and provide access to national and international markets.</li>
-                            <li>Create a competitive advantage by improving the quality of goods and services.</li>
+                            <li><?= pc_h($pc['std_benefit_1']) ?></li>
+                            <li><?= pc_h($pc['std_benefit_2']) ?></li>
+                            <li><?= pc_h($pc['std_benefit_3']) ?></li>
+                            <li><?= pc_h($pc['std_benefit_4']) ?></li>
+                            <li><?= pc_h($pc['std_benefit_5']) ?></li>
                         </ul>
                     </div>
 
                     <!-- Process -->
                     <div class="highlighted-section">
-                        <h3>Standards Development Process</h3>
-                        <p>The Standards Development Process follows 9 stages — from an early idea to a published Eswatini National Standard.</p>
+                        <h3><?= pc_h($pc['std_process_title']) ?></h3>
+                        <p><?= pc_h($pc['standards_process_desc']) ?></p>
 
                         <?php
                         $stages = [
-                            ['n'=>'0', 'icon'=>'fa-lightbulb',       'title'=>'Preliminary Stage',
-                             'desc'=>'An opportunity to introduce proposals (Preliminary Work Items, or PWIs) for projects that are not yet mature enough for processing — for example, an emerging-technology standard for which no reference document yet exists.'],
-                            ['n'=>'1', 'icon'=>'fa-file-alt',        'title'=>'Proposal Stage',
-                             'desc'=>'ESWASA / SAC receives — and accepts or rejects — a <strong>New Work Item Proposal (NWIP)</strong> for: a new standard, a new part of an existing standard, a revision, or an amendment.'],
-                            ['n'=>'2', 'icon'=>'fa-pencil-ruler',    'title'=>'Preparatory Stage',
-                             'desc'=>'Preparation of a Working Draft (WD), if necessary. The stage concludes when the first Committee Draft (CD) is available for submission to the full Technical Committee or Sub-Committee.'],
-                            ['n'=>'3', 'icon'=>'fa-users',           'title'=>'Committee Stage',
-                             'desc'=>'Comments from members are received, consensus is built and voting is requested for progression of the draft to the Enquiry stage. The cycle may repeat if the CD needs further significant development.'],
-                            ['n'=>'4', 'icon'=>'fa-bullhorn',        'title'=>'Enquiry Stage',
-                             'desc'=>'Comments are sought from individuals or organisations not participating directly in the ESWASA committee — i.e. from the <strong>wider public</strong>. Availability of the text for enquiry is notified to the appropriate authorities. Public review allows stakeholders and the public to review draft standards and submit comments before approval, ensuring transparency, inclusiveness, consensus, and national relevance.'],
-                            ['n'=>'5', 'icon'=>'fa-comment-dots',    'title'=>'Disposal of Comments Stage',
-                             'desc'=>'Within <strong>30 days</strong> of the end of the voting period, the Committee Secretariat prepares a report indicating comments received and the response on each. Every attempt is made to resolve negative votes.', 'pill'=>'within 30 days'],
-                            ['n'=>'6', 'icon'=>'fa-clipboard-check', 'title'=>'Approval Stage',
-                             'desc'=>'The ESWASA Standards Approvals Committee (SAC) reviews the Final Draft Standard (FDS) on technical grounds and determines whether it may advance to publication.'],
-                            ['n'=>'7', 'icon'=>'fa-gavel',           'title'=>'Endorsement Stage',
-                             'desc'=>'Final approval as an Eswatini National Standard rests with the <strong>ESWASA Council</strong>. The availability of the approved standard is notified in the <strong>Government Gazette</strong>.', 'pill'=>'≤ 30 days'],
-                            ['n'=>'8', 'icon'=>'fa-book-open',       'title'=>'Publication Stage',
-                             'desc'=>'Once endorsed by the ESWASA Council, the text is ready for publication as a published Eswatini National Standard (SZNS).', 'pill'=>'≤ 60 days'],
+                            ['n'=>'0', 'icon'=>'fa-lightbulb',       'title'=>$pc['std_process_step_0_title'], 'desc'=>$pc['std_process_step_0_body']],
+                            ['n'=>'1', 'icon'=>'fa-file-alt',        'title'=>$pc['std_process_step_1_title'], 'desc'=>$pc['std_process_step_1_body']],
+                            ['n'=>'2', 'icon'=>'fa-pencil-ruler',    'title'=>$pc['std_process_step_2_title'], 'desc'=>$pc['std_process_step_2_body']],
+                            ['n'=>'3', 'icon'=>'fa-users',           'title'=>$pc['std_process_step_3_title'], 'desc'=>$pc['std_process_step_3_body']],
+                            ['n'=>'4', 'icon'=>'fa-bullhorn',        'title'=>$pc['std_process_step_4_title'], 'desc'=>$pc['std_process_step_4_body']],
+                            ['n'=>'5', 'icon'=>'fa-comment-dots',    'title'=>$pc['std_process_step_5_title'], 'desc'=>$pc['std_process_step_5_body'], 'pill'=>$pc['std_process_step_5_pill']],
+                            ['n'=>'6', 'icon'=>'fa-clipboard-check', 'title'=>$pc['std_process_step_6_title'], 'desc'=>$pc['std_process_step_6_body']],
+                            ['n'=>'7', 'icon'=>'fa-gavel',           'title'=>$pc['std_process_step_7_title'], 'desc'=>$pc['std_process_step_7_body'], 'pill'=>$pc['std_process_step_7_pill']],
+                            ['n'=>'8', 'icon'=>'fa-book-open',       'title'=>$pc['std_process_step_8_title'], 'desc'=>$pc['std_process_step_8_body'], 'pill'=>$pc['std_process_step_8_pill']],
                         ];
                         ?>
                         <div class="process-timeline">
@@ -605,16 +852,16 @@ include_once 'includes/breadcrumb_helper.php';
                             ?>
                                 <div class="timeline-stage" data-side="<?= $side ?>">
                                     <div class="stage-marker">
-                                        <div class="stage-number"><?= htmlspecialchars($s['n']) ?></div>
+                                        <div class="stage-number"><?= pc_h($s['n']) ?></div>
                                     </div>
                                     <div class="stage-card">
                                         <div class="stage-head">
-                                            <span class="stage-icon"><i class="fas <?= htmlspecialchars($s['icon']) ?>"></i></span>
-                                            <h4 class="stage-title"><?= htmlspecialchars($s['title']) ?></h4>
+                                            <span class="stage-icon"><i class="fas <?= pc_h($s['icon']) ?>"></i></span>
+                                            <h4 class="stage-title"><?= pc_h($s['title']) ?></h4>
                                         </div>
-                                        <p class="stage-description"><?= $s['desc'] ?></p>
+                                        <p class="stage-description"><?= pc_h($s['desc']) ?></p>
                                         <?php if (!empty($s['pill'])): ?>
-                                            <span class="stage-pill"><i class="far fa-clock me-1"></i><?= htmlspecialchars($s['pill']) ?></span>
+                                            <span class="stage-pill"><i class="far fa-clock me-1"></i><?= pc_h($s['pill']) ?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -624,141 +871,121 @@ include_once 'includes/breadcrumb_helper.php';
 
                     <!-- Proposal Form -->
                     <div class="highlighted-section">
-                        <h3>Submitting a Standards Proposal</h3>
-                        <p>To propose a new standard or revision of an existing SZNS, please:</p>
+                        <h3><?= pc_h($pc['std_proposal_title']) ?></h3>
+                        <p><?= pc_h($pc['standards_proposal']) ?></p>
                         <ol>
-                            <li>Complete the official <strong>Standards Development Proposal Form</strong> — either the downloadable form below, or via the online portal: <a href="https://tc.eswasa.co.sz/proposal.php" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">tc.eswasa.co.sz/proposal.php</a></li>
-                            <li>Email the completed form to <a href="mailto:standards@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">standards@eswasa.co.sz</a> or <a href="mailto:info@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@eswasa.co.sz</a></li>
+                            <li>Complete the official <strong>Standards Development Proposal Form</strong> — either the downloadable form below, or via the online portal: <a href="<?= pc_h($pc['std_proposal_portal_url']) ?>" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;"><?= pc_h(preg_replace('#^https?://#', '', $pc['std_proposal_portal_url'])) ?></a></li>
+                            <li>Email the completed form to <a href="mailto:<?= pc_h($pc['std_proposal_email_primary']) ?>" style="color:#2B3388; text-decoration:underline; font-weight:600;"><?= pc_h($pc['std_proposal_email_primary']) ?></a> or <a href="mailto:<?= pc_h($pc['std_proposal_email_secondary']) ?>" style="color:#2B3388; text-decoration:underline; font-weight:600;"><?= pc_h($pc['std_proposal_email_secondary']) ?></a></li>
                         </ol>
                         <div class="mt-3">
-                            <a href="admin/uploads/standards_proposal_form.pdf" class="btn btn-primary" target="_blank">
-                                <i class="fas fa-file-pdf me-2"></i>Download Proposal Form (PDF)
+                            <a href="<?= pc_h($pc['std_proposal_form_url']) ?>" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-file-pdf me-2"></i><?= pc_h($pc['std_proposal_form_label']) ?>
                             </a>
                         </div>
                         <p class="mt-3 small">
-                            <strong>Note:</strong> Proposals should include the title and scope of the standard, socio-economic impacts, intended uses, and justification. Priority is given to standards supporting national priorities (e.g. food security, infrastructure, MSME competitiveness, emerging technologies).
+                            <strong>Note:</strong> <?= pc_h(preg_replace('/^Note:\s*/i', '', $pc['std_proposal_note'])) ?>
                         </p>
                     </div>
                 </div>
 
                 <!-- ============ TECHNICAL COMMITTEES & WORK PROGRAMMES ============ -->
                 <div id="technical-committees" class="section-anchor">
-                    <h2 class="display-6 fw-bold text-center mt-5 mb-3">Technical Committees &amp; Work Programmes</h2>
+                    <h2 class="display-6 fw-bold text-center mt-5 mb-3"><?= pc_h($pc['std_tc_section_title']) ?></h2>
                     <div class="section-divider mb-4"></div>
 
                     <div class="highlighted-section">
-                        <h3>About Technical Committees (TCs)</h3>
-                        <p>
-                            Technical Committees (TCs) are the cornerstone of the ESWASA standards development process. They are composed of volunteers who are qualified in the subject matter and represent a balance of interested parties — including producers, users, consumers, government, and other relevant stakeholders.
-                        </p>
-                        <p>
-                            TCs are responsible for developing, maintaining, and revising Eswatini National Standards (SZNS) within their specific technical areas. They ensure that standards are developed through a consensus-based process, reflecting the needs and expertise of all relevant parties.
-                        </p>
+                        <h3><?= pc_h($pc['std_tc_about_title']) ?></h3>
+                        <?= pc_paragraphs_html($pc['std_tc_about_body']) ?>
                     </div>
 
                     <div class="highlighted-section">
-                        <h3>Key Benefits of Joining an ESWASA TC</h3>
+                        <h3><?= pc_h($pc['std_tc_benefits_title']) ?></h3>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="tc-benefit-card">
-                                    <h4>Market Expansion</h4>
-                                    <p>Contribute to standards that facilitate trade and regional integration. Participation ensures your products and services meet international benchmarks, opening doors to new domestic and global markets.</p>
+                                    <h4><?= pc_h($pc['std_tc_benefit_1_title']) ?></h4>
+                                    <p><?= pc_h($pc['std_tc_benefit_1_body']) ?></p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="tc-benefit-card">
-                                    <h4>Operational Optimisation</h4>
-                                    <p>Gain early access to best practices in Quality &amp; Management Systems (e.g. ISO 9001, ISO 45001). Implement efficient, safety-focused processes before they become mandatory — reducing waste and costs.</p>
+                                    <h4><?= pc_h($pc['std_tc_benefit_2_title']) ?></h4>
+                                    <p><?= pc_h($pc['std_tc_benefit_2_body']) ?></p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="tc-benefit-card">
-                                    <h4>Customer Trust Building</h4>
-                                    <p>Shape standards for critical areas like Food Safety and Product Quality. Demonstrating commitment to Eswatini National Standards (SZNS) strengthens brand reputation and consumer confidence.</p>
+                                    <h4><?= pc_h($pc['std_tc_benefit_3_title']) ?></h4>
+                                    <p><?= pc_h($pc['std_tc_benefit_3_body']) ?></p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="tc-benefit-card">
-                                    <h4>Regulatory Compliance</h4>
-                                    <p>Influence the technical requirements that may become government regulations. By contributing, you ensure standards are practical and achievable for your sector, easing future compliance burdens.</p>
+                                    <h4><?= pc_h($pc['std_tc_benefit_4_title']) ?></h4>
+                                    <p><?= pc_h($pc['std_tc_benefit_4_body']) ?></p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="highlighted-section">
-                        <h3>Apply to be a TC Member</h3>
-                        <p>
-                            Becoming a member of an ESWASA Technical Committee is a great way to contribute to the development of standards that impact your industry and society. Members gain valuable insights, network with experts, and help shape the future of their technical field.
-                        </p>
-                        <p>
-                            <strong>Eligibility:</strong> Membership is open to Eswatini citizens with relevant expertise and a commitment to the standards development process.
-                        </p>
-                        <p>
-                            Submit completed applications to <a href="mailto:info@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">info@eswasa.co.sz</a> or <a href="mailto:standards@eswasa.co.sz" style="color:#2B3388; text-decoration:underline; font-weight:600;">standards@eswasa.co.sz</a>.
-                        </p>
+                        <h3><?= pc_h($pc['std_tc_apply_title']) ?></h3>
+                        <?= pc_paragraphs_html($pc['std_tc_apply_body']) ?>
                         <div class="mt-3">
-                            <a href="https://tc.eswasa.co.sz/" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-external-link-alt me-2"></i>Visit the TC Portal</a>
-                            <a href="tcp.php" class="btn btn-primary"><i class="fas fa-user-plus me-2"></i>Register Interest</a>
+                            <a href="<?= pc_h($pc['std_tc_portal_url']) ?>" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-external-link-alt me-2"></i>Visit the TC Portal</a>
+                            <a href="<?= pc_h($pc['std_tc_register_url']) ?>" class="btn btn-primary"><i class="fas fa-user-plus me-2"></i>Register Interest</a>
                         </div>
                     </div>
 
                     <div class="highlighted-section">
-                        <h3>ESWASA Work Programmes</h3>
-                        <p>
-                            The ESWASA Work Programme details all current and scheduled standards development and revision projects. The programme is derived from national needs assessments and stakeholder requests, ensuring the standards developed align with Eswatini's economic and regulatory priorities. Interested stakeholders are invited to review the programme and provide feedback.
-                        </p>
+                        <h3><?= pc_h($pc['std_workprog_title']) ?></h3>
+                        <?= pc_paragraphs_html($pc['std_workprog_body']) ?>
                         <div class="mt-3">
-                            <a href="https://tc.eswasa.co.sz/work-programme.php" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-calendar-alt me-2"></i>View Work Programme</a>
+                            <a href="<?= pc_h($pc['std_workprog_url']) ?>" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-calendar-alt me-2"></i>View Work Programme</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- ============ PURCHASE STANDARDS ============ -->
                 <div id="purchase-standards" class="section-anchor">
-                    <h2 class="display-6 fw-bold text-center mt-5 mb-3">Purchase Standards</h2>
+                    <h2 class="display-6 fw-bold text-center mt-5 mb-3"><?= pc_h($pc['std_purchase_section_title']) ?></h2>
                     <div class="section-divider mb-4"></div>
 
                     <div class="highlighted-section">
-                        <h3>Standards Sales</h3>
-                        <p>
-                            Purchase your SZNS Standards through the ESWASA office or conveniently online via the ESWASA estore.
-                        </p>
-                        <p>
-                            ESWASA sells SZNS as well as related documents and specifications. Our services extend to sourcing other international and regional standards for you, such as <strong>ISO, IEC, ARSO, SADCSTAN, SANS and ASTM</strong>.
-                        </p>
+                        <h3><?= pc_h($pc['std_sales_title']) ?></h3>
+                        <?= pc_paragraphs_html($pc['std_sales_body']) ?>
                         <div class="mt-3">
-                            <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-shopping-cart me-2"></i>Visit the ESWASA estore</a>
-                            <a href="purchase.php" class="btn btn-primary"><i class="fas fa-book me-2"></i>View Standards Catalogue</a>
+                            <a href="<?= pc_h($pc['std_estore_url']) ?>" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-shopping-cart me-2"></i>Visit the ESWASA estore</a>
+                            <a href="<?= pc_h($pc['std_catalogue_url']) ?>" class="btn btn-primary"><i class="fas fa-book me-2"></i>View Standards Catalogue</a>
                         </div>
                     </div>
 
                     <!-- Most Popular Standards (training-page card pattern) -->
                     <div class="highlighted-section">
-                        <h3>Most Popular Standards</h3>
-                        <p>The standards most frequently purchased from ESWASA across our certification client base:</p>
+                        <h3><?= pc_h($pc['std_popular_title']) ?></h3>
+                        <p><?= pc_h($pc['std_popular_intro']) ?></p>
                         <?php
                         $popular = [
-                            ['code'=>'SZNS ISO 9001:2015',  'name'=>'Quality Management Systems',           'img'=>'admin/uploads/certificate-iso-9001-colored.svg'],
-                            ['code'=>'SZNS ISO 14001:2015', 'name'=>'Environmental Management Systems',     'img'=>'admin/uploads/certificate-iso-14001-colored.svg'],
-                            ['code'=>'SZNS ISO 22000:2018', 'name'=>'Food Safety Management Systems',       'img'=>'admin/uploads/course-iso-22000.svg'],
-                            ['code'=>'SZNS ISO 45001:2018', 'name'=>'Occupational Health &amp; Safety',     'img'=>'admin/uploads/certificate-iso-45001-colored.svg'],
-                            ['code'=>'SZNS ISO 19011:2018', 'name'=>'Guidelines for Auditing Management Systems', 'img'=>'admin/uploads/course-iso-19011.svg'],
-                            ['code'=>'SZNS ISO 27001',      'name'=>'Information Security Management Systems',   'img'=>'admin/uploads/certificate-iso-27001-colored.svg'],
+                            ['code'=>$pc['std_popular_1_code'], 'name'=>$pc['std_popular_1_name'], 'img'=>pc_image_src($pc['std_popular_1_image'], 'admin/uploads/certificate-iso-9001-colored.svg')],
+                            ['code'=>$pc['std_popular_2_code'], 'name'=>$pc['std_popular_2_name'], 'img'=>pc_image_src($pc['std_popular_2_image'], 'admin/uploads/certificate-iso-14001-colored.svg')],
+                            ['code'=>$pc['std_popular_3_code'], 'name'=>$pc['std_popular_3_name'], 'img'=>pc_image_src($pc['std_popular_3_image'], 'admin/uploads/course-iso-22000.svg')],
+                            ['code'=>$pc['std_popular_4_code'], 'name'=>$pc['std_popular_4_name'], 'img'=>pc_image_src($pc['std_popular_4_image'], 'admin/uploads/certificate-iso-45001-colored.svg')],
+                            ['code'=>$pc['std_popular_5_code'], 'name'=>$pc['std_popular_5_name'], 'img'=>pc_image_src($pc['std_popular_5_image'], 'admin/uploads/course-iso-19011.svg')],
+                            ['code'=>$pc['std_popular_6_code'], 'name'=>$pc['std_popular_6_name'], 'img'=>pc_image_src($pc['std_popular_6_image'], 'admin/uploads/certificate-iso-27001-colored.svg')],
                         ];
                         ?>
                         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center mt-2">
-                            <?php foreach ($popular as $s): ?>
+                            <?php foreach ($popular as $s): if ($s['code']==='' && $s['name']==='') continue; ?>
                             <div class="col">
                                 <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift h-100">
                                     <div class="add2cart_image">
-                                        <img src="<?= htmlspecialchars($s['img']) ?>" alt="<?= htmlspecialchars($s['code']) ?> — <?= htmlspecialchars($s['name']) ?>" class="img-fluid rounded-top">
+                                        <img src="<?= pc_h($s['img']) ?>" alt="<?= pc_h($s['code']) ?> — <?= pc_h($s['name']) ?>" class="img-fluid rounded-top">
                                     </div>
                                     <div class="add2cart_details p-4">
                                         <div class="con_cont">
-                                            <span class="popular-code"><?= htmlspecialchars($s['code']) ?></span>
-                                            <a class="add2cart_prod_name d-block mb-3 fw-bold"><?= $s['name'] ?></a>
-                                            <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" class="add2cart_btn btn btn-primary btn-sm">
+                                            <span class="popular-code"><?= pc_h($s['code']) ?></span>
+                                            <a class="add2cart_prod_name d-block mb-3 fw-bold"><?= pc_h($s['name']) ?></a>
+                                            <a href="<?= pc_h($pc['std_estore_url']) ?>" target="_blank" rel="noopener" class="add2cart_btn btn btn-primary btn-sm">
                                                 <i class="fas fa-shopping-cart me-1"></i>Purchase
                                             </a>
                                         </div>
@@ -768,43 +995,36 @@ include_once 'includes/breadcrumb_helper.php';
                             <?php endforeach; ?>
                         </div>
                         <p class="small text-muted mt-4 mb-0 text-center">
-                            For the complete list, browse the <a href="purchase.php" style="color:#2B3388; text-decoration:underline; font-weight:600;">Standards Catalogue</a> or visit the <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">estore</a>.
+                            For the complete list, browse the <a href="<?= pc_h($pc['std_catalogue_url']) ?>" style="color:#2B3388; text-decoration:underline; font-weight:600;">Standards Catalogue</a> or visit the <a href="<?= pc_h($pc['std_estore_url']) ?>" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">estore</a>.
                         </p>
                     </div>
 
                     <!-- Copyrights -->
                     <div class="highlighted-section">
-                        <h3>Copyrights</h3>
-                        <p>
-                            Standards and publications are copyright-protected. Reproduction, copying, scanning, distribution, or unauthorised sharing without written permission from ESWASA is prohibited.
-                        </p>
-                        <p>
-                            Copyright protection preserves the integrity and authenticity of standards and protects intellectual property rights.
-                        </p>
+                        <h3><?= pc_h($pc['std_copyright_title']) ?></h3>
+                        <?= pc_paragraphs_html($pc['std_copyright_body']) ?>
                     </div>
 
                     <!-- Our Affiliations -->
                     <div class="highlighted-section">
-                        <h3>Our Affiliations</h3>
-                        <p>
-                            ESWASA collaborates with international and regional standards bodies to source standards and harmonise national requirements with global best practice.
-                        </p>
+                        <h3><?= pc_h($pc['std_affiliations_title']) ?></h3>
+                        <p><?= pc_h($pc['std_affiliations_intro']) ?></p>
                         <?php
                         $affiliations = [
-                            ['name'=>'ISO',      'full'=>'International Organization for Standardization', 'img'=>'admin/uploads/iso.png',  'url'=>'https://www.iso.org'],
-                            ['name'=>'IEC',      'full'=>'International Electrotechnical Commission',      'img'=>'admin/uploads/iec.png',  'url'=>'https://www.iec.ch'],
-                            ['name'=>'ARSO',     'full'=>'African Organisation for Standardisation',       'img'=>'admin/uploads/arso.png', 'url'=>'#'],
-                            ['name'=>'SADCSTAN', 'full'=>'SADC Cooperation in Standardization',            'img'=>'assets/img/sadcstan.jpg','url'=>'#'],
-                            ['name'=>'SANS / SABS','full'=>'South African National Standards',            'img'=>'assets/img/SABS.png',    'url'=>'https://www.sabs.co.za'],
-                            ['name'=>'ASTM',     'full'=>'ASTM International',                             'img'=>'admin/uploads/astm.png', 'url'=>'https://www.astm.org'],
+                            ['name'=>$pc['std_aff_1_name'], 'full'=>$pc['std_aff_1_full'], 'img'=>pc_image_src($pc['std_aff_1_image'], 'admin/uploads/iso.png'),  'url'=>$pc['std_aff_1_url']],
+                            ['name'=>$pc['std_aff_2_name'], 'full'=>$pc['std_aff_2_full'], 'img'=>pc_image_src($pc['std_aff_2_image'], 'admin/uploads/iec.png'),  'url'=>$pc['std_aff_2_url']],
+                            ['name'=>$pc['std_aff_3_name'], 'full'=>$pc['std_aff_3_full'], 'img'=>pc_image_src($pc['std_aff_3_image'], 'admin/uploads/arso.png'), 'url'=>$pc['std_aff_3_url']],
+                            ['name'=>$pc['std_aff_4_name'], 'full'=>$pc['std_aff_4_full'], 'img'=>pc_image_src($pc['std_aff_4_image'], 'assets/img/sadcstan.jpg'),'url'=>$pc['std_aff_4_url']],
+                            ['name'=>$pc['std_aff_5_name'], 'full'=>$pc['std_aff_5_full'], 'img'=>pc_image_src($pc['std_aff_5_image'], 'assets/img/SABS.png'),   'url'=>$pc['std_aff_5_url']],
+                            ['name'=>$pc['std_aff_6_name'], 'full'=>$pc['std_aff_6_full'], 'img'=>pc_image_src($pc['std_aff_6_image'], 'admin/uploads/astm.png'), 'url'=>$pc['std_aff_6_url']],
                         ];
                         ?>
                         <div class="affiliation-grid">
-                            <?php foreach ($affiliations as $a): ?>
-                                <a class="affiliation-tile" href="<?= htmlspecialchars($a['url']) ?>" <?= $a['url'] === '#' ? 'title="Link coming soon"' : 'target="_blank" rel="noopener"' ?>>
-                                    <img src="<?= htmlspecialchars($a['img']) ?>" alt="<?= htmlspecialchars($a['name']) ?> logo">
-                                    <div class="affiliation-name"><?= htmlspecialchars($a['name']) ?></div>
-                                    <div class="affiliation-full"><?= htmlspecialchars($a['full']) ?></div>
+                            <?php foreach ($affiliations as $a): if ($a['name'] === '') continue; ?>
+                                <a class="affiliation-tile" href="<?= pc_h($a['url']) ?>" <?= $a['url'] === '#' ? 'title="Link coming soon"' : 'target="_blank" rel="noopener"' ?>>
+                                    <img src="<?= pc_h($a['img']) ?>" alt="<?= pc_h($a['name']) ?> logo">
+                                    <div class="affiliation-name"><?= pc_h($a['name']) ?></div>
+                                    <div class="affiliation-full"><?= pc_h($a['full']) ?></div>
                                 </a>
                             <?php endforeach; ?>
                         </div>
@@ -813,36 +1033,32 @@ include_once 'includes/breadcrumb_helper.php';
 
                 <!-- ============ INFORMATION CENTRE ============ -->
                 <div id="information-centre" class="section-anchor">
-                    <h2 class="display-6 fw-bold text-center mt-5 mb-3">Information Centre</h2>
+                    <h2 class="display-6 fw-bold text-center mt-5 mb-3"><?= pc_h($pc['std_info_section_title']) ?></h2>
                     <div class="section-divider mb-4"></div>
 
                     <div class="highlighted-section">
-                        <h3>About the Information Centre</h3>
-                        <p>The Information Unit holds the database of:</p>
+                        <h3><?= pc_h($pc['std_info_about_title']) ?></h3>
+                        <p><?= pc_h($pc['std_info_about_intro']) ?></p>
                         <ul>
-                            <li>Information on technical specifications to manufacturers and traders.</li>
-                            <li>Information relating to national, regional and international standards.</li>
-                            <li>Information to exporters and importers on the technical regulations and requirements of importing and exporting countries.</li>
-                            <li>Information on ESWASA Certified Products and Services.</li>
+                            <li><?= pc_h($pc['std_info_item_1']) ?></li>
+                            <li><?= pc_h($pc['std_info_item_2']) ?></li>
+                            <li><?= pc_h($pc['std_info_item_3']) ?></li>
+                            <li><?= pc_h($pc['std_info_item_4']) ?></li>
                         </ul>
                         <p class="mt-3">
-                            Students, researchers, industry professionals and the general public are welcome to make use of our centre.
+                            <?= pc_h($pc['std_info_about_outro']) ?>
                         </p>
                     </div>
 
                     <div class="highlighted-section">
-                        <h3>AfCFTA Annex 6 — Technical Barriers to Trade</h3>
-                        <p>
-                            The African Continental Free Trade Area (AfCFTA) Annex 6 on Technical Barriers to Trade facilitates trade through cooperation in the areas of <strong>standards, technical regulations, conformity assessment, accreditation and metrology</strong>.
-                        </p>
+                        <h3><?= pc_h($pc['std_afcfta_title']) ?></h3>
+                        <p><?= pc_h($pc['std_afcfta_body']) ?></p>
                     </div>
 
                     <div class="highlighted-section">
-                        <h3>National Enquiry Point (WTO/TBT)</h3>
-                        <p>
-                            ESWASA serves as the National Enquiry Point (NEP) for Technical Barriers to Trade (WTO/TBT) information. ESWASA receives notifications on technical regulations from the WTO and disseminates them to stakeholders.
-                        </p>
-                        <img src="assets/img/WTO.png" alt="World Trade Organization — Technical Barriers to Trade" class="info-centre-img" style="max-width: 480px;">
+                        <h3><?= pc_h($pc['std_nep_title']) ?></h3>
+                        <p><?= pc_h($pc['std_nep_body']) ?></p>
+                        <img src="<?= pc_h(pc_image_src($pc['std_nep_image'], 'assets/img/WTO.png')) ?>" alt="<?= pc_h($pc['std_nep_image_alt']) ?>" class="info-centre-img" style="max-width: 480px;">
                     </div>
                 </div>
 
@@ -853,11 +1069,11 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h2 class="cta-title">Get Involved in Standards Development</h2>
-                        <p class="cta-subtitle">Contact our Standards Unit, register for a Technical Committee, or purchase a standard online.</p>
-                        <a href="contact.php" class="btn-cta">Contact Standards Unit</a>
-                        <a href="#technical-committees" class="btn-cta">Join a Technical Committee</a>
-                        <a href="https://estore.eswasa.co.sz/" target="_blank" rel="noopener" class="btn-cta">Visit estore</a>
+                        <h2 class="cta-title"><?= pc_h($pc['std_cta_title']) ?></h2>
+                        <p class="cta-subtitle"><?= pc_h($pc['std_cta_subtitle']) ?></p>
+                        <a href="<?= pc_h($pc['std_cta_btn_1_url']) ?>" class="btn-cta"><?= pc_h($pc['std_cta_btn_1_label']) ?></a>
+                        <a href="<?= pc_h($pc['std_cta_btn_2_url']) ?>" class="btn-cta"><?= pc_h($pc['std_cta_btn_2_label']) ?></a>
+                        <a href="<?= pc_h($pc['std_cta_btn_3_url']) ?>" target="_blank" rel="noopener" class="btn-cta"><?= pc_h($pc['std_cta_btn_3_label']) ?></a>
                     </div>
                 </div>
             </div>

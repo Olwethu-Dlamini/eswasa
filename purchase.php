@@ -1,4 +1,75 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+require_once __DIR__ . '/includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+include_once 'includes/breadcrumb_helper.php';
+
+$purchase_keys = [
+    // Breadcrumb
+    'purchase_breadcrumb_home_label',
+    'purchase_breadcrumb_parent_label',
+    'purchase_breadcrumb_current_label',
+    'purchase_breadcrumb_title',
+    // Intro box
+    'purchase_intro_title',
+    'purchase_intro_body',
+    // Catalogue action card
+    'purchase_catalogue_title',
+    'purchase_catalogue_body',
+    'purchase_catalogue_link_text',
+    'purchase_catalogue_link_url',
+    // Webstore action card
+    'purchase_webstore_title',
+    'purchase_webstore_body',
+    'purchase_webstore_link_text',
+    'purchase_webstore_link_url',
+    // Assistance card
+    'purchase_assist_title',
+    'purchase_assist_body',
+    'purchase_contact_phone',
+    'purchase_contact_fax',
+    'purchase_contact_email_general',
+    'purchase_contact_email_sales',
+    // CTA buttons
+    'purchase_cta_primary_text',
+    'purchase_cta_primary_url',
+    'purchase_cta_secondary_text',
+    'purchase_cta_secondary_url',
+];
+
+$purchase_defaults = [
+    'purchase_breadcrumb_home_label'   => 'Home',
+    'purchase_breadcrumb_parent_label' => 'Standards',
+    'purchase_breadcrumb_current_label'=> 'Purchase Standards',
+    'purchase_breadcrumb_title'        => 'Purchase Standards',
+
+    'purchase_intro_title' => 'Standard Sales',
+    'purchase_intro_body'  => "SZNS Standard Sales through the Authority's office assistance or conveniently online.\n\nESWASA sells Eswatini National Standards (SZNS) as well as related documents and specifications. Our services extend to sourcing other international and/or foreign standards for you, such as SANS, ARSO, ISO and IEC standards.",
+
+    'purchase_catalogue_title'     => 'Standards Catalogue',
+    'purchase_catalogue_body'      => 'Browse our complete list of published national and adopted international standards to identify the specific documents you require.',
+    'purchase_catalogue_link_text' => 'Download Latest Standards Catalogue (PDF)',
+    'purchase_catalogue_link_url'  => 'admin/uploads/eswasa_standards_catalogue_latest.pdf',
+
+    'purchase_webstore_title'     => 'Online Webstore',
+    'purchase_webstore_body'      => 'Purchase standards conveniently online through our webstore.',
+    'purchase_webstore_link_text' => 'Webstore - https://estore.eswasa.co.sz/',
+    'purchase_webstore_link_url'  => 'https://estore.eswasa.co.sz/',
+
+    'purchase_assist_title'         => 'Need Assistance with Purchasing?',
+    'purchase_assist_body'          => 'Until our online platform is live, or if you require guidance on specific standards or bulk orders, please contact our Sales Department directly using the verified contact details below:',
+    'purchase_contact_phone'        => '+268 2518 4610',
+    'purchase_contact_fax'          => '+268 2518 4526',
+    'purchase_contact_email_general'=> 'info@eswasa.co.sz',
+    'purchase_contact_email_sales'  => 'sales@eswasa.co.sz',
+
+    'purchase_cta_primary_text'   => 'Contact Sales Team',
+    'purchase_cta_primary_url'    => 'contact.php',
+    'purchase_cta_secondary_text' => 'View All Standards Areas',
+    'purchase_cta_secondary_url'  => 'Standards.php',
+];
+
+$pc = pc_get_many($conn, $purchase_keys, $purchase_defaults);
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -195,14 +266,14 @@
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
                                 <span property="itemListElement" typeof="ListItem">
-                                    <a href="index.html">Home</a>
+                                    <a href="index.html"><?= pc_h($pc['purchase_breadcrumb_home_label']) ?></a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Standards</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['purchase_breadcrumb_parent_label']) ?></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Purchase Standards</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['purchase_breadcrumb_current_label']) ?></span>
                             </nav>
-                            <h3 class="title">Purchase Standards</h3>
+                            <h3 class="title"><?= pc_h($pc['purchase_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -211,48 +282,46 @@
         <section class="py-5">
             <div class="container">
                 <div class="intro-box">
-                    <h3>Standard Sales</h3>
-                    <p>SZNS Standard Sales through the Authority's office assistance or conveniently online.</p>
-                    <p>ESWASA sells Eswatini National Standards (SZNS) as well as related documents and specifications. Our services extend to sourcing other international and/or foreign standards for you, such as SANS, ARSO, ISO and IEC standards.</p>
+                    <h3><?= pc_h($pc['purchase_intro_title']) ?></h3>
+                    <?= pc_paragraphs_html($pc['purchase_intro_body']) ?>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="action-card">
-                            <h4><i class="fas fa-search me-2"></i>Standards Catalogue</h4>
-                            <p>Browse our complete list of published national and adopted international standards to identify the specific documents you require.</p>
-                            <a href="admin/uploads/eswasa_standards_catalogue_latest.pdf" class="catalogue-link" target="_blank"> 
-                                <i class="fas fa-file-pdf"></i> Download Latest Standards Catalogue (PDF)
+                            <h4><i class="fas fa-search me-2"></i><?= pc_h($pc['purchase_catalogue_title']) ?></h4>
+                            <p><?= pc_h($pc['purchase_catalogue_body']) ?></p>
+                            <a href="<?= pc_h($pc['purchase_catalogue_link_url']) ?>" class="catalogue-link" target="_blank">
+                                <i class="fas fa-file-pdf"></i> <?= pc_h($pc['purchase_catalogue_link_text']) ?>
                             </a>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="action-card">
-                            <h4><i class="fas fa-shopping-cart me-2"></i>Online Webstore</h4>
-                            <p>Purchase standards conveniently online through our webstore.</p>
-                            <a href="https://estore.eswasa.co.sz/" class="catalogue-link" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> Webstore - https://estore.eswasa.co.sz/
+                            <h4><i class="fas fa-shopping-cart me-2"></i><?= pc_h($pc['purchase_webstore_title']) ?></h4>
+                            <p><?= pc_h($pc['purchase_webstore_body']) ?></p>
+                            <a href="<?= pc_h($pc['purchase_webstore_link_url']) ?>" class="catalogue-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> <?= pc_h($pc['purchase_webstore_link_text']) ?>
                             </a>
                         </div>
                     </div>
                 </div>
 
                <div class="card" style="border: 1px solid rgba(43, 51, 136, 0.15); box-shadow: 0 4px 12px rgba(43, 51, 136, 0.06); border-radius: 4px; padding: 25px;">
-                    <h3 style="color: #2B3388; font-weight: 700; margin-bottom: 20px;">Need Assistance with Purchasing?</h3>
+                    <h3 style="color: #2B3388; font-weight: 700; margin-bottom: 20px;"><?= pc_h($pc['purchase_assist_title']) ?></h3>
 
                     <p class="lead">
-                        Until our online platform is live, or if you require guidance on specific standards or bulk orders,
-                        please contact our Sales Department directly using the verified contact details below:
+                        <?= pc_h($pc['purchase_assist_body']) ?>
                     </p>
 
                     <ul class="list-unstyled mb-4 contact-list">
-                        <li><i class="fas fa-phone-alt" style="color:#2B3388;"></i> Telephone: +268 2518 4610</li>
-                        <li><i class="fas fa-fax" style="color:#2B3388;"></i> Fax: +268 2518 4526</li>
+                        <li><i class="fas fa-phone-alt" style="color:#2B3388;"></i> Telephone: <?= pc_h($pc['purchase_contact_phone']) ?></li>
+                        <li><i class="fas fa-fax" style="color:#2B3388;"></i> Fax: <?= pc_h($pc['purchase_contact_fax']) ?></li>
                         <li><i class="fas fa-envelope" style="color:#2B3388;"></i> Email (General):
-                            <a href="mailto:info@eswasa.co.sz" style="color:#2B3388;">info@eswasa.co.sz</a>
+                            <a href="mailto:<?= pc_h($pc['purchase_contact_email_general']) ?>" style="color:#2B3388;"><?= pc_h($pc['purchase_contact_email_general']) ?></a>
                         </li>
                         <li><i class="fas fa-envelope" style="color:#2B3388;"></i> Email (Sales):
-                            <a href="mailto:sales@eswasa.co.sz" style="color:#2B3388;">sales@eswasa.co.sz</a>
+                            <a href="mailto:<?= pc_h($pc['purchase_contact_email_sales']) ?>" style="color:#2B3388;"><?= pc_h($pc['purchase_contact_email_sales']) ?></a>
                         </li>
                     </ul>
                 </div>
@@ -260,8 +329,8 @@
 
 
                 <div class="text-center my-5 pt-3">
-                    <a href="contact.php" class="btn-cta">Contact Sales Team</a>
-                    <a href="Standards.php" class="btn-cta">View All Standards Areas</a>
+                    <a href="<?= pc_h($pc['purchase_cta_primary_url']) ?>" class="btn-cta"><?= pc_h($pc['purchase_cta_primary_text']) ?></a>
+                    <a href="<?= pc_h($pc['purchase_cta_secondary_url']) ?>" class="btn-cta"><?= pc_h($pc['purchase_cta_secondary_text']) ?></a>
                 </div>
 
             </div>

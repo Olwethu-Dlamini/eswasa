@@ -1,4 +1,103 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+include_once 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+$pc = pc_get_many($conn, [
+    // Breadcrumb / hero
+    'services_breadcrumb_title',
+
+    // Services grid section header
+    'services_grid_title',
+    'services_grid_subtitle',
+
+    // Service cards (6)
+    'services_card_1_title', 'services_card_1_desc', 'services_card_1_url',
+    'services_card_2_title', 'services_card_2_desc', 'services_card_2_url',
+    'services_card_3_title', 'services_card_3_desc', 'services_card_3_url',
+    'services_card_4_title', 'services_card_4_desc', 'services_card_4_url',
+    'services_card_5_title', 'services_card_5_desc', 'services_card_5_url',
+    'services_card_6_title', 'services_card_6_desc', 'services_card_6_url',
+
+    // Info sections (2)
+    'services_info_1_title', 'services_info_1_body',
+    'services_info_2_title', 'services_info_2_body',
+
+    // Affiliations section header
+    'services_affil_title',
+    'services_affil_subtitle',
+
+    // Affiliations (6)
+    'services_affil_1_img', 'services_affil_1_alt', 'services_affil_1_url',
+    'services_affil_2_img', 'services_affil_2_alt', 'services_affil_2_url',
+    'services_affil_3_img', 'services_affil_3_alt', 'services_affil_3_url',
+    'services_affil_4_img', 'services_affil_4_alt', 'services_affil_4_url',
+    'services_affil_5_img', 'services_affil_5_alt', 'services_affil_5_url',
+    'services_affil_6_img', 'services_affil_6_alt', 'services_affil_6_url',
+], [
+    'services_breadcrumb_title' => 'Our Services',
+
+    'services_grid_title'    => 'Our Services',
+    'services_grid_subtitle' => 'Empowering Excellence Through Standards',
+
+    'services_card_1_title' => 'Certification',
+    'services_card_1_desc' => "Certification to management systems and products. Let us assist you in demonstrating your organisation's ability to meet requirements and needs.",
+    'services_card_1_url'  => 'Certification.php',
+
+    'services_card_2_title' => 'Product Testing',
+    'services_card_2_desc' => 'Food and product testing in microbiology. Testing performed in accordance with international standards.',
+    'services_card_2_url'  => 'product.php',
+
+    'services_card_3_title' => 'Calibration Services',
+    'services_card_3_desc' => 'Calibration services based on accuracy, trust, and consistency.',
+    'services_card_3_url'  => 'Calibration.php',
+
+    'services_card_4_title' => 'Standards Development',
+    'services_card_4_desc' => 'Bringing together different expertise and experiences to develop mutually accepted solutions to common challenges.',
+    'services_card_4_url'  => 'Standards.php',
+
+    'services_card_5_title' => 'Standards Sales',
+    'services_card_5_desc' => 'Sale of national, regional and international standards.',
+    'services_card_5_url'  => 'Standards.php',
+
+    'services_card_6_title' => 'Training Academy',
+    'services_card_6_desc' => 'We enable organisations and individuals to continuously improve, innovate and transform.',
+    'services_card_6_url'  => 'training-about.php',
+
+    'services_info_1_title' => 'Information Centre / WTO Enquiry Point',
+    'services_info_1_body'  => 'The ESWASA National Enquiry Point holds the collection of national, regional and international standards. We welcome students, researchers, industry professionals and the general public to make use of our centre. The enquiry point is a channel for mitigating problems businesses face in obtaining information on standards, technical regulations and conformity assessment procedures for the access of their products in international markets, thus eliminating technical barriers to trade.',
+
+    'services_info_2_title' => 'The National Enquiry Point',
+    'services_info_2_body'  => 'The World Trade Organization (WTO) Agreement on Technical Barriers to Trade (the TBT Agreement) requires WTO members to establish a National Enquiry Point (NEP) as a way of mitigating problems business enterprises face in obtaining information on technical regulations, standards and conformity assessment procedures applicable to their products in international markets. The Eswatini Standards Authority (ESWASA) is the TBT National Enquiry Point for Eswatini.',
+
+    'services_affil_title'    => 'Our Affiliations',
+    'services_affil_subtitle' => 'Partnering for Excellence',
+
+    'services_affil_1_img' => 'admin/uploads/itu.png',
+    'services_affil_1_alt' => 'ITU',
+    'services_affil_1_url' => 'https://www.itu.int/',
+
+    'services_affil_2_img' => 'admin/uploads/iso.png',
+    'services_affil_2_alt' => 'ISO',
+    'services_affil_2_url' => 'https://www.iso.org/',
+
+    'services_affil_3_img' => 'admin/uploads/iec.png',
+    'services_affil_3_alt' => 'IEC',
+    'services_affil_3_url' => 'https://www.iec.ch/',
+
+    'services_affil_4_img' => 'assets/img/SABS.png',
+    'services_affil_4_alt' => 'SABS',
+    'services_affil_4_url' => 'https://www.sabs.co.za/',
+
+    'services_affil_5_img' => 'admin/uploads/arso.png',
+    'services_affil_5_alt' => 'ARSO',
+    'services_affil_5_url' => 'https://www.arso-org.org/',
+
+    'services_affil_6_img' => 'admin/uploads/astm.png',
+    'services_affil_6_alt' => 'ASTM',
+    'services_affil_6_url' => 'https://www.astm.org/',
+]);
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -23,7 +122,7 @@
     <link rel="stylesheet" href="assets/css/spacing.css">
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    
+
     <style>
         /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
         body {
@@ -240,9 +339,9 @@
                                     <a href="index.php">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Our Services</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['services_breadcrumb_title']) ?></span>
                             </nav>
-                            <h1 class="title">Our Services</h1>
+                            <h1 class="title"><?= pc_h($pc['services_breadcrumb_title']) ?></h1>
                         </div>
                     </div>
                 </div>
@@ -256,9 +355,9 @@
             <div>
                 <!-- Section Title -->
                 <div class="main_title centered upper mb-5 text-center">
-                    <h2 class="display-6 fw-bold">Our Services</h2>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['services_grid_title']) ?></h2>
                     <div class="section-divider"></div>
-                    <p class="mt-3 mb-0" style="color: #2B3388;">Empowering Excellence Through Standards</p>
+                    <p class="mt-3 mb-0" style="color: #2B3388;"><?= pc_h($pc['services_grid_subtitle']) ?></p>
                 </div>
 
                 <!-- Services Grid – FULL CARD CLICKABLE -->
@@ -266,7 +365,7 @@
 
                     <!-- Certification -->
                     <div class="col">
-                        <a href="Certification.php" class="text-decoration-none">
+                        <a href="<?= pc_h($pc['services_card_1_url']) ?>" class="text-decoration-none">
                             <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -274,15 +373,15 @@
                                         <path d="M16 24 L22 30 L33 18"/>
                                     </svg>
                                 </span>
-                                <h3 class="service-title">Certification</h3>
-                                <p class="service-description">Certification to management systems and products. Let us assist you in demonstrating your organisation's ability to meet requirements and needs.</p>
+                                <h3 class="service-title"><?= pc_h($pc['services_card_1_title']) ?></h3>
+                                <p class="service-description"><?= pc_h($pc['services_card_1_desc']) ?></p>
                             </div>
                         </a>
                     </div>
 
                     <!-- Product Testing -->
                     <div class="col">
-                        <a href="product.php" class="text-decoration-none">
+                        <a href="<?= pc_h($pc['services_card_2_url']) ?>" class="text-decoration-none">
                             <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -294,15 +393,15 @@
                                         <circle cx="24" cy="33" r="1.2" fill="currentColor"/>
                                     </svg>
                                 </span>
-                                <h3 class="service-title">Product Testing</h3>
-                                <p class="service-description">Food and product testing in microbiology. Testing performed in accordance with international standards.</p>
+                                <h3 class="service-title"><?= pc_h($pc['services_card_2_title']) ?></h3>
+                                <p class="service-description"><?= pc_h($pc['services_card_2_desc']) ?></p>
                             </div>
                         </a>
                     </div>
 
                     <!-- Calibration Services -->
                     <div class="col">
-                        <a href="Calibration.php" class="text-decoration-none">
+                        <a href="<?= pc_h($pc['services_card_3_url']) ?>" class="text-decoration-none">
                             <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -316,15 +415,15 @@
                                         <circle cx="24" cy="34" r="2.6" fill="currentColor"/>
                                     </svg>
                                 </span>
-                                <h3 class="service-title">Calibration Services</h3>
-                                <p class="service-description">Calibration services based on accuracy, trust, and consistency.</p>
+                                <h3 class="service-title"><?= pc_h($pc['services_card_3_title']) ?></h3>
+                                <p class="service-description"><?= pc_h($pc['services_card_3_desc']) ?></p>
                             </div>
                         </a>
                     </div>
 
                     <!-- Standards Development -->
                     <div class="col">
-                        <a href="Standards.php" class="text-decoration-none">
+                        <a href="<?= pc_h($pc['services_card_4_url']) ?>" class="text-decoration-none">
                             <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -335,15 +434,15 @@
                                         <line x1="16" y1="38" x2="26" y2="38"/>
                                     </svg>
                                 </span>
-                                <h3 class="service-title">Standards Development</h3>
-                                <p class="service-description">Bringing together different expertise and experiences to develop mutually accepted solutions to common challenges.</p>
+                                <h3 class="service-title"><?= pc_h($pc['services_card_4_title']) ?></h3>
+                                <p class="service-description"><?= pc_h($pc['services_card_4_desc']) ?></p>
                             </div>
                         </a>
                     </div>
 
                     <!-- Standards Sales -->
                     <div class="col">
-                        <a href="Standards.php" class="text-decoration-none">
+                        <a href="<?= pc_h($pc['services_card_5_url']) ?>" class="text-decoration-none">
                             <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -352,15 +451,15 @@
                                         <path d="M24 10 C 30 7, 36 7, 40 9 L 40 38 C 36 36, 30 36, 24 39"/>
                                     </svg>
                                 </span>
-                                <h3 class="service-title">Standards Sales</h3>
-                                <p class="service-description">Sale of national, regional and international standards.</p>
+                                <h3 class="service-title"><?= pc_h($pc['services_card_5_title']) ?></h3>
+                                <p class="service-description"><?= pc_h($pc['services_card_5_desc']) ?></p>
                             </div>
                         </a>
                     </div>
 
                     <!-- Training Academy -->
                     <div class="col">
-                        <a href="training-about.php" class="text-decoration-none">
+                        <a href="<?= pc_h($pc['services_card_6_url']) ?>" class="text-decoration-none">
                             <div class="card service-card border-0 rounded-3 p-4 h-100">
                                 <span class="service-icon" aria-hidden="true">
                                     <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -370,8 +469,8 @@
                                         <circle cx="44" cy="34" r="1.6" fill="currentColor"/>
                                     </svg>
                                 </span>
-                                <h3 class="service-title">Training Academy</h3>
-                                <p class="service-description">We enable organisations and individuals to continuously improve, innovate and transform.</p>
+                                <h3 class="service-title"><?= pc_h($pc['services_card_6_title']) ?></h3>
+                                <p class="service-description"><?= pc_h($pc['services_card_6_desc']) ?></p>
                             </div>
                         </a>
                     </div>
@@ -381,14 +480,14 @@
 
             <!-- Information Centre Section -->
             <div class="info-section mt-5">
-                <h3>Information Centre / WTO Enquiry Point</h3>
-                <p>The ESWASA National Enquiry Point holds the collection of national, regional and international standards. We welcome students, researchers, industry professionals and the general public to make use of our centre. The enquiry point is a channel for mitigating problems businesses face in obtaining information on standards, technical regulations and conformity assessment procedures for the access of their products in international markets, thus eliminating technical barriers to trade.</p>
+                <h3><?= pc_h($pc['services_info_1_title']) ?></h3>
+                <?= pc_paragraphs_html($pc['services_info_1_body']) ?>
             </div>
 
             <!-- Information Centre Details Section -->
             <div class="info-section mt-4">
-                <h3>The National Enquiry Point</h3>
-                <p>The World Trade Organization (WTO) Agreement on Technical Barriers to Trade (the TBT Agreement) requires WTO members to establish a National Enquiry Point (NEP) as a way of mitigating problems business enterprises face in obtaining information on technical regulations, standards and conformity assessment procedures applicable to their products in international markets. The Eswatini Standards Authority (ESWASA) is the TBT National Enquiry Point for Eswatini.</p>
+                <h3><?= pc_h($pc['services_info_2_title']) ?></h3>
+                <?= pc_paragraphs_html($pc['services_info_2_body']) ?>
             </div>
 
         </div>
@@ -398,75 +497,23 @@
             <div class="container">
                 <!-- Section Title -->
                 <div class="text-center mb-5">
-                    <h2 class="display-6 fw-bold">Our Affiliations</h2>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['services_affil_title']) ?></h2>
                     <div class="section-divider"></div>
-                    <p class="mt-3 mb-0" style="color: #2B3388;">Partnering for Excellence</p>
+                    <p class="mt-3 mb-0" style="color: #2B3388;"><?= pc_h($pc['services_affil_subtitle']) ?></p>
                 </div>
 
                 <!-- Horizontal Slider -->
                 <div class="affiliations-slider position-relative overflow-hidden">
                     <div class="slider-track d-flex flex-nowrap">
-                        <div class="slider-item px-3">
-                            <a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/itu.png" alt="ITU" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.iso.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/iso.png" alt="ISO" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.iec.ch/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/iec.png" alt="IEC" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
-                                <img src="assets/img/SABS.png" alt="SABS" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.arso-org.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/arso.png" alt="ARSO" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.astm.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/astm.png" alt="ASTM" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <!-- Duplicate items for infinite scroll effect -->
-                        <div class="slider-item px-3">
-                            <a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/itu.png" alt="ITU" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.iso.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/iso.png" alt="ISO" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.iec.ch/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/iec.png" alt="IEC" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
-                                <img src="assets/img/SABS.png" alt="SABS" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.arso-org.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/arso.png" alt="ARSO" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
-                        <div class="slider-item px-3">
-                            <a href="https://www.astm.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="admin/uploads/astm.png" alt="ASTM" class="img-fluid affiliation-logo">
-                            </a>
-                        </div>
+                        <?php for ($pass = 0; $pass < 2; $pass++): ?>
+                            <?php for ($i = 1; $i <= 6; $i++): ?>
+                                <div class="slider-item px-3">
+                                    <a href="<?= pc_h($pc['services_affil_' . $i . '_url']) ?>" target="_blank" rel="noopener noreferrer">
+                                        <img src="<?= pc_h(pc_image_src($pc['services_affil_' . $i . '_img'], 'assets/img/SABS.png')) ?>" alt="<?= pc_h($pc['services_affil_' . $i . '_alt']) ?>" class="img-fluid affiliation-logo">
+                                    </a>
+                                </div>
+                            <?php endfor; ?>
+                        <?php endfor; ?>
                     </div>
                 </div>
             </div>

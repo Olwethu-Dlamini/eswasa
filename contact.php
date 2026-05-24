@@ -1,6 +1,67 @@
 <?php
 include_once 'includes/db_connect.php';
 include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+// CMS content for editable strings (does NOT touch form submission below).
+$pc_keys = [
+    'contact_breadcrumb_title',
+    'contact_intro_title',
+    'contact_intro_text',
+    'contact_office1_title',
+    'contact_office1_addr',
+    'contact_office1_phone1_label', 'contact_office1_phone1_tel',
+    'contact_office1_phone2_label', 'contact_office1_phone2_tel',
+    'contact_office2_title',
+    'contact_office2_addr',
+    'contact_office2_phone1_label', 'contact_office2_phone1_tel',
+    'contact_postal_title',
+    'contact_postal_lines',
+    'contact_website_title',
+    'contact_website_url', 'contact_website_label',
+    'contact_email_addr',
+    'contact_form_title',
+    'contact_form_success_text',
+    'contact_form_name_ph',
+    'contact_form_email_ph',
+    'contact_form_phone_ph',
+    'contact_form_subject_ph',
+    'contact_form_message_ph',
+    'contact_form_submit_label',
+    'contact_map_embed',
+];
+$pc_defaults = [
+    'contact_breadcrumb_title'      => 'Contact Us',
+    'contact_intro_title'           => 'Get In Touch With Us',
+    'contact_intro_text'            => 'Contact us anytime for support. We are always just 1 click away from you.',
+    'contact_office1_title'         => 'Head Office',
+    'contact_office1_addr'          => "Plot 247, Marbel Construction Premises,\nKing Mswati III Avenue West\nMatsapha Industrial Site",
+    'contact_office1_phone1_label'  => '(+268) 2518 4633/ 4610',
+    'contact_office1_phone1_tel'    => '+26825184633',
+    'contact_office1_phone2_label'  => '(+268) 7806 8944',
+    'contact_office1_phone2_tel'    => '+26878068944',
+    'contact_office2_title'         => 'Metrology Laboratory',
+    'contact_office2_addr'          => "King Sobhuza II Avenue\nMatsapha Crescent, Opposite YKK Zippers\nMatsapha Industrial Site",
+    'contact_office2_phone1_label'  => '(+268) 2518 6633',
+    'contact_office2_phone1_tel'    => '+26825186633',
+    'contact_postal_title'          => 'Postal Address:',
+    'contact_postal_lines'          => "P.O. Box 1399,\nMatsapha, Eswatini",
+    'contact_website_title'         => 'Website:',
+    'contact_website_url'           => 'https://www.eswasa.co.sz',
+    'contact_website_label'         => 'www.eswasa.co.sz',
+    'contact_email_addr'            => 'info@eswasa.co.sz',
+    'contact_form_title'            => 'Fill Up The Contact Form',
+    'contact_form_success_text'     => "Thank you! Your message has been sent successfully. We'll contact you soon.",
+    'contact_form_name_ph'          => 'Name *',
+    'contact_form_email_ph'         => 'E-mail *',
+    'contact_form_phone_ph'         => 'Phone *',
+    'contact_form_subject_ph'       => 'Your Subject *',
+    'contact_form_message_ph'       => 'Message',
+    'contact_form_submit_label'     => 'Submit Message',
+    'contact_map_embed'             => 'https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d14282.718543167279!2d31.303588!3d-26.498258!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDI5JzUzLjciUyAzMcKwMTgnMTIuOSJF!5e0!3m2!1sen!2sus!4v1750623979471!5m2!1sen!2sus',
+];
+$pc = pc_get_many($conn, $pc_keys, $pc_defaults);
+
 // Handle form submission at the very top
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize inputs
@@ -277,9 +338,9 @@ if (isset($_SESSION['contact_error'])) {
                             <nav class="breadcrumb">
                                 <a href="index.php">Home</a>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span>Contact</span>
+                                <span><?= pc_h($pc['contact_breadcrumb_title']) ?></span>
                             </nav>
-                            <h3 class="title">Contact Us</h3>
+                            <h3 class="title"><?= pc_h($pc['contact_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -291,30 +352,48 @@ if (isset($_SESSION['contact_error'])) {
                 <div class="row">
                     <div class="col-lg-5">
                         <div class="contact-info-wrap">
-                            <h2 class="title">Get In Touch With Us</h2>
-                            <p>Contact us anytime for support. We are always just 1 click away from you.</p>
+                            <h2 class="title"><?= pc_h($pc['contact_intro_title']) ?></h2>
+                            <p><?= pc_h($pc['contact_intro_text']) ?></p>
                         </div>
 
+                        <?php
+                            $office1_lines = preg_split("/\r?\n/", trim($pc['contact_office1_addr']));
+                            $office2_lines = preg_split("/\r?\n/", trim($pc['contact_office2_addr']));
+                        ?>
                         <div class="row g-3 mb-3">
                             <!-- Head Office -->
                             <div class="col-md-6">
                                 <div class="location-card">
-                                    <h5>Head Office</h5>
-                                    <div class="loc-line"><i class="fas fa-map-marker-alt"></i><span>Plot 247, Marbel Construction Premises,</span></div>
-                                    <div class="loc-line"><span style="margin-left: 26px;">King Mswati III Avenue West</span></div>
-                                    <div class="loc-line"><span style="margin-left: 26px;">Matsapha Industrial Site</span></div>
-                                    <div class="loc-line mt-2"><i class="fas fa-phone-alt"></i><a href="tel:+26825184633">(+268) 2518 4633/ 4610</a></div>
-                                    <div class="loc-line"><i class="fas fa-mobile-alt"></i><a href="tel:+26878068944">(+268) 7806 8944</a></div>
+                                    <h5><?= pc_h($pc['contact_office1_title']) ?></h5>
+                                    <?php foreach ($office1_lines as $i => $line): if (trim($line) === '') continue; ?>
+                                        <?php if ($i === 0): ?>
+                                            <div class="loc-line"><i class="fas fa-map-marker-alt"></i><span><?= pc_h($line) ?></span></div>
+                                        <?php else: ?>
+                                            <div class="loc-line"><span style="margin-left: 26px;"><?= pc_h($line) ?></span></div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    <?php if (trim($pc['contact_office1_phone1_label']) !== ''): ?>
+                                        <div class="loc-line mt-2"><i class="fas fa-phone-alt"></i><a href="tel:<?= pc_h($pc['contact_office1_phone1_tel']) ?>"><?= pc_h($pc['contact_office1_phone1_label']) ?></a></div>
+                                    <?php endif; ?>
+                                    <?php if (trim($pc['contact_office1_phone2_label']) !== ''): ?>
+                                        <div class="loc-line"><i class="fas fa-mobile-alt"></i><a href="tel:<?= pc_h($pc['contact_office1_phone2_tel']) ?>"><?= pc_h($pc['contact_office1_phone2_label']) ?></a></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <!-- Metrology Laboratory -->
                             <div class="col-md-6">
                                 <div class="location-card">
-                                    <h5>Metrology Laboratory</h5>
-                                    <div class="loc-line"><i class="fas fa-map-marker-alt"></i><span>King Sobhuza II Avenue</span></div>
-                                    <div class="loc-line"><span style="margin-left: 26px;">Matsapha Crescent, Opposite YKK Zippers</span></div>
-                                    <div class="loc-line"><span style="margin-left: 26px;">Matsapha Industrial Site</span></div>
-                                    <div class="loc-line mt-2"><i class="fas fa-phone-alt"></i><a href="tel:+26825186633">(+268) 2518 6633</a></div>
+                                    <h5><?= pc_h($pc['contact_office2_title']) ?></h5>
+                                    <?php foreach ($office2_lines as $i => $line): if (trim($line) === '') continue; ?>
+                                        <?php if ($i === 0): ?>
+                                            <div class="loc-line"><i class="fas fa-map-marker-alt"></i><span><?= pc_h($line) ?></span></div>
+                                        <?php else: ?>
+                                            <div class="loc-line"><span style="margin-left: 26px;"><?= pc_h($line) ?></span></div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    <?php if (trim($pc['contact_office2_phone1_label']) !== ''): ?>
+                                        <div class="loc-line mt-2"><i class="fas fa-phone-alt"></i><a href="tel:<?= pc_h($pc['contact_office2_phone1_tel']) ?>"><?= pc_h($pc['contact_office2_phone1_label']) ?></a></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -322,26 +401,27 @@ if (isset($_SESSION['contact_error'])) {
                         <!-- Postal & Website row -->
                         <div class="row contact-bottom-row">
                             <div class="col-sm-6">
-                                <h6><i class="fas fa-envelope me-2"></i>Postal Address:</h6>
-                                <p>P.O. Box 1399,</p>
-                                <p>Matsapha, Eswatini</p>
+                                <h6><i class="fas fa-envelope me-2"></i><?= pc_h($pc['contact_postal_title']) ?></h6>
+                                <?php foreach (preg_split("/\r?\n/", trim($pc['contact_postal_lines'])) as $pline): if (trim($pline) === '') continue; ?>
+                                    <p><?= pc_h($pline) ?></p>
+                                <?php endforeach; ?>
                             </div>
                             <div class="col-sm-6">
-                                <h6><i class="fas fa-globe me-2"></i>Website:</h6>
-                                <p><a href="https://www.eswasa.co.sz" target="_blank">www.eswasa.co.sz</a></p>
-                                <p><a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a></p>
+                                <h6><i class="fas fa-globe me-2"></i><?= pc_h($pc['contact_website_title']) ?></h6>
+                                <p><a href="<?= pc_h($pc['contact_website_url']) ?>" target="_blank"><?= pc_h($pc['contact_website_label']) ?></a></p>
+                                <p><a href="mailto:<?= pc_h($pc['contact_email_addr']) ?>"><?= pc_h($pc['contact_email_addr']) ?></a></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-7">
                         <div class="contact-info-wrap">
-                            <h4 class="title">Fill Up The Contact Form</h4>
+                            <h4 class="title"><?= pc_h($pc['contact_form_title']) ?></h4>
                         </div>
 
                         <!-- Success Message -->
                         <?php if ($success): ?>
                             <div class="contact-form-success">
-                                <strong>Thank you!</strong> Your message has been sent successfully. We'll contact you soon.
+                                <?= pc_h($pc['contact_form_success_text']) ?>
                             </div>
                         <?php endif; ?>
 
@@ -359,34 +439,34 @@ if (isset($_SESSION['contact_error'])) {
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-grp">
-                                                <input name="name" type="text" placeholder="Name *" required 
+                                                <input name="name" type="text" placeholder="<?= pc_h($pc['contact_form_name_ph']) ?>" required
                                                        value="<?= htmlspecialchars($prefill['name'] ?? '') ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-grp">
-                                                <input name="email" type="email" placeholder="E-mail *" required
+                                                <input name="email" type="email" placeholder="<?= pc_h($pc['contact_form_email_ph']) ?>" required
                                                        value="<?= htmlspecialchars($prefill['email'] ?? '') ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-grp">
-                                                <input name="phone" type="tel" placeholder="Phone *" required
+                                                <input name="phone" type="tel" placeholder="<?= pc_h($pc['contact_form_phone_ph']) ?>" required
                                                        value="<?= htmlspecialchars($prefill['phone'] ?? '') ?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-grp">
-                                                <input name="subject" type="text" placeholder="Your Subject *" required
+                                                <input name="subject" type="text" placeholder="<?= pc_h($pc['contact_form_subject_ph']) ?>" required
                                                        value="<?= htmlspecialchars($prefill['subject'] ?? '') ?>">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-grp">
-                                        <textarea name="message" placeholder="Message" required><?= htmlspecialchars($prefill['message'] ?? '') ?></textarea>
+                                        <textarea name="message" placeholder="<?= pc_h($pc['contact_form_message_ph']) ?>" required><?= htmlspecialchars($prefill['message'] ?? '') ?></textarea>
                                     </div>
                                     <div class="form-grp col-10 mx-auto text-center">
-                                        <button type="submit" class="btn-cta" style="cursor:pointer;">Submit Message</button>
+                                        <button type="submit" class="btn-cta" style="cursor:pointer;"><?= pc_h($pc['contact_form_submit_label']) ?></button>
                                     </div>
                                 </form>
                             </div>
@@ -397,7 +477,7 @@ if (isset($_SESSION['contact_error'])) {
         </section>
 
         <div class="contact-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d14282.718543167279!2d31.303588!3d-26.498258!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjbCsDI5JzUzLjciUyAzMcKwMTgnMTIuOSJF!5e0!3m2!1sen!2sus!4v1750623979471!5m2!1sen!2sus" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <iframe src="<?= pc_h($pc['contact_map_embed']) ?>" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
     </main>
 

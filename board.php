@@ -1,4 +1,22 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+require_once __DIR__ . '/includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+require_once __DIR__ . '/includes/breadcrumb_helper.php';
+
+$pc = pc_get_many($conn, [
+    'board_hero_title',
+    'board_intro_body',
+], [
+    'board_hero_title' => 'Members of the Council',
+    'board_intro_body' => 'Strategic Oversight & Governance',
+]);
+
+$members = [];
+$res = $conn->query("SELECT * FROM eswasa_board_members ORDER BY sort_order ASC, name ASC");
+if ($res) {
+    while ($r = $res->fetch_assoc()) { $members[] = $r; }
+}
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -157,9 +175,9 @@
                                     <a href="index.html">Home</a>
                                 </span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Members of the Council</span>
+                                <span property="itemListElement" typeof="ListItem"><?= pc_h($pc['board_hero_title']) ?></span>
                             </nav>
-                            <h3 class="title">Members of the Council</h3>
+                            <h3 class="title"><?= pc_h($pc['board_hero_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -171,129 +189,42 @@
             <!-- Section Header -->
             <div class="main_title centered upper mb-5">
                 <h2 class="display-6 fw-bold text-center">
-                    Members of the Council
-                    <span class="d-block fs-5 text-muted mt-2">Strategic Oversight &amp; Governance</span>
+                    <?= pc_h($pc['board_hero_title']) ?>
+                    <span class="d-block fs-5 text-muted mt-2"><?= pc_h($pc['board_intro_body']) ?></span>
                     <span class="section-divider d-block" style="margin-top: 14px;"></span>
                 </h2>
-                
+
             </div>
 
             <!-- Board Members Grid -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                
-                <!-- Board Member 1 -->
+                <?php foreach ($members as $m): ?>
                 <div class="col">
                     <div class="card board-member-card h-100 p-4">
                         <div class="board-img-container">
-                            <img 
-                                src="admin/uploads/dumile.png" 
-                                alt="Mrs. Dumile Sibandze" 
+                            <img
+                                src="<?= pc_h(pc_image_src($m['photo'], 'assets/img/team/default.jpg')) ?>"
+                                alt="<?= pc_h($m['name']) ?>"
                                 class="board-img"
                             >
                         </div>
                         <div class="board-member-info">
-                            <h4 class="board-member-name">Mrs. Dumile Sibandze</h4>
-                            <p class="board-member-role">Chairperson</p>
-                            
+                            <h4 class="board-member-name"><?= pc_h($m['name']) ?></h4>
+                            <p class="board-member-role"><?= pc_h($m['role']) ?></p>
+                            <?php if (!empty($m['bio'])): ?>
+                                <p class="board-member-bio"><?= pc_h($m['bio']) ?></p>
+                            <?php endif; ?>
                             <div class="board-member-social">
-                             
-                                
+                                <?php if (!empty($m['social_linkedin'])): ?>
+                                    <a href="<?= pc_h($m['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
                 </div>
-
-             
-
-                <!-- Board Member 3 -->
-                <div class="col">
-                    <div class="card board-member-card h-100 p-4">
-                        <div class="board-img-container">
-                            <img 
-                                src="admin/uploads/cebile.jpg" 
-                                alt="Ms. Cebile Nhlabatsi" 
-                                class="board-img"
-                            >
-                        </div>
-                        <div class="board-member-info">
-                            <h4 class="board-member-name">Ms. Cebile Nhlabatsi</h4>
-                            <p class="board-member-role">Council Member</p>
-                           
-                            <div class="board-member-social">
-                                
-                           
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Board Member 4 -->
-                <div class="col">
-                    <div class="card board-member-card h-100 p-4">
-                        <div class="board-img-container">
-                            <img 
-                                src="admin/uploads/Dladla.jpg" 
-                                alt="Ms. Nompumelelo Dladla" 
-                                class="board-img"
-                            >
-                        </div>
-                        <div class="board-member-info">
-                            <h4 class="board-member-name">Ms. Nompumelelo Dladla</h4>
-                            <p class="board-member-role">Council Member</p>
-                            
-                            <div class="board-member-social">
-                               
-                          
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-        
-
-                <!-- Board Member 6 -->
-                <div class="col">
-                    <div class="card board-member-card h-100 p-4">
-                        <div class="board-img-container">
-                            <img 
-                                src="admin/uploads/Tania.jpg" 
-                                alt="Ms. Tania Fyfe" 
-                                class="board-img"
-                            >
-                        </div>
-                        <div class="board-member-info">
-                            <h4 class="board-member-name">Ms. Tania Fyfe</h4>
-                            <p class="board-member-role">Council Member</p>
-                            
-                            <div class="board-member-social">
-                               
-                               
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card board-member-card h-100 p-4">
-                        <div class="board-img-container">
-                            <img 
-                                src="admin/uploads/sukati.png" 
-                                alt="Ms. Sipholesihle Sukati" 
-                                class="board-img"
-                            >
-                        </div>
-                        <div class="board-member-info">
-                            <h4 class="board-member-name">Ms. Sipholesihle Sukati</h4>
-                            <p class="board-member-role">Council Member</p>
-                            
-                            <div class="board-member-social">
-                                
-                               
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <?php endforeach; ?>
             </div>
         </div>
 

@@ -2,6 +2,111 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+// ── CMS keys for index page (Discover, Marks, Affiliations + headings) ──
+$pc_keys = [
+    // Section headings
+    'index_discover_heading',
+    'index_marks_heading',
+    'index_affiliations_heading',
+    // Discover cards (1..4)
+    'index_discover_1_title','index_discover_1_desc','index_discover_1_url',
+    'index_discover_2_title','index_discover_2_desc','index_discover_2_url',
+    'index_discover_3_title','index_discover_3_desc','index_discover_3_url',
+    'index_discover_4_title','index_discover_4_desc','index_discover_4_url',
+    // Certification Marks (1..4)
+    'index_mark_1_title','index_mark_1_desc','index_mark_1_image','index_mark_1_explore_url','index_mark_1_verify_url',
+    'index_mark_2_title','index_mark_2_desc','index_mark_2_image','index_mark_2_explore_url','index_mark_2_verify_url',
+    'index_mark_3_title','index_mark_3_desc','index_mark_3_image','index_mark_3_explore_url','index_mark_3_verify_url',
+    'index_mark_4_title','index_mark_4_desc','index_mark_4_image','index_mark_4_explore_url','index_mark_4_verify_url',
+    // Affiliations (1..11)
+    'index_affiliation_1_logo','index_affiliation_1_url','index_affiliation_1_alt',
+    'index_affiliation_2_logo','index_affiliation_2_url','index_affiliation_2_alt',
+    'index_affiliation_3_logo','index_affiliation_3_url','index_affiliation_3_alt',
+    'index_affiliation_4_logo','index_affiliation_4_url','index_affiliation_4_alt',
+    'index_affiliation_5_logo','index_affiliation_5_url','index_affiliation_5_alt',
+    'index_affiliation_6_logo','index_affiliation_6_url','index_affiliation_6_alt',
+    'index_affiliation_7_logo','index_affiliation_7_url','index_affiliation_7_alt',
+    'index_affiliation_8_logo','index_affiliation_8_url','index_affiliation_8_alt',
+    'index_affiliation_9_logo','index_affiliation_9_url','index_affiliation_9_alt',
+    'index_affiliation_10_logo','index_affiliation_10_url','index_affiliation_10_alt',
+    'index_affiliation_11_logo','index_affiliation_11_url','index_affiliation_11_alt',
+];
+$pc_defaults = [
+    'index_discover_heading'     => 'Discover',
+    'index_marks_heading'        => 'Certification Marks',
+    'index_affiliations_heading' => 'Our Affiliations',
+
+    'index_discover_1_title' => 'Certification',
+    'index_discover_1_desc'  => 'Independent certification of management systems and products, audited to recognised international standards.',
+    'index_discover_1_url'   => 'Certification.php',
+    'index_discover_2_title' => 'Product Testing',
+    'index_discover_2_desc'  => 'Food, microbiology and product testing carried out to recognised international standards.',
+    'index_discover_2_url'   => 'product.php',
+    'index_discover_3_title' => 'Standards Development',
+    'index_discover_3_desc'  => 'National standards developed with industry, government and consumer input to protect health and enable trade.',
+    'index_discover_3_url'   => 'Standards.php',
+    'index_discover_4_title' => 'Training & Development',
+    'index_discover_4_desc'  => 'Quality management, internal auditing and standards training aligned to international best practice.',
+    'index_discover_4_url'   => 'training-about.php',
+
+    'index_mark_1_title'       => 'Management Systems Certification Mark',
+    'index_mark_1_desc'        => 'Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.',
+    'index_mark_1_image'       => 'assets/img/quality/management-mark-black.png',
+    'index_mark_1_explore_url' => 'managementsystems.php',
+    'index_mark_1_verify_url'  => 'certification-status.php',
+    'index_mark_2_title'       => 'Product Certification Mark',
+    'index_mark_2_desc'        => 'A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing — giving buyers confidence in quality and safety.',
+    'index_mark_2_image'       => 'assets/img/quality/product-certification-black.png',
+    'index_mark_2_explore_url' => 'Certification.php',
+    'index_mark_2_verify_url'  => 'certification-status.php',
+    'index_mark_3_title'       => 'Compulsory Standards Quality Mark',
+    'index_mark_3_desc'        => 'A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.',
+    'index_mark_3_image'       => 'assets/img/quality/compulsory-standards-black.png',
+    'index_mark_3_explore_url' => 'Certification.php',
+    'index_mark_3_verify_url'  => 'certification-status.php',
+    'index_mark_4_title'       => 'Ingelo MSME Product Certification Mark',
+    'index_mark_4_desc'        => 'A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers — helping them prove product quality, access new markets and grow with credibility.',
+    'index_mark_4_image'       => 'assets/img/quality/ingelo-certification-black.png',
+    'index_mark_4_explore_url' => 'ingelo.php',
+    'index_mark_4_verify_url'  => 'certification-status.php',
+
+    'index_affiliation_1_logo'  => 'admin/uploads/iso.png',
+    'index_affiliation_1_url'   => 'https://www.iso.org/',
+    'index_affiliation_1_alt'   => 'ISO',
+    'index_affiliation_2_logo'  => 'admin/uploads/iec.png',
+    'index_affiliation_2_url'   => 'https://www.iec.ch/',
+    'index_affiliation_2_alt'   => 'IEC',
+    'index_affiliation_3_logo'  => 'admin/uploads/itu.png',
+    'index_affiliation_3_url'   => 'https://www.itu.int/',
+    'index_affiliation_3_alt'   => 'ITU',
+    'index_affiliation_4_logo'  => 'assets/img/iaf.webp',
+    'index_affiliation_4_url'   => 'https://iaf.nu/',
+    'index_affiliation_4_alt'   => 'IAF',
+    'index_affiliation_5_logo'  => 'assets/img/ILAC.jpg',
+    'index_affiliation_5_url'   => 'https://ilac.org/',
+    'index_affiliation_5_alt'   => 'ILAC',
+    'index_affiliation_6_logo'  => 'assets/img/SABS.png',
+    'index_affiliation_6_url'   => 'https://www.sabs.co.za/',
+    'index_affiliation_6_alt'   => 'SABS',
+    'index_affiliation_7_logo'  => 'assets/img/SADCAS.png',
+    'index_affiliation_7_url'   => 'https://www.sadcas.org/',
+    'index_affiliation_7_alt'   => 'SADCAS',
+    'index_affiliation_8_logo'  => 'assets/img/sadc.webp',
+    'index_affiliation_8_url'   => 'https://www.sadc.int/',
+    'index_affiliation_8_alt'   => 'SADC',
+    'index_affiliation_9_logo'  => 'assets/img/sadcstan.jpg',
+    'index_affiliation_9_url'   => 'https://www.sadcstan.org/',
+    'index_affiliation_9_alt'   => 'SADCSTAN',
+    'index_affiliation_10_logo' => 'admin/uploads/arso.png',
+    'index_affiliation_10_url'  => 'https://www.arso-org.org/',
+    'index_affiliation_10_alt'  => 'ARSO',
+    'index_affiliation_11_logo' => 'admin/uploads/astm.png',
+    'index_affiliation_11_url'  => 'https://www.astm.org/',
+    'index_affiliation_11_alt'  => 'ASTM',
+];
+$pc = pc_get_many($conn, $pc_keys, $pc_defaults);
 
 // Fetch banners for slider
 $banners = mysqli_query($conn, "SELECT * FROM banners");
@@ -621,7 +726,7 @@ if ($am_result) {
             <div class="row align-items-center gap-4 gap-md-0">
                 <div class="col-md-8">
                     <div class="section__title text-center text-md-start">
-                        <h2 class="title tg-svg" style="color: #2B3388;">Discover</h2>
+                        <h2 class="title tg-svg" style="color: #2B3388;"><?= pc_h($pc['index_discover_heading']) ?></h2>
                         <div class="section-divider" style="margin-left: 0; margin-right: 0;"></div>
                     </div>
                 </div>
@@ -632,22 +737,22 @@ if ($am_result) {
             <div class="col-12 col-sm-6 col-lg-3">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
-                        <a href="Certification.php">
+                        <a href="<?= pc_h($pc['index_discover_1_url']) ?>">
                             <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M24 4 L42 11 V24 C42 34 34 42 24 44 C14 42 6 34 6 24 V11 Z"/>
                                 <path d="M16 24 L22 30 L33 18"/>
                             </svg>
                         </a>
-                        <h4 class="title"><a href="Certification.php"><b>Certification</b></a></h4>
-                        <p class="card-desc">Independent certification of management systems and products, audited to recognised international standards.</p>
-                        <a href="Certification.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                        <h4 class="title"><a href="<?= pc_h($pc['index_discover_1_url']) ?>"><b><?= pc_h($pc['index_discover_1_title']) ?></b></a></h4>
+                        <p class="card-desc"><?= pc_h($pc['index_discover_1_desc']) ?></p>
+                        <a href="<?= pc_h($pc['index_discover_1_url']) ?>" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-lg-3">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
-                        <a href="product.php">
+                        <a href="<?= pc_h($pc['index_discover_2_url']) ?>">
                             <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M18 6 H30"/>
                                 <path d="M20 6 V20 L10 38 C8.5 41 10.5 44 13.5 44 H34.5 C37.5 44 39.5 41 38 38 L28 20 V6"/>
@@ -657,16 +762,16 @@ if ($am_result) {
                                 <circle cx="24" cy="33" r="1.2" fill="currentColor"/>
                             </svg>
                         </a>
-                        <h4 class="title"><a href="product.php"><b>Product Testing</b></a></h4>
-                        <p class="card-desc">Food, microbiology and product testing carried out to recognised international standards.</p>
-                        <a href="product.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                        <h4 class="title"><a href="<?= pc_h($pc['index_discover_2_url']) ?>"><b><?= pc_h($pc['index_discover_2_title']) ?></b></a></h4>
+                        <p class="card-desc"><?= pc_h($pc['index_discover_2_desc']) ?></p>
+                        <a href="<?= pc_h($pc['index_discover_2_url']) ?>" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-lg-3">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
-                        <a href="Standards.php">
+                        <a href="<?= pc_h($pc['index_discover_3_url']) ?>">
                             <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M10 6 H28 L38 16 V42 H10 Z"/>
                                 <path d="M28 6 V16 H38"/>
@@ -675,16 +780,16 @@ if ($am_result) {
                                 <line x1="16" y1="34" x2="26" y2="34"/>
                             </svg>
                         </a>
-                        <h4 class="title"><a href="Standards.php"><b>Standards Development</b></a></h4>
-                        <p class="card-desc">National standards developed with industry, government and consumer input to protect health and enable trade.</p>
-                        <a href="Standards.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                        <h4 class="title"><a href="<?= pc_h($pc['index_discover_3_url']) ?>"><b><?= pc_h($pc['index_discover_3_title']) ?></b></a></h4>
+                        <p class="card-desc"><?= pc_h($pc['index_discover_3_desc']) ?></p>
+                        <a href="<?= pc_h($pc['index_discover_3_url']) ?>" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-lg-3">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
-                        <a href="training-about.php">
+                        <a href="<?= pc_h($pc['index_discover_4_url']) ?>">
                             <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M4 20 L24 10 L44 20 L24 30 Z"/>
                                 <path d="M12 24 V34 C12 36.5 17 40 24 40 C31 40 36 36.5 36 34 V24"/>
@@ -692,9 +797,9 @@ if ($am_result) {
                                 <circle cx="44" cy="34" r="1.6" fill="currentColor"/>
                             </svg>
                         </a>
-                        <h4 class="title"><a href="training-about.php"><b>Training &amp; Development</b></a></h4>
-                        <p class="card-desc">Quality management, internal auditing and standards training aligned to international best practice.</p>
-                        <a href="training-about.php" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                        <h4 class="title"><a href="<?= pc_h($pc['index_discover_4_url']) ?>"><b><?= pc_h($pc['index_discover_4_title']) ?></b></a></h4>
+                        <p class="card-desc"><?= pc_h($pc['index_discover_4_desc']) ?></p>
+                        <a href="<?= pc_h($pc['index_discover_4_url']) ?>" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -815,52 +920,52 @@ if ($am_result) {
 <section class="trust-eswasa-section">
     <div class="container">
         <div class="section-heading">
-            <h2>Certification Marks</h2>
+            <h2><?= pc_h($pc['index_marks_heading']) ?></h2>
             <div class="section-divider"></div>
         </div>
         <div class="marks-grid">
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/management-mark-black.png" alt="Management Systems Certification Mark">
+                    <img src="<?= pc_h(pc_image_src($pc['index_mark_1_image'], 'assets/img/quality/management-mark-black.png')) ?>" alt="<?= pc_h($pc['index_mark_1_title']) ?>">
                 </div>
-                <h3 class="mark-title">Management Systems Certification Mark</h3>
-                <p class="mark-desc">Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.</p>
+                <h3 class="mark-title"><?= pc_h($pc['index_mark_1_title']) ?></h3>
+                <p class="mark-desc"><?= pc_h($pc['index_mark_1_desc']) ?></p>
                 <div class="mark-actions">
-                    <a href="managementsystems.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_1_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_1_verify_url']) ?>">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/product-certification-black.png" alt="Product Certification Mark">
+                    <img src="<?= pc_h(pc_image_src($pc['index_mark_2_image'], 'assets/img/quality/product-certification-black.png')) ?>" alt="<?= pc_h($pc['index_mark_2_title']) ?>">
                 </div>
-                <h3 class="mark-title">Product Certification Mark</h3>
-                <p class="mark-desc">A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing &mdash; giving buyers confidence in quality and safety.</p>
+                <h3 class="mark-title"><?= pc_h($pc['index_mark_2_title']) ?></h3>
+                <p class="mark-desc"><?= pc_h($pc['index_mark_2_desc']) ?></p>
                 <div class="mark-actions">
-                    <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_2_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_2_verify_url']) ?>">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/compulsory-standards-black.png" alt="Compulsory Standards Quality Mark">
+                    <img src="<?= pc_h(pc_image_src($pc['index_mark_3_image'], 'assets/img/quality/compulsory-standards-black.png')) ?>" alt="<?= pc_h($pc['index_mark_3_title']) ?>">
                 </div>
-                <h3 class="mark-title">Compulsory Standards Quality Mark</h3>
-                <p class="mark-desc">A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.</p>
+                <h3 class="mark-title"><?= pc_h($pc['index_mark_3_title']) ?></h3>
+                <p class="mark-desc"><?= pc_h($pc['index_mark_3_desc']) ?></p>
                 <div class="mark-actions">
-                    <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_3_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_3_verify_url']) ?>">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="assets/img/quality/ingelo-certification-black.png" alt="Ingelo MSME Product Certification Mark">
+                    <img src="<?= pc_h(pc_image_src($pc['index_mark_4_image'], 'assets/img/quality/ingelo-certification-black.png')) ?>" alt="<?= pc_h($pc['index_mark_4_title']) ?>">
                 </div>
-                <h3 class="mark-title">Ingelo MSME Product Certification Mark</h3>
-                <p class="mark-desc">A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers &mdash; helping them prove product quality, access new markets and grow with credibility.</p>
+                <h3 class="mark-title"><?= pc_h($pc['index_mark_4_title']) ?></h3>
+                <p class="mark-desc"><?= pc_h($pc['index_mark_4_desc']) ?></p>
                 <div class="mark-actions">
-                    <a href="ingelo.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_4_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?= pc_h($pc['index_mark_4_verify_url']) ?>">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
@@ -941,123 +1046,30 @@ if ($am_result) {
 <section class="affiliations-area">
     <div class="container">
         <div class="section-heading">
-            <h2>Our Affiliations</h2>
+            <h2><?= pc_h($pc['index_affiliations_heading']) ?></h2>
             <div class="section-divider"></div>
         </div>
 
         <div class="affiliations-slider">
             <div class="slider-track d-flex flex-nowrap">
+                <?php
+                $affiliation_count = 11;
+                // Render twice: original set + duplicate for seamless infinite scroll
+                for ($pass = 0; $pass < 2; $pass++):
+                    for ($i = 1; $i <= $affiliation_count; $i++):
+                        $logo = $pc['index_affiliation_' . $i . '_logo'];
+                        $url  = $pc['index_affiliation_' . $i . '_url'];
+                        $alt  = $pc['index_affiliation_' . $i . '_alt'];
+                ?>
                 <div class="slider-item px-3">
-                    <a href="https://www.iso.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/iso.png" alt="ISO" class="affiliation-logo">
+                    <a href="<?= pc_h($url) ?>" target="_blank" rel="noopener noreferrer"<?= $pass === 1 ? ' aria-hidden="true" tabindex="-1"' : '' ?>>
+                        <img src="<?= pc_h(pc_image_src($logo, 'assets/img/logo/ESWASA_LOGO.jpg')) ?>" alt="<?= pc_h($alt) ?>" class="affiliation-logo">
                     </a>
                 </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.iec.ch/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/iec.png" alt="IEC" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/itu.png" alt="ITU" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://iaf.nu/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/iaf.webp" alt="IAF" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://ilac.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/ILAC.jpg" alt="ILAC" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sadcas.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/SADCAS.png" alt="SADCAS" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sadc.int/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/sadc.webp" alt="SADC" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sadcstan.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/sadcstan.jpg" alt="SADCSTAN" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.arso-org.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/arso.png" alt="ARSO" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.astm.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/astm.png" alt="ASTM" class="affiliation-logo">
-                    </a>
-                </div>
-                <!-- Duplicate set for seamless infinite scroll -->
-                <div class="slider-item px-3">
-                    <a href="https://www.iso.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/iso.png" alt="ISO" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.iec.ch/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/iec.png" alt="IEC" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.itu.int/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/itu.png" alt="ITU" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://iaf.nu/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/iaf.webp" alt="IAF" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://ilac.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/ILAC.jpg" alt="ILAC" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sabs.co.za/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/SABS.png" alt="SABS" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sadcas.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/SADCAS.png" alt="SADCAS" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sadc.int/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/sadc.webp" alt="SADC" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.sadcstan.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="assets/img/sadcstan.jpg" alt="SADCSTAN" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.arso-org.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/arso.png" alt="ARSO" class="affiliation-logo">
-                    </a>
-                </div>
-                <div class="slider-item px-3">
-                    <a href="https://www.astm.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="admin/uploads/astm.png" alt="ASTM" class="affiliation-logo">
-                    </a>
-                </div>
+                <?php
+                    endfor;
+                endfor;
+                ?>
             </div>
         </div>
     </div>

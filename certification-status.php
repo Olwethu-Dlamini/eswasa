@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'includes/db_connect.php';
 include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
 
 /*
  * Public Certification Status Register
@@ -25,6 +26,98 @@ $withdrawn = [
 $reduced = [
     // ['client' => '...', 'cert_no' => '...', 'scope' => '...', 'effective' => '...', 'note' => 'Scope reduced — see notes'],
 ];
+
+// ── CMS content ─────────────────────────────────────────────
+$cert_status_keys = [
+    // Hero / breadcrumb
+    'cert_status_breadcrumb_title',
+    // Section title block
+    'cert_status_section_title',
+    'cert_status_section_subtitle',
+    // Intro card (multi-paragraph allowed)
+    'cert_status_intro',
+    // Suspended block
+    'cert_status_suspended_title',
+    'cert_status_suspended_empty',
+    'cert_status_suspended_col_client',
+    'cert_status_suspended_col_cert_no',
+    'cert_status_suspended_col_scope',
+    'cert_status_suspended_col_date',
+    'cert_status_suspended_col_reason',
+    // Withdrawn block
+    'cert_status_withdrawn_title',
+    'cert_status_withdrawn_empty',
+    'cert_status_withdrawn_col_client',
+    'cert_status_withdrawn_col_cert_no',
+    'cert_status_withdrawn_col_scope',
+    'cert_status_withdrawn_col_date',
+    // Reduced block
+    'cert_status_reduced_title',
+    'cert_status_reduced_empty',
+    'cert_status_reduced_col_client',
+    'cert_status_reduced_col_cert_no',
+    'cert_status_reduced_col_scope',
+    'cert_status_reduced_col_date',
+    'cert_status_reduced_col_note',
+    // Footer note — Appeals
+    'cert_status_footer_appeals_label',
+    'cert_status_footer_appeals_body',
+    'cert_status_footer_appeals_link_label',
+    'cert_status_footer_appeals_link_url',
+    // Footer note — Complaints
+    'cert_status_footer_complaints_label',
+    'cert_status_footer_complaints_body',
+    'cert_status_footer_complaints_link_label',
+    'cert_status_footer_complaints_link_url',
+    // Footer note — Information requests
+    'cert_status_footer_info_label',
+    'cert_status_footer_info_body',
+    'cert_status_footer_info_phone_1',
+    'cert_status_footer_info_phone_2',
+    'cert_status_footer_info_link_label',
+    'cert_status_footer_info_link_url',
+];
+
+$pc = pc_get_many($conn, $cert_status_keys, [
+    'cert_status_breadcrumb_title' => 'Certification Status Register',
+    'cert_status_section_title' => 'Certification Status Register',
+    'cert_status_section_subtitle' => 'Public record of suspended, withdrawn and reduced-scope certifications',
+    'cert_status_intro' => "In accordance with the Suspension / Withdrawal / Reduced Scope of Certification Procedure (CER_PR_026), ESWASA publishes information on the certified status of clients whose certification has been suspended, withdrawn or reduced in scope. This register is updated as decisions are taken by the Certification Approvals Committee. The current status of an active certificate may be confirmed by contacting the ESWASA Certification Unit.",
+    'cert_status_suspended_title' => 'Currently Suspended Certifications',
+    'cert_status_suspended_empty' => 'No certifications are currently under suspension.',
+    'cert_status_suspended_col_client' => 'Client',
+    'cert_status_suspended_col_cert_no' => 'Certificate No.',
+    'cert_status_suspended_col_scope' => 'Standard / Scope',
+    'cert_status_suspended_col_date' => 'Suspended On',
+    'cert_status_suspended_col_reason' => 'Reason',
+    'cert_status_withdrawn_title' => 'Withdrawn / Cancelled Certifications',
+    'cert_status_withdrawn_empty' => 'No certifications have been withdrawn or cancelled.',
+    'cert_status_withdrawn_col_client' => 'Client',
+    'cert_status_withdrawn_col_cert_no' => 'Certificate No.',
+    'cert_status_withdrawn_col_scope' => 'Standard / Scope',
+    'cert_status_withdrawn_col_date' => 'Withdrawn On',
+    'cert_status_reduced_title' => 'Reduced-Scope Certifications',
+    'cert_status_reduced_empty' => 'No certifications are currently operating under a reduced scope.',
+    'cert_status_reduced_col_client' => 'Client',
+    'cert_status_reduced_col_cert_no' => 'Certificate No.',
+    'cert_status_reduced_col_scope' => 'Standard / Original Scope',
+    'cert_status_reduced_col_date' => 'Effective',
+    'cert_status_reduced_col_note' => 'Notes',
+    'cert_status_footer_appeals_label' => 'Disputing a decision.',
+    'cert_status_footer_appeals_body' => 'A client whose certification has been suspended, withdrawn or reduced in scope may submit a written appeal to ESWASA within 90 days of the decision, accompanied by the prescribed fee',
+    'cert_status_footer_appeals_link_label' => 'CER_PR_002 — Appeals Handling Procedure',
+    'cert_status_footer_appeals_link_url' => 'CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf',
+    'cert_status_footer_complaints_label' => 'Lodging a complaint.',
+    'cert_status_footer_complaints_body' => 'Complaints regarding a certified client or any aspect of the ESWASA Management Systems Certification Scheme may be sent in writing to the Marketing & Sales Officer',
+    'cert_status_footer_complaints_link_label' => 'CER_PR_006 — Complaints Handling Procedure',
+    'cert_status_footer_complaints_link_url' => 'CER_PR_006 PROCEDURE FOR COMPLAINTS HANDLING.pdf',
+    'cert_status_footer_info_label' => 'Requesting information.',
+    'cert_status_footer_info_body' => 'For verification of certified status or any other public information, contact the Marketing & Sales Officer on',
+    'cert_status_footer_info_phone_1' => '(+268) 2518 4633',
+    'cert_status_footer_info_phone_2' => '(+268) 7806 8944',
+    'cert_status_footer_info_link_label' => 'CER_PR_015 — Handling Requests for Information',
+    'cert_status_footer_info_link_url' => 'CER_PR_015 HANDLING REQUESTS FOR INFORMATION.pdf',
+]);
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -223,7 +316,7 @@ $reduced = [
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Certification Status</span>
                             </nav>
-                            <h1 class="title">Certification Status Register</h1>
+                            <h1 class="title"><?= pc_h($pc['cert_status_breadcrumb_title']) ?></h1>
                         </div>
                     </div>
                 </div>
@@ -235,39 +328,33 @@ $reduced = [
             <div class="container">
                 <!-- Section title -->
                 <div class="main_title centered upper mb-4 text-center">
-                    <h2 class="display-6 fw-bold">Certification Status Register</h2>
-                    <p class="text-muted mt-2 mb-0">Public record of suspended, withdrawn and reduced-scope certifications</p>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['cert_status_section_title']) ?></h2>
+                    <p class="text-muted mt-2 mb-0"><?= pc_h($pc['cert_status_section_subtitle']) ?></p>
                     <div class="section-divider"></div>
                 </div>
 
                 <!-- Intro / legal basis -->
                 <div class="intro-card">
-                    <p>
-                        In accordance with the <strong>Suspension / Withdrawal / Reduced Scope of Certification Procedure
-                        (CER_PR_026)</strong>, ESWASA publishes information on the certified status of clients whose
-                        certification has been suspended, withdrawn or reduced in scope. This register is updated as
-                        decisions are taken by the Certification Approvals Committee. The current status of an active
-                        certificate may be confirmed by contacting the ESWASA Certification Unit.
-                    </p>
+                    <?= pc_paragraphs_html($pc['cert_status_intro']) ?>
                 </div>
 
                 <!-- ===== Suspended ===== -->
                 <div class="status-block">
                     <h3 class="status-title">
-                        <span>Currently Suspended Certifications</span>
+                        <span><?= pc_h($pc['cert_status_suspended_title']) ?></span>
                         <span class="count"><?= count($suspended) ?></span>
                     </h3>
                     <?php if (empty($suspended)): ?>
-                        <div class="empty-state">No certifications are currently under suspension.</div>
+                        <div class="empty-state"><?= pc_h($pc['cert_status_suspended_empty']) ?></div>
                     <?php else: ?>
                         <table class="status-table">
                             <thead>
                                 <tr>
-                                    <th>Client</th>
-                                    <th>Certificate&nbsp;No.</th>
-                                    <th>Standard / Scope</th>
-                                    <th>Suspended On</th>
-                                    <th>Reason</th>
+                                    <th><?= pc_h($pc['cert_status_suspended_col_client']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_suspended_col_cert_no']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_suspended_col_scope']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_suspended_col_date']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_suspended_col_reason']) ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -288,19 +375,19 @@ $reduced = [
                 <!-- ===== Withdrawn ===== -->
                 <div class="status-block">
                     <h3 class="status-title">
-                        <span>Withdrawn / Cancelled Certifications</span>
+                        <span><?= pc_h($pc['cert_status_withdrawn_title']) ?></span>
                         <span class="count"><?= count($withdrawn) ?></span>
                     </h3>
                     <?php if (empty($withdrawn)): ?>
-                        <div class="empty-state">No certifications have been withdrawn or cancelled.</div>
+                        <div class="empty-state"><?= pc_h($pc['cert_status_withdrawn_empty']) ?></div>
                     <?php else: ?>
                         <table class="status-table">
                             <thead>
                                 <tr>
-                                    <th>Client</th>
-                                    <th>Certificate&nbsp;No.</th>
-                                    <th>Standard / Scope</th>
-                                    <th>Withdrawn On</th>
+                                    <th><?= pc_h($pc['cert_status_withdrawn_col_client']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_withdrawn_col_cert_no']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_withdrawn_col_scope']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_withdrawn_col_date']) ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -320,20 +407,20 @@ $reduced = [
                 <!-- ===== Reduced Scope ===== -->
                 <div class="status-block">
                     <h3 class="status-title">
-                        <span>Reduced-Scope Certifications</span>
+                        <span><?= pc_h($pc['cert_status_reduced_title']) ?></span>
                         <span class="count"><?= count($reduced) ?></span>
                     </h3>
                     <?php if (empty($reduced)): ?>
-                        <div class="empty-state">No certifications are currently operating under a reduced scope.</div>
+                        <div class="empty-state"><?= pc_h($pc['cert_status_reduced_empty']) ?></div>
                     <?php else: ?>
                         <table class="status-table">
                             <thead>
                                 <tr>
-                                    <th>Client</th>
-                                    <th>Certificate&nbsp;No.</th>
-                                    <th>Standard / Original Scope</th>
-                                    <th>Effective</th>
-                                    <th>Notes</th>
+                                    <th><?= pc_h($pc['cert_status_reduced_col_client']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_reduced_col_cert_no']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_reduced_col_scope']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_reduced_col_date']) ?></th>
+                                    <th><?= pc_h($pc['cert_status_reduced_col_note']) ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -354,23 +441,18 @@ $reduced = [
                 <!-- Footer note: appeals + info requests -->
                 <div class="footer-note">
                     <p class="mb-2">
-                        <strong>Disputing a decision.</strong> A client whose certification has been suspended,
-                        withdrawn or reduced in scope may submit a written appeal to ESWASA within
-                        <strong>90 days</strong> of the decision, accompanied by the prescribed fee
-                        (<a href="CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf" target="_blank">CER_PR_002 — Appeals Handling Procedure</a>).
+                        <strong><?= pc_h($pc['cert_status_footer_appeals_label']) ?></strong> <?= pc_h($pc['cert_status_footer_appeals_body']) ?>
+                        (<a href="<?= pc_h($pc['cert_status_footer_appeals_link_url']) ?>" target="_blank"><?= pc_h($pc['cert_status_footer_appeals_link_label']) ?></a>).
                     </p>
                     <p class="mb-2">
-                        <strong>Lodging a complaint.</strong> Complaints regarding a certified client or
-                        any aspect of the ESWASA Management Systems Certification Scheme may be sent in
-                        writing to the Marketing &amp; Sales Officer
-                        (<a href="CER_PR_006 PROCEDURE FOR COMPLAINTS HANDLING.pdf" target="_blank">CER_PR_006 — Complaints Handling Procedure</a>).
+                        <strong><?= pc_h($pc['cert_status_footer_complaints_label']) ?></strong> <?= pc_h($pc['cert_status_footer_complaints_body']) ?>
+                        (<a href="<?= pc_h($pc['cert_status_footer_complaints_link_url']) ?>" target="_blank"><?= pc_h($pc['cert_status_footer_complaints_link_label']) ?></a>).
                     </p>
                     <p class="mb-0">
-                        <strong>Requesting information.</strong> For verification of certified status or any
-                        other public information, contact the Marketing &amp; Sales Officer on
-                        <a href="tel:+26825184633">(+268) 2518 4633</a> or
-                        <a href="tel:+26878068944">(+268) 7806 8944</a>
-                        (<a href="CER_PR_015 HANDLING REQUESTS FOR INFORMATION.pdf" target="_blank">CER_PR_015 — Handling Requests for Information</a>).
+                        <strong><?= pc_h($pc['cert_status_footer_info_label']) ?></strong> <?= pc_h($pc['cert_status_footer_info_body']) ?>
+                        <a href="tel:<?= pc_h(preg_replace('/[^0-9+]/', '', $pc['cert_status_footer_info_phone_1'])) ?>"><?= pc_h($pc['cert_status_footer_info_phone_1']) ?></a> or
+                        <a href="tel:<?= pc_h(preg_replace('/[^0-9+]/', '', $pc['cert_status_footer_info_phone_2'])) ?>"><?= pc_h($pc['cert_status_footer_info_phone_2']) ?></a>
+                        (<a href="<?= pc_h($pc['cert_status_footer_info_link_url']) ?>" target="_blank"><?= pc_h($pc['cert_status_footer_info_link_label']) ?></a>).
                     </p>
                 </div>
             </div>

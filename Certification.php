@@ -1,8 +1,92 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include 'includes/db_connect.php';
-include_once 'includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+
+$cert_keys_defaults = [
+    // Breadcrumb / hero
+    'cert_breadcrumb_title'      => 'Certification Services',
+
+    // Section 1 — Your Path to Quality Excellence
+    'cert_path_title'            => 'Your Path to Quality Excellence',
+    'cert_path_intro'            => 'The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.',
+    'cert_why_title'             => 'Why Certify',
+    'cert_why_body'              => 'Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.',
+    'cert_focus_title'           => 'Our Focus Areas',
+    'cert_focus_body'            => 'The department mainly focuses on Management Systems Certification, Ingelo Certification, Product Certification (ESWASA Mark), Testing Services, and Scales and Metrology Services.',
+
+    // Marks grid — 4 cards
+    'cert_mark_1_image'          => 'assets/img/quality/management-mark-black.png',
+    'cert_mark_1_alt'            => 'Management Systems Certification Mark',
+    'cert_mark_1_title'          => 'Management Systems Certification Mark',
+    'cert_mark_1_desc'           => 'Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.',
+    'cert_mark_1_explore_url'    => 'managementsystems.php',
+
+    'cert_mark_2_image'          => 'assets/img/quality/product-certification-black.png',
+    'cert_mark_2_alt'            => 'Product Certification Mark',
+    'cert_mark_2_title'          => 'Product Certification Mark',
+    'cert_mark_2_desc'           => 'A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing — giving buyers confidence in quality and safety.',
+    'cert_mark_2_explore_url'    => 'Certification.php',
+
+    'cert_mark_3_image'          => 'assets/img/quality/compulsory-standards-black.png',
+    'cert_mark_3_alt'            => 'Compulsory Standards Quality Mark',
+    'cert_mark_3_title'          => 'Compulsory Standards Quality Mark',
+    'cert_mark_3_desc'           => 'A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.',
+    'cert_mark_3_explore_url'    => 'Certification.php',
+
+    'cert_mark_4_image'          => 'assets/img/quality/ingelo-certification-black.png',
+    'cert_mark_4_alt'            => 'Ingelo MSME Product Certification Mark',
+    'cert_mark_4_title'          => 'Ingelo MSME Product Certification Mark',
+    'cert_mark_4_desc'           => 'A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers — helping them prove product quality, access new markets and grow with credibility.',
+    'cert_mark_4_explore_url'    => 'ingelo.php',
+
+    // Section 2 — Benefits
+    'cert_benefits_title'        => 'What Certification Can Do For Your Business',
+    'cert_benefits_intro'        => 'Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.',
+
+    'cert_card_1_title'          => 'Boost Your Market Presence',
+    'cert_card_1_body'           => 'Imagine walking into new markets with confidence, knowing your products meet the highest standards. ESWASA certification opens doors to government tenders, international exports, and premium customers who demand quality assurance.',
+    'cert_card_1_list_label'     => "You'll be able to:",
+    'cert_card_1_list'           => "Access lucrative government contracts\nExport to regional markets seamlessly\nCharge premium prices for certified quality\nStand out from your competitors",
+    'cert_card_1_image'          => 'assets/img/quality/product-certification-black.png',
+    'cert_card_1_image_alt'      => 'Product Mark',
+    'cert_card_1_btn_label'      => 'Explore Product Certification',
+    'cert_card_1_btn_url'        => 'product.php',
+
+    'cert_card_2_title'          => 'Streamline Your Operations',
+    'cert_card_2_body'           => 'Stop wasting resources on inefficient processes. Our management system certification helps you create workflows that save time, reduce errors, and cut costs. Many businesses save up to 30% on operational expenses after certification.',
+    'cert_card_2_list_label'     => "You'll experience:",
+    'cert_card_2_list'           => "Reduced product defects and returns\nFaster response to customer needs\nImproved employee productivity\nBetter resource utilisation",
+    'cert_card_2_image'          => 'assets/img/quality/management-mark-black.png',
+    'cert_card_2_image_alt'      => 'Management Mark',
+    'cert_card_2_btn_label'      => 'Discover Management Systems',
+    'cert_card_2_btn_url'        => 'managementsystems.php',
+
+    // Section 3 — Steps
+    'cert_steps_title'           => 'Your Certification Journey Made Simple',
+    'cert_steps_subtitle'        => 'We guide you every step of the way - no stress, no surprises',
+    'cert_steps_image'           => 'assets/img/steps-to-certification.jpg',
+    'cert_steps_image_alt'       => 'Steps to Certification: Gap Analysis, Training and Documentation, Internal Audit and MRM, Audit and Certification, ISO Certified',
+
+    // Section 4 — CTA
+    'cert_cta_title'             => 'Begin Your Certification Journey',
+    'cert_cta_subtitle'          => 'Begin your certification journey with ESWASA today.',
+    'cert_cta_1_label'           => 'Contact Us',
+    'cert_cta_1_url'             => 'contact.php',
+    'cert_cta_2_label'           => 'Request Quote',
+    'cert_cta_2_url'             => 'qoute_certification.php',
+    'cert_cta_3_label'           => 'Training Programs',
+    'cert_cta_3_url'             => 'training-about.php',
+];
+$pc = pc_get_many($conn, array_keys($cert_keys_defaults), $cert_keys_defaults);
+
+// Helper for rendering newline-separated bullet lists
+$cert_split_list = function ($text) {
+    $lines = preg_split("/\r\n|\n|\r/", (string)$text);
+    return array_values(array_filter(array_map('trim', $lines), function ($l) { return $l !== ''; }));
+};
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -356,10 +440,10 @@ include_once 'includes/breadcrumb_helper.php';
     <button class="scroll__top scroll-to-target" data-target="html">
         <i class="fas fa-angle-up"></i>
     </button>
-    
+
     <!-- header-area -->
     <?php include("includes/header.php")?>
-    
+
     <!-- main-area -->
     <main class="main-area fix">
 
@@ -376,7 +460,7 @@ include_once 'includes/breadcrumb_helper.php';
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Certification</span>
                             </nav>
-                            <h1 class="title">Certification Services</h1>
+                            <h1 class="title"><?= pc_h($pc['cert_breadcrumb_title']) ?></h1>
                         </div>
                     </div>
                 </div>
@@ -388,68 +472,68 @@ include_once 'includes/breadcrumb_helper.php';
         <section class="cert-section">
             <div class="container">
                 <div class="main_title centered upper mb-4 text-center">
-                    <h2 class="display-6 fw-bold">Your Path to Quality Excellence</h2>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['cert_path_title']) ?></h2>
                     <div class="section-divider"></div>
                 </div>
                 <div class="intro-card intro-card-featured mb-5">
-                    <p>The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.</p>
+                    <p><?= pc_h($pc['cert_path_intro']) ?></p>
                 </div>
                 <div class="row mb-4 cert-split g-3">
                     <div class="col-lg-6 cert-split-left">
                         <div class="cert-split-card">
-                            <h4 class="cert-split-card-title">Why Certify</h4>
-                            <p>Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
+                            <h4 class="cert-split-card-title"><?= pc_h($pc['cert_why_title']) ?></h4>
+                            <p><?= pc_h($pc['cert_why_body']) ?></p>
                         </div>
                     </div>
                     <div class="col-lg-6 cert-split-right">
                         <div class="cert-split-card">
-                            <h4 class="cert-split-card-title">Our Focus Areas</h4>
-                            <p>The department mainly focuses on Management Systems Certification, Ingelo Certification, Product Certification (ESWASA Mark), Testing Services, and Scales and Metrology Services.</p>
+                            <h4 class="cert-split-card-title"><?= pc_h($pc['cert_focus_title']) ?></h4>
+                            <p><?= pc_h($pc['cert_focus_body']) ?></p>
                         </div>
                     </div>
                 </div>
                 <div class="marks-grid">
                     <div class="mark-item">
                         <div class="mark-image">
-                            <img src="assets/img/quality/management-mark-black.png" alt="Management Systems Certification Mark">
+                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_1_image'], 'assets/img/quality/management-mark-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_1_alt']) ?>">
                         </div>
-                        <h3 class="mark-title">Management Systems Certification Mark</h3>
-                        <p class="mark-desc">Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.</p>
+                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_1_title']) ?></h3>
+                        <p class="mark-desc"><?= pc_h($pc['cert_mark_1_desc']) ?></p>
                         <div class="mark-actions">
-                            <a href="managementsystems.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="<?= pc_h($pc['cert_mark_1_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                             <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <div class="mark-item">
                         <div class="mark-image">
-                            <img src="assets/img/quality/product-certification-black.png" alt="Product Certification Mark">
+                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_2_image'], 'assets/img/quality/product-certification-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_2_alt']) ?>">
                         </div>
-                        <h3 class="mark-title">Product Certification Mark</h3>
-                        <p class="mark-desc">A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing &mdash; giving buyers confidence in quality and safety.</p>
+                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_2_title']) ?></h3>
+                        <p class="mark-desc"><?= pc_h($pc['cert_mark_2_desc']) ?></p>
                         <div class="mark-actions">
-                            <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="<?= pc_h($pc['cert_mark_2_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                             <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <div class="mark-item">
                         <div class="mark-image">
-                            <img src="assets/img/quality/compulsory-standards-black.png" alt="Compulsory Standards Quality Mark">
+                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_3_image'], 'assets/img/quality/compulsory-standards-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_3_alt']) ?>">
                         </div>
-                        <h3 class="mark-title">Compulsory Standards Quality Mark</h3>
-                        <p class="mark-desc">A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.</p>
+                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_3_title']) ?></h3>
+                        <p class="mark-desc"><?= pc_h($pc['cert_mark_3_desc']) ?></p>
                         <div class="mark-actions">
-                            <a href="Certification.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="<?= pc_h($pc['cert_mark_3_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                             <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <div class="mark-item">
                         <div class="mark-image">
-                            <img src="assets/img/quality/ingelo-certification-black.png" alt="Ingelo MSME Product Certification Mark">
+                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_4_image'], 'assets/img/quality/ingelo-certification-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_4_alt']) ?>">
                         </div>
-                        <h3 class="mark-title">Ingelo MSME Product Certification Mark</h3>
-                        <p class="mark-desc">A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers &mdash; helping them prove product quality, access new markets and grow with credibility.</p>
+                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_4_title']) ?></h3>
+                        <p class="mark-desc"><?= pc_h($pc['cert_mark_4_desc']) ?></p>
                         <div class="mark-actions">
-                            <a href="ingelo.php">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="<?= pc_h($pc['cert_mark_4_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                             <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
@@ -461,41 +545,39 @@ include_once 'includes/breadcrumb_helper.php';
         <section class="cert-section">
             <div class="container">
                 <div class="main_title centered upper mb-4 text-center">
-                    <h2 class="display-6 fw-bold">What Certification Can Do For Your Business</h2>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['cert_benefits_title']) ?></h2>
                     <div class="section-divider"></div>
                 </div>
                 <div class="intro-card mb-5">
-                    <p>Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.</p>
+                    <p><?= pc_h($pc['cert_benefits_intro']) ?></p>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="cert-card">
-                            <h3>Boost Your Market Presence</h3>
-                            <p>Imagine walking into new markets with confidence, knowing your products meet the highest standards. ESWASA certification opens doors to government tenders, international exports, and premium customers who demand quality assurance.</p>
-                            <p><strong>You'll be able to:</strong></p>
+                            <h3><?= pc_h($pc['cert_card_1_title']) ?></h3>
+                            <p><?= pc_h($pc['cert_card_1_body']) ?></p>
+                            <p><strong><?= pc_h($pc['cert_card_1_list_label']) ?></strong></p>
                             <ul>
-                                <li>Access lucrative government contracts</li>
-                                <li>Export to regional markets seamlessly</li>
-                                <li>Charge premium prices for certified quality</li>
-                                <li>Stand out from your competitors</li>
+                                <?php foreach ($cert_split_list($pc['cert_card_1_list']) as $item): ?>
+                                    <li><?= pc_h($item) ?></li>
+                                <?php endforeach; ?>
                             </ul>
-                            <img src="assets/img/quality/product-certification-black.png" alt="Product Mark" class="card-mark">
-                            <a href="product.php" class="btn-cert">Explore Product Certification</a>
+                            <img src="<?= pc_h(pc_image_src($pc['cert_card_1_image'], 'assets/img/quality/product-certification-black.png')) ?>" alt="<?= pc_h($pc['cert_card_1_image_alt']) ?>" class="card-mark">
+                            <a href="<?= pc_h($pc['cert_card_1_btn_url']) ?>" class="btn-cert"><?= pc_h($pc['cert_card_1_btn_label']) ?></a>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="cert-card">
-                            <h3>Streamline Your Operations</h3>
-                            <p>Stop wasting resources on inefficient processes. Our management system certification helps you create workflows that save time, reduce errors, and cut costs. Many businesses save up to 30% on operational expenses after certification.</p>
-                            <p><strong>You'll experience:</strong></p>
+                            <h3><?= pc_h($pc['cert_card_2_title']) ?></h3>
+                            <p><?= pc_h($pc['cert_card_2_body']) ?></p>
+                            <p><strong><?= pc_h($pc['cert_card_2_list_label']) ?></strong></p>
                             <ul>
-                                <li>Reduced product defects and returns</li>
-                                <li>Faster response to customer needs</li>
-                                <li>Improved employee productivity</li>
-                                <li>Better resource utilisation</li>
+                                <?php foreach ($cert_split_list($pc['cert_card_2_list']) as $item): ?>
+                                    <li><?= pc_h($item) ?></li>
+                                <?php endforeach; ?>
                             </ul>
-                            <img src="assets/img/quality/management-mark-black.png" alt="Management Mark" class="card-mark">
-                            <a href="managementsystems.php" class="btn-cert">Discover Management Systems</a>
+                            <img src="<?= pc_h(pc_image_src($pc['cert_card_2_image'], 'assets/img/quality/management-mark-black.png')) ?>" alt="<?= pc_h($pc['cert_card_2_image_alt']) ?>" class="card-mark">
+                            <a href="<?= pc_h($pc['cert_card_2_btn_url']) ?>" class="btn-cert"><?= pc_h($pc['cert_card_2_btn_label']) ?></a>
                         </div>
                     </div>
                 </div>
@@ -506,12 +588,12 @@ include_once 'includes/breadcrumb_helper.php';
         <section class="cert-section bg-light">
             <div class="container">
                 <div class="text-center mb-4" style="text-align: center;">
-                    <h2 style="color: #2B3388; text-align: center;">Your Certification Journey Made Simple</h2>
+                    <h2 style="color: #2B3388; text-align: center;"><?= pc_h($pc['cert_steps_title']) ?></h2>
                     <div class="section-divider"></div>
-                    <p class="lead mt-3" style="text-align: center;">We guide you every step of the way - no stress, no surprises</p>
+                    <p class="lead mt-3" style="text-align: center;"><?= pc_h($pc['cert_steps_subtitle']) ?></p>
                 </div>
                 <div class="steps-img-section">
-                    <img src="assets/img/steps-to-certification.jpg" alt="Steps to Certification: Gap Analysis, Training and Documentation, Internal Audit and MRM, Audit and Certification, ISO Certified">
+                    <img src="<?= pc_h(pc_image_src($pc['cert_steps_image'], 'assets/img/steps-to-certification.jpg')) ?>" alt="<?= pc_h($pc['cert_steps_image_alt']) ?>">
                 </div>
             </div>
         </section>
@@ -521,11 +603,11 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h2 class="cta-title">Begin Your Certification Journey</h2>
-                        <p class="cta-subtitle">Begin your certification journey with ESWASA today.</p>
-                        <a href="contact.php" class="btn-cta">Contact Us</a>
-                        <a href="qoute_certification.php" class="btn-cta">Request Quote</a>
-                        <a href="training-about.php" class="btn-cta">Training Programs</a>
+                        <h2 class="cta-title"><?= pc_h($pc['cert_cta_title']) ?></h2>
+                        <p class="cta-subtitle"><?= pc_h($pc['cert_cta_subtitle']) ?></p>
+                        <a href="<?= pc_h($pc['cert_cta_1_url']) ?>" class="btn-cta"><?= pc_h($pc['cert_cta_1_label']) ?></a>
+                        <a href="<?= pc_h($pc['cert_cta_2_url']) ?>" class="btn-cta"><?= pc_h($pc['cert_cta_2_label']) ?></a>
+                        <a href="<?= pc_h($pc['cert_cta_3_url']) ?>" class="btn-cta"><?= pc_h($pc['cert_cta_3_label']) ?></a>
                     </div>
                 </div>
             </div>
@@ -537,7 +619,7 @@ include_once 'includes/breadcrumb_helper.php';
     <!-- footer-area -->
     <?php include("includes/footer.php")?>
     <!-- footer-area-end -->
-    
+
     <!-- JS here -->
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
