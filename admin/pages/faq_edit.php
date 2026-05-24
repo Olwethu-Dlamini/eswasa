@@ -18,12 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($id) {
-        // UPDATE
+        // UPDATE — 3 strings + 2 ints (sort_order, id)
         $stmt = $conn->prepare("UPDATE eswasa_faq SET question = ?, answer = ?, category = ?, sort_order = ? WHERE id = ?");
-        $stmt->bind_param('ssssi', $question, $answer, $category, $sort_order, $id);
+        $stmt->bind_param('sssii', $question, $answer, $category, $sort_order, $id);
         $msg = 'FAQ updated successfully.';
     } else {
-        // INSERT
+        // INSERT — 3 strings + 1 int (sort_order)
         $stmt = $conn->prepare("INSERT INTO eswasa_faq (question, answer, category, sort_order) VALUES (?, ?, ?, ?)");
         $stmt->bind_param('sssi', $question, $answer, $category, $sort_order);
         $msg = 'FAQ added successfully.';
