@@ -353,38 +353,43 @@ $recentEvents = $recentStmt->get_result();
     <script>
         jQuery(function ($) {
             'use strict';
-            if (typeof $.magnificPopup === 'undefined') return;
+            if (!$.fn.magnificPopup) {
+                console.warn('[event-gallery] magnificPopup plugin not loaded');
+                return;
+            }
 
             $('.event-gallery').each(function () {
                 var $g = $(this);
                 var $main = $g.find('.event-gallery__main');
-                var $links = $g.find('a.event-gallery__lightbox');
-                if (!$main.length || !$links.length) return;
+                if (!$main.length || !$g.find('a.event-gallery__lightbox').length) return;
 
-                var items = $links.map(function () {
-                    return { src: $(this).attr('href'), title: $(this).attr('title') || '' };
-                }).get();
-
-                $main.data('current-index', 0);
-
-                // Tap-to-zoom: open lightbox at the currently-previewed index
-                $main.on('click', 'a.event-gallery__lightbox', function (e) {
-                    e.preventDefault();
-                    var idx = parseInt($main.data('current-index'), 10) || 0;
-                    $.magnificPopup.open({
-                        items: items,
-                        type: 'image',
-                        gallery: {
-                            enabled: true,
-                            navigateByImgClick: true,
-                            preload: [0, 1],
-                            tCounter: '<span class="mfp-counter">%curr% of %total%</span>'
-                        },
-                        image: { titleSrc: function (item) { return item.title || ''; } },
-                        closeOnContentClick: false,
-                        mainClass: 'mfp-with-zoom',
-                        zoom: { enabled: true, duration: 250, easing: 'ease-in-out' }
-                    }, idx);
+                // Canonical magnific gallery: bind to container, delegate to anchors.
+                $main.magnificPopup({
+                    delegate: 'a.event-gallery__lightbox',
+                    type: 'image',
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: true,
+                        preload: [0, 1],
+                        tCounter: '<span class="mfp-counter">%curr% of %total%</span>'
+                    },
+                    image: {
+                        titleSrc: function (item) {
+                            return item.el ? item.el.attr('title') : '';
+                        }
+                    },
+                    closeOnContentClick: false,
+                    mainClass: 'mfp-with-zoom',
+                    zoom: { enabled: true, duration: 250, easing: 'ease-in-out' },
+                    callbacks: {
+                        // Honor the thumbnail the user previewed before tapping zoom
+                        open: function () {
+                            var idx = parseInt($main.data('current-index'), 10) || 0;
+                            if (idx > 0 && typeof this.goTo === 'function') {
+                                this.goTo(idx);
+                            }
+                        }
+                    }
                 });
 
                 // Thumb click → swap main preview + remember index for next tap-to-zoom
