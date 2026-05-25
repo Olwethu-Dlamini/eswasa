@@ -88,12 +88,24 @@ body {
 
 /* Chevron rotation */
 #sidebar a[data-bs-toggle="collapse"] .fa-chevron-down {
-    transition: transform 0.2s;
+    transition: transform 0.25s cubic-bezier(0.32, 0.72, 0.34, 1);
     font-size: 0.8rem;
 }
 #sidebar a[data-bs-toggle="collapse"][aria-expanded="true"] .fa-chevron-down {
     transform: rotate(180deg);
 }
+
+/* Smoother submenu expand/collapse — override Bootstrap's default curve */
+#sidebar .collapsing {
+    transition: height 0.28s cubic-bezier(0.32, 0.72, 0.34, 1);
+}
+/* Subtle fade for submenu items as they slide in */
+#sidebar .collapse .nav-link,
+#sidebar .collapse.show .nav-link {
+    transition: background-color 0.15s, color 0.15s, opacity 0.18s ease-out;
+}
+/* Sidebar uses smooth scrollbar */
+#sidebar { scroll-behavior: smooth; }
 
 /* Theme toggle label */
 #sidebar .text-muted {
