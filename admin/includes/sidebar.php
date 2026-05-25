@@ -21,19 +21,8 @@ function submenu_open($pages, $current) {
     <div class="sidebar-inner">
         <ul class="nav flex-column pt-2">
 
-            <!-- Home Page -->
-            <?php $home_pages = ['index_edit.php','banners_edit.php','statistics_edit.php']; ?>
             <li class="nav-item">
-                <a class="nav-link <?= is_active_group($home_pages, $current_page) ?> d-flex justify-content-between"
-                   href="#submenu-home" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $home_pages) ? 'true' : 'false' ?>">
-                    <span><i class="fas fa-house-user fa-fw me-2"></i>Home Page</span>
-                    <i class="fas fa-chevron-down small mt-1"></i>
-                </a>
-                <ul class="nav flex-column ms-3 collapse <?= submenu_open($home_pages, $current_page) ?>" id="submenu-home">
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='index_edit.php'?'active':'' ?>" href="index.php?page=index_edit.php">Home Sections</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='banners_edit.php'?'active':'' ?>" href="index.php?page=banners_edit.php">Banner Slider</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='statistics_edit.php'?'active':'' ?>" href="index.php?page=statistics_edit.php">Statistics</a></li>
-                </ul>
+                <?= nav_link('index_edit.php', $current_page, 'fa-house-user', 'Home Page') ?>
             </li>
 
             <li class="nav-item">

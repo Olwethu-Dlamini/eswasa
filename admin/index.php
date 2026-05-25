@@ -58,8 +58,6 @@ $allowed_pages = [
     'posts.php',
     'board_edit.php',
     'index_edit.php',
-    'banners_edit.php',
-    'statistics_edit.php',
 ];
 
 // Resolve page
@@ -111,8 +109,6 @@ $page_titles = [
     'posts.php'                 => 'Posts',
     'board_edit.php'            => 'Board Members',
     'index_edit.php'            => 'Home Page',
-    'banners_edit.php'          => 'Banner Slider',
-    'statistics_edit.php'       => 'Statistics',
 ];
 $page_title = $page_titles[$page] ?? ucfirst(str_replace(['.php','_'], ['', ' '], $page));
 

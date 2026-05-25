@@ -114,20 +114,6 @@ if (!$banners) {
     die("Banner query failed: " . mysqli_error($conn));
 }
 
-// Fetch statistics - handle both old and new column structures
-$stats = [];
-$result = mysqli_query($conn, "SELECT * FROM site_statistics");
-if (!$result) {
-    die("Statistics query failed: " . mysqli_error($conn));
-}
-while ($row = mysqli_fetch_assoc($result)) {
-    // Handle missing columns gracefully
-    $row['stat_key'] = $row['stat_key'] ?? ($row['stat_name'] ?? 'stat_' . $row['id']);
-    $row['stat_label'] = $row['stat_label'] ?? ($row['stat_name'] ?? 'Statistic');
-    $row['stat_value'] = $row['stat_value'] ?? 0;
-    $stats[$row['stat_key']] = $row;
-}
-
 // Fetch events
 $events = mysqli_query($conn, "SELECT * FROM eswasa_events ORDER BY event_date DESC LIMIT 3");
 if (!$events) {
