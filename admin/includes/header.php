@@ -23,6 +23,8 @@ $current_user = getCurrentUser($conn);
     <link href="css/style.css" rel="stylesheet">
     <!-- Cropper.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <!-- Shared cropper modal (binds to any input.crop-input) -->
+    <script src="js/cropper-modal.js" defer></script>
 </head>
 <body>
 

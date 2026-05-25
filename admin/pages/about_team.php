@@ -12,6 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // -- Save page-level text (hero title + intro body) --
     if ($action === 'save_page_text') {
+        // Handle the staff group photo if a cropped payload was submitted.
+        $staff_path = pc_save_base64_image(
+            $_POST['team_staff_group_photo_cropped'] ?? '',
+            ADMIN_ROOT . '/uploads/',
+            'team_staff_group'
+        );
+        if (is_string($staff_path)) {
+            pc_save($conn, 'team_staff_group_photo', $staff_path);
+        }
+
         $text_keys = [
             'team_hero_title',
             'team_intro_body',
@@ -47,8 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Photo upload (optional). If no new file, keep existing on update.
-        $photo_path = pc_upload_image('photo_file', ADMIN_ROOT . '/uploads/', 'team');
+        // Photo (optional). Prefer the cropper's base64 payload; fall back to
+        // a raw file upload if the user picked a file but never cropped.
+        $photo_path = pc_save_base64_image($_POST['photo_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'team');
+        if ($photo_path === null || $photo_path === false) {
+            $photo_path = pc_upload_image('photo_file', ADMIN_ROOT . '/uploads/', 'team');
+        }
+        // If neither produced a usable path, leave $photo_path === null
+        // so the UPDATE branch below preserves the existing photo.
+        if ($photo_path === false) $photo_path = null;
 
         if ($action === 'add') {
             $photo = $photo_path ?? '';
@@ -121,12 +138,14 @@ $pc = pc_get_many($conn, [
     'team_section_main_title',
     'team_section_council_title',
     'team_section_executive_title',
+    'team_staff_group_photo',
 ], [
     'team_hero_title'              => 'Meet Our Team',
     'team_intro_body'              => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
     'team_section_main_title'      => 'Our Council and Management',
     'team_section_council_title'   => 'Members of the Council',
     'team_section_executive_title' => 'Executive Team',
+    'team_staff_group_photo'       => 'admin/uploads/staff_group_photo.jpg',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -207,6 +226,26 @@ if (isset($_GET['edit'])) {
                            value="<?= pc_h($pc['team_section_executive_title']) ?>">
                     <div class="form-text">Default: &ldquo;Executive Team&rdquo;.</div>
                 </div>
+            </div>
+
+            <hr>
+            <h6 class="mb-3 text-muted">ESWASA Staff Group Photo</h6>
+            <div class="mb-3">
+                <?php
+                    $staff_photo_src = pc_image_src($pc['team_staff_group_photo'], 'admin/uploads/staff_group_photo.jpg');
+                ?>
+                <div class="mb-2">
+                    <img data-crop-preview="team_staff_group_photo_preview"
+                         src="../<?= pc_h($staff_photo_src) ?>"
+                         alt="Current staff group photo"
+                         style="max-width:100%; max-height:180px; border:1px solid #ddd; padding:4px; background:#fff;">
+                </div>
+                <input type="file" accept="image/*" class="form-control crop-input"
+                       name="team_staff_group_photo_file"
+                       data-crop-w="900" data-crop-h="360"
+                       data-crop-label="Staff Group Photo">
+                <input type="hidden" name="team_staff_group_photo_cropped">
+                <div class="form-text">Pick a photo, crop it to 900 &times; 360, then click <strong>Apply Selection</strong> &mdash; the preview updates. Click <strong>Save Page Text</strong> to persist.</div>
             </div>
 
             <button type="submit" class="btn btn-primary">Save Page Text</button>
@@ -386,8 +425,17 @@ $section_meta = [
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Photo</label>
-                        <input type="file" name="photo_file" accept="image/*" class="form-control">
-                        <div class="form-text">JPG, PNG, WEBP or GIF.</div>
+                        <div class="mb-2">
+                            <img data-crop-preview="photo_preview" alt=""
+                                 src=""
+                                 style="max-width:140px; max-height:140px; border:1px solid #ddd; padding:4px; background:#fff; border-radius:50%; display:none;"
+                                 onload="this.style.display='inline-block'">
+                        </div>
+                        <input type="file" name="photo_file" accept="image/*" class="form-control crop-input"
+                               data-crop-w="1000" data-crop-h="1000"
+                               data-crop-label="Member Photo">
+                        <input type="hidden" name="photo_cropped">
+                        <div class="form-text">Pick a photo &mdash; cropper opens for a 1:1 square crop.</div>
                     </div>
 
                     <div class="mb-3">
@@ -463,12 +511,16 @@ $section_meta = [
                 <label class="form-label fw-bold">Photo</label>
                 <?php if (!empty($edit_member['photo'])): ?>
                     <div class="mb-2">
-                        <img src="../<?= pc_h(pc_image_src($edit_member['photo'])) ?>" alt=""
-                             style="max-height:120px;border:1px solid #ddd;border-radius:4px">
+                        <img data-crop-preview="photo_preview"
+                             src="../<?= pc_h(pc_image_src($edit_member['photo'])) ?>" alt=""
+                             style="max-width:140px;max-height:140px;border:1px solid #ddd;padding:4px;background:#fff;border-radius:50%">
                     </div>
                 <?php endif; ?>
-                <input type="file" name="photo_file" accept="image/*" class="form-control">
-                <div class="form-text">Leave empty to keep current image.</div>
+                <input type="file" name="photo_file" accept="image/*" class="form-control crop-input"
+                       data-crop-w="1000" data-crop-h="1000"
+                       data-crop-label="Member Photo">
+                <input type="hidden" name="photo_cropped">
+                <div class="form-text">Pick a photo to open the cropper (1:1 square). Leave empty to keep current image.</div>
             </div>
 
             <div class="mb-3">

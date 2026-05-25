@@ -10,12 +10,14 @@ $pc = pc_get_many($conn, [
     'team_section_main_title',
     'team_section_council_title',
     'team_section_executive_title',
+    'team_staff_group_photo',
 ], [
     'team_hero_title'              => 'Meet Our Team',
     'team_intro_body'              => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
     'team_section_main_title'      => 'Our Council and Management',
     'team_section_council_title'   => 'Members of the Council',
     'team_section_executive_title' => 'Executive Team',
+    'team_staff_group_photo'       => 'admin/uploads/staff_group_photo.jpg',
 ]);
 
 // Team members from dedicated table (live rows only — is_vacant = 0).
@@ -529,7 +531,7 @@ try {
                 <!-- Rectangular Group Photo -->
                 <div class="text-center">
                     <div class="staff-photo-container mx-auto">
-                        <img src="admin/uploads/staff_group_photo.jpg" alt="ESWASA Staff Group Photo" class="staff-photo">
+                        <img src="<?= pc_h(pc_image_src($pc['team_staff_group_photo'], 'admin/uploads/staff_group_photo.jpg')) ?>" alt="ESWASA Staff Group Photo" class="staff-photo">
                         <div class="staff-photo-placeholder">
                             Staff Group Photo<br><em>(900 × 360 px recommended)</em>
                         </div>

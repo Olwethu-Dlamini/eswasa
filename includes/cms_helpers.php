@@ -139,6 +139,40 @@ if (!function_exists('pc_upload_image')) {
     }
 }
 
+if (!function_exists('pc_save_base64_image')) {
+    /**
+     * Decode a base64 data URL (e.g. from a cropper canvas.toDataURL) and
+     * write it to the upload directory. Returns the stored path
+     * ("admin/uploads/foo.jpg") on success, null when there's no payload,
+     * false on failure.
+     */
+    function pc_save_base64_image(?string $base64, string $upload_dir, string $prefix = 'cms')
+    {
+        if (empty($base64) || strpos($base64, 'data:image') !== 0) return null;
+
+        $parts = explode(';', $base64, 2);
+        if (count($parts) !== 2) return false;
+        $type = $parts[0];
+        if (strpos($parts[1], ',') === false) return false;
+        $data = explode(',', $parts[1], 2)[1];
+        $decoded = base64_decode($data);
+        if ($decoded === false) return false;
+
+        $ext = 'jpg';
+        if (strpos($type, 'image/png')  !== false) $ext = 'png';
+        if (strpos($type, 'image/webp') !== false) $ext = 'webp';
+
+        if (!is_dir($upload_dir)) @mkdir($upload_dir, 0755, true);
+        if (!is_writable($upload_dir)) return false;
+
+        $name = uniqid($prefix . '_', true) . '.' . $ext;
+        $dest = rtrim($upload_dir, '/\\') . DIRECTORY_SEPARATOR . $name;
+        if (file_put_contents($dest, $decoded) === false) return false;
+
+        return 'admin/uploads/' . $name;
+    }
+}
+
 if (!function_exists('pc_image_src')) {
     /**
      * Resolve a stored image path for use in <img src="">.
