@@ -7,6 +7,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 
 require_once __DIR__ . '/includes/event_images.php';
+require_once __DIR__ . '/includes/breadcrumb_helper.php';
 
 // Get event ID from URL
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -77,17 +78,6 @@ $recentEvents = $recentStmt->get_result();
             max-width: 100%;
             height: auto;
             margin: 15px 0;
-        }
-        .breadcrumb-area.breadcrumb-bg {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-        }
-        .breadcrumb-area .breadcrumb-content {
-            background: rgba(43, 51, 136, 0.38);
-            padding: 35px 0 20px 0;
-            border-radius: 4px;
         }
         .event-meta {
             color: #2B3388;
@@ -218,12 +208,6 @@ $recentEvents = $recentStmt->get_result();
         .mfp-counter { color: #fff; font-family: Arial, sans-serif; }
 
         @media (max-width: 767.98px) {
-            .breadcrumb-area .breadcrumb-content {
-                padding: 20px 10px 12px 10px;
-            }
-            .breadcrumb-content .title {
-                font-size: 1.4rem;
-            }
             .event-content {
                 font-size: 15px !important;
             }
@@ -248,16 +232,15 @@ $recentEvents = $recentStmt->get_result();
 
     <main class="main-area fix">
         <!-- Breadcrumb -->
-        <section class="breadcrumb-area breadcrumb-bg" 
-                 style="background-image: url('<?= !empty($event['image']) ? 'admin/uploads/' . htmlspecialchars($event['image']) : 'assets/img/bg/breadcrumb_bg.jpg' ?>');">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('event-details', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <div class="breadcrumb-content text-white">
+                        <div class="breadcrumb-content">
                             <nav class="breadcrumb">
-                                <a href="index.php">Home</a>
+                                <span><a href="index.php">Home</a></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <a href="events.php">Events</a>
+                                <span><a href="events.php">Events</a></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span><?= htmlspecialchars($event['title']) ?></span>
                             </nav>
