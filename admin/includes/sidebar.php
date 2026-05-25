@@ -126,7 +126,7 @@ function submenu_open($pages, $current) {
             </li>
 
             <!-- Customer Care -->
-            <?php $cc_pages = ['service_charter.php','customer_feedback.php']; ?>
+            <?php $cc_pages = ['service_charter.php','customer_feedback.php','policies_edit.php']; ?>
             <li class="nav-item">
                 <a class="nav-link <?= is_active_group($cc_pages, $current_page) ?> d-flex justify-content-between"
                    href="#submenu-cc" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $cc_pages) ? 'true' : 'false' ?>">
@@ -136,6 +136,7 @@ function submenu_open($pages, $current) {
                 <ul class="nav flex-column ms-3 collapse <?= submenu_open($cc_pages, $current_page) ?>" id="submenu-cc">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='service_charter.php'?'active':'' ?>" href="index.php?page=service_charter.php">Service Charter</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='customer_feedback.php'?'active':'' ?>" href="index.php?page=customer_feedback.php">Customer Feedback</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='policies_edit.php'?'active':'' ?>" href="index.php?page=policies_edit.php">Policies</a></li>
                 </ul>
             </li>
 
