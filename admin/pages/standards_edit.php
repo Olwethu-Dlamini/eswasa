@@ -160,10 +160,84 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 </div>
 <?php unset($_SESSION['flash']); endif; ?>
 
-<form method="POST" enctype="multipart/form-data">
+<style>
+    .std-toc {
+        position: sticky;
+        top: 72px;
+        z-index: 30;
+        background: var(--bs-body-bg);
+        border-bottom: 1px solid var(--bs-border-color);
+        padding: 10px 0;
+        margin: 0 0 1rem;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+    .std-toc::-webkit-scrollbar { height: 6px; }
+    .std-toc::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 3px; }
+    .std-toc a {
+        flex-shrink: 0;
+        font-size: 13px;
+        padding: 6px 12px;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 999px;
+        color: var(--bs-secondary-color);
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color .15s, color .15s, border-color .15s;
+    }
+    .std-toc a:hover {
+        color: var(--bs-primary);
+        border-color: var(--bs-primary);
+        background: rgba(var(--bs-primary-rgb), .06);
+    }
+    .std-toc .save-pill {
+        margin-left: auto;
+        font-weight: 600;
+    }
+    .std-edit-section { scroll-margin-top: 140px; }
+    .std-save-bar {
+        position: sticky;
+        bottom: 0;
+        z-index: 25;
+        background: var(--bs-body-bg);
+        border-top: 1px solid var(--bs-border-color);
+        padding: 12px 0;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+    .std-save-bar .save-hint {
+        font-size: 13px;
+        color: var(--bs-secondary-color);
+    }
+</style>
+
+<nav class="std-toc" aria-label="Standards editor sections">
+    <a href="#sec-meta">Breadcrumb</a>
+    <a href="#sec-about">About Standards</a>
+    <a href="#sec-what">What is a Standard</a>
+    <a href="#sec-benefits">Benefits</a>
+    <a href="#sec-process">9-Stage Process</a>
+    <a href="#sec-proposal">Submit Proposal</a>
+    <a href="#sec-tc">Technical Committees</a>
+    <a href="#sec-purchase">Purchase Standards</a>
+    <a href="#sec-affiliations">Affiliations</a>
+    <a href="#sec-info">Info Centre</a>
+    <a href="#sec-cta">CTA</a>
+    <button type="submit" form="standardsEditForm" name="save_std" class="btn btn-sm btn-primary save-pill">
+        <i class="fas fa-save me-1"></i> Save
+    </button>
+</nav>
+
+<form id="standardsEditForm" method="POST" enctype="multipart/form-data">
 
     <!-- ───────── Breadcrumb / Meta ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-meta">
         <div class="card-body">
             <h5 class="mb-3">Breadcrumb &amp; Meta</h5>
             <div class="mb-3">
@@ -178,7 +252,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── Section 1: About / Mandate ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-about">
         <div class="card-body">
             <h5 class="mb-3">Section 1 — About Standards Development</h5>
             <div class="mb-3">
@@ -214,7 +288,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── What is a Standard ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-what">
         <div class="card-body">
             <h5 class="mb-3">What is a Standard?</h5>
             <div class="mb-3">
@@ -230,7 +304,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── Benefits ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-benefits">
         <div class="card-body">
             <h5 class="mb-3">Benefits of Standards</h5>
             <div class="mb-3">
@@ -247,7 +321,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── 9-Stage Process ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-process">
         <div class="card-body">
             <h5 class="mb-3">Standards Development Process — 9 Stages</h5>
             <div class="mb-3">
@@ -298,7 +372,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── Proposal ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-proposal">
         <div class="card-body">
             <h5 class="mb-3">Submitting a Standards Proposal</h5>
             <div class="mb-3">
@@ -341,7 +415,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── Technical Committees ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-tc">
         <div class="card-body">
             <h5 class="mb-3">Technical Committees &amp; Work Programmes</h5>
             <div class="mb-3">
@@ -410,7 +484,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── Purchase Standards ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-purchase">
         <div class="card-body">
             <h5 class="mb-3">Purchase Standards</h5>
             <div class="mb-3">
@@ -483,7 +557,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── Affiliations ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-affiliations">
         <div class="card-body">
             <h5 class="mb-3">Our Affiliations</h5>
             <div class="mb-3">
@@ -524,7 +598,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── Information Centre ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-info">
         <div class="card-body">
             <h5 class="mb-3">Information Centre</h5>
             <div class="mb-3">
@@ -586,7 +660,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     </div>
 
     <!-- ───────── CTA ───────── -->
-    <div class="card mb-3">
+    <div class="card mb-3 std-edit-section" id="sec-cta">
         <div class="card-body">
             <h5 class="mb-3">Get Involved — Page CTA</h5>
             <div class="mb-3">
@@ -612,7 +686,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
         </div>
     </div>
 
-    <div class="mb-5 text-end">
+    <div class="std-save-bar">
+        <span class="save-hint">Changes save the whole page at once.</span>
         <button type="submit" name="save_std" class="btn btn-primary px-5"><i class="fas fa-save me-2"></i>Save Changes</button>
     </div>
 </form>

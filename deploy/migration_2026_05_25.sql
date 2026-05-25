@@ -96,6 +96,14 @@ DELETE FROM page_content WHERE page_key = 'implementation_info';
 DELETE FROM page_content WHERE page_key LIKE 'board\_%';
 DELETE FROM page_content WHERE page_key = 'breadcrumb_bg_board';
 
+-- Drop the 3 pre-session standards stubs that contained HTML markup
+-- (e.g. "<p>Under Section 5 of the <em>Standards Act, 1968...</em></p>").
+-- Standards.php has proper full-text defaults in pc_get_many() — deleting
+-- these rows lets the defaults take effect; admin can edit them to
+-- whatever they want from the editor and the rows will be re-created.
+DELETE FROM page_content
+WHERE page_key IN ('standards_mandate','standards_process_desc','standards_proposal');
+
 -- ── 3. SEED + UPDATE page_content (REPLACE INTO from local) ───
 REPLACE INTO `page_content` VALUES (1,'standards_mandate','Standards Development Mandate','<p>Under Section 5 of the <em>Standards Act, 1968...</em></p>','2026-01-14 09:46:46');
 REPLACE INTO `page_content` VALUES (2,'standards_process_desc','Standards Development Process','<p>ESWASA follows a structured 8-stage process...</p>','2026-01-14 09:46:46');
