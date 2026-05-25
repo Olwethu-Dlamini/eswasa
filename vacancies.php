@@ -1,4 +1,49 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+include_once __DIR__ . '/includes/db_connect.php';
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+$vacancies_keys = [
+    // Breadcrumb
+    'vacancies_breadcrumb_home_label',
+    'vacancies_breadcrumb_current_label',
+    'vacancies_breadcrumb_title',
+    // Intro info-box
+    'vacancies_intro_title',
+    'vacancies_intro_body',
+    // Section heading
+    'vacancies_section_title',
+    // How to apply info-box
+    'vacancies_apply_title',
+    'vacancies_apply_body',
+    'vacancies_hr_email',
+    // Empty state
+    'vacancies_empty_state',
+];
+
+$vacancies_defaults = [
+    'vacancies_breadcrumb_home_label'   => 'Home',
+    'vacancies_breadcrumb_current_label'=> 'Vacancies',
+    'vacancies_breadcrumb_title'        => 'Current Vacancies',
+
+    'vacancies_intro_title' => 'Working at ESWASA',
+    'vacancies_intro_body'  => "The Eswatini Standards Authority (ESWASA) is committed to attracting and retaining talented individuals who are passionate about standards, quality, and making a difference in Eswatini. We offer a dynamic and professional work environment where you can grow your career and contribute to the nation's development.\n\nWe offer competitive packages and a supportive work environment. Find our available positions below.",
+
+    'vacancies_section_title' => 'Available Positions',
+
+    'vacancies_apply_title' => 'How to Apply',
+    'vacancies_apply_body'  => "Click on any vacancy above to view complete details. When you click \"Apply for this Position\", your email client will open with the job title pre-filled. Please attach your cover letter and CV and send to [email].\n\nEnsure you quote the position title in the subject line of your email.\n\nOnly shortlisted candidates will be contacted for interviews.",
+    'vacancies_hr_email'    => 'hr@eswasa.co.sz',
+
+    'vacancies_empty_state' => 'There are no current vacancies available at this time.',
+];
+
+$pc = pc_get_many($conn, $vacancies_keys, $vacancies_defaults);
+
+// Render apply body with [email] placeholder → mailto link
+$apply_email_html = '<a href="mailto:' . pc_h($pc['vacancies_hr_email']) . '">' . pc_h($pc['vacancies_hr_email']) . '</a>';
+$apply_body_html = str_replace('[email]', $apply_email_html, pc_paragraphs_html($pc['vacancies_apply_body']));
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -139,6 +184,17 @@
             margin-top: 0;
             margin-bottom: 15px;
         }
+        /* Intro variant — canonical centered title + 60px section-divider */
+        .info-box.is-intro { text-align: center; }
+        .info-box.is-intro h3 { margin-bottom: 0; }
+        .info-box.is-intro .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 24px;
+            border-radius: 0;
+        }
+        .info-box.is-intro p { text-align: left; }
         .info-box p a {
             color: #2B3388;
             font-weight: 600;
@@ -274,15 +330,10 @@
     <?php include("includes/header.php")?>
 
     <?php
-    $conn = new mysqli('localhost', 'root', '', 'eswasa');
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
     $conn->set_charset("utf8mb4");
-    
     $vacancies = $conn->query("
-        SELECT * FROM eswasa_vacancies 
-        WHERE closing_date >= CURDATE() 
+        SELECT * FROM eswasa_vacancies
+        WHERE closing_date >= CURDATE()
         ORDER BY closing_date ASC
     ");
     ?>
@@ -295,11 +346,11 @@
                     <div class="col-12">
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
-                                <span><a href="index.php">Home</a></span>
+                                <span><a href="index.php"><?= pc_h($pc['vacancies_breadcrumb_home_label']) ?></a></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span>Vacancies</span>
+                                <span><?= pc_h($pc['vacancies_breadcrumb_current_label']) ?></span>
                             </nav>
-                            <h3 class="title">Current Vacancies</h3>
+                            <h3 class="title"><?= pc_h($pc['vacancies_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -311,13 +362,13 @@
                 <div class="row">
                     <div class="col-12">
                         
-                        <div class="info-box">
-                            <h3>Working at ESWASA</h3>
-                            <p>The <strong>Eswatini Standards Authority (ESWASA)</strong> is committed to attracting and retaining talented individuals who are passionate about standards, quality, and making a difference in Eswatini. We offer a dynamic and professional work environment where you can grow your career and contribute to the nation's development.</p>
-                            <p>We offer competitive packages and a supportive work environment. Find our available positions below.</p>
+                        <div class="info-box is-intro">
+                            <h3><?= pc_h($pc['vacancies_intro_title']) ?></h3>
+                            <div class="section-divider"></div>
+                            <?= pc_paragraphs_html($pc['vacancies_intro_body']) ?>
                         </div>
 
-                        <h2>Available Positions</h2>
+                        <h2><?= pc_h($pc['vacancies_section_title']) ?></h2>
                         <div class="section-divider" style="margin-left: 0; margin-right: 0; margin-bottom: 25px;"></div>
                         
                         <?php if ($vacancies && $vacancies->num_rows > 0): ?>
@@ -370,15 +421,13 @@
                             <?php endwhile; ?>
                         <?php else: ?>
                             <div class="text-center py-5">
-                                <p>There are no current vacancies available at this time.</p>
+                                <p><?= pc_h($pc['vacancies_empty_state']) ?></p>
                             </div>
                         <?php endif; ?>
 
                         <div class="info-box" style="margin-top: 30px;">
-                            <h3>How to Apply</h3>
-                            <p>Click on any vacancy above to view complete details. When you click "Apply for this Position", your email client will open with the job title pre-filled. Please attach your <strong>cover letter</strong> and <strong>CV</strong> and send to <a href="mailto:hr@eswasa.co.sz">hr@eswasa.co.sz</a>.</p>
-                            <p>Ensure you quote the position title in the subject line of your email.</p>
-                            <p>Only shortlisted candidates will be contacted for interviews.</p>
+                            <h3><?= pc_h($pc['vacancies_apply_title']) ?></h3>
+                            <?= $apply_body_html ?>
                         </div>
                     </div>
                 </div>
@@ -418,6 +467,8 @@
     <script src="assets/js/main.js"></script>
     
     <script>
+        var ESWASA_HR_EMAIL = <?= json_encode($pc['vacancies_hr_email']) ?>;
+
         function showVacancyDetails(title, location, closingDate, description, responsibilities) {
             // Set title
             document.getElementById('vacancyModalLabel').textContent = title;
@@ -453,8 +504,8 @@
                 'Thank you for your consideration.\n\n' +
                 'Best regards,\n[Your Name]'
             );
-            document.getElementById('applyEmailLink').href = 
-                'mailto:hr@eswasa.co.sz?subject=' + emailSubject + '&body=' + emailBody;
+            document.getElementById('applyEmailLink').href =
+                'mailto:' + ESWASA_HR_EMAIL + '?subject=' + emailSubject + '&body=' + emailBody;
             
             // Show modal
             const modal = new bootstrap.Modal(document.getElementById('vacancyModal'));
