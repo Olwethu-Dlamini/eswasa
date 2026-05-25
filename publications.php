@@ -1,40 +1,48 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+include_once __DIR__ . '/includes/db_connect.php';
+$conn->set_charset('utf8mb4');
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+require __DIR__ . '/includes/cms_keys_publications.php';
+
+$pc = pc_get_many($conn, $publications_keys, $publications_defaults);
+
+$result = $conn->query("SELECT * FROM eswasa_publications ORDER BY published_date DESC");
+
+function pub_type_label(string $t): string {
+    return [
+        'standard'      => 'Standard',
+        'report'        => 'Report',
+        'guidance'      => 'Guidance Document',
+        'newsletter'    => 'Newsletter',
+        'annual_report' => 'Annual Report',
+    ][$t] ?? ucfirst($t);
+}
+
+function pub_file_url(string $stored): string {
+    // file_path is stored as e.g. "publications/foo.pdf"; live under /admin/uploads/
+    $parts = array_map('rawurlencode', explode('/', $stored));
+    return 'admin/uploads/' . implode('/', $parts);
+}
+?>
 <!doctype html>
 <html class="no-js" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Publications - ESWASA</title>
+    <title><?= pc_h($pc['publications_breadcrumb_title']) ?> - ESWASA</title>
     <meta name="description" content="Access publications, reports, and documents from the Eswatini Standards Authority (ESWASA).">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/css/select2.min.css">
-    <link rel="stylesheet" href="assets/css/odometer.css">
-    <link rel="stylesheet" href="assets/css/slick.css">
-    <link rel="stylesheet" href="assets/css/aos.css">
-    <link rel="stylesheet" href="assets/css/spacing.css">
-    <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 15px;
-            color: #2B3388;
-        }
-        body h1, body h2, body h3, body h4, body h5, body h6 {
-            font-family: Arial, sans-serif;
-            color: #2B3388;
-        }
-        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
-            font-family: Arial, sans-serif;
-        }
+        /* ESWASA theme base — locked spec (#2B3388, #fff, Arial 15px) */
+        body { font-family: Arial, sans-serif; font-size: 15px; color: #2B3388; }
+        body h1, body h2, body h3, body h4, body h5, body h6 { font-family: Arial, sans-serif; color: #2B3388; }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td { font-family: Arial, sans-serif; }
         .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
@@ -42,157 +50,118 @@
         .breadcrumb-separator i { color: #fff !important; }
         .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
 
-        /* Brand Colors */
-        :root {
-            --eswasa-blue: #2B3388;
-            --eswasa-dark: rgba(43, 51, 136, 0.85);
-            --eswasa-light-gray: rgba(43, 51, 136, 0.04);
-        }
-
-        /* Publication Card */
-        .publication-card {
-            border: 1px solid rgba(43, 51, 136, 0.15);
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background-color: #fff;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .publication-card:hover {
-            border-color: #2B3388;
-            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
-        }
-        .publication-title {
-            color: #2B3388;
-            font-weight: 600;
-            font-size: 1.25rem;
-            margin: 0 0 10px 0;
-        }
-        .publication-meta {
-            font-size: 0.875rem;
-            color: #2B3388;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
-        }
-        .publication-meta span:not(:last-child)::after {
-            content: " | ";
-            margin: 0 8px;
-            color: #2B3388;
-        }
-        .publication-type {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            background-color: #fff;
-            color: #2B3388;
-            border: 1px solid rgba(43, 51, 136, 0.30);
-        }
-        .type-standard,
-        .type-report,
-        .type-guidance,
-        .type-newsletter,
-        .type-annual-report,
-        .type-annual_report {
-            background-color: #fff;
-            color: #2B3388;
-            border: 1px solid rgba(43, 51, 136, 0.30);
-        }
-        .publication-description {
-            margin-bottom: 15px;
-            color: #2B3388;
-        }
-        .publication-link a {
-            color: #2B3388;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .publication-link a:hover {
-            color: #2B3388;
-            text-decoration: underline;
-        }
-
-        /* Info & Links Box */
-        .info-box, .related-links-section {
+        /* Intro info-box (canonical centered title + 60px divider) */
+        .info-box {
             background-color: rgba(43, 51, 136, 0.04);
             border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 25px;
+            margin-bottom: 30px;
         }
-        .info-box h3, .related-links-section h3 {
-            color: #2B3388;
-            margin-top: 0;
-            font-size: 1.25rem;
+        .info-box h3 { color: #2B3388; font-weight: 700; margin: 0; }
+        .info-box.is-intro { text-align: center; }
+        .info-box.is-intro .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 24px;
+            border-radius: 0;
         }
-        .related-links-section ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        .related-links-section ul li {
-            margin-bottom: 10px;
-        }
-        .related-links-section ul li a {
-            color: #2B3388;
-            text-decoration: none;
-        }
-        .related-links-section ul li a:hover {
-            color: #2B3388;
-            text-decoration: underline;
-        }
+        .info-box.is-intro p { text-align: left; margin-bottom: 12px; }
+        .info-box.is-intro p:last-child { margin-bottom: 0; }
 
-        /* Filter buttons */
-        .filter-buttons {
-            margin: 20px 0 25px 0;
+        /* Documents list — row-style, not cards */
+        .pub-list {
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            background: #fff;
+            overflow: hidden;
         }
-        .filter-btn {
-            margin: 0 8px 10px 0;
-            padding: 8px 16px;
+        .pub-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 18px 22px;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.10);
+            transition: background-color .15s ease;
+        }
+        .pub-row:last-child { border-bottom: 0; }
+        .pub-row:hover { background-color: rgba(43, 51, 136, 0.03); }
+        .pub-icon {
+            flex: 0 0 auto;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #2B3388;
+            border: 1px solid rgba(43, 51, 136, 0.20);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .pub-main { flex: 1 1 auto; min-width: 0; }
+        .pub-title {
+            display: block;
+            color: #2B3388;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-decoration: none;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+        .pub-title:hover { color: #2B3388; text-decoration: underline; }
+        .pub-meta {
+            font-size: 0.85rem;
+            color: rgba(43, 51, 136, 0.75);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+        }
+        .pub-meta .sep { color: rgba(43, 51, 136, 0.35); }
+        .pub-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #2B3388;
             border: 1px solid rgba(43, 51, 136, 0.30);
             background: #fff;
-            color: #2B3388;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
-            font-family: Arial, sans-serif;
         }
-        .filter-btn.active, .filter-btn:hover {
+        .pub-download {
+            flex: 0 0 auto;
+            color: #2B3388;
+            border: 1px solid rgba(43, 51, 136, 0.30);
+            background: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+        }
+        .pub-download:hover {
             background-color: #2B3388;
             color: #fff;
             border-color: #2B3388;
         }
+        .pub-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: rgba(43, 51, 136, 0.75);
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+        }
 
-        @media (max-width: 767.98px) {
-            .main-area h2 {
-                font-size: 26px;
-                line-height: 1.25;
-                overflow-wrap: anywhere;
-            }
-            .publication-card {
-                padding: 15px;
-            }
-            .publication-title {
-                font-size: 1.1rem;
-            }
-            .publication-meta span:not(:last-child)::after {
-                content: "";
-                margin: 0;
-            }
-            .publication-meta span {
-                display: block;
-                margin-bottom: 4px;
-            }
-            .filter-btn {
-                padding: 6px 12px;
-                font-size: 0.85rem;
-            }
-            .info-box, .related-links-section {
-                padding: 15px;
-            }
+        @media (max-width: 575.98px) {
+            .pub-row { flex-wrap: wrap; padding: 14px 16px; gap: 12px; }
+            .pub-icon { width: 34px; height: 34px; }
+            .pub-download { width: 100%; text-align: center; }
+            .pub-title { font-size: 1rem; }
         }
     </style>
 </head>
@@ -204,18 +173,6 @@
     </button>
     <?php include("includes/header.php")?>
 
-    <?php
-    // Database connection
-    $conn = new mysqli('localhost', 'root', '', 'eswasa');
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    $conn->set_charset("utf8mb4");
-
-    // Fetch all publications
-    $result = $conn->query("SELECT * FROM eswasa_publications ORDER BY published_date DESC");
-    ?>
-
     <main class="main-area fix">
 
         <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('publications', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
@@ -224,11 +181,11 @@
                     <div class="col-12">
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
-                                <span><a href="index.php">Home</a></span>
+                                <span><a href="index.php"><?= pc_h($pc['publications_breadcrumb_home_label']) ?></a></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span>Publications</span>
+                                <span><?= pc_h($pc['publications_breadcrumb_current_label']) ?></span>
                             </nav>
-                            <h3 class="title">Publications</h3>
+                            <h3 class="title"><?= pc_h($pc['publications_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -237,84 +194,56 @@
 
         <section class="py-5">
             <div class="container">
-                <div class="info-box">
-                    <h3>About ESWASA Publications</h3>
-                    <p>This section provides access to various publications produced by the Eswatini Standards Authority (ESWASA). These include official standards documents, annual reports, technical guidelines, newsletters, and other relevant reports.</p>
+
+                <div class="info-box is-intro">
+                    <h3><?= pc_h($pc['publications_intro_title']) ?></h3>
+                    <div class="section-divider"></div>
+                    <?= pc_paragraphs_html($pc['publications_intro_body']) ?>
                 </div>
 
-                <!-- Filter Buttons -->
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All Types</button>
-                    <button class="filter-btn" data-filter="annual_report">Annual Reports</button>
-                    <button class="filter-btn" data-filter="newsletter">Newsletters</button>
-                    <button class="filter-btn" data-filter="guidance">Guidance</button>
-                    <button class="filter-btn" data-filter="report">Reports</button>
-                    <button class="filter-btn" data-filter="standard">Standards</button>
-                </div>
+                <h2><?= pc_h($pc['publications_section_title']) ?></h2>
+                <div class="section-divider mb-4" style="margin-left: 0; margin-right: 0;"></div>
 
-                <div class="row">
-                    <div class="col-12">
-                        <h2>Available Publications</h2>
-                        <div class="section-divider mb-4" style="margin-left: 0; margin-right: 0;"></div>
-                        
-                        <?php if ($result && $result->num_rows > 0): ?>
-                            <?php while ($pub = $result->fetch_assoc()): ?>
-                                <?php
-                                // Determine type class and label
-                                $type = $pub['pub_type'];
-                                $typeClass = 'type-' . $type;
-                                $typeName = match($type) {
-                                    'standard' => 'Standard',
-                                    'report' => 'Report',
-                                    'guidance' => 'Guidance Document',
-                                    'newsletter' => 'Newsletter',
-                                    'annual_report' => 'Annual Report',
-                                    default => ucfirst($type)
-                                };
-
-                                // Build file path
-                                $filePath = 'admin/uploads/' . $pub['file_path'];
-                                
-                                // Get file size in MB (if file exists)
-                                $fullPath = __DIR__ . '/admin/uploads/' . $pub['file_path'];
-                                $fileSize = file_exists($fullPath) 
-                                    ? round(filesize($fullPath) / (1024 * 1024), 1) 
-                                    : 'N/A';
-                                ?>
-                                <div class="publication-card" data-type="<?= htmlspecialchars($type) ?>">
-                                    <h4 class="publication-title"><?= htmlspecialchars($pub['title']) ?></h4>
-                                    <div class="publication-meta">
-                                        <span>Published: <?= date('Y-m-d', strtotime($pub['published_date'])) ?></span>
-                                        <span>Format: PDF (<?= $fileSize ?> MB)</span>
-                                        <span class="publication-type <?= htmlspecialchars($typeClass) ?>"><?= htmlspecialchars($typeName) ?></span>
-                                    </div>
-                                    <div class="publication-description">
-                                        <p><?= nl2br(htmlspecialchars($pub['description'])) ?></p>
-                                    </div>
-                                    <div class="publication-link">
-                                        <a href="<?= htmlspecialchars($filePath) ?>" target="_blank">Download Publication</a>
+                <?php if ($result && $result->num_rows > 0): ?>
+                    <div class="pub-list">
+                        <?php while ($pub = $result->fetch_assoc()): ?>
+                            <?php
+                            $url = pub_file_url($pub['file_path']);
+                            $fullPath = __DIR__ . '/admin/uploads/' . $pub['file_path'];
+                            $sizeStr = '';
+                            if (file_exists($fullPath)) {
+                                $bytes = filesize($fullPath);
+                                $sizeStr = $bytes >= 1048576
+                                    ? round($bytes / 1048576, 1) . ' MB'
+                                    : round($bytes / 1024, 0) . ' KB';
+                            }
+                            ?>
+                            <div class="pub-row">
+                                <span class="pub-icon" aria-hidden="true"><i class="fas fa-file-pdf"></i></span>
+                                <div class="pub-main">
+                                    <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="pub-title">
+                                        <?= htmlspecialchars($pub['title']) ?>
+                                    </a>
+                                    <div class="pub-meta">
+                                        <span class="pub-badge"><?= htmlspecialchars(pub_type_label($pub['pub_type'])) ?></span>
+                                        <span>Published <?= date('d M Y', strtotime($pub['published_date'])) ?></span>
+                                        <?php if ($sizeStr !== ''): ?>
+                                            <span class="sep">&middot;</span>
+                                            <span>PDF, <?= $sizeStr ?></span>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <div class="text-center py-4">
-                                <p>No publications are currently available.</p>
+                                <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="pub-download">
+                                    <i class="fas fa-download me-1"></i>Download
+                                </a>
                             </div>
-                        <?php endif; ?>
+                        <?php endwhile; ?>
                     </div>
-                </div>
-
-                <div class="related-links-section">
-                    <h3>Related Links</h3>
-                    <ul>
-                        <li><a href="standards.php">View Eswatini National Standards (SZNS)</a></li>
-                        <li><a href="workprogrammes.php">ESWASA Work Programmes</a></li>
-                        <li><a href="tcplatform.php">Technical Committee Information</a></li>
-                        <li><a href="https://www.iso.org/" target="_blank">International Organization for Standardization (ISO)</a></li>
-                        <li><a href="https://www.iec.ch/" target="_blank">International Electrotechnical Commission (IEC)</a></li>
-                        <li><a href="https://www.itu.int/" target="_blank">International Telecommunication Union (ITU)</a></li>
-                    </ul>
-                </div>
+                <?php else: ?>
+                    <div class="pub-empty">
+                        <?= pc_h($pc['publications_empty_state']) ?>
+                    </div>
+                <?php endif; ?>
 
             </div>
         </section>
@@ -323,48 +252,8 @@
 
     <?php include("includes/footer.php")?>
 
-    <!-- Filtering Script -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.publication-card');
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Update active state
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-
-                const filterType = this.getAttribute('data-filter');
-
-                cards.forEach(card => {
-                    if (filterType === 'all' || card.getAttribute('data-type') === filterType) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        });
-    });
-    </script>
-
-    <!-- Scripts -->
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/isotope.pkgd.min.js"></script>
-    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <script src="assets/js/jquery.odometer.min.js"></script>
-    <script src="assets/js/jquery.appear.js"></script>
-    <script src="assets/js/tween-max.min.js"></script>
-    <script src="assets/js/select2.min.js"></script>
-    <script src="assets/js/slick.min.js"></script>
-    <script src="assets/js/slick-animation.min.js"></script>
-    <script src="assets/js/tg-cursor.min.js"></script>
-    <script src="assets/js/form-contact.js"></script>
-    <script src="assets/js/wow.min.js"></script>
-    <script src="assets/js/aos.js"></script>
     <script src="assets/js/main.js"></script>
 
 </body>
