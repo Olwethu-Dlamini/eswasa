@@ -316,7 +316,8 @@ $pc = pc_get_many($conn, $purchase_keys, $purchase_defaults);
                 </div>
 
                <div class="card" style="border: 1px solid rgba(43, 51, 136, 0.15); box-shadow: 0 4px 12px rgba(43, 51, 136, 0.06); border-radius: 4px; padding: 25px;">
-                    <h3 style="color: #2B3388; font-weight: 700; margin-bottom: 20px;"><?= pc_h($pc['purchase_assist_title']) ?></h3>
+                    <h3 style="color: #2B3388; font-weight: 700; margin: 0; text-align: center;"><?= pc_h($pc['purchase_assist_title']) ?></h3>
+                    <div class="section-divider" style="width:60px; height:2px; background:#2B3388; margin:16px auto 24px; border-radius:0;"></div>
 
                     <p class="lead">
                         <?= pc_h($pc['purchase_assist_body']) ?>
