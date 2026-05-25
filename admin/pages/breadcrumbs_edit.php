@@ -22,7 +22,6 @@ $pages = [
     'ingelo'              => ['Ingelo',                 'ingelo.php',               'assets/img/bg/Ingelo.png'],
     'managementsystems'   => ['Management Systems',     'managementsystems.php',    'assets/img/bg/breadcrumb_bg.jpg'],
     'meetourteam'         => ['Meet Our Team',          'Meetourteam.php',          'assets/img/bg/bg.png'],
-    'news'                => ['News',                   'news.php',                 'assets/img/bg/breadcrumb_bg.jpg'],
     'privacy'             => ['Privacy Policy',         'privacy.php',              'assets/img/bg.png'],
     'product'             => ['Product Certification',  'product.php',              'assets/img/bg/breadcrumb_bg.jpg'],
     'publications'        => ['Publications',           'publications.php',         'assets/img/bg/breadcrumb_bg.jpg'],
