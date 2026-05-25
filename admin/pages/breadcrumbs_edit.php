@@ -36,6 +36,9 @@ $pages = [
     'vacancies'           => ['Vacancies',              'vacancies.php',           'assets/img/bg/breadcrumb_bg.jpg'],
     'work'                => ['Work Programmes',        'work.php',                'assets/img/bg/breadcrumb_bg.jpg'],
     'announcements'       => ['Announcements',          'announcements.php',       'assets/img/bg/breadcrumb_bg.jpg'],
+    'service-charter'     => ['Service Charter',        'service-charter.php',     'assets/img/bg/breadcrumb_bg.jpg'],
+    'customer-feedback'   => ['Customer Feedback',      'customer-feedback.php',   'assets/img/bg/breadcrumb_bg.jpg'],
+    'policies'            => ['Policies',               'policies.php',            'assets/img/bg/breadcrumb_bg.jpg'],
 ];
 
 // ── Save handler ──────────────────────────────────────────────
