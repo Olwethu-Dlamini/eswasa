@@ -2,11 +2,12 @@
 if (!defined('ESWASA_ADMIN')) {
     exit('Direct access not permitted.');
 }
+require_once __DIR__ . '/../../includes/cms_helpers.php';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = trim($_POST['title'] ?? '');
-    $description = trim($_POST['description'] ?? '');
+    $title = pc_strip_text($_POST['title'] ?? '');
+    $description = pc_strip_text($_POST['description'] ?? '');
     $announcement_type = $_POST['announcement_type'] ?? 'news';
     $published_date = $_POST['published_date'] ?? '';
     $external_link = trim($_POST['external_link'] ?? '');

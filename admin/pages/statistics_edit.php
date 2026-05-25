@@ -1,5 +1,6 @@
 <?php
 if (!defined('ESWASA_ADMIN')) exit('Direct access not permitted.');
+require_once __DIR__ . '/../../includes/cms_helpers.php';
 
 // Detect available columns on site_statistics (handles legacy schemas)
 $has_stat_key   = false;
@@ -33,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_stats'])) {
         if ($stmt) {
             foreach ($_POST['stats'] as $id => $vals) {
                 $id    = (int)$id;
-                $label = trim((string)($vals['label'] ?? ''));
+                $label = pc_strip_text((string)($vals['label'] ?? ''));
                 $value = (int)($vals['value'] ?? 0);
                 if ($label === '') continue;
                 $stmt->bind_param('sii', $label, $value, $id);
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_stat'])) {
         set_flash('danger', 'site_statistics table is missing required columns.');
         redirect_self();
     }
-    $new_label = trim($_POST['new_label'] ?? '');
+    $new_label = pc_strip_text($_POST['new_label'] ?? '');
     $new_value = (int)($_POST['new_value'] ?? 0);
     $new_key   = trim($_POST['new_key'] ?? '');
 

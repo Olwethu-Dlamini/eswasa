@@ -2,11 +2,12 @@
 if (!defined('ESWASA_ADMIN')) {
     exit('Direct access not permitted.');
 }
+require_once __DIR__ . '/../../includes/cms_helpers.php';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $question = trim($_POST['question'] ?? '');
-    $answer = trim($_POST['answer'] ?? '');
+    $question = pc_strip_text($_POST['question'] ?? '');
+    $answer = pc_strip_text($_POST['answer'] ?? '');
     $category = $_POST['category'] ?? 'general';
     $sort_order = (int)($_POST['sort_order'] ?? 0);
     $id = !empty($_POST['id']) ? (int)$_POST['id'] : null;

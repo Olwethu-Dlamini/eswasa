@@ -2,6 +2,7 @@
 if (!defined('ESWASA_ADMIN')) {
     exit('Direct access not permitted.');
 }
+require_once __DIR__ . '/../../includes/cms_helpers.php';
 
 $upload_dir = ADMIN_ROOT . '/uploads/';
 
@@ -53,16 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
     }
 
     $text_fields = [
-        'about_intro'               => trim($_POST['about_intro']               ?? ''),
-        'about_vision'              => trim($_POST['about_vision']              ?? ''),
-        'about_mission'             => trim($_POST['about_mission']             ?? ''),
-        'about_history'             => trim($_POST['about_history']             ?? ''),
-        'about_val_transparency'    => trim($_POST['about_val_transparency']    ?? ''),
-        'about_val_people'          => trim($_POST['about_val_people']          ?? ''),
-        'about_val_responsiveness'  => trim($_POST['about_val_responsiveness']  ?? ''),
-        'about_val_innovation'      => trim($_POST['about_val_innovation']      ?? ''),
-        'about_val_professionalism' => trim($_POST['about_val_professionalism'] ?? ''),
-        'about_breadcrumb_title'    => trim($_POST['about_breadcrumb_title']    ?? ''),
+        'about_intro'               => pc_strip_text($_POST['about_intro']               ?? ''),
+        'about_vision'              => pc_strip_text($_POST['about_vision']              ?? ''),
+        'about_mission'             => pc_strip_text($_POST['about_mission']             ?? ''),
+        'about_history'             => pc_strip_text($_POST['about_history']             ?? ''),
+        'about_val_transparency'    => pc_strip_text($_POST['about_val_transparency']    ?? ''),
+        'about_val_people'          => pc_strip_text($_POST['about_val_people']          ?? ''),
+        'about_val_responsiveness'  => pc_strip_text($_POST['about_val_responsiveness']  ?? ''),
+        'about_val_innovation'      => pc_strip_text($_POST['about_val_innovation']      ?? ''),
+        'about_val_professionalism' => pc_strip_text($_POST['about_val_professionalism'] ?? ''),
+        'about_breadcrumb_title'    => pc_strip_text($_POST['about_breadcrumb_title']    ?? ''),
     ];
 
     $all = array_merge($text_fields, $image_updates);

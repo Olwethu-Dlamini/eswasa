@@ -3,12 +3,13 @@
 if (!defined('ESWASA_ADMIN')) {
     exit('Direct access not permitted.');
 }
+require_once __DIR__ . '/../../includes/cms_helpers.php';
 
 // Handle form submission (CREATE / UPDATE)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = trim($_POST['title'] ?? '');
-    $description = trim($_POST['description'] ?? '');
-    $location = trim($_POST['location'] ?? '');
+    $title = pc_strip_text($_POST['title'] ?? '');
+    $description = pc_strip_text($_POST['description'] ?? '');
+    $location = pc_strip_text($_POST['location'] ?? '');
     $event_date = $_POST['event_date'] ?? '';
     $category = $_POST['category'] ?? 'workshop';
     $id = !empty($_POST['id']) ? (int)$_POST['id'] : null;

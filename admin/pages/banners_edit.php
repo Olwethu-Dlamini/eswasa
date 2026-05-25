@@ -1,5 +1,6 @@
 <?php
 if (!defined('ESWASA_ADMIN')) exit('Direct access not permitted.');
+require_once __DIR__ . '/../../includes/cms_helpers.php';
 
 // Detect whether the banners table has a `description` column (schema variation between deployments)
 $has_description = false;
@@ -15,8 +16,8 @@ if (!is_dir($upload_dir_fs)) {
 
 // ── Handle Add / Edit ──────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_GET['delete'])) {
-    $caption     = trim($_POST['caption'] ?? '');
-    $description = trim($_POST['description'] ?? '');
+    $caption     = pc_strip_text($_POST['caption'] ?? '');
+    $description = pc_strip_text($_POST['description'] ?? '');
     $url         = trim($_POST['url'] ?? '');
     $banner_id   = isset($_POST['banner_id']) ? (int)$_POST['banner_id'] : 0;
     $updated_by  = $_SESSION['username'] ?? 'Admin';
