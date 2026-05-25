@@ -125,6 +125,19 @@ function submenu_open($pages, $current) {
                 </ul>
             </li>
 
+            <!-- Customer Care -->
+            <?php $cc_pages = ['service_charter.php']; ?>
+            <li class="nav-item">
+                <a class="nav-link <?= is_active_group($cc_pages, $current_page) ?> d-flex justify-content-between"
+                   href="#submenu-cc" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $cc_pages) ? 'true' : 'false' ?>">
+                    <span><i class="fas fa-headset fa-fw me-2"></i>Customer Care</span>
+                    <i class="fas fa-chevron-down small mt-1"></i>
+                </a>
+                <ul class="nav flex-column ms-3 collapse <?= submenu_open($cc_pages, $current_page) ?>" id="submenu-cc">
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='service_charter.php'?'active':'' ?>" href="index.php?page=service_charter.php">Service Charter</a></li>
+                </ul>
+            </li>
+
             <li class="nav-item">
                 <?= nav_link('contact_edit.php', $current_page, 'fa-envelope', 'Contact Us') ?>
             </li>
