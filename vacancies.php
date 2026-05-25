@@ -1,5 +1,6 @@
 <?php
 include_once __DIR__ . '/includes/db_connect.php';
+$conn->set_charset('utf8mb4');
 include_once __DIR__ . '/includes/breadcrumb_helper.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
 
@@ -330,7 +331,6 @@ $apply_body_html = str_replace('[email]', $apply_email_html, pc_paragraphs_html(
     <?php include("includes/header.php")?>
 
     <?php
-    $conn->set_charset("utf8mb4");
     $vacancies = $conn->query("
         SELECT * FROM eswasa_vacancies
         WHERE closing_date >= CURDATE()
