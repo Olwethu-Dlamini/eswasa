@@ -214,10 +214,10 @@ if (isset($_GET['edit'])) {
                     <tbody>
                         <?php while ($event = $events_result->fetch_assoc()): ?>
                             <tr>
-                                <td><?= htmlspecialchars($event['title']) ?></td>
+                                <td><?= htmlspecialchars((string)($event['title'] ?? '')) ?></td>
                                 <td><?= date('d M, Y', strtotime($event['event_date'])) ?></td>
-                                <td><?= htmlspecialchars($event['location']) ?></td>
-                                <td><?= ucfirst(htmlspecialchars($event['category'])) ?></td>
+                                <td><?= htmlspecialchars((string)($event['location'] ?? '')) ?></td>
+                                <td><?= ucfirst(htmlspecialchars((string)($event['category'] ?? ''))) ?></td>
                                 <td>
                                     <a href="index.php?page=events_edit.php&edit=<?= $event['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
                                     <a href="index.php?page=events_edit.php&delete=<?= $event['id'] ?>" 

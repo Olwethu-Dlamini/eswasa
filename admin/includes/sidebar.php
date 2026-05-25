@@ -130,6 +130,10 @@ function submenu_open($pages, $current) {
                 <?= nav_link('contact_edit.php', $current_page, 'fa-envelope', 'Contact Us') ?>
             </li>
 
+            <li class="nav-item">
+                <?= nav_link('users.php', $current_page, 'fa-user-shield', 'Users') ?>
+            </li>
+
             <li class="nav-item mt-3 border-top pt-3">
                 <!-- Theme toggle -->
                 <div class="px-3 d-flex align-items-center justify-content-between mb-2">
