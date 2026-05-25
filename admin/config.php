@@ -54,8 +54,23 @@ function set_flash($type, $message) {
     ];
 }
 
-// Redirect to the current page (preserves query string)
+// Redirect back to the current admin page (preserves the ?page= and any
+// other safe GET params). Built from SCRIPT_NAME instead of REQUEST_URI
+// because some hosts strip the query string from REQUEST_URI after a POST.
 function redirect_self() {
-    header("Location: " . $_SERVER['REQUEST_URI']);
+    $url = $_SERVER['SCRIPT_NAME']; // e.g. /admin/index.php
+    $params = $_GET;
+    // Drop one-shot action params so refreshing the redirect target
+    // doesn't re-trigger them.
+    unset(
+        $params['delete'],
+        $params['delete_banner'],
+        $params['delete_quote'],
+        $params['quote_sent']
+    );
+    if (!empty($params)) {
+        $url .= '?' . http_build_query($params);
+    }
+    header('Location: ' . $url);
     exit;
 }

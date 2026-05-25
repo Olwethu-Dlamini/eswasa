@@ -85,9 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
         set_flash('success', 'About Us updated.');
     }
 
-    // Redirect back to this page (preserve query string)
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit;
+    // Redirect back to this page (uses robust SCRIPT_NAME-based redirect)
+    redirect_self();
 }
 
 // ── Load Values ──────────────────────────────────────────────

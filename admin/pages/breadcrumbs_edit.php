@@ -96,8 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_breadcrumbs'])) 
         set_flash('success', count($image_updates) . ' breadcrumb image(s) updated successfully.');
     }
 
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit;
+    redirect_self();
 }
 
 // ── Load current breadcrumb values ──────────────────────────

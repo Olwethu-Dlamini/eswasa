@@ -51,12 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_purchase'])) {
     if (function_exists('set_flash')) {
         set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
     }
-    if (function_exists('redirect_self')) {
-        redirect_self();
-    } else {
-        header('Location: ' . $_SERVER['REQUEST_URI']);
-        exit;
-    }
+    redirect_self();
 }
 
 // ── Load current values ───────────────────────────────────────
