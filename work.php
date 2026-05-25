@@ -120,11 +120,15 @@ try {
         .intro-box h3 {
             color: #2B3388;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 0;
             font-weight: 700;
-            border-bottom: 3px solid #2B3388;
-            padding-bottom: 15px;
-            display: inline-block;
+        }
+        .intro-box .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 24px;
+            border-radius: 0;
         }
         .intro-box p { text-align: left; }
         .intro-box p {
@@ -244,6 +248,7 @@ try {
             <div class="container">
                 <div class="intro-box">
                     <h3><?= pc_h($pc['work_intro_title']) ?></h3>
+                    <div class="section-divider"></div>
                     <?= pc_paragraphs_html($pc['work_intro_body']) ?>
                 </div>
 
