@@ -116,6 +116,7 @@ try {
             margin: 40px 0 60px 0;
             border-radius: 4px;
         }
+        .intro-box { text-align: center; }
         .intro-box h3 {
             color: #2B3388;
             margin-top: 0;
@@ -123,7 +124,9 @@ try {
             font-weight: 700;
             border-bottom: 3px solid rgba(43, 51, 136, 0.15);
             padding-bottom: 15px;
+            display: inline-block;
         }
+        .intro-box p { text-align: left; }
         .intro-box p {
             font-size: 15px;
             line-height: 1.6;
@@ -252,8 +255,7 @@ try {
                 <div class="wp-list-container">
                     <?php if (empty($work_programmes)): ?>
                         <div class="text-center text-muted py-4" style="border: 1px dashed rgba(43,51,136,0.25); border-radius: 4px;">
-                            <p class="mb-1" style="color:#2B3388;">No projects to display yet.</p>
-                            <small>Once added in the admin, the current and recent standards-development projects will appear here.</small>
+                            <p class="mb-0" style="color:#2B3388;">No projects to display yet.</p>
                         </div>
                     <?php else: ?>
                         <?php foreach ($work_programmes as $p): ?>
