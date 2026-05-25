@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($password === $user['password']) { // Replace with proper password hashing
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_role'] = $user['role'];
-            header('Location: pages/dashboard.php');
+            header('Location: ../index.php?page=index_edit.php');
             exit();
         } else {
             $error = 'Invalid password';

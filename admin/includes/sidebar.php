@@ -3,7 +3,7 @@
 if (!defined('ESWASA_ADMIN')) {
     exit('Direct access not permitted.');
 }
-$current_page = basename($_GET['page'] ?? 'dashboard.php');
+$current_page = basename($_GET['page'] ?? 'index_edit.php');
 
 function nav_link($page, $current, $icon, $label) {
     $active = ($current === $page) ? 'active' : '';
@@ -20,10 +20,6 @@ function submenu_open($pages, $current) {
 <nav id="sidebar" class="bg-body border-end">
     <div class="sidebar-inner">
         <ul class="nav flex-column pt-2">
-
-            <li class="nav-item">
-                <?= nav_link('dashboard.php', $current_page, 'fa-home', 'Dashboard') ?>
-            </li>
 
             <!-- Home Page -->
             <?php $home_pages = ['index_edit.php','banners_edit.php','statistics_edit.php']; ?>

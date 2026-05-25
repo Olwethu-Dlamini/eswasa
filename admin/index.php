@@ -28,7 +28,6 @@ define('ESWASA_ADMIN', true);
 // Allowed pages — must match actual files in admin/pages/.
 // Stub pages (added by P2) cover sidebar links that previously 404'd.
 $allowed_pages = [
-    'dashboard.php',
     'about_edit.php',
     'about_team.php',
     'services_edit.php',
@@ -64,9 +63,9 @@ $allowed_pages = [
 ];
 
 // Resolve page
-$page = basename($_GET['page'] ?? 'dashboard.php');
+$page = basename($_GET['page'] ?? 'index_edit.php');
 if (!in_array($page, $allowed_pages)) {
-    $page = 'dashboard.php';
+    $page = 'index_edit.php';
 }
 
 // Load page content
@@ -82,7 +81,6 @@ $content = ob_get_clean();
 
 // Page title
 $page_titles = [
-    'dashboard.php'             => 'Dashboard',
     'about_edit.php'            => 'About Us',
     'about_team.php'            => 'Meet Our Team',
     'services_edit.php'         => 'Our Services',

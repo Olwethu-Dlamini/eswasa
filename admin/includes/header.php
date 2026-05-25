@@ -33,7 +33,7 @@ $current_user = getCurrentUser($conn);
             </button>
 
             <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="index.php?page=dashboard.php">
+            <a class="navbar-brand d-flex align-items-center" href="index.php?page=index_edit.php">
                 <img src="../assets/img/logo/ESWASALOGO.png"
                      alt="ESWASA"
                      class="navbar-logo"
