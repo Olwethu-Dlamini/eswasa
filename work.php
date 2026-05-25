@@ -12,11 +12,6 @@ $work_keys = [
     'work_intro_title',
     'work_intro_body',
     'work_section_title',
-    'work_item_1_title', 'work_item_1_url', 'work_item_1_details', 'work_item_1_status_label', 'work_item_1_status_class',
-    'work_item_2_title', 'work_item_2_url', 'work_item_2_details', 'work_item_2_status_label', 'work_item_2_status_class',
-    'work_item_3_title', 'work_item_3_url', 'work_item_3_details', 'work_item_3_status_label', 'work_item_3_status_class',
-    'work_item_4_title', 'work_item_4_url', 'work_item_4_details', 'work_item_4_status_label', 'work_item_4_status_class',
-    'work_item_5_title', 'work_item_5_url', 'work_item_5_details', 'work_item_5_status_label', 'work_item_5_status_class',
     'work_cta_1_text', 'work_cta_1_url',
     'work_cta_2_text', 'work_cta_2_url',
 ];
@@ -31,19 +26,6 @@ $work_defaults = [
     'work_intro_body'         => "The **ESWASA Work Programme** details all current and scheduled standards development and revision projects. This programme is derived from national needs assessments and stakeholder requests, ensuring that the standards developed align with Eswatini's economic and regulatory priorities.\n\nInterested stakeholders are invited to review the programme and provide feedback. For more information on specific projects, please contact us directly.",
     'work_section_title'      => 'Current and Recent Projects',
 
-    // Project slots — left empty so the page shows the "no projects yet"
-    // empty state until admin populates them via Work Programmes editor.
-    'work_item_1_title'        => '',  'work_item_1_url' => '',
-    'work_item_1_details'      => '',  'work_item_1_status_label' => '', 'work_item_1_status_class' => '',
-    'work_item_2_title'        => '',  'work_item_2_url' => '',
-    'work_item_2_details'      => '',  'work_item_2_status_label' => '', 'work_item_2_status_class' => '',
-    'work_item_3_title'        => '',  'work_item_3_url' => '',
-    'work_item_3_details'      => '',  'work_item_3_status_label' => '', 'work_item_3_status_class' => '',
-    'work_item_4_title'        => '',  'work_item_4_url' => '',
-    'work_item_4_details'      => '',  'work_item_4_status_label' => '', 'work_item_4_status_class' => '',
-    'work_item_5_title'        => '',  'work_item_5_url' => '',
-    'work_item_5_details'      => '',  'work_item_5_status_label' => '', 'work_item_5_status_class' => '',
-
     'work_cta_1_text' => 'Propose a Standard Project',
     'work_cta_1_url'  => 'Standards.php',
     'work_cta_2_text' => 'General Enquiries',
@@ -51,6 +33,19 @@ $work_defaults = [
 ];
 
 $pc = pc_get_many($conn, $work_keys, $work_defaults);
+
+// Programmes from the dedicated table. Wrapped in try/catch so a missing
+// table on legacy environments doesn't break the page.
+$work_programmes = [];
+try {
+    if ($res = @$conn->query("SELECT title, url, details, status_label, status_class FROM eswasa_work_programmes ORDER BY sort_order ASC, id ASC")) {
+        while ($r = $res->fetch_assoc()) {
+            if (trim((string)($r['title'] ?? '')) !== '') $work_programmes[] = $r;
+        }
+    }
+} catch (\Throwable $e) {
+    // Table missing — render empty state.
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -249,45 +244,35 @@ $pc = pc_get_many($conn, $work_keys, $work_defaults);
                     <?= pc_paragraphs_html($pc['work_intro_body']) ?>
                 </div>
 
-                <?php
-                    // Count populated items to decide between list + empty state.
-                    $populated_items = 0;
-                    for ($i = 1; $i <= 5; $i++) {
-                        if (trim((string)($pc["work_item_{$i}_title"] ?? '')) !== '') $populated_items++;
-                    }
-                ?>
                 <div class="section__title text-center mt-5 mb-4">
                     <h2 class="title" style="color:#2B3388; font-weight:700;"><?= pc_h($pc['work_section_title']) ?></h2>
                     <div class="section-divider"></div>
                 </div>
 
                 <div class="wp-list-container">
-                    <?php if ($populated_items === 0): ?>
+                    <?php if (empty($work_programmes)): ?>
                         <div class="text-center text-muted py-4" style="border: 1px dashed rgba(43,51,136,0.25); border-radius: 4px;">
                             <p class="mb-1" style="color:#2B3388;">No projects to display yet.</p>
                             <small>Once added in the admin, the current and recent standards-development projects will appear here.</small>
                         </div>
                     <?php else: ?>
-                        <?php for ($i = 1; $i <= 5; $i++):
-                            $t   = $pc["work_item_{$i}_title"];
-                            $u   = $pc["work_item_{$i}_url"];
-                            $d   = $pc["work_item_{$i}_details"];
-                            $sl  = $pc["work_item_{$i}_status_label"];
-                            $sc  = $pc["work_item_{$i}_status_class"];
-                            if ($t === '' && $u === '' && $d === '' && $sl === '') continue;
-                        ?>
+                        <?php foreach ($work_programmes as $p): ?>
                         <div class="wp-list-item">
                             <div class="wp-content">
                                 <div class="wp-title">
-                                    <a href="<?= pc_h($u) ?>"><?= pc_h($t) ?></a>
+                                    <?php if (!empty($p['url'])): ?>
+                                        <a href="<?= pc_h($p['url']) ?>"><?= pc_h($p['title']) ?></a>
+                                    <?php else: ?>
+                                        <?= pc_h($p['title']) ?>
+                                    <?php endif; ?>
                                 </div>
-                                <div class="wp-details"><?= pc_h($d) ?></div>
+                                <div class="wp-details"><?= pc_h($p['details']) ?></div>
                             </div>
                             <div class="wp-status">
-                                <span class="status-badge <?= pc_h($sc) ?>"><?= pc_h($sl) ?></span>
+                                <span class="status-badge <?= pc_h($p['status_class']) ?>"><?= pc_h($p['status_label']) ?></span>
                             </div>
                         </div>
-                        <?php endfor; ?>
+                        <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
 
