@@ -281,8 +281,12 @@ try {
         .staff-photo-container {
             width: 100%;
             max-width: 900px;
-            height: 0;
-            padding-bottom: 40%;
+            /* Always exactly 5:2 (= 900:360) regardless of parent width.
+               The earlier padding-bottom:40% trick measured against the
+               parent's width and stretched the box past the cropper's
+               aspect ratio on wider parents, causing object-fit: cover
+               to crop the saved image. */
+            aspect-ratio: 5 / 2;
             background: rgba(43, 51, 136, 0.04);
             border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
@@ -343,7 +347,7 @@ try {
             .team-leader .team-name { font-size: 17px; }
             .team-header h2 { font-size: 24px; }
             .section-title { font-size: 20px; margin: 40px 0 0; }
-            .staff-photo-container { padding-bottom: 50%; }
+            /* aspect-ratio on the base rule keeps 5:2 at every viewport */
             .team-header p { font-size: 15px; }
         }
         @media (max-width: 575.98px) {
