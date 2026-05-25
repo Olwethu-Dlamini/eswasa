@@ -7,9 +7,15 @@ require_once __DIR__ . '/includes/cms_helpers.php';
 $pc = pc_get_many($conn, [
     'team_hero_title',
     'team_intro_body',
+    'team_section_main_title',
+    'team_section_council_title',
+    'team_section_executive_title',
 ], [
-    'team_hero_title' => 'Meet Our Team',
-    'team_intro_body' => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
+    'team_hero_title'              => 'Meet Our Team',
+    'team_intro_body'              => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
+    'team_section_main_title'      => 'Our Council and Management',
+    'team_section_council_title'   => 'Members of the Council',
+    'team_section_executive_title' => 'Executive Team',
 ]);
 
 // Team members from dedicated table (live rows only — is_vacant = 0).
@@ -383,7 +389,7 @@ try {
         <div class="container py-5">
             <!-- Page intro -->
             <div class="team-header">
-                <h2>Our Council and Management</h2>
+                <h2><?= pc_h($pc['team_section_main_title']) ?></h2>
                 <div class="section-divider"></div>
                 <p><?= pc_h($pc['team_intro_body']) ?></p>
             </div>
@@ -394,7 +400,7 @@ try {
                 $council_members = array_slice($council, 1);
             ?>
             <div class="team-section">
-                <h3 class="section-title">Members of the Council</h3>
+                <h3 class="section-title"><?= pc_h($pc['team_section_council_title']) ?></h3>
                 <div class="section-divider"></div>
                 <div class="team-layout">
                     <div class="team-leader">
@@ -436,7 +442,7 @@ try {
             <!-- Management Section -->
             <?php if (!empty($management)): ?>
             <div class="team-section">
-                <h3 class="section-title">Executive Team</h3>
+                <h3 class="section-title"><?= pc_h($pc['team_section_executive_title']) ?></h3>
                 <div class="section-divider"></div>
                 <div class="team-layout">
                     <?php

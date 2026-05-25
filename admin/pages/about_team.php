@@ -12,7 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // -- Save page-level text (hero title + intro body) --
     if ($action === 'save_page_text') {
-        $text_keys = ['team_hero_title', 'team_intro_body'];
+        $text_keys = [
+            'team_hero_title',
+            'team_intro_body',
+            'team_section_main_title',
+            'team_section_council_title',
+            'team_section_executive_title',
+        ];
         $kv = [];
         foreach ($text_keys as $k) {
             $kv[$k] = pc_strip_text($_POST[$k] ?? '');
@@ -112,9 +118,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $pc = pc_get_many($conn, [
     'team_hero_title',
     'team_intro_body',
+    'team_section_main_title',
+    'team_section_council_title',
+    'team_section_executive_title',
 ], [
-    'team_hero_title' => 'Meet Our Team',
-    'team_intro_body' => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
+    'team_hero_title'              => 'Meet Our Team',
+    'team_intro_body'              => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
+    'team_section_main_title'      => 'Our Council and Management',
+    'team_section_council_title'   => 'Members of the Council',
+    'team_section_executive_title' => 'Executive Team',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -170,6 +182,31 @@ if (isset($_GET['edit'])) {
                 <label class="form-label fw-bold">Intro Paragraph</label>
                 <textarea name="team_intro_body" class="form-control" rows="3"><?= pc_h($pc['team_intro_body']) ?></textarea>
                 <div class="form-text">Shown below the page title, above the Council and Executive Team sections.</div>
+            </div>
+
+            <hr>
+            <h6 class="mb-3 text-muted">Section Headings (shown on the public page)</h6>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Main Section Heading</label>
+                <input type="text" name="team_section_main_title" class="form-control"
+                       value="<?= pc_h($pc['team_section_main_title']) ?>">
+                <div class="form-text">The big H2 over everything &mdash; default: &ldquo;Our Council and Management&rdquo;.</div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Council Section Title</label>
+                    <input type="text" name="team_section_council_title" class="form-control"
+                           value="<?= pc_h($pc['team_section_council_title']) ?>">
+                    <div class="form-text">Default: &ldquo;Members of the Council&rdquo;.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Executive Team Section Title</label>
+                    <input type="text" name="team_section_executive_title" class="form-control"
+                           value="<?= pc_h($pc['team_section_executive_title']) ?>">
+                    <div class="form-text">Default: &ldquo;Executive Team&rdquo;.</div>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Save Page Text</button>
@@ -228,7 +265,8 @@ $section_meta = [
             <?php foreach (['council','management','staff'] as $sec_key):
                 $rows = $by_section[$sec_key];
                 $meta = $section_meta[$sec_key];
-                if (empty($rows)) continue;
+                // Always render Council and Executive; Staff only when populated.
+                if (empty($rows) && $sec_key === 'staff') continue;
             ?>
                 <div class="mb-4">
                     <div class="d-flex align-items-baseline justify-content-between mb-2">
@@ -239,6 +277,17 @@ $section_meta = [
                         </h5>
                         <small class="text-muted"><?= htmlspecialchars($meta['blurb']) ?></small>
                     </div>
+                    <?php if (empty($rows)): ?>
+                        <div class="border rounded p-4 text-center text-muted">
+                            <i class="fas fa-user-plus fa-2x mb-2 d-block"></i>
+                            No <?= htmlspecialchars($meta['label']) ?> members yet.
+                            <button type="button" class="btn btn-sm btn-outline-primary ms-2"
+                                data-bs-toggle="modal" data-bs-target="#addMemberModal"
+                                onclick="document.querySelector('#addMemberModal select[name=section]').value='<?= $sec_key ?>';">
+                                + Add <?= htmlspecialchars($meta['label']) ?> member
+                            </button>
+                        </div>
+                    <?php else: ?>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead>
@@ -280,6 +329,7 @@ $section_meta = [
                             </tbody>
                         </table>
                     </div>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>

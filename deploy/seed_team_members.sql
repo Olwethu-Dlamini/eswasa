@@ -24,6 +24,13 @@ ON DUPLICATE KEY UPDATE
     sort_order = VALUES(sort_order),
     is_vacant  = VALUES(is_vacant);
 
+-- Seed the editable section titles used on Meetourteam.php (idempotent).
+INSERT INTO page_content (page_key, content) VALUES
+    ('team_section_main_title',      'Our Council and Management'),
+    ('team_section_council_title',   'Members of the Council'),
+    ('team_section_executive_title', 'Executive Team')
+ON DUPLICATE KEY UPDATE content = VALUES(content);
+
 -- Verify
 SELECT COUNT(*) AS total_after_seed FROM eswasa_team_members;
 SELECT id, name, role, section, sort_order, is_vacant
