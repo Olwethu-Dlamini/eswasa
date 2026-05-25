@@ -122,7 +122,7 @@ try {
             margin-top: 0;
             margin-bottom: 20px;
             font-weight: 700;
-            border-bottom: 3px solid rgba(43, 51, 136, 0.15);
+            border-bottom: 3px solid #2B3388;
             padding-bottom: 15px;
             display: inline-block;
         }
