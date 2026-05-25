@@ -46,7 +46,7 @@
             color: #fff;
         }
 
-        /* Event item — borders over shadows */
+        /* Event item — borders over shadows. Equal-height cards in a row. */
         .events__item {
             transition: border-color .25s ease, box-shadow .25s ease;
             border: 1px solid rgba(43, 51, 136, 0.15);
@@ -54,6 +54,9 @@
             overflow: hidden;
             margin-bottom: 30px;
             background: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         .events__item:hover {
             border-color: #2B3388;
@@ -64,20 +67,20 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
+            display: block;
         }
-        .events__date {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background-color: #2B3388;
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 3px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            z-index: 10;
+        .events__item-content {
+            padding: 16px;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
         }
-        .events__item-content { padding: 16px; }
+        .events__item-content .title {
+            font-size: 1.05rem;
+            margin: 0 0 10px;
+            line-height: 1.35;
+            min-height: 2.7em; /* hold 2 lines so card titles align */
+        }
         .events__item-content .title a {
             color: #2B3388;
             text-decoration: none;
@@ -86,9 +89,23 @@
         .events__item-content .title a:hover {
             color: #2B3388;
         }
-        .location {
+        .events__meta {
+            margin-top: auto;
             color: #2B3388;
             font-size: 0.9rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 10px;
+        }
+        .events__meta .location i,
+        .events__meta .event-date i { margin-right: 4px; }
+        .events__meta .event-date {
+            font-size: 0.8rem;
+            color: rgba(43, 51, 136, 0.75);
+        }
+        .events__meta .sep {
+            color: rgba(43, 51, 136, 0.35);
         }
 
         /* Recent Events Sidebar */
@@ -202,13 +219,12 @@
                                     $date = date('d M, Y', strtotime($event['event_date']));
                                     $image = !empty($event['image']) ? 'admin/uploads/' . htmlspecialchars($event['image']) : 'assets/img/default-event.jpg';
                                     ?>
-                                    <div class="col-xl-4 col-md-6">
+                                    <div class="col-xl-4 col-md-6 d-flex">
                                         <div class="events__item shine__animate-item">
                                             <div class="events__item-thumb">
                                                 <a href="event-details.php?id=<?= (int)$event['id'] ?>" class="shine__animate-link">
                                                     <img src="<?= $image ?>" alt="<?= htmlspecialchars($event['title']) ?>">
                                                 </a>
-                                                <span class="events__date"><i class="far fa-calendar-alt"></i> <?= $date ?></span>
                                             </div>
                                             <div class="events__item-content">
                                                 <h4 class="title">
@@ -216,10 +232,15 @@
                                                         <?= htmlspecialchars($event['title']) ?>
                                                     </a>
                                                 </h4>
-                                                <span class="location">
-                                                    <i class="fas fa-map-marker-alt"></i> 
-                                                    <?= htmlspecialchars($event['location'] ?: 'Online') ?>
-                                                </span>
+                                                <div class="events__meta">
+                                                    <span class="location">
+                                                        <i class="fas fa-map-marker-alt"></i><?= htmlspecialchars($event['location'] ?: 'Online') ?>
+                                                    </span>
+                                                    <span class="sep">&middot;</span>
+                                                    <span class="event-date">
+                                                        <i class="far fa-calendar-alt"></i><?= $date ?>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
