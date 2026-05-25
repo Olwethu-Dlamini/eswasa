@@ -1,6 +1,5 @@
 <?php
-if (!defined('ESWASA_ADMIN')) { exit('Direct access not permitted.'); }
-$stub_title      = 'Certification Quote Requests';
-$stub_public_url = 'qoute_certification.php';
-$stub_intro      = 'Inbox of certification-quote submissions from the public Request Certification Quote form (Management Systems / Product / Ingelo schemes).';
-include __DIR__ . '/_stub.php';
+if (!defined('ESWASA_ADMIN')) exit('Direct access not permitted.');
+$quote_source_filter = 'certification';
+$quote_page_label    = 'Certification Quote Requests';
+include __DIR__ . '/_quote_inbox.php';

@@ -98,14 +98,18 @@ if (!function_exists('pc_upload_image')) {
      * Handles a single file upload from $_FILES.
      * Returns relative path (e.g. "admin/uploads/foo.jpg") on success, null if no file,
      * false on error. Caller passes $field (the $_FILES key) and $prefix (filename prefix).
+     * $max_bytes defaults to 5MB.
      */
-    function pc_upload_image(string $field, string $upload_dir, string $prefix = 'cms'): ?string
+    function pc_upload_image(string $field, string $upload_dir, string $prefix = 'cms', int $max_bytes = 5242880): ?string
     {
         if (empty($_FILES[$field]) || ($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
             return null;
         }
         $err = $_FILES[$field]['error'] ?? UPLOAD_ERR_OK;
         if ($err !== UPLOAD_ERR_OK) return null;
+
+        $size = (int)($_FILES[$field]['size'] ?? 0);
+        if ($size <= 0 || $size > $max_bytes) return null;
 
         $tmp = $_FILES[$field]['tmp_name'];
         if (!is_uploaded_file($tmp)) return null;

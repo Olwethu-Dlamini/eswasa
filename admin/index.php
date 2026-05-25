@@ -54,7 +54,6 @@ $allowed_pages = [
     'qoute_certification.php',
     'qoute_calibration.php',
     'users.php',
-    'posts.php',
     'board_edit.php',
     'index_edit.php',
 ];
@@ -104,7 +103,6 @@ $page_titles = [
     'qoute_certification.php'   => 'Certification Quote Requests',
     'qoute_calibration.php'     => 'Calibration Quote Requests',
     'users.php'                 => 'Users',
-    'posts.php'                 => 'Posts',
     'board_edit.php'            => 'Board Members',
     'index_edit.php'            => 'Home Page',
 ];
