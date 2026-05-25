@@ -31,7 +31,17 @@
                 '<button type="button" class="btn btn-sm btn-light" id="cropperCloseBtn">✕ Close</button>' +
             '</div>' +
             '<div id="cropperBody">' +
-                '<div id="cropperImgWrap"><img id="cropperImg" alt=""></div>' +
+                '<div id="cropperHint">' +
+                    'Drag the corners or move the box. Only the area inside the bright box will be saved — everything outside it will be discarded.' +
+                '</div>' +
+                '<div id="cropperMain">' +
+                    '<div id="cropperImgWrap"><img id="cropperImg" alt=""></div>' +
+                    '<aside id="cropperSidebar">' +
+                        '<div class="cropper-side-label">Preview of what will be saved</div>' +
+                        '<div id="cropperPreview"></div>' +
+                        '<div id="cropperPreviewMeta" class="cropper-side-meta"></div>' +
+                    '</aside>' +
+                '</div>' +
             '</div>' +
             '<div id="cropperFooter">' +
                 '<div class="btn-group">' +
@@ -46,13 +56,24 @@
 
         var styles = document.createElement('style');
         styles.textContent =
-            '#cropperOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; flex-direction: column; align-items: stretch; justify-content: stretch; }' +
+            '#cropperOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; flex-direction: column; }' +
             '#cropperOverlay.show { display: flex; }' +
             '#cropperHeader { padding: 14px 24px; background: #222; color: #fff; display: flex; justify-content: space-between; align-items: center; }' +
-            '#cropperBody { flex: 1; width: 100%; padding: 16px; overflow: hidden; background: #111; display: flex; align-items: center; justify-content: center; }' +
-            '#cropperImgWrap { max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }' +
-            '#cropperImg { display: block; max-width: 100%; }' +
-            '#cropperFooter { padding: 16px 24px; background: #222; display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; }';
+            '#cropperBody { flex: 1; padding: 16px 24px; background: #111; display: flex; flex-direction: column; gap: 12px; min-height: 0; }' +
+            '#cropperHint { color: #ffd34d; font-size: 14px; padding: 8px 12px; background: rgba(255,211,77,0.08); border-left: 3px solid #ffd34d; }' +
+            '#cropperMain { flex: 1; display: flex; gap: 20px; min-height: 0; }' +
+            '#cropperImgWrap { flex: 1; min-width: 0; max-height: 100%; display: flex; align-items: center; justify-content: center; }' +
+            '#cropperImg { display: block; max-width: 100%; max-height: 100%; }' +
+            '#cropperSidebar { width: 280px; flex-shrink: 0; color: #fff; display: flex; flex-direction: column; gap: 8px; }' +
+            '.cropper-side-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.75; }' +
+            '#cropperPreview { width: 100%; aspect-ratio: 1; overflow: hidden; background: #000; border: 1px solid #444; }' +
+            '.cropper-side-meta { font-size: 12px; opacity: 0.7; line-height: 1.5; }' +
+            '#cropperFooter { padding: 16px 24px; background: #222; display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; }' +
+            '@media (max-width: 767.98px) {' +
+                '#cropperMain { flex-direction: column; }' +
+                '#cropperSidebar { width: 100%; }' +
+                '#cropperPreview { width: 200px; }' +
+            '}';
         document.head.appendChild(styles);
 
         return overlay;
@@ -60,14 +81,16 @@
 
     var overlay   = init();
     if (!overlay) return;
-    var imgEl     = document.getElementById('cropperImg');
-    var titleEl   = document.getElementById('cropperTitle');
-    var sizeEl    = document.getElementById('cropperSize');
-    var closeBtn  = document.getElementById('cropperCloseBtn');
-    var applyBtn  = document.getElementById('cropperApply');
-    var rotateL   = document.getElementById('cropperRotateL');
-    var rotateR   = document.getElementById('cropperRotateR');
-    var resetBtn  = document.getElementById('cropperReset');
+    var imgEl       = document.getElementById('cropperImg');
+    var titleEl     = document.getElementById('cropperTitle');
+    var sizeEl      = document.getElementById('cropperSize');
+    var closeBtn    = document.getElementById('cropperCloseBtn');
+    var applyBtn    = document.getElementById('cropperApply');
+    var rotateL     = document.getElementById('cropperRotateL');
+    var rotateR     = document.getElementById('cropperRotateR');
+    var resetBtn    = document.getElementById('cropperReset');
+    var previewEl   = document.getElementById('cropperPreview');
+    var previewMeta = document.getElementById('cropperPreviewMeta');
 
     var cropper       = null;
     var currentInput  = null;
@@ -93,6 +116,18 @@
             console.warn('cropper: no hidden input named "' + hiddenName + '" found in form');
         }
 
+        // Match the live preview's aspect to the target crop so the user
+        // sees exactly the area that will be saved.
+        if (previewEl) {
+            previewEl.style.aspectRatio = (currentW > 0 && currentH > 0)
+                ? (currentW + ' / ' + currentH) : '1 / 1';
+        }
+        if (previewMeta) {
+            previewMeta.textContent = (currentW > 0 && currentH > 0)
+                ? ('Output size: ' + currentW + ' × ' + currentH + ' px')
+                : '';
+        }
+
         var reader = new FileReader();
         reader.onload = function (e) {
             if (cropper) { cropper.destroy(); cropper = null; }
@@ -105,6 +140,7 @@
                     autoCropArea: 1,
                     responsive: true,
                     background: true,
+                    preview: '#cropperPreview',
                     ready: function () { this.cropper.crop(); }
                 });
             };

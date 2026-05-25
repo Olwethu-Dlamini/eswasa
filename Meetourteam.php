@@ -310,7 +310,7 @@ try {
             height: 100%;
             background-color: transparent;
             color: rgba(43, 51, 136, 0.55);
-            display: flex;
+            display: none; /* hidden by default — only shows when no image src */
             align-items: center;
             justify-content: center;
             font-style: italic;
@@ -318,7 +318,8 @@ try {
             text-align: center;
             padding: 0 20px;
         }
-        .staff-photo[src=""] + .staff-photo-placeholder {
+        .staff-photo[src=""] + .staff-photo-placeholder,
+        .staff-photo:not([src]) + .staff-photo-placeholder {
             display: flex;
         }
 
