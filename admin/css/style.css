@@ -40,6 +40,38 @@ body {
     overflow-x: hidden;
     flex-shrink: 0;
     transition: width 0.3s ease, min-width 0.3s ease;
+
+    /* Reserve scrollbar gutter so content doesn't shift / get clipped
+       when a submenu opens and the scrollbar appears. */
+    scrollbar-gutter: stable;
+
+    /* Thin scrollbar — Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+
+/* Thin scrollbar — Chromium/WebKit */
+#sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+#sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+#sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 4px;
+}
+#sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.32);
+}
+[data-bs-theme="dark"] #sidebar {
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+[data-bs-theme="dark"] #sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+}
+[data-bs-theme="dark"] #sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.32);
 }
 
 .sidebar-inner {
