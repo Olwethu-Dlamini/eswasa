@@ -54,7 +54,6 @@ $allowed_pages = [
     'qoute_certification.php',
     'qoute_calibration.php',
     'users.php',
-    'board_edit.php',
     'index_edit.php',
 ];
 
@@ -103,7 +102,6 @@ $page_titles = [
     'qoute_certification.php'   => 'Certification Quote Requests',
     'qoute_calibration.php'     => 'Calibration Quote Requests',
     'users.php'                 => 'Users',
-    'board_edit.php'            => 'Board Members',
     'index_edit.php'            => 'Home Page',
 ];
 $page_title = $page_titles[$page] ?? ucfirst(str_replace(['.php','_'], ['', ' '], $page));

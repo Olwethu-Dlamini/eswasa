@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id          = $action === 'update' ? (int)($_POST['id'] ?? 0) : 0;
         $name        = pc_strip_text($_POST['name'] ?? '');
         $role        = pc_strip_text($_POST['role'] ?? '');
-        $section     = ($_POST['section'] ?? 'management') === 'staff' ? 'staff' : 'management';
+        $section_raw = (string)($_POST['section'] ?? 'management');
+        $section     = in_array($section_raw, ['council','management','staff'], true) ? $section_raw : 'management';
         $bio         = pc_strip_text($_POST['bio'] ?? '');
         $linkedin    = pc_strip_text($_POST['social_linkedin'] ?? '');
         $sort_order  = (int)($_POST['sort_order'] ?? 0);
@@ -215,7 +216,12 @@ if (isset($_GET['edit'])) {
                                 </td>
                                 <td><?= pc_h($m['name']) ?></td>
                                 <td><?= pc_h($m['role']) ?></td>
-                                <td><span class="badge bg-secondary"><?= pc_h($m['section']) ?></span></td>
+                                <?php
+                                    $sec = (string)$m['section'];
+                                    $sec_label = ['council' => 'Council', 'management' => 'Executive Team', 'staff' => 'Staff'][$sec] ?? ucfirst($sec);
+                                    $sec_badge = ['council' => 'bg-info', 'management' => 'bg-primary', 'staff' => 'bg-secondary'][$sec] ?? 'bg-secondary';
+                                ?>
+                                <td><span class="badge <?= $sec_badge ?>"><?= pc_h($sec_label) ?></span></td>
                                 <td><?= (int)$m['sort_order'] ?></td>
                                 <td><?= !empty($m['is_vacant']) ? '<span class="badge bg-warning text-dark">Vacant</span>' : '' ?></td>
                                 <td>
@@ -265,7 +271,8 @@ if (isset($_GET['edit'])) {
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold">Section *</label>
                             <select name="section" class="form-select" required>
-                                <option value="management">Management</option>
+                                <option value="council">Council</option>
+                                <option value="management" selected>Executive Team</option>
                                 <option value="staff">Staff</option>
                             </select>
                         </div>
@@ -338,7 +345,8 @@ if (isset($_GET['edit'])) {
                 <div class="col-md-4 mb-3">
                     <label class="form-label fw-bold">Section *</label>
                     <select name="section" class="form-select" required>
-                        <option value="management" <?= $edit_member['section'] === 'management' ? 'selected' : '' ?>>Management</option>
+                        <option value="council" <?= $edit_member['section'] === 'council' ? 'selected' : '' ?>>Council</option>
+                        <option value="management" <?= $edit_member['section'] === 'management' ? 'selected' : '' ?>>Executive Team</option>
                         <option value="staff" <?= $edit_member['section'] === 'staff' ? 'selected' : '' ?>>Staff</option>
                     </select>
                 </div>

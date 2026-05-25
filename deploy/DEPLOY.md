@@ -80,9 +80,11 @@ work.php
 ## 2. Delete these files from the server
 ```
 news.php
+board.php
 admin/pages/dashboard.php
 admin/pages/posts.php
 admin/pages/training_edit.php
+admin/pages/board_edit.php
 ```
 
 ## 3. Make sure this directory exists and is writable

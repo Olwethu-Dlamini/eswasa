@@ -60,10 +60,26 @@ SET @ddl := IF(@col_exists = 0,
     'SELECT 1');
 PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
+-- ── 1c. Extend team.section enum to include 'council' and migrate
+--       any rows from eswasa_board_members into team as section='council'.
+--       board.php has been retired; Council + Executive Team now both
+--       live on Meetourteam.php and are driven by eswasa_team_members.
+ALTER TABLE eswasa_team_members
+  MODIFY COLUMN section ENUM('management','staff','council') NOT NULL DEFAULT 'management';
+
+INSERT INTO eswasa_team_members (name, role, photo, bio, section, social_linkedin, sort_order)
+  SELECT b.name, b.role, b.photo, b.bio, 'council', b.social_linkedin, b.sort_order
+  FROM eswasa_board_members b
+  WHERE NOT EXISTS (
+    SELECT 1 FROM eswasa_team_members t WHERE t.name = b.name AND t.section = 'council'
+  );
+
 -- ── 2. CLEAN OUT KEYS THAT WERE DROPPED THIS SESSION ──────────
 DELETE FROM page_content WHERE page_key LIKE 'news\_%';
 DELETE FROM page_content WHERE page_key = 'breadcrumb_bg_news';
 DELETE FROM page_content WHERE page_key = 'implementation_info';
+DELETE FROM page_content WHERE page_key LIKE 'board\_%';
+DELETE FROM page_content WHERE page_key = 'breadcrumb_bg_board';
 
 -- ── 3. SEED + UPDATE page_content (REPLACE INTO from local) ───
 REPLACE INTO `page_content` VALUES (1,'standards_mandate','Standards Development Mandate','<p>Under Section 5 of the <em>Standards Act, 1968...</em></p>','2026-01-14 09:46:46');

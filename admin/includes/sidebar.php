@@ -34,7 +34,7 @@ function submenu_open($pages, $current) {
             </li>
 
             <!-- About Us -->
-            <?php $about_pages = ['about_edit.php','about_team.php','board_edit.php']; ?>
+            <?php $about_pages = ['about_edit.php','about_team.php']; ?>
             <li class="nav-item">
                 <a class="nav-link <?= is_active_group($about_pages, $current_page) ?> d-flex justify-content-between"
                    href="#submenu-about" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $about_pages) ? 'true' : 'false' ?>">
@@ -44,7 +44,6 @@ function submenu_open($pages, $current) {
                 <ul class="nav flex-column ms-3 collapse <?= submenu_open($about_pages, $current_page) ?>" id="submenu-about">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='about_edit.php'?'active':'' ?>" href="index.php?page=about_edit.php">Who Are We</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='about_team.php'?'active':'' ?>" href="index.php?page=about_team.php">Meet Our Team</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='board_edit.php'?'active':'' ?>" href="index.php?page=board_edit.php">Board Members</a></li>
                 </ul>
             </li>
 

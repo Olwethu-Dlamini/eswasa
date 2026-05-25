@@ -11,7 +11,6 @@ if (!is_dir($upload_dir)) {
 // ── Page definitions: slug => [label, frontend file, default image] ──
 $pages = [
     'services'            => ['Our Services',           'services.php',             'assets/img/bg.png'],
-    'board'               => ['Board',                  'board.php',                'assets/img/bg.png'],
     'calibration'         => ['Calibration',            'Calibration.php',          'assets/img/bg/calibrationbg.png'],
     'certification'       => ['Certification',          'Certification.php',        'assets/img/bg/breadcrumb_bg.jpg'],
     'contact'             => ['Contact Us',             'contact.php',              'assets/img/bg/breadcrumb_bg.jpg'],

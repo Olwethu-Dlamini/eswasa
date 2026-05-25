@@ -12,24 +12,23 @@ $pc = pc_get_many($conn, [
     'team_intro_body' => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
 ]);
 
-// Team members from dedicated table (live rows only — is_vacant = 0)
-$management = [];
-$staff = [];
-// Wrapped in try/catch because PHP 8.1+ mysqli throws on bad queries
-// by default; if the table is missing on this environment we render
-// empty sections rather than 500ing the page.
+// Team members from dedicated table (live rows only — is_vacant = 0).
+// The page has two sections: Council (governance) and Executive Team.
+// The existing 'management' section value is treated as Executive Team.
+$council    = [];
+$management = []; // = Executive Team in the UI
+$staff      = [];
 try {
     if ($res = @$conn->query("SELECT * FROM eswasa_team_members WHERE is_vacant = 0 ORDER BY sort_order ASC, name ASC")) {
         while ($r = $res->fetch_assoc()) {
-            if (($r['section'] ?? '') === 'staff') {
-                $staff[] = $r;
-            } else {
-                $management[] = $r;
-            }
+            $sec = (string)($r['section'] ?? 'management');
+            if      ($sec === 'council') $council[]    = $r;
+            elseif  ($sec === 'staff')   $staff[]      = $r;
+            else                          $management[] = $r;
         }
     }
 } catch (\Throwable $e) {
-    // table/schema missing on this environment — fall back to empty list
+    // table/schema missing on this environment — fall back to empty lists
 }
 ?>
 <!doctype html>
@@ -390,6 +389,10 @@ try {
             </div>
 
             <!-- Council Section -->
+            <?php if (!empty($council)):
+                $council_chair   = $council[0];
+                $council_members = array_slice($council, 1);
+            ?>
             <div class="team-section">
                 <h3 class="section-title">Members of the Council</h3>
                 <div class="section-divider"></div>
@@ -397,54 +400,43 @@ try {
                     <div class="team-leader">
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="admin/uploads/dumile.png" alt="Mrs. Dumile Sibandze" class="team-img">
+                                <img src="<?= pc_h(pc_image_src($council_chair['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($council_chair['name']) ?>" class="team-img">
                             </div>
-                            <h4 class="team-name">Mrs. Dumile Sibandze</h4>
-                            <p class="team-role">Council Chair</p>
-                            <div class="team-social"></div>
+                            <h4 class="team-name"><?= pc_h($council_chair['name']) ?></h4>
+                            <p class="team-role"><?= pc_h($council_chair['role']) ?></p>
+                            <div class="team-social">
+                                <?php if (!empty($council_chair['social_linkedin'])): ?>
+                                    <a href="<?= pc_h($council_chair['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
+                    <?php if (!empty($council_members)): ?>
                     <div class="team-members">
-                        <div class="team-card">
-                            <div class="team-img-container">
-                                <img src="admin/uploads/cebile.jpg" alt="Ms. Cebile Nhlabatsi" class="team-img">
+                        <?php foreach ($council_members as $c): ?>
+                            <div class="team-card">
+                                <div class="team-img-container">
+                                    <img src="<?= pc_h(pc_image_src($c['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($c['name']) ?>" class="team-img">
+                                </div>
+                                <h4 class="team-name"><?= pc_h($c['name']) ?></h4>
+                                <p class="team-role"><?= pc_h($c['role']) ?></p>
+                                <div class="team-social">
+                                    <?php if (!empty($c['social_linkedin'])): ?>
+                                        <a href="<?= pc_h($c['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                            <h4 class="team-name">Ms. Cebile Nhlabatsi</h4>
-                            <p class="team-role">Council Member</p>
-                            <div class="team-social"></div>
-                        </div>
-                        <div class="team-card">
-                            <div class="team-img-container">
-                                <img src="admin/uploads/Dladla.jpg" alt="Ms. Nompumelelo Dladla" class="team-img">
-                            </div>
-                            <h4 class="team-name">Ms. Nompumelelo Dladla</h4>
-                            <p class="team-role">Council Member</p>
-                            <div class="team-social"></div>
-                        </div>
-                        <div class="team-card">
-                            <div class="team-img-container">
-                                <img src="admin/uploads/Tania.jpg" alt="Ms. Tania Fyfe" class="team-img">
-                            </div>
-                            <h4 class="team-name">Ms. Tania Fyfe</h4>
-                            <p class="team-role">Council Member</p>
-                            <div class="team-social"></div>
-                        </div>
-                        <div class="team-card">
-                            <div class="team-img-container">
-                                <img src="admin/uploads/sukati.png" alt="Ms. Sipholesihle Sukati" class="team-img">
-                            </div>
-                            <h4 class="team-name">Ms. Sipholesihle Sukati</h4>
-                            <p class="team-role">Council Member</p>
-                            <div class="team-social"></div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Management Section -->
             <?php if (!empty($management)): ?>
             <div class="team-section">
-                <h3 class="section-title">Management Team</h3>
+                <h3 class="section-title">Executive Team</h3>
                 <div class="section-divider"></div>
                 <div class="team-layout">
                     <?php
