@@ -152,9 +152,29 @@
             margin-top: 4px;
         }
 
+        /* Pagination — theme-aligned */
+        .pagination__wrap ul li a {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.25);
+            color: #2B3388 !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 0.95rem !important;
+            font-weight: 600 !important;
+            min-width: 45px;
+            width: auto;
+            padding: 0 14px;
+        }
+        .pagination__wrap ul li.active a,
+        .pagination__wrap ul li a:hover {
+            background: #2B3388;
+            border-color: #2B3388;
+            color: #fff !important;
+        }
+
         @media (max-width: 767.98px) {
             .events__item-thumb img { height: 170px; }
             .rc-post-thumb { width: 52px; height: 52px; }
+            .pagination__wrap ul li a { min-width: 38px; height: 38px; font-size: 0.9rem !important; padding: 0 10px; }
         }
     </style>
 </head>
@@ -174,17 +194,32 @@
     }
     $conn->set_charset("utf8mb4");
 
-    // Fetch all upcoming & recent events (sorted by date, soonest first)
-    $result = $conn->query("
-        SELECT * FROM eswasa_events 
-        ORDER BY event_date ASC
-    ");
+    // Pagination — 6 events per page
+    $per_page = 6;
+    $page = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
+
+    $total_events = 0;
+    if ($cnt = $conn->query("SELECT COUNT(*) AS c FROM eswasa_events")) {
+        $row = $cnt->fetch_assoc();
+        $total_events = (int)($row['c'] ?? 0);
+    }
+    $total_pages = max(1, (int)ceil($total_events / $per_page));
+    if ($page > $total_pages) $page = $total_pages;
+    $offset = ($page - 1) * $per_page;
+
+    // Page slice — ORDER BY date ASC. Bind LIMIT/OFFSET as params (mysqli supports it).
+    $result = null;
+    if ($stmt = $conn->prepare("SELECT * FROM eswasa_events ORDER BY event_date ASC LIMIT ? OFFSET ?")) {
+        $stmt->bind_param('ii', $per_page, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    }
 
     // Fetch recent events for sidebar (latest 4)
     $recent_result = $conn->query("
-        SELECT id, title, event_date, image 
-        FROM eswasa_events 
-        ORDER BY event_date DESC 
+        SELECT id, title, event_date, image
+        FROM eswasa_events
+        ORDER BY event_date DESC
         LIMIT 4
     ");
     ?>
@@ -252,13 +287,20 @@
                             <?php endif; ?>
                         </div>
 
-                        <!-- Pagination (static for now) -->
-                        <?php if ($result && $result->num_rows > 9): ?>
-                            <nav class="pagination__wrap mt-30">
+                        <?php if ($total_pages > 1): ?>
+                            <nav class="pagination__wrap mt-30" aria-label="Events pagination">
                                 <ul class="list-wrap">
-                                    <li class="active"><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">Next</a></li>
+                                    <?php if ($page > 1): ?>
+                                        <li><a href="?p=<?= $page - 1 ?>" aria-label="Previous page">&laquo; Prev</a></li>
+                                    <?php endif; ?>
+                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                        <li class="<?= $i === $page ? 'active' : '' ?>">
+                                            <a href="?p=<?= $i ?>"><?= $i ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <?php if ($page < $total_pages): ?>
+                                        <li><a href="?p=<?= $page + 1 ?>" aria-label="Next page">Next &raquo;</a></li>
+                                    <?php endif; ?>
                                 </ul>
                             </nav>
                         <?php endif; ?>

@@ -6,6 +6,8 @@ if ($conn->connect_error) {
 }
 $conn->set_charset("utf8mb4");
 
+require_once __DIR__ . '/includes/event_images.php';
+
 // Get event ID from URL
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: events.php");
@@ -19,6 +21,9 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 $event = $result->fetch_assoc();
+
+// Gallery for this event (falls back to legacy single `image` column if empty)
+$event_images = $event ? eswasa_get_event_images($conn, (int)$event['id']) : [];
 
 if (!$event) {
     header("HTTP/1.0 404 Not Found");
@@ -44,6 +49,7 @@ $recentEvents = $recentStmt->get_result();
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <!-- Keep other CSS if needed, but main.css should cover most -->
     <style>
@@ -137,6 +143,80 @@ $recentEvents = $recentStmt->get_result();
             font-size: 0.85rem;
         }
 
+        /* Event Gallery */
+        .event-gallery {
+            margin: 24px 0 32px;
+        }
+        .event-gallery__main {
+            position: relative;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .event-gallery__main a { display: block; }
+        .event-gallery__main img {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            display: block;
+        }
+        .event-gallery__zoom-hint {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(43, 51, 136, 0.85);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            pointer-events: none;
+        }
+        .event-gallery__zoom-hint i { margin-right: 5px; }
+        .event-gallery__thumbs {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+        }
+        .event-gallery__thumb {
+            flex: 0 0 90px;
+            height: 70px;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+            scroll-snap-align: start;
+            cursor: pointer;
+            background: #fff;
+            padding: 0;
+            transition: border-color .15s ease;
+        }
+        .event-gallery__thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .event-gallery__thumb.is-active,
+        .event-gallery__thumb:hover {
+            border-color: #2B3388;
+        }
+        .event-gallery__count {
+            font-size: 0.85rem;
+            color: rgba(43, 51, 136, 0.75);
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        /* Magnific popup theme tweaks */
+        .mfp-bg { background: rgba(43, 51, 136, 0.92); opacity: 1; }
+        .mfp-title { color: #fff; font-family: Arial, sans-serif; font-size: 0.95rem; padding-right: 60px; }
+        .mfp-counter { color: #fff; font-family: Arial, sans-serif; }
+
         @media (max-width: 767.98px) {
             .breadcrumb-area .breadcrumb-content {
                 padding: 20px 10px 12px 10px;
@@ -155,6 +235,8 @@ $recentEvents = $recentStmt->get_result();
                 margin-bottom: 5px;
                 margin-left: 0 !important;
             }
+            .event-gallery__main img { height: 260px; }
+            .event-gallery__thumb { flex: 0 0 72px; height: 56px; }
         }
     </style>
 </head>
@@ -201,6 +283,44 @@ $recentEvents = $recentStmt->get_result();
                             <?php endif; ?>
                         </div>
 
+                        <?php if (!empty($event_images)): ?>
+                            <?php $first = $event_images[0]; ?>
+                            <div class="event-gallery" id="event-gallery-<?= (int)$event['id'] ?>">
+                                <div class="event-gallery__main">
+                                    <?php foreach ($event_images as $idx => $img): ?>
+                                        <a href="admin/uploads/<?= htmlspecialchars($img['image']) ?>"
+                                           data-mfp-gallery="event-<?= (int)$event['id'] ?>"
+                                           title="<?= htmlspecialchars($event['title']) ?> &mdash; image <?= $idx + 1 ?> of <?= count($event_images) ?>"
+                                           class="event-gallery__lightbox<?= $idx === 0 ? '' : ' d-none' ?>">
+                                            <?php if ($idx === 0): ?>
+                                                <img src="admin/uploads/<?= htmlspecialchars($img['image']) ?>"
+                                                     alt="<?= htmlspecialchars($event['title']) ?>"
+                                                     id="event-gallery-main-img-<?= (int)$event['id'] ?>"
+                                                     onerror="this.src='assets/img/default-event.jpg'; this.onerror=null;">
+                                                <span class="event-gallery__zoom-hint"><i class="fas fa-search-plus"></i>Tap to zoom</span>
+                                            <?php endif; ?>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php if (count($event_images) > 1): ?>
+                                    <div class="event-gallery__thumbs" role="tablist">
+                                        <?php foreach ($event_images as $idx => $img): ?>
+                                            <button type="button"
+                                                    class="event-gallery__thumb<?= $idx === 0 ? ' is-active' : '' ?>"
+                                                    data-img="admin/uploads/<?= htmlspecialchars($img['image']) ?>"
+                                                    data-index="<?= $idx ?>"
+                                                    aria-label="Show image <?= $idx + 1 ?>">
+                                                <img src="admin/uploads/<?= htmlspecialchars($img['image']) ?>"
+                                                     alt="<?= htmlspecialchars($event['title']) ?> thumbnail <?= $idx + 1 ?>"
+                                                     onerror="this.src='assets/img/default-thumb.jpg'; this.onerror=null;">
+                                            </button>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <div class="event-gallery__count"><?= count($event_images) ?> images &mdash; swipe or click to zoom</div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="event-content" style="font-size:1.13em; line-height:1.7;">
                             <?= nl2br(htmlspecialchars($event['description'])) ?>
                         </div>
@@ -245,6 +365,66 @@ $recentEvents = $recentStmt->get_result();
 
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        (function ($) {
+            'use strict';
+            var $gallery = $('.event-gallery');
+            if (!$gallery.length) return;
+
+            // Build a scoped lightbox per gallery — limited to THIS event's images only.
+            $gallery.each(function () {
+                var $g = $(this);
+                var eventId = $g.attr('id');
+                var $links = $g.find('.event-gallery__lightbox');
+                if (!$links.length) return;
+
+                $links.magnificPopup({
+                    delegate: '',
+                    type: 'image',
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: true,
+                        preload: [0, 1],
+                        tCounter: '<span class="mfp-counter">%curr% of %total%</span>'
+                    },
+                    image: {
+                        titleSrc: function (item) {
+                            return item.el.attr('title');
+                        }
+                    },
+                    items: $links.map(function () {
+                        return { src: $(this).attr('href'), title: $(this).attr('title') };
+                    }).get(),
+                    closeOnContentClick: false,
+                    mainClass: 'mfp-with-zoom',
+                    zoom: {
+                        enabled: true,
+                        duration: 250,
+                        easing: 'ease-in-out'
+                    }
+                });
+
+                // Thumb click → swap main image + sync lightbox start index
+                $g.on('click', '.event-gallery__thumb', function (e) {
+                    e.preventDefault();
+                    var $btn = $(this);
+                    var idx = parseInt($btn.attr('data-index'), 10) || 0;
+                    var src = $btn.attr('data-img');
+                    $g.find('.event-gallery__thumb').removeClass('is-active');
+                    $btn.addClass('is-active');
+                    $g.find('[id^="event-gallery-main-img-"]').attr('src', src);
+                    // Re-bind so the main click opens at the chosen index
+                    $g.find('.event-gallery__lightbox').first().magnificPopup('open', { index: idx });
+                });
+
+                // Bind only the first <a> as the click target for the main image
+                $g.find('.event-gallery__main').on('click', 'a.event-gallery__lightbox', function (e) {
+                    // magnificPopup already handles the click; nothing extra here.
+                });
+            });
+        })(jQuery);
+    </script>
 </body>
 </html>
