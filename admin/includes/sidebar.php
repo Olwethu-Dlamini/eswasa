@@ -125,7 +125,7 @@ function submenu_open($pages, $current) {
             </li>
 
             <!-- Updates -->
-            <?php $upd_pages = ['events_edit.php','vacancies_edit.php','publications_edit.php','announcements_edit.php','news_edit.php','faq_edit.php']; ?>
+            <?php $upd_pages = ['events_edit.php','vacancies_edit.php','publications_edit.php','announcements_edit.php','faq_edit.php']; ?>
             <li class="nav-item">
                 <a class="nav-link <?= is_active_group($upd_pages, $current_page) ?> d-flex justify-content-between"
                    href="#submenu-updates" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $upd_pages) ? 'true' : 'false' ?>">
@@ -137,7 +137,6 @@ function submenu_open($pages, $current) {
                     <li class="nav-item"><a class="nav-link <?= $current_page==='vacancies_edit.php'?'active':'' ?>" href="index.php?page=vacancies_edit.php">Vacancies</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='publications_edit.php'?'active':'' ?>" href="index.php?page=publications_edit.php">Publications</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='announcements_edit.php'?'active':'' ?>" href="index.php?page=announcements_edit.php">Announcements</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='news_edit.php'?'active':'' ?>" href="index.php?page=news_edit.php">News</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='faq_edit.php'?'active':'' ?>" href="index.php?page=faq_edit.php">FAQ</a></li>
                 </ul>
             </li>
