@@ -1,8 +1,11 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-include 'includes/db_connect.php';
-include_once 'includes/breadcrumb_helper.php';
+include_once __DIR__ . '/includes/db_connect.php';
+$conn->set_charset('utf8mb4');
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+require __DIR__ . '/includes/cms_keys_customer_feedback.php';
+
+$pc = pc_get_many($conn, $customer_feedback_keys, $customer_feedback_defaults);
 
 $success = false;
 $error = '';
@@ -39,7 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             rating TINYINT,
             suggestion TEXT,
             email VARCHAR(150),
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            is_read TINYINT(1) DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_created (created_at),
+            INDEX idx_is_read (is_read)
         )");
 
         $stmt = $conn->prepare("INSERT INTO eswasa_customer_feedback
@@ -53,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if ($stmt && $stmt->execute()) {
-            $to = 'info@eswasa.co.sz';
+            $to = $pc['customer_feedback_fallback_email'] ?: 'info@eswasa.co.sz';
             $email_subject = "Customer Feedback: " . $prefill['feedback_type'];
             $body  = "<h3>New Customer Feedback</h3>";
             $body .= "<p><strong>Service:</strong> " . htmlspecialchars($prefill['service']) . "</p>";
@@ -75,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: customer-feedback.php?success=1");
             exit;
         } else {
-            $error = 'Sorry — we could not save your feedback. Please try again or email info@eswasa.co.sz directly.';
+            $fallback = pc_h($pc['customer_feedback_fallback_email']);
+            $error = "Sorry — we could not save your feedback. Please try again or email {$fallback} directly.";
         }
     }
 }
@@ -90,38 +97,20 @@ if (isset($_GET['success'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Customer Feedback &amp; Complaints - ESWASA</title>
+    <title><?= pc_h($pc['customer_feedback_breadcrumb_title']) ?> - ESWASA</title>
     <meta name="description" content="Share feedback, file a complaint, or lodge a compliment with the Eswatini Standards Authority.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/css/select2.min.css">
-    <link rel="stylesheet" href="assets/css/odometer.css">
-    <link rel="stylesheet" href="assets/css/slick.css">
-    <link rel="stylesheet" href="assets/css/aos.css">
-    <link rel="stylesheet" href="assets/css/spacing.css">
-    <link rel="stylesheet" href="assets/css/tg-cursor.css">
-    <link rel="stylesheet" type="text/css" href="rs-plugin/css/settings.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="assets/css/extralayers.css" media="screen">
     <link rel="stylesheet" href="assets/css/main.css">
 
     <style>
-        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 15px;
-            color: #2B3388;
-        }
-        body h1, body h2, body h3, body h4, body h5, body h6 {
-            font-family: Arial, sans-serif;
-            color: #2B3388;
-        }
-        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
-            font-family: Arial, sans-serif;
-        }
+        /* ESWASA theme base — locked spec (#2B3388, #fff, Arial 15px) */
+        body { font-family: Arial, sans-serif; font-size: 15px; color: #2B3388; }
+        body h1, body h2, body h3, body h4, body h5, body h6 { font-family: Arial, sans-serif; color: #2B3388; }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td { font-family: Arial, sans-serif; }
         .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
@@ -129,32 +118,24 @@ if (isset($_GET['success'])) {
         .breadcrumb-separator i { color: #fff !important; }
         .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
 
-        .display-6 { color: #2B3388; font-weight: 700; letter-spacing: -0.01em; }
-        .section-divider {
-            width: 60px; height: 2px; background: #2B3388;
-            margin: 16px auto 0; border-radius: 0;
-        }
-        .intro-card {
-            background: #fff;
+        /* Intro info-box (canonical centered title + 60px divider) — NO blue-left accent */
+        .info-box {
+            background-color: rgba(43, 51, 136, 0.04);
             border: 1px solid rgba(43, 51, 136, 0.15);
-            border-left: 3px solid #2B3388;
             border-radius: 4px;
-            padding: 22px 26px;
-            max-width: 920px;
-            margin: 0 auto 36px;
+            padding: 25px;
+            margin-bottom: 30px;
         }
-        .intro-card p {
-            margin: 0; color: #2B3388;
-            font-size: 15px; line-height: 1.65;
-        }
+        .info-box.is-intro { text-align: center; }
+        .info-box.is-intro p { text-align: left; margin: 0; line-height: 1.65; }
 
-        .feedback-section { padding: 60px 0 80px; }
+        .feedback-section { padding: 50px 0 70px; }
 
         .feedback-card {
             background: #fff;
             border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
-            padding: 36px 36px 32px;
+            padding: 32px;
             max-width: 920px;
             margin: 0 auto;
         }
@@ -188,7 +169,7 @@ if (isset($_GET['success'])) {
         }
         .feedback-card textarea { min-height: 120px; resize: vertical; }
 
-        .radio-row { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 6px; }
+        .radio-row { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 6px; }
         .radio-row label {
             font-weight: 500;
             color: #2B3388;
@@ -238,37 +219,31 @@ if (isset($_GET['success'])) {
         .alert-success,
         .alert-error {
             padding: 14px 18px;
-            border-radius: 3px;
+            border-radius: 4px;
             margin-bottom: 24px;
             font-size: 0.95rem;
         }
         .alert-success {
             background: rgba(43, 51, 136, 0.06);
-            border-left: 4px solid #2B3388;
+            border: 1px solid rgba(43, 51, 136, 0.25);
             color: #2B3388;
         }
         .alert-error {
             background: rgba(176, 0, 0, 0.06);
-            border-left: 4px solid #b00;
+            border: 1px solid rgba(176, 0, 0, 0.30);
             color: #b00;
         }
 
         @media (max-width: 767.98px) {
-            .feedback-section { padding: 40px 0 50px; }
-            .feedback-card { padding: 26px 22px 24px; }
-            .breadcrumb-content .title { font-size: 1.6rem; }
+            .feedback-section { padding: 30px 0 40px; }
+            .feedback-card { padding: 22px; }
+            .breadcrumb-content .title { font-size: 1.5rem; }
             .rating-row label { font-size: 1.55rem; }
         }
     </style>
 </head>
 <body>
-    <div id="preloader">
-        <div class="spinner">
-            <div class="sk-dot1"></div><div class="sk-dot2"></div>
-            <div class="rect3"></div><div class="rect4"></div>
-            <div class="rect5"></div>
-        </div>
-    </div>
+
     <button class="scroll__top scroll-to-target" data-target="html">
         <i class="fas fa-angle-up"></i>
     </button>
@@ -277,21 +252,19 @@ if (isset($_GET['success'])) {
 
     <main class="main-area fix">
 
-        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('customer-feedback', 'assets/img/bg.png') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('customer-feedback', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
-                                <span property="itemListElement" typeof="ListItem">
-                                    <a href="index.php">Home</a>
-                                </span>
+                                <span><a href="index.php"><?= pc_h($pc['customer_feedback_breadcrumb_home_label']) ?></a></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Customer Care</span>
+                                <span><?= pc_h($pc['customer_feedback_breadcrumb_parent_label']) ?></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Feedback &amp; Complaints</span>
+                                <span><?= pc_h($pc['customer_feedback_breadcrumb_current_label']) ?></span>
                             </nav>
-                            <h3 class="title">Customer Feedback / Complaint Form</h3>
+                            <h3 class="title"><?= pc_h($pc['customer_feedback_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -301,15 +274,15 @@ if (isset($_GET['success'])) {
         <section class="feedback-section">
             <div class="container">
 
-                <div class="intro-card">
-                    <p>Kindly fill in all the fields below.</p>
+                <div class="info-box is-intro">
+                    <?= pc_paragraphs_html($pc['customer_feedback_intro_body']) ?>
                 </div>
 
                 <div class="feedback-card">
 
                     <?php if ($success): ?>
                         <div class="alert-success">
-                            <strong>Thank you.</strong> Your feedback has been submitted successfully. We will be in touch.
+                            <?= pc_h($pc['customer_feedback_success_message']) ?>
                         </div>
                     <?php endif; ?>
 
@@ -340,7 +313,7 @@ if (isset($_GET['success'])) {
                                 ];
                                 foreach ($services as $s) {
                                     $sel = $prefill['service'] === $s ? 'selected' : '';
-                                    echo "<option value=\"$s\" $sel>$s</option>";
+                                    echo '<option value="' . htmlspecialchars($s) . '" ' . $sel . '>' . htmlspecialchars($s) . '</option>';
                                 }
                                 ?>
                             </select>
@@ -353,7 +326,7 @@ if (isset($_GET['success'])) {
                                 $types = ['Complaint', 'Compliment', 'Suggestion'];
                                 foreach ($types as $t) {
                                     $chk = $prefill['feedback_type'] === $t ? 'checked' : '';
-                                    echo "<label><input type=\"radio\" name=\"feedback_type\" value=\"$t\" $chk> $t</label>";
+                                    echo '<label><input type="radio" name="feedback_type" value="' . htmlspecialchars($t) . '" ' . $chk . '> ' . htmlspecialchars($t) . '</label>';
                                 }
                                 ?>
                             </div>
@@ -366,7 +339,7 @@ if (isset($_GET['success'])) {
                                 $resolved = ['Yes', 'No', 'Partially'];
                                 foreach ($resolved as $r) {
                                     $chk = $prefill['resolved'] === $r ? 'checked' : '';
-                                    echo "<label><input type=\"radio\" name=\"resolved\" value=\"$r\" $chk> $r</label>";
+                                    echo '<label><input type="radio" name="resolved" value="' . htmlspecialchars($r) . '" ' . $chk . '> ' . htmlspecialchars($r) . '</label>';
                                 }
                                 ?>
                             </div>
@@ -383,8 +356,8 @@ if (isset($_GET['success'])) {
                                 <?php
                                 for ($i = 5; $i >= 1; $i--) {
                                     $chk = (string)$prefill['rating'] === (string)$i ? 'checked' : '';
-                                    echo "<input type=\"radio\" id=\"r$i\" name=\"rating\" value=\"$i\" $chk required>";
-                                    echo "<label for=\"r$i\" title=\"$i star".($i>1?'s':'')."\">&#9733;</label>";
+                                    echo '<input type="radio" id="r' . $i . '" name="rating" value="' . $i . '" ' . $chk . ' required>';
+                                    echo '<label for="r' . $i . '" title="' . $i . ' star' . ($i > 1 ? 's' : '') . '">&#9733;</label>';
                                 }
                                 ?>
                             </div>
@@ -400,7 +373,7 @@ if (isset($_GET['success'])) {
                             <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($prefill['email']) ?>" placeholder="name@example.com">
                         </div>
 
-                        <button type="submit" class="btn-submit">Submit</button>
+                        <button type="submit" class="btn-submit"><?= pc_h($pc['customer_feedback_submit_button']) ?></button>
                     </form>
                 </div>
 
