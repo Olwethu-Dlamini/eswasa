@@ -138,14 +138,21 @@ $pc = pc_get_many($conn, $purchase_keys, $purchase_defaults);
             margin: 25px 0 50px 0;
             border-radius: 4px;
         }
+        .intro-box { text-align: center; }
         .intro-box h3 {
             color: #2B3388;
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 0;
             font-weight: 700;
-            border-bottom: 2px solid rgba(43, 51, 136, 0.15);
-            padding-bottom: 10px;
         }
+        .intro-box .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 24px;
+            border-radius: 0;
+        }
+        .intro-box p { text-align: left; }
 
         /* Action Card Style (For Catalogue and Store Link) */
         .action-card {
@@ -283,6 +290,7 @@ $pc = pc_get_many($conn, $purchase_keys, $purchase_defaults);
             <div class="container">
                 <div class="intro-box">
                     <h3><?= pc_h($pc['purchase_intro_title']) ?></h3>
+                    <div class="section-divider"></div>
                     <?= pc_paragraphs_html($pc['purchase_intro_body']) ?>
                 </div>
 
