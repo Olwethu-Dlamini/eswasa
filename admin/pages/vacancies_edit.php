@@ -3,20 +3,8 @@ if (!defined('ESWASA_ADMIN')) {
     exit('Direct access not permitted.');
 }
 require_once __DIR__ . '/../../includes/cms_helpers.php';
-
-// ── Page-content key inventory ─────────────────────────────────
-$text_keys = [
-    'vacancies_breadcrumb_home_label',
-    'vacancies_breadcrumb_current_label',
-    'vacancies_breadcrumb_title',
-    'vacancies_intro_title',
-    'vacancies_intro_body',
-    'vacancies_section_title',
-    'vacancies_apply_title',
-    'vacancies_apply_body',
-    'vacancies_hr_email',
-    'vacancies_empty_state',
-];
+require __DIR__ . '/../../includes/cms_keys_vacancies.php';
+$text_keys = $vacancies_keys;
 
 // ── POST: save Page Content ────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_vacancies_content'])) {
@@ -92,7 +80,7 @@ if (isset($_GET['edit'])) {
     $stmt->close();
 }
 
-$pc = pc_get_many($conn, $text_keys);
+$pc = pc_get_many($conn, $text_keys, $vacancies_defaults);
 
 // Active tab — edit mode forces the positions tab so the user sees the prefilled form
 $active_tab = ($_GET['tab'] ?? '') === 'content' ? 'content' : 'positions';
