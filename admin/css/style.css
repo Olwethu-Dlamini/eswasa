@@ -48,10 +48,15 @@ body {
     padding-bottom: 2rem;
 }
 
+/* Vertical gap between top-level items */
+#sidebar > .sidebar-inner > .nav > .nav-item + .nav-item {
+    margin-top: 0.15rem;
+}
+
 /* Top-level nav links */
 #sidebar .nav-link {
     color: var(--bs-secondary-color);
-    padding: 0.75rem 1.4rem;
+    padding: 0.9rem 1.5rem;
     font-size: 1.05rem;
     font-weight: 500;
     border-radius: 0;
@@ -67,23 +72,32 @@ body {
     color: var(--bs-primary);
     font-weight: 600;
     border-left: 3px solid var(--bs-primary);
-    padding-left: calc(1.4rem - 3px);
+    padding-left: calc(1.5rem - 3px);
     background-color: rgba(var(--bs-primary-rgb), 0.06);
 }
 
 /* Icons */
 #sidebar .nav-link .fa-fw {
     font-size: 1.05rem;
+    margin-right: 0.1rem;
 }
 
+/* Submenu wrapper — small breathing room above and below */
+#sidebar ul[id^="submenu-"] {
+    padding-top: 0.25rem;
+    padding-bottom: 0.4rem;
+}
 /* Submenu links */
 #sidebar .nav.flex-column.ms-3 .nav-link {
     font-size: 0.975rem;
-    padding: 0.55rem 1rem 0.55rem 2.25rem;
+    padding: 0.65rem 1rem 0.65rem 2.5rem;
     white-space: normal;
 }
+#sidebar .nav.flex-column.ms-3 .nav-item + .nav-item {
+    margin-top: 0.1rem;
+}
 #sidebar .nav.flex-column.ms-3 .nav-link.active {
-    padding-left: calc(2.25rem - 3px);
+    padding-left: calc(2.5rem - 3px);
 }
 
 /* Chevron rotation */
@@ -216,6 +230,23 @@ body {
     transition: border-color 0.2s;
 }
 .card:hover { border-color: var(--bs-primary); }
+
+/* A bit more breathing room inside admin editor cards… */
+#mainContent .card > .card-body {
+    padding: 1.5rem 1.5rem;
+}
+/* …and between stacked cards on multi-section editors (Home, MS, Std, etc). */
+#mainContent form .card + .card,
+#mainContent .card + .card,
+#mainContent .card + form,
+#mainContent form + .card {
+    margin-top: 1.25rem;
+}
+/* The Bootstrap mb-3 spacing between sub-section blocks inside a card
+   feels tight when each block has its own border. Bump a touch. */
+#mainContent .card .border.rounded + .border.rounded {
+    margin-top: 1rem;
+}
 
 /* ══════════════════════════════════════════════
    MISC COMPONENTS
