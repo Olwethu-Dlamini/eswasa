@@ -15,14 +15,21 @@ $pc = pc_get_many($conn, [
 // Team members from dedicated table (live rows only — is_vacant = 0)
 $management = [];
 $staff = [];
-if ($res = $conn->query("SELECT * FROM eswasa_team_members WHERE is_vacant = 0 ORDER BY sort_order ASC, name ASC")) {
-    while ($r = $res->fetch_assoc()) {
-        if ($r['section'] === 'staff') {
-            $staff[] = $r;
-        } else {
-            $management[] = $r;
+// Wrapped in try/catch because PHP 8.1+ mysqli throws on bad queries
+// by default; if the table is missing on this environment we render
+// empty sections rather than 500ing the page.
+try {
+    if ($res = @$conn->query("SELECT * FROM eswasa_team_members WHERE is_vacant = 0 ORDER BY sort_order ASC, name ASC")) {
+        while ($r = $res->fetch_assoc()) {
+            if (($r['section'] ?? '') === 'staff') {
+                $staff[] = $r;
+            } else {
+                $management[] = $r;
+            }
         }
     }
+} catch (\Throwable $e) {
+    // table/schema missing on this environment — fall back to empty list
 }
 ?>
 <!doctype html>

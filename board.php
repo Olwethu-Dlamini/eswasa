@@ -12,9 +12,15 @@ $pc = pc_get_many($conn, [
 ]);
 
 $members = [];
-$res = $conn->query("SELECT * FROM eswasa_board_members ORDER BY sort_order ASC, name ASC");
-if ($res) {
-    while ($r = $res->fetch_assoc()) { $members[] = $r; }
+// Wrapped in try/catch because PHP 8.1+ mysqli throws on bad queries
+// by default; if the table is missing we render an empty list.
+try {
+    $res = @$conn->query("SELECT * FROM eswasa_board_members ORDER BY sort_order ASC, name ASC");
+    if ($res) {
+        while ($r = $res->fetch_assoc()) { $members[] = $r; }
+    }
+} catch (\Throwable $e) {
+    // table/schema missing on this environment — fall back to empty list
 }
 ?>
 <!doctype html>
