@@ -351,45 +351,43 @@ $recentEvents = $recentStmt->get_result();
     <script src="assets/js/jquery.magnific-popup.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        (function ($) {
+        jQuery(function ($) {
             'use strict';
-            var $gallery = $('.event-gallery');
-            if (!$gallery.length) return;
+            if (typeof $.magnificPopup === 'undefined') return;
 
-            // Build a scoped lightbox per gallery — limited to THIS event's images only.
-            $gallery.each(function () {
+            $('.event-gallery').each(function () {
                 var $g = $(this);
-                var eventId = $g.attr('id');
-                var $links = $g.find('.event-gallery__lightbox');
-                if (!$links.length) return;
+                var $main = $g.find('.event-gallery__main');
+                var $links = $g.find('a.event-gallery__lightbox');
+                if (!$main.length || !$links.length) return;
 
-                $links.magnificPopup({
-                    delegate: '',
-                    type: 'image',
-                    gallery: {
-                        enabled: true,
-                        navigateByImgClick: true,
-                        preload: [0, 1],
-                        tCounter: '<span class="mfp-counter">%curr% of %total%</span>'
-                    },
-                    image: {
-                        titleSrc: function (item) {
-                            return item.el.attr('title');
-                        }
-                    },
-                    items: $links.map(function () {
-                        return { src: $(this).attr('href'), title: $(this).attr('title') };
-                    }).get(),
-                    closeOnContentClick: false,
-                    mainClass: 'mfp-with-zoom',
-                    zoom: {
-                        enabled: true,
-                        duration: 250,
-                        easing: 'ease-in-out'
-                    }
+                var items = $links.map(function () {
+                    return { src: $(this).attr('href'), title: $(this).attr('title') || '' };
+                }).get();
+
+                $main.data('current-index', 0);
+
+                // Tap-to-zoom: open lightbox at the currently-previewed index
+                $main.on('click', 'a.event-gallery__lightbox', function (e) {
+                    e.preventDefault();
+                    var idx = parseInt($main.data('current-index'), 10) || 0;
+                    $.magnificPopup.open({
+                        items: items,
+                        type: 'image',
+                        gallery: {
+                            enabled: true,
+                            navigateByImgClick: true,
+                            preload: [0, 1],
+                            tCounter: '<span class="mfp-counter">%curr% of %total%</span>'
+                        },
+                        image: { titleSrc: function (item) { return item.title || ''; } },
+                        closeOnContentClick: false,
+                        mainClass: 'mfp-with-zoom',
+                        zoom: { enabled: true, duration: 250, easing: 'ease-in-out' }
+                    }, idx);
                 });
 
-                // Thumb click → swap main image + sync lightbox start index
+                // Thumb click → swap main preview + remember index for next tap-to-zoom
                 $g.on('click', '.event-gallery__thumb', function (e) {
                     e.preventDefault();
                     var $btn = $(this);
@@ -398,16 +396,10 @@ $recentEvents = $recentStmt->get_result();
                     $g.find('.event-gallery__thumb').removeClass('is-active');
                     $btn.addClass('is-active');
                     $g.find('[id^="event-gallery-main-img-"]').attr('src', src);
-                    // Re-bind so the main click opens at the chosen index
-                    $g.find('.event-gallery__lightbox').first().magnificPopup('open', { index: idx });
-                });
-
-                // Bind only the first <a> as the click target for the main image
-                $g.find('.event-gallery__main').on('click', 'a.event-gallery__lightbox', function (e) {
-                    // magnificPopup already handles the click; nothing extra here.
+                    $main.data('current-index', idx);
                 });
             });
-        })(jQuery);
+        });
     </script>
 </body>
 </html>
