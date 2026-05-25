@@ -143,7 +143,10 @@ if (isset($_GET['edit'])) {
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Meet Our Team</h1>
+    <div>
+        <h1 class="h2 mb-1">Meet Our Team</h1>
+        <small class="text-muted">Manage the <strong>Council</strong> and <strong>Executive Team</strong> shown on the public Meet Our Team page.</small>
+    </div>
     <a href="../Meetourteam.php" target="_blank" class="btn btn-outline-secondary btn-sm">View Public Page</a>
 </div>
 
@@ -166,7 +169,7 @@ if (isset($_GET['edit'])) {
             <div class="mb-3">
                 <label class="form-label fw-bold">Intro Paragraph</label>
                 <textarea name="team_intro_body" class="form-control" rows="3"><?= pc_h($pc['team_intro_body']) ?></textarea>
-                <div class="form-text">Shown below the &ldquo;Our Council and Management&rdquo; heading.</div>
+                <div class="form-text">Shown below the page title, above the Council and Executive Team sections.</div>
             </div>
 
             <button type="submit" class="btn btn-primary">Save Page Text</button>
@@ -175,11 +178,43 @@ if (isset($_GET['edit'])) {
 </div>
 
 <!-- ============================================================
-     Card 2: Team member CRUD
+     Card 2: Team member CRUD — grouped by section
      ============================================================ -->
+<?php
+// Bucket members by section so each one renders under its own subhead
+$by_section = ['council' => [], 'management' => [], 'staff' => []];
+foreach ($members as $m) {
+    $sec = (string)$m['section'];
+    if (!isset($by_section[$sec])) $by_section[$sec] = [];
+    $by_section[$sec][] = $m;
+}
+// Re-sort each bucket by sort_order then name
+foreach ($by_section as &$rows) {
+    usort($rows, function ($a, $b) {
+        $sa = (int)($a['sort_order'] ?? 0);
+        $sb = (int)($b['sort_order'] ?? 0);
+        if ($sa !== $sb) return $sa <=> $sb;
+        return strcmp((string)$a['name'], (string)$b['name']);
+    });
+}
+unset($rows);
+
+$section_meta = [
+    'council'    => ['label' => 'Council',        'badge' => 'bg-info',      'icon' => 'fa-landmark',         'blurb' => 'Governance — appears at the top of Meet Our Team.'],
+    'management' => ['label' => 'Executive Team', 'badge' => 'bg-primary',   'icon' => 'fa-user-tie',         'blurb' => 'Day-to-day management — appears below Council.'],
+    'staff'      => ['label' => 'Staff',          'badge' => 'bg-secondary', 'icon' => 'fa-users',            'blurb' => 'General staff — currently not surfaced on the public page.'],
+];
+?>
 <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Team Members (<?= count($members) ?>)</span>
+        <span>
+            Team Members (<?= count($members) ?>)
+            <small class="text-muted ms-2">
+                <?= count($by_section['council']) ?> Council ·
+                <?= count($by_section['management']) ?> Executive ·
+                <?= count($by_section['staff']) ?> Staff
+            </small>
+        </span>
         <?php if (!$edit_member): ?>
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addMemberModal">
                 + Add Team Member
@@ -190,54 +225,63 @@ if (isset($_GET['edit'])) {
         <?php if (empty($members)): ?>
             <p class="text-muted mb-0">No team members yet. Click &ldquo;Add Team Member&rdquo; to add the first one.</p>
         <?php else: ?>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th style="width:80px">Photo</th>
-                            <th>Name</th>
-                            <th>Role</th>
-                            <th>Section</th>
-                            <th style="width:90px">Sort</th>
-                            <th style="width:80px">Vacant</th>
-                            <th style="width:170px">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($members as $m): ?>
-                            <tr>
-                                <td>
-                                    <?php if (!empty($m['photo'])): ?>
-                                        <img src="../<?= pc_h(pc_image_src($m['photo'])) ?>" alt=""
-                                             style="width:48px;height:48px;object-fit:cover;border-radius:50%;border:1px solid #ddd">
-                                    <?php else: ?>
-                                        <span class="text-muted small">&mdash;</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= pc_h($m['name']) ?></td>
-                                <td><?= pc_h($m['role']) ?></td>
-                                <?php
-                                    $sec = (string)$m['section'];
-                                    $sec_label = ['council' => 'Council', 'management' => 'Executive Team', 'staff' => 'Staff'][$sec] ?? ucfirst($sec);
-                                    $sec_badge = ['council' => 'bg-info', 'management' => 'bg-primary', 'staff' => 'bg-secondary'][$sec] ?? 'bg-secondary';
-                                ?>
-                                <td><span class="badge <?= $sec_badge ?>"><?= pc_h($sec_label) ?></span></td>
-                                <td><?= (int)$m['sort_order'] ?></td>
-                                <td><?= !empty($m['is_vacant']) ? '<span class="badge bg-warning text-dark">Vacant</span>' : '' ?></td>
-                                <td>
-                                    <a href="index.php?page=about_team.php&edit=<?= (int)$m['id'] ?>"
-                                       class="btn btn-sm btn-outline-primary">Edit</a>
-                                    <form method="POST" style="display:inline" onsubmit="return confirm('Delete this team member?');">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="id" value="<?= (int)$m['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+            <?php foreach (['council','management','staff'] as $sec_key):
+                $rows = $by_section[$sec_key];
+                $meta = $section_meta[$sec_key];
+                if (empty($rows)) continue;
+            ?>
+                <div class="mb-4">
+                    <div class="d-flex align-items-baseline justify-content-between mb-2">
+                        <h5 class="mb-0">
+                            <i class="fas <?= $meta['icon'] ?> me-2 text-muted"></i>
+                            <?= htmlspecialchars($meta['label']) ?>
+                            <span class="badge <?= $meta['badge'] ?> ms-2"><?= count($rows) ?></span>
+                        </h5>
+                        <small class="text-muted"><?= htmlspecialchars($meta['blurb']) ?></small>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width:80px">Photo</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th style="width:90px">Sort</th>
+                                    <th style="width:80px">Vacant</th>
+                                    <th style="width:170px">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($rows as $m): ?>
+                                    <tr>
+                                        <td>
+                                            <?php if (!empty($m['photo'])): ?>
+                                                <img src="../<?= pc_h(pc_image_src($m['photo'])) ?>" alt=""
+                                                     style="width:48px;height:48px;object-fit:cover;border-radius:50%;border:1px solid #ddd">
+                                            <?php else: ?>
+                                                <span class="text-muted small">&mdash;</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?= pc_h($m['name']) ?></td>
+                                        <td><?= pc_h($m['role']) ?></td>
+                                        <td><?= (int)$m['sort_order'] ?></td>
+                                        <td><?= !empty($m['is_vacant']) ? '<span class="badge bg-warning text-dark">Vacant</span>' : '' ?></td>
+                                        <td>
+                                            <a href="index.php?page=about_team.php&edit=<?= (int)$m['id'] ?>"
+                                               class="btn btn-sm btn-outline-primary">Edit</a>
+                                            <form method="POST" style="display:inline" onsubmit="return confirm('Delete this team member?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="id" value="<?= (int)$m['id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         <?php endif; ?>
     </div>
 </div>
