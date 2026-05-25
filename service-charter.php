@@ -1,46 +1,31 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-include 'includes/db_connect.php';
-include_once 'includes/breadcrumb_helper.php';
+include_once __DIR__ . '/includes/db_connect.php';
+$conn->set_charset('utf8mb4');
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+require __DIR__ . '/includes/cms_keys_service_charter.php';
+
+$pc = pc_get_many($conn, $service_charter_keys, $service_charter_defaults);
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Service Charter - ESWASA</title>
+    <title><?= pc_h($pc['service_charter_breadcrumb_title']) ?> - ESWASA</title>
     <meta name="description" content="The ESWASA Service Charter — our commitments to customers on accessibility, turnaround times, quality of service, impartiality and how to escalate complaints.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <link rel="stylesheet" href="assets/css/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/css/select2.min.css">
-    <link rel="stylesheet" href="assets/css/odometer.css">
-    <link rel="stylesheet" href="assets/css/slick.css">
-    <link rel="stylesheet" href="assets/css/aos.css">
-    <link rel="stylesheet" href="assets/css/spacing.css">
-    <link rel="stylesheet" href="assets/css/tg-cursor.css">
-    <link rel="stylesheet" type="text/css" href="rs-plugin/css/settings.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="assets/css/extralayers.css" media="screen">
     <link rel="stylesheet" href="assets/css/main.css">
 
     <style>
-        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 15px;
-            color: #2B3388;
-        }
-        body h1, body h2, body h3, body h4, body h5, body h6 {
-            font-family: Arial, sans-serif;
-            color: #2B3388;
-        }
-        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
-            font-family: Arial, sans-serif;
-        }
+        /* ESWASA theme base — locked spec (#2B3388, #fff, Arial 15px) */
+        body { font-family: Arial, sans-serif; font-size: 15px; color: #2B3388; }
+        body h1, body h2, body h3, body h4, body h5, body h6 { font-family: Arial, sans-serif; color: #2B3388; }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td { font-family: Arial, sans-serif; }
         .text-muted { color: #2B3388 !important; }
         .breadcrumb-content .breadcrumb a,
         .breadcrumb-content .breadcrumb span,
@@ -48,40 +33,56 @@ include_once 'includes/breadcrumb_helper.php';
         .breadcrumb-separator i { color: #fff !important; }
         .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
 
-        .display-6 { color: #2B3388; font-weight: 700; letter-spacing: -0.01em; }
-        .section-divider {
-            width: 60px; height: 2px; background: #2B3388;
-            margin: 16px auto 0; border-radius: 0;
-        }
-        .intro-card {
-            background: #fff;
+        /* Intro info-box (canonical centered title + 60px divider) — NO blue-left accent */
+        .info-box {
+            background-color: rgba(43, 51, 136, 0.04);
             border: 1px solid rgba(43, 51, 136, 0.15);
-            border-left: 3px solid #2B3388;
             border-radius: 4px;
-            padding: 26px 28px;
-            max-width: 920px;
-            margin: 0 auto 40px;
+            padding: 25px;
+            margin-bottom: 30px;
         }
-        .intro-card p {
-            margin: 0; color: #2B3388;
-            font-size: 15px; line-height: 1.7;
+        .info-box h3 { color: #2B3388; font-weight: 700; margin: 0; }
+        .info-box.is-intro { text-align: center; }
+        .info-box.is-intro .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 24px;
+            border-radius: 0;
         }
+        .info-box.is-intro p { text-align: left; margin-bottom: 12px; }
+        .info-box.is-intro p:last-child { margin-bottom: 0; }
 
-        .charter-section { padding: 60px 0 80px; }
+        /* Charter blocks — borders over shadows, no left accent */
+        .charter-section { padding: 50px 0 70px; }
+        .charter-section-title {
+            color: #2B3388;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 0;
+        }
+        .charter-section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 14px auto 30px;
+            border-radius: 0;
+        }
         .charter-block {
             background: #fff;
-            border: 1px solid rgba(43, 51, 136, 0.12);
+            border: 1px solid rgba(43, 51, 136, 0.15);
             border-radius: 4px;
-            padding: 28px 28px;
-            margin-bottom: 22px;
+            padding: 24px 26px;
+            margin-bottom: 18px;
         }
         .charter-block h3 {
             color: #2B3388;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
             margin: 0 0 12px;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(43, 51, 136, 0.20);
+            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
         }
         .charter-block p,
         .charter-block li {
@@ -92,31 +93,33 @@ include_once 'includes/breadcrumb_helper.php';
         }
         .charter-block ul { padding-left: 20px; margin: 0; }
 
+        /* Service Standards grid — flat cells (no blue left bar) */
         .commitment-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 16px;
         }
         .commitment-item {
             background: rgba(43, 51, 136, 0.04);
-            border-left: 3px solid #2B3388;
-            padding: 16px 18px;
-            border-radius: 0 4px 4px 0;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            padding: 14px 16px;
+            border-radius: 4px;
         }
         .commitment-item strong { display: block; color: #2B3388; margin-bottom: 4px; font-size: 0.95rem; }
         .commitment-item span { color: #2B3388; font-size: 0.92rem; line-height: 1.5; }
 
+        /* Contact CTA — brand-blue panel */
         .contact-cta {
             background: #2B3388;
             color: #fff;
-            padding: 32px 32px;
+            padding: 30px;
             border-radius: 4px;
             text-align: center;
             margin-top: 30px;
         }
         .contact-cta h3 { color: #fff; font-weight: 700; margin: 0 0 10px; }
-        .contact-cta p { color: rgba(255,255,255,0.9); margin: 0 0 18px; line-height: 1.6; }
+        .contact-cta p { color: rgba(255,255,255,0.92); margin: 0 0 18px; line-height: 1.6; }
         .contact-cta .btn-charter {
             display: inline-block;
             background: #fff;
@@ -128,24 +131,19 @@ include_once 'includes/breadcrumb_helper.php';
             font-size: 0.95rem;
             transition: background .2s ease;
         }
-        .contact-cta .btn-charter:hover { background: rgba(255,255,255,0.9); }
+        .contact-cta .btn-charter:hover { background: rgba(255,255,255,0.88); }
 
         @media (max-width: 767.98px) {
-            .charter-section { padding: 40px 0 50px; }
+            .charter-section { padding: 30px 0 40px; }
+            .charter-section-title { font-size: 1.25rem; }
             .commitment-grid { grid-template-columns: 1fr; }
-            .breadcrumb-content .title { font-size: 1.6rem; }
-            .charter-block { padding: 22px 20px; }
+            .charter-block { padding: 20px 18px; }
+            .breadcrumb-content .title { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <div id="preloader">
-        <div class="spinner">
-            <div class="sk-dot1"></div><div class="sk-dot2"></div>
-            <div class="rect3"></div><div class="rect4"></div>
-            <div class="rect5"></div>
-        </div>
-    </div>
+
     <button class="scroll__top scroll-to-target" data-target="html">
         <i class="fas fa-angle-up"></i>
     </button>
@@ -154,21 +152,19 @@ include_once 'includes/breadcrumb_helper.php';
 
     <main class="main-area fix">
 
-        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('service-charter', 'assets/img/bg.png') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('service-charter', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="breadcrumb-content">
                             <nav class="breadcrumb">
-                                <span property="itemListElement" typeof="ListItem">
-                                    <a href="index.php">Home</a>
-                                </span>
+                                <span><a href="index.php"><?= pc_h($pc['service_charter_breadcrumb_home_label']) ?></a></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Customer Care</span>
+                                <span><?= pc_h($pc['service_charter_breadcrumb_parent_label']) ?></span>
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
-                                <span property="itemListElement" typeof="ListItem">Service Charter</span>
+                                <span><?= pc_h($pc['service_charter_breadcrumb_current_label']) ?></span>
                             </nav>
-                            <h3 class="title">ESWASA Service Charter</h3>
+                            <h3 class="title"><?= pc_h($pc['service_charter_breadcrumb_title']) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -177,13 +173,12 @@ include_once 'includes/breadcrumb_helper.php';
 
         <section class="charter-section">
             <div class="container">
-                <div class="main_title centered upper mb-4 text-center">
-                    <h2 class="display-6 fw-bold">Our Commitments To You</h2>
-                    <div class="section-divider"></div>
-                </div>
 
-                <div class="intro-card">
-                    <p>The ESWASA Service Charter sets out the standards of service you can expect from the Eswatini Standards Authority. It is our public statement of what we will deliver, how we will deliver it, and how you can hold us accountable when we fall short.</p>
+                <h2 class="charter-section-title"><?= pc_h($pc['service_charter_section_title']) ?></h2>
+                <div class="charter-section-divider"></div>
+
+                <div class="info-box is-intro">
+                    <?= pc_paragraphs_html($pc['service_charter_intro_body']) ?>
                 </div>
 
                 <div class="row">
@@ -228,11 +223,11 @@ include_once 'includes/breadcrumb_helper.php';
                         <div class="charter-block">
                             <h3>Our Core Values</h3>
                             <ul>
-                                <li><strong>Transparency</strong> — clear, accessible information about our processes, fees and decisions.</li>
-                                <li><strong>Responsiveness</strong> — we listen, we act, and we communicate progress.</li>
-                                <li><strong>People-Centricity</strong> — every customer receives respectful, professional attention.</li>
-                                <li><strong>Innovation</strong> — we continuously improve our services and adopt better practice.</li>
-                                <li><strong>Professionalism</strong> — competence, impartiality and integrity in everything we do.</li>
+                                <li><strong>Transparency</strong> &mdash; clear, accessible information about our processes, fees and decisions.</li>
+                                <li><strong>Responsiveness</strong> &mdash; we listen, we act, and we communicate progress.</li>
+                                <li><strong>People-Centricity</strong> &mdash; every customer receives respectful, professional attention.</li>
+                                <li><strong>Innovation</strong> &mdash; we continuously improve our services and adopt better practice.</li>
+                                <li><strong>Professionalism</strong> &mdash; competence, impartiality and integrity in everything we do.</li>
                             </ul>
                         </div>
 
@@ -257,13 +252,13 @@ include_once 'includes/breadcrumb_helper.php';
                                 <li>Call us on <strong>(+268) 2518 4633 / 4610</strong>.</li>
                                 <li>Visit our offices in Matsapha during working hours.</li>
                             </ul>
-                            <p>For matters relating to certification decisions, our <a href="CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf" target="_blank">Appeals Handling Procedure</a> sets out a formal route.</p>
+                            <p>For matters relating to certification decisions, our <a href="CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf" target="_blank" rel="noopener">Appeals Handling Procedure</a> sets out a formal route.</p>
                         </div>
 
                         <div class="contact-cta">
-                            <h3>Have feedback for us?</h3>
-                            <p>Whether it is a complaint, a compliment or a suggestion — we want to hear from you.</p>
-                            <a href="customer-feedback.php" class="btn-charter">Submit Feedback</a>
+                            <h3><?= pc_h($pc['service_charter_cta_title']) ?></h3>
+                            <p><?= pc_h($pc['service_charter_cta_body']) ?></p>
+                            <a href="<?= pc_h($pc['service_charter_cta_button_url']) ?>" class="btn-charter"><?= pc_h($pc['service_charter_cta_button_text']) ?></a>
                         </div>
 
                     </div>
