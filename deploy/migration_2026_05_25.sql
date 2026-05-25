@@ -67,6 +67,21 @@ PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 ALTER TABLE eswasa_team_members
   MODIFY COLUMN section ENUM('management','staff','council') NOT NULL DEFAULT 'management';
 
+-- 1c-1. Normalize honorifics (add the period after Mr / Mrs / Ms / Dr / Prof).
+--       Done BEFORE the migration so the NOT EXISTS dedupe step matches
+--       correctly between board and team rows. Idempotent.
+UPDATE eswasa_board_members SET name = REPLACE(name, 'Mr ',   'Mr. ')   WHERE name LIKE 'Mr %'   AND name NOT LIKE 'Mr. %';
+UPDATE eswasa_board_members SET name = REPLACE(name, 'Mrs ',  'Mrs. ')  WHERE name LIKE 'Mrs %'  AND name NOT LIKE 'Mrs. %';
+UPDATE eswasa_board_members SET name = REPLACE(name, 'Ms ',   'Ms. ')   WHERE name LIKE 'Ms %'   AND name NOT LIKE 'Ms. %';
+UPDATE eswasa_board_members SET name = REPLACE(name, 'Dr ',   'Dr. ')   WHERE name LIKE 'Dr %'   AND name NOT LIKE 'Dr. %';
+UPDATE eswasa_board_members SET name = REPLACE(name, 'Prof ', 'Prof. ') WHERE name LIKE 'Prof %' AND name NOT LIKE 'Prof. %';
+
+UPDATE eswasa_team_members  SET name = REPLACE(name, 'Mr ',   'Mr. ')   WHERE name LIKE 'Mr %'   AND name NOT LIKE 'Mr. %';
+UPDATE eswasa_team_members  SET name = REPLACE(name, 'Mrs ',  'Mrs. ')  WHERE name LIKE 'Mrs %'  AND name NOT LIKE 'Mrs. %';
+UPDATE eswasa_team_members  SET name = REPLACE(name, 'Ms ',   'Ms. ')   WHERE name LIKE 'Ms %'   AND name NOT LIKE 'Ms. %';
+UPDATE eswasa_team_members  SET name = REPLACE(name, 'Dr ',   'Dr. ')   WHERE name LIKE 'Dr %'   AND name NOT LIKE 'Dr. %';
+UPDATE eswasa_team_members  SET name = REPLACE(name, 'Prof ', 'Prof. ') WHERE name LIKE 'Prof %' AND name NOT LIKE 'Prof. %';
+
 INSERT INTO eswasa_team_members (name, role, photo, bio, section, social_linkedin, sort_order)
   SELECT b.name, b.role, b.photo, b.bio, 'council', b.social_linkedin, b.sort_order
   FROM eswasa_board_members b
