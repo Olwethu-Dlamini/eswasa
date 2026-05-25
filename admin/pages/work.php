@@ -46,14 +46,102 @@ $status_class_options = [
 ?>
 
 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Work Programmes</h1>
+    <div>
+        <h1 class="h2 mb-1">Work Programmes</h1>
+        <small class="text-muted">Manage the page meta, intro, programme list and CTAs shown on the public <code>work.php</code> page.</small>
+    </div>
     <a href="../work.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
 </div>
 
-<form method="POST" enctype="multipart/form-data">
+<style>
+    .wp-toc {
+        position: sticky;
+        top: 72px;
+        z-index: 30;
+        background: var(--bs-body-bg);
+        border-bottom: 1px solid var(--bs-border-color);
+        padding: 10px 0;
+        margin: 0 0 1rem;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+    .wp-toc::-webkit-scrollbar { height: 6px; }
+    .wp-toc::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 3px; }
+    .wp-toc a {
+        flex-shrink: 0;
+        font-size: 13px;
+        padding: 6px 12px;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 999px;
+        color: var(--bs-secondary-color);
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color .15s, color .15s, border-color .15s;
+    }
+    .wp-toc a:hover {
+        color: var(--bs-primary);
+        border-color: var(--bs-primary);
+        background: rgba(var(--bs-primary-rgb), .06);
+    }
+    .wp-toc .save-pill {
+        margin-left: auto;
+        font-weight: 600;
+    }
+    .wp-edit-section { scroll-margin-top: 140px; }
+    .wp-save-bar {
+        position: sticky;
+        bottom: 0;
+        z-index: 25;
+        background: var(--bs-body-bg);
+        border-top: 1px solid var(--bs-border-color);
+        padding: 12px 0;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+    .wp-save-bar .save-hint { font-size: 13px; color: var(--bs-secondary-color); }
+
+    /* Status badge preview — matches the public work.php styling */
+    .wp-status-preview {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+    .wp-status-preview.status-published { background: #2B3388; color: #fff; }
+    .wp-status-preview.status-underdev  { background: transparent; color: #2B3388; border: 1px solid #2B3388; }
+    .wp-status-preview.status-revision  { background: rgba(43,51,136,0.10); color: #2B3388; }
+
+    .wp-programme-card { background: #fff; border: 1px solid var(--bs-border-color); border-radius: 4px; padding: 18px; margin-bottom: 14px; }
+    .wp-programme-card .pc-num {
+        display: inline-block; min-width: 28px; height: 28px; line-height: 28px;
+        text-align: center; border-radius: 50%; background: rgba(43,51,136,0.10);
+        color: #2B3388; font-weight: 700; margin-right: 8px;
+    }
+</style>
+
+<nav class="wp-toc" aria-label="Work Programmes editor sections">
+    <a href="#wp-sec-meta">Page Meta</a>
+    <a href="#wp-sec-breadcrumb">Breadcrumb</a>
+    <a href="#wp-sec-intro">Introduction</a>
+    <a href="#wp-sec-list">Programme List</a>
+    <a href="#wp-sec-cta">CTAs</a>
+    <button type="submit" form="workEditForm" name="save_work" class="btn btn-sm btn-primary save-pill">
+        <i class="fas fa-save me-1"></i> Save
+    </button>
+</nav>
+
+<form id="workEditForm" method="POST" enctype="multipart/form-data">
 
     <!-- Page Meta -->
-    <div class="card mb-3">
+    <div class="card mb-3 wp-edit-section" id="wp-sec-meta">
         <div class="card-body">
             <h5 class="card-title mb-3">Page Meta</h5>
             <div class="mb-3">
@@ -69,7 +157,7 @@ $status_class_options = [
     </div>
 
     <!-- Breadcrumb -->
-    <div class="card mb-3">
+    <div class="card mb-3 wp-edit-section" id="wp-sec-breadcrumb">
         <div class="card-body">
             <h5 class="card-title mb-3">Breadcrumb / Hero</h5>
             <div class="row g-3">
@@ -91,7 +179,7 @@ $status_class_options = [
     </div>
 
     <!-- Intro Box -->
-    <div class="card mb-3">
+    <div class="card mb-3 wp-edit-section" id="wp-sec-intro">
         <div class="card-body">
             <h5 class="card-title mb-3">Introduction</h5>
             <div class="mb-3">
@@ -107,52 +195,105 @@ $status_class_options = [
     </div>
 
     <!-- Section + Programme Items -->
-    <div class="card mb-3">
+    <div class="card mb-3 wp-edit-section" id="wp-sec-list">
         <div class="card-body">
-            <h5 class="card-title mb-3">Programme List</h5>
-            <div class="mb-3">
-                <label class="form-label">Section Heading</label>
-                <input type="text" name="work_section_title" class="form-control" value="<?= pc_h($pc['work_section_title']) ?>">
+            <?php
+                $populated = 0;
+                for ($i = 1; $i <= 5; $i++) {
+                    if (trim((string)($pc["work_item_{$i}_title"] ?? '')) !== '') $populated++;
+                }
+            ?>
+            <div class="d-flex justify-content-between align-items-baseline mb-3">
+                <h5 class="card-title mb-0">Programme List
+                    <small class="text-muted ms-2"><?= $populated ?> / 5 filled</small>
+                </h5>
+                <small class="text-muted">Blank slots are hidden on the public page.</small>
             </div>
 
-            <?php for ($i = 1; $i <= 5; $i++): ?>
-            <div class="border rounded p-3 mb-3 bg-light">
-                <h6 class="fw-bold mb-3">Programme #<?= $i ?></h6>
+            <div class="mb-4">
+                <label class="form-label">Section Heading</label>
+                <input type="text" name="work_section_title" class="form-control" value="<?= pc_h($pc['work_section_title']) ?>"
+                       placeholder="Current and Recent Projects">
+                <small class="text-muted">Centered title rendered above the programme list with the brand-blue underline.</small>
+            </div>
+
+            <?php for ($i = 1; $i <= 5; $i++):
+                $row_title = (string)$pc["work_item_{$i}_title"];
+                $row_label = (string)$pc["work_item_{$i}_status_label"];
+                $row_class = $pc["work_item_{$i}_status_class"] ?: 'status-published';
+                $is_filled = $row_title !== '';
+            ?>
+            <div class="wp-programme-card">
+                <div class="d-flex justify-content-between align-items-baseline mb-3">
+                    <h6 class="fw-bold mb-0"><span class="pc-num"><?= $i ?></span>Programme</h6>
+                    <?php if ($is_filled): ?>
+                        <span class="wp-status-preview <?= pc_h($row_class) ?>" id="wp-preview-<?= $i ?>"><?= pc_h($row_label ?: 'Status') ?></span>
+                    <?php else: ?>
+                        <span class="badge bg-light text-muted border">Empty &mdash; will not show on page</span>
+                    <?php endif; ?>
+                </div>
                 <div class="row g-3">
                     <div class="col-md-8">
                         <label class="form-label">Title</label>
-                        <input type="text" name="work_item_<?= $i ?>_title" class="form-control" value="<?= pc_h($pc["work_item_{$i}_title"]) ?>">
+                        <input type="text" name="work_item_<?= $i ?>_title" class="form-control" value="<?= pc_h($row_title) ?>"
+                               placeholder="e.g. Development of SZNS for …">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Link URL</label>
-                        <input type="text" name="work_item_<?= $i ?>_url" class="form-control" value="<?= pc_h($pc["work_item_{$i}_url"]) ?>" placeholder="standard-detail.php">
+                        <input type="text" name="work_item_<?= $i ?>_url" class="form-control" value="<?= pc_h($pc["work_item_{$i}_url"]) ?>"
+                               placeholder="standard-detail.php">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <label class="form-label">Details</label>
-                        <input type="text" name="work_item_<?= $i ?>_details" class="form-control" value="<?= pc_h($pc["work_item_{$i}_details"]) ?>" placeholder="Approved: 2020 | Reference: SZNS US 1234: 2020">
+                        <input type="text" name="work_item_<?= $i ?>_details" class="form-control" value="<?= pc_h($pc["work_item_{$i}_details"]) ?>"
+                               placeholder="Approved: 2020 | Reference: SZNS US 1234: 2020">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <label class="form-label">Status Label</label>
-                        <input type="text" name="work_item_<?= $i ?>_status_label" class="form-control" value="<?= pc_h($pc["work_item_{$i}_status_label"]) ?>" placeholder="Published">
+                        <input type="text" name="work_item_<?= $i ?>_status_label" class="form-control"
+                               value="<?= pc_h($row_label) ?>" placeholder="Published"
+                               data-wp-row="<?= $i ?>" data-wp-field="label">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <label class="form-label">Status Style</label>
-                        <?php $current_class = $pc["work_item_{$i}_status_class"] ?: 'status-published'; ?>
-                        <select name="work_item_<?= $i ?>_status_class" class="form-select">
+                        <select name="work_item_<?= $i ?>_status_class" class="form-select"
+                                data-wp-row="<?= $i ?>" data-wp-field="class">
                             <?php foreach ($status_class_options as $val => $label): ?>
-                                <option value="<?= pc_h($val) ?>" <?= $current_class === $val ? 'selected' : '' ?>><?= pc_h($label) ?></option>
+                                <option value="<?= pc_h($val) ?>" <?= $row_class === $val ? 'selected' : '' ?>><?= pc_h($label) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
-                <small class="text-muted d-block mt-2">Leave all fields blank to hide this programme entry on the public page.</small>
+                <small class="text-muted d-block mt-2">Leave the Title blank to hide this slot on the public page.</small>
             </div>
             <?php endfor; ?>
         </div>
     </div>
 
+    <script>
+    // Live status-badge preview as admin edits each programme row.
+    (function () {
+        document.querySelectorAll('[data-wp-row]').forEach(function (el) {
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
+        });
+        function updatePreview(e) {
+            var row = e.target.getAttribute('data-wp-row');
+            var preview = document.getElementById('wp-preview-' + row);
+            if (!preview) return;
+            var labelEl = document.querySelector('input[data-wp-row="' + row + '"][data-wp-field="label"]');
+            var classEl = document.querySelector('select[data-wp-row="' + row + '"][data-wp-field="class"]');
+            if (labelEl) preview.textContent = labelEl.value || 'Status';
+            if (classEl) {
+                preview.classList.remove('status-published', 'status-underdev', 'status-revision');
+                preview.classList.add(classEl.value);
+            }
+        }
+    })();
+    </script>
+
     <!-- CTAs -->
-    <div class="card mb-3">
+    <div class="card mb-3 wp-edit-section" id="wp-sec-cta">
         <div class="card-body">
             <h5 class="card-title mb-3">Call-to-Action Buttons</h5>
             <div class="row g-3">
@@ -176,8 +317,9 @@ $status_class_options = [
         </div>
     </div>
 
-    <div class="mt-4 pt-3 border-top text-end">
-        <button type="submit" name="save_work" class="btn btn-primary px-5 shadow-sm">
+    <div class="wp-save-bar">
+        <span class="save-hint">Changes save the whole Work Programmes page at once.</span>
+        <button type="submit" name="save_work" class="btn btn-primary px-5">
             <i class="fas fa-save me-2"></i>Save Changes
         </button>
     </div>
