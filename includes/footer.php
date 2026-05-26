@@ -38,9 +38,9 @@
 
             <!-- Social icons on the right -->
             <div class="d-flex gap-3">
-                <a href="#" class="text-white" style="font-size: 20px;"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="text-white" style="font-size: 20px;"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="text-white" style="font-size: 20px;"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.facebook.com/eswasaupdates" target="_blank" rel="noopener" aria-label="Facebook" class="text-white" style="font-size: 20px;"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="LinkedIn" class="text-white" style="font-size: 20px;"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="WhatsApp" class="text-white" style="font-size: 20px;"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
 
