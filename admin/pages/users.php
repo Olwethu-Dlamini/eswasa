@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_user'])) {
     $role     = $_POST['role'] ?? 'author';
     $password = $_POST['password'] ?? '';
 
-    $allowed_roles = ['admin','editor','author'];
-    if (!in_array($role, $allowed_roles, true)) $role = 'author';
+    // Only one role is supported — everyone with admin access is a full admin.
+    $role = 'admin';
 
     if ($username === '' || $email === '') {
         set_flash('danger', 'Username and email are required.');
@@ -116,7 +116,6 @@ if ($rs) {
                 <tr>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Role</th>
                     <th>Created</th>
                     <th class="text-end">Actions</th>
                 </tr>
@@ -131,12 +130,11 @@ if ($rs) {
                             <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($u['email']) ?></td>
-                        <td><span class="badge bg-secondary text-uppercase"><?= htmlspecialchars($u['role']) ?></span></td>
                         <td class="small text-muted"><?= htmlspecialchars($u['created_at']) ?></td>
                         <td class="text-end text-nowrap">
                             <button class="btn btn-sm btn-outline-primary"
                                     data-bs-toggle="modal" data-bs-target="#userModal"
-                                    onclick="openEditUserModal(<?= (int)$u['id'] ?>, '<?= htmlspecialchars(addslashes($u['username'])) ?>', '<?= htmlspecialchars(addslashes($u['email'])) ?>', '<?= htmlspecialchars($u['role']) ?>')">
+                                    onclick="openEditUserModal(<?= (int)$u['id'] ?>, '<?= htmlspecialchars(addslashes($u['username'])) ?>', '<?= htmlspecialchars(addslashes($u['email'])) ?>')">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
                             <?php if ((int)$u['id'] !== $current_user_id): ?>
@@ -174,14 +172,7 @@ if ($rs) {
                         <label class="form-label">Email</label>
                         <input type="email" class="form-control" name="email" id="user_email" required maxlength="100">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Role</label>
-                        <select class="form-select" name="role" id="user_role">
-                            <option value="admin">Admin</option>
-                            <option value="editor">Editor</option>
-                            <option value="author" selected>Author</option>
-                        </select>
-                    </div>
+                    <input type="hidden" name="role" id="user_role" value="admin">
                     <div class="mb-1">
                         <label class="form-label">Password</label>
                         <input type="password" class="form-control" name="password" id="user_password" autocomplete="new-password">
@@ -203,16 +194,14 @@ function openAddUserModal() {
     document.getElementById('user_id').value = '';
     document.getElementById('user_username').value = '';
     document.getElementById('user_email').value = '';
-    document.getElementById('user_role').value = 'author';
     document.getElementById('user_password').value = '';
     document.getElementById('user_password').required = true;
 }
-function openEditUserModal(id, username, email, role) {
+function openEditUserModal(id, username, email) {
     document.getElementById('userModalLabel').textContent = 'Edit user';
     document.getElementById('user_id').value = id;
     document.getElementById('user_username').value = username.replace(/\\'/g, "'");
     document.getElementById('user_email').value = email.replace(/\\'/g, "'");
-    document.getElementById('user_role').value = role;
     document.getElementById('user_password').value = '';
     document.getElementById('user_password').required = false;
 }
