@@ -1,11 +1,6 @@
 <?php
-// Database connection (adjust path if needed)
-$conn = new mysqli('localhost', 'root', '', 'eswasa');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$conn->set_charset("utf8mb4");
-
+require_once __DIR__ . '/includes/db_connect.php';
+$conn->set_charset('utf8mb4');
 require_once __DIR__ . '/includes/event_images.php';
 require_once __DIR__ . '/includes/breadcrumb_helper.php';
 

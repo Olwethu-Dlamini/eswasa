@@ -188,11 +188,6 @@
     <?php include("includes/header.php")?>
 
     <?php
-    // Database connection
-    $conn = new mysqli('localhost', 'root', '', 'eswasa');
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
     $conn->set_charset("utf8mb4");
 
     // Pagination — 6 events per page
