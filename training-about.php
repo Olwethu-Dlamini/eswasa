@@ -43,7 +43,7 @@ $train_about_keys = [
     'train_about_policy_cancellations_tab','train_about_policy_cancellations_title','train_about_policy_cancellations_body',
     'train_about_policy_fees_tab','train_about_policy_fees_title','train_about_policy_fees_body',
     'train_about_bank_title',
-    'train_about_bank_name','train_about_bank_account_name','train_about_bank_account_number','train_about_bank_branch_code','train_about_bank_branch_name','train_about_bank_note',
+    'train_about_bank_name','train_about_bank_account_name','train_about_bank_account_number','train_about_bank_branch_code','train_about_bank_branch_name','train_about_bank_swift','train_about_bank_note',
     'train_about_policy_travel_tab','train_about_policy_travel_title','train_about_policy_travel_body',
     'train_about_policy_inhouse_tab','train_about_policy_inhouse_title','train_about_policy_inhouse_body',
     'train_about_policy_assessments_tab','train_about_policy_assessments_title',
@@ -177,6 +177,7 @@ $train_about_defaults = [
     'train_about_bank_account_number' => '9110002956732',
     'train_about_bank_branch_code' => '663164',
     'train_about_bank_branch_name' => 'Matsapha',
+    'train_about_bank_swift' => 'SBICSZMX',
     'train_about_bank_note' => 'Mobile Money and a Speedpoint machine are also available at the ESWASA office for ease of payment.',
 
     'train_about_policy_travel_tab' => 'Travel',
@@ -1057,6 +1058,7 @@ if (!function_exists('train_about_list_items')) {
                                         <dt>Account Number</dt><dd><?= pc_h($pc['train_about_bank_account_number']) ?></dd>
                                         <dt>Branch Code</dt><dd><?= pc_h($pc['train_about_bank_branch_code']) ?></dd>
                                         <dt>Branch Name</dt><dd><?= pc_h($pc['train_about_bank_branch_name']) ?></dd>
+                                        <dt>SWIFT Code</dt><dd><?= pc_h($pc['train_about_bank_swift']) ?></dd>
                                     </dl>
                                     <p class="mb-0"><?= pc_h($pc['train_about_bank_note']) ?></p>
                                 </div>
