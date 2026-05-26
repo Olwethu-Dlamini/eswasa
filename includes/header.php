@@ -33,19 +33,11 @@
                     </div>
                     <div class="col-md-6">
                         <ul class="tg-header__top-social list-wrap">
-
-                        <ul class="tg-header__top-info list-wrap">
-                            <li><a href="#"><i class="fa fa-certificate" aria-hidden="true"></i> Certification</a></li>
-                            <li><a href="#"><i class="fa fa-certificate" aria-hidden="true"></i> Standards</a></li>
-                            
-                        </ul>
-                            
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                            <li><a href="#"><i class="fab fa-whatsapp"></i></a></li>
-                            
-                            
-                            
+                            <li><a href="Certification.php"><i class="fa fa-certificate" aria-hidden="true"></i> Certification</a></li>
+                            <li><a href="Standards.php"><i class="fa fa-balance-scale" aria-hidden="true"></i> Standards</a></li>
+                            <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a></li>
                         </ul>
                     </div>
                 </div>
