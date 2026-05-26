@@ -430,6 +430,7 @@ $apply_body_html = str_replace('[email]', $apply_email_html, pc_paragraphs_html(
     <?php include("includes/footer.php")?>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/tg-cursor.min.js"></script>
     <script src="assets/js/main.js"></script>
     
     <script>

@@ -37,6 +37,7 @@ function pub_file_url(string $stored): string {
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
         /* ESWASA theme base — locked spec (#2B3388, #fff, Arial 15px) */
@@ -254,6 +255,7 @@ function pub_file_url(string $stored): string {
 
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/tg-cursor.min.js"></script>
     <script src="assets/js/main.js"></script>
 
 </body>
