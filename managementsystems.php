@@ -700,28 +700,20 @@ $pc = pc_get_many($conn, array_keys($ms_keys_defaults), $ms_keys_defaults);
                         <div class="cw-divider"></div>
                     </div>
                     <?php
-                    // Source: ESWASA Certified Clients List (May 2026).
-                    // Standards mapped to current SZNS revisions per the portfolio table above.
-                    $clients = [
-                        ['slug'=>'galp-petroleum',        'name'=>'GALP Eswatini',         'standard'=>'SZNS ISO 9001:2015'],
-                        ['slug'=>'swazi-wire-industries', 'name'=>'Eswatini Wire',         'standard'=>'SZNS ISO 9001:2015'],
-                        ['slug'=>'asd-medicals',          'name'=>'ASD Medicals',          'standard'=>'SZNS ISO 9001:2015'],
-                        ['slug'=>'phocweni-clinic',       'name'=>'Phocweni Clinic',       'standard'=>'SZNS ISO 9001:2015'],
-                        ['slug'=>'mp-foods',              'name'=>'MP Foods',              'standard'=>'SZNS SANS 10330:2020 — HACCP'],
-                        ['slug'=>'eagles-nest',           'name'=>'Eagles Nest',           'standard'=>'SZNS SANS 10330:2020 — HACCP'],
-
-                    ];
+                    // Loaded from the certified_organisations table; managed via
+                    // admin → Management Systems → Certified Organisations tab.
+                    $clients = [];
+                    $cres = $conn->query('SELECT name, standard, logo_path FROM certified_organisations WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
+                    if ($cres) {
+                        while ($crow = $cres->fetch_assoc()) $clients[] = $crow;
+                    }
                     ?>
                     <div class="client-grid">
                         <?php foreach ($clients as $c):
-                            $logo = null;
-                            foreach (['png','jpg','jpeg','webp','svg'] as $ext) {
-                                $candidate = 'assets/img/clients/'.$c['slug'].'.'.$ext;
-                                if (file_exists(__DIR__.'/'.$candidate)) { $logo = $candidate; break; }
-                            }
+                            $logo = trim((string)($c['logo_path'] ?? ''));
                         ?>
                         <div class="client-tile">
-                            <?php if ($logo): ?>
+                            <?php if ($logo !== ''): ?>
                                 <img src="<?= htmlspecialchars($logo) ?>" alt="<?= htmlspecialchars($c['name']) ?> logo">
                             <?php else: ?>
                                 <div class="client-wordmark"><?= htmlspecialchars($c['name']) ?></div>

@@ -15,6 +15,10 @@
 --      Training Calendar admin (replaces the 13 hard-coded slots).
 --      Seeded with the existing 13 sessions and 28 intakes so the public
 --      page renders unchanged on day-zero.
+--   3. certified_organisations — new table backing the "Some of the
+--      Certified Organisations" tiles on managementsystems.php (was a
+--      hardcoded $clients array). Seeded with the 6 current orgs and
+--      their existing logo paths so day-zero is invisible.
 
 
 -- =====================================================================
@@ -168,3 +172,41 @@ INSERT IGNORE INTO training_intakes (id, session_id, start_date, end_date, label
 SELECT 'training_sessions' AS table_name, COUNT(*) AS row_count FROM training_sessions
 UNION ALL
 SELECT 'training_intakes', COUNT(*) FROM training_intakes;
+
+
+-- =====================================================================
+-- 3. certified_organisations — new table
+-- =====================================================================
+-- Replaces the hard-coded $clients array in managementsystems.php so the
+-- admin can add / edit / delete orgs and upload their logos.
+
+CREATE TABLE IF NOT EXISTS certified_organisations (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(200) NOT NULL,
+    standard    VARCHAR(200) NOT NULL,
+    logo_path   VARCHAR(500) DEFAULT NULL,
+    sort_order  INT          NOT NULL DEFAULT 0,
+    is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_sort (sort_order, id),
+    INDEX idx_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ── Seed: 6 organisations (current list, with their existing logo paths) ────
+INSERT IGNORE INTO certified_organisations (id, name, standard, logo_path, sort_order, is_active) VALUES
+ (1, 'GALP Eswatini',   'SZNS ISO 9001:2015',           'assets/img/clients/galp-petroleum.jpg',         1, 1),
+ (2, 'Eswatini Wire',   'SZNS ISO 9001:2015',           'assets/img/clients/swazi-wire-industries.png',  2, 1),
+ (3, 'ASD Medicals',    'SZNS ISO 9001:2015',           'assets/img/clients/asd-medicals.png',           3, 1),
+ (4, 'Phocweni Clinic', 'SZNS ISO 9001:2015',           NULL,                                            4, 1),
+ (5, 'MP Foods',        'SZNS SANS 10330:2020 — HACCP', NULL,                                            5, 1),
+ (6, 'Eagles Nest',     'SZNS SANS 10330:2020 — HACCP', 'assets/img/clients/eagles-nest.png',            6, 1);
+
+
+-- =====================================================================
+-- Verification — should print 6 certified organisations
+-- =====================================================================
+SELECT id, sort_order, name, standard, IFNULL(logo_path, '(wordmark)') AS logo
+FROM certified_organisations
+ORDER BY sort_order ASC, id ASC;
