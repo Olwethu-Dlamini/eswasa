@@ -72,29 +72,6 @@ $ms_keys_defaults = [
     // Certification Documents
     'ms_docs_title' => 'Certification Documents',
 
-    'ms_doc_1_title' => 'Rules for the Use of the Certification Mark',
-    'ms_doc_1_url'   => 'CER_RU_028 RULES FOR THE USE OF THE CERTIFICATION MARK.pdf',
-    'ms_doc_2_title' => 'Procedure for Appeals Handling',
-    'ms_doc_2_url'   => 'CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf',
-    'ms_doc_3_title' => 'Procedure for Complaints Handling',
-    'ms_doc_3_url'   => 'CER_PR_006 PROCEDURE FOR COMPLAINTS HANDLING.pdf',
-    'ms_doc_4_title' => 'Procedure for Suspension/ Withdrawal/ Reduced Scope of Certification',
-    'ms_doc_4_url'   => 'CER_PR_026 PROCEDURE FOR SUSPENSION WITHDRAWAL REDUCED SCOPE OF CERTIFICATION.pdf',
-    'ms_doc_5_title' => 'Impartiality Policy',
-    'ms_doc_5_url'   => 'Impartiality Policy - SWASA Certification.pdf',
-    'ms_doc_6_title' => 'Procedure for Management Systems Certification Audits',
-    'ms_doc_6_url'   => 'CER_PR_020 PROCEDURE FOR MANAGEMENT SYSTEMS CERTIFICATION AUDITS.pdf',
-    'ms_doc_7_title' => 'Grant of Certification Procedure',
-    'ms_doc_7_url'   => 'CER_PR_014 GRANT OF CERTIFICATION PROCEDURE.pdf',
-    'ms_doc_8_title' => 'Client Notice of Changes',
-    'ms_doc_8_url'   => 'CER_FO_ 028 CLIENT NOTICE OF CHANGES.pdf',
-    'ms_doc_9_title' => 'Handling Requests for Information',
-    'ms_doc_9_url'   => 'CER_PR_015 HANDLING REQUESTS FOR INFORMATION.pdf',
-    'ms_doc_10_title' => 'Extending Scope of Certification Procedure',
-    'ms_doc_10_url'   => 'CER_PR_012 EXTENDING SCOPE OF CERTIFICATION PROCEDURE.pdf',
-    'ms_doc_11_title' => 'Special Audits Procedure',
-    'ms_doc_11_url'   => 'CER_PR_028 SPECIAL AUDITS PROCEDURE.pdf',
-
     // Why Certify
     'ms_why_title'    => 'Why Certify with ESWASA?',
     'ms_why_subtitle' => 'We provide reliable, efficient and results-driven certification services.',
@@ -737,25 +714,22 @@ $pc = pc_get_many($conn, array_keys($ms_keys_defaults), $ms_keys_defaults);
                     <h3><?= pc_h($pc['ms_docs_title']) ?></h3>
                     <div class="cw-divider"></div>
                 </div>
+                <?php
+                // Loaded from certification_documents table; managed via
+                // admin → Management Systems → Certification Documents tab.
+                $docs = [];
+                $dres = $conn->query('SELECT title, file_path FROM certification_documents WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
+                if ($dres) { while ($drow = $dres->fetch_assoc()) $docs[] = $drow; }
+                ?>
                 <div class="row g-4">
-                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <div class="col-lg col-md-4 col-6">
-                        <a href="<?= pc_h($pc['ms_doc_'.$i.'_url']) ?>" target="_blank" class="doc-card">
-                            <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                            <p><?= pc_h($pc['ms_doc_'.$i.'_title']) ?></p>
-                        </a>
-                    </div>
-                    <?php endfor; ?>
-                </div>
-                <div class="row g-4 mt-0">
-                    <?php for ($i = 6; $i <= 11; $i++): ?>
+                    <?php foreach ($docs as $doc): ?>
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="<?= pc_h($pc['ms_doc_'.$i.'_url']) ?>" target="_blank" class="doc-card">
+                        <a href="<?= pc_h($doc['file_path']) ?>" target="_blank" class="doc-card">
                             <div class="doc-icon" style="background: #2B3388;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2h16v-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                            <p><?= pc_h($pc['ms_doc_'.$i.'_title']) ?></p>
+                            <p><?= pc_h($doc['title']) ?></p>
                         </a>
                     </div>
-                    <?php endfor; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>

@@ -19,6 +19,10 @@
 --      Certified Organisations" tiles on managementsystems.php (was a
 --      hardcoded $clients array). Seeded with the 6 current orgs and
 --      their existing logo paths so day-zero is invisible.
+--   4. certification_documents — new table backing the "Certification
+--      Documents" cards on managementsystems.php (was 11 fixed CMS
+--      key pairs). Seeded with the 11 current docs and their existing
+--      file paths so day-zero is invisible.
 
 
 -- =====================================================================
@@ -209,4 +213,46 @@ INSERT IGNORE INTO certified_organisations (id, name, standard, logo_path, sort_
 -- =====================================================================
 SELECT id, sort_order, name, standard, IFNULL(logo_path, '(wordmark)') AS logo
 FROM certified_organisations
+ORDER BY sort_order ASC, id ASC;
+
+
+-- =====================================================================
+-- 4. certification_documents — new table
+-- =====================================================================
+-- Replaces the 11 fixed ms_doc_*_title / ms_doc_*_url pairs in
+-- page_content with a proper add/edit/delete-able table.
+
+CREATE TABLE IF NOT EXISTS certification_documents (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    title       VARCHAR(500) NOT NULL,
+    file_path   VARCHAR(500) NOT NULL,
+    sort_order  INT          NOT NULL DEFAULT 0,
+    is_active   TINYINT(1)   NOT NULL DEFAULT 1,
+    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_sort (sort_order, id),
+    INDEX idx_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ── Seed: 11 certification documents (current managementsystems.php list) ──
+INSERT IGNORE INTO certification_documents (id, title, file_path, sort_order, is_active) VALUES
+ (1,  'Rules for the Use of the Certification Mark',                          'CER_RU_028 RULES FOR THE USE OF THE CERTIFICATION MARK.pdf',                                   1,  1),
+ (2,  'Procedure for Appeals Handling',                                       'CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf',                                                2,  1),
+ (3,  'Procedure for Complaints Handling',                                    'CER_PR_006 PROCEDURE FOR COMPLAINTS HANDLING.pdf',                                             3,  1),
+ (4,  'Procedure for Suspension/ Withdrawal/ Reduced Scope of Certification', 'CER_PR_026 PROCEDURE FOR SUSPENSION WITHDRAWAL REDUCED SCOPE OF CERTIFICATION.pdf',            4,  1),
+ (5,  'Impartiality Policy',                                                  'Impartiality Policy - SWASA Certification.pdf',                                                5,  1),
+ (6,  'Procedure for Management Systems Certification Audits',                'CER_PR_020 PROCEDURE FOR MANAGEMENT SYSTEMS CERTIFICATION AUDITS.pdf',                         6,  1),
+ (7,  'Grant of Certification Procedure',                                     'CER_PR_014 GRANT OF CERTIFICATION PROCEDURE.pdf',                                              7,  1),
+ (8,  'Client Notice of Changes',                                             'CER_FO_ 028 CLIENT NOTICE OF CHANGES.pdf',                                                     8,  1),
+ (9,  'Handling Requests for Information',                                    'CER_PR_015 HANDLING REQUESTS FOR INFORMATION.pdf',                                             9,  1),
+ (10, 'Extending Scope of Certification Procedure',                           'CER_PR_012 EXTENDING SCOPE OF CERTIFICATION PROCEDURE.pdf',                                    10, 1),
+ (11, 'Special Audits Procedure',                                             'CER_PR_028 SPECIAL AUDITS PROCEDURE.pdf',                                                      11, 1);
+
+
+-- =====================================================================
+-- Verification — should print 11 certification documents
+-- =====================================================================
+SELECT id, sort_order, title, file_path
+FROM certification_documents
 ORDER BY sort_order ASC, id ASC;

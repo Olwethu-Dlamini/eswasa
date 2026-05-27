@@ -34,17 +34,7 @@ $text_keys = [
 
     // Documents
     'ms_docs_title',
-    'ms_doc_1_title','ms_doc_1_url',
-    'ms_doc_2_title','ms_doc_2_url',
-    'ms_doc_3_title','ms_doc_3_url',
-    'ms_doc_4_title','ms_doc_4_url',
-    'ms_doc_5_title','ms_doc_5_url',
-    'ms_doc_6_title','ms_doc_6_url',
-    'ms_doc_7_title','ms_doc_7_url',
-    'ms_doc_8_title','ms_doc_8_url',
-    'ms_doc_9_title','ms_doc_9_url',
-    'ms_doc_10_title','ms_doc_10_url',
-    'ms_doc_11_title','ms_doc_11_url',
+    // ms_doc_*_title/url removed — docs now live in certification_documents (Certification Documents tab).
 
     // Why Certify
     'ms_why_title','ms_why_subtitle','ms_why_img_alt',
@@ -179,11 +169,129 @@ if (isset($_GET['delete_org'])) {
     exit;
 }
 
+// ── PDF upload helper for certification_documents ─────────────
+function ms_upload_doc_pdf(string $field, string $upload_dir, int $max_bytes = 26214400): array {
+    if (empty($_FILES[$field]['name'])) return ['ok' => true, 'path' => null, 'error' => ''];
+    if (($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) return ['ok' => false, 'path' => null, 'error' => 'Upload failed.'];
+    if ($_FILES[$field]['size'] > $max_bytes) return ['ok' => false, 'path' => null, 'error' => 'PDF exceeds 25 MB.'];
+    $tmp = $_FILES[$field]['tmp_name'];
+    $original = $_FILES[$field]['name'];
+    $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
+    if ($ext !== 'pdf') return ['ok' => false, 'path' => null, 'error' => 'Only PDF files are allowed.'];
+    if (function_exists('finfo_open')) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_file($finfo, $tmp);
+        finfo_close($finfo);
+        if ($mime && !in_array(strtolower($mime), ['application/pdf','application/x-pdf','binary/octet-stream'], true)) {
+            return ['ok' => false, 'path' => null, 'error' => 'File does not look like a valid PDF.'];
+        }
+    }
+    $stem = strtolower(pathinfo($original, PATHINFO_FILENAME));
+    $stem = preg_replace('/[^a-z0-9]+/', '-', $stem);
+    $stem = trim($stem, '-') ?: 'doc';
+    if (strlen($stem) > 60) $stem = substr($stem, 0, 60);
+    $unique = $stem . '_' . date('Ymd_His') . '_' . bin2hex(random_bytes(3)) . '.pdf';
+    if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true) && !is_dir($upload_dir)) {
+        return ['ok' => false, 'path' => null, 'error' => 'Could not create uploads directory.'];
+    }
+    $target = rtrim($upload_dir, '/\\') . DIRECTORY_SEPARATOR . $unique;
+    if (!move_uploaded_file($tmp, $target)) return ['ok' => false, 'path' => null, 'error' => 'Failed to save uploaded file.'];
+    return ['ok' => true, 'path' => 'admin/uploads/docs/' . $unique, 'error' => ''];
+}
+
+// ── Save handler: certification document (create / update) ────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_doc'])) {
+    $id         = !empty($_POST['doc_id']) ? (int)$_POST['doc_id'] : null;
+    $title      = pc_strip_text($_POST['doc_title'] ?? '');
+    $sort_order = (int)($_POST['doc_sort_order'] ?? 0);
+    $is_active  = !empty($_POST['doc_is_active']) ? 1 : 0;
+    $existing   = trim($_POST['doc_existing_path'] ?? '');
+    $manual_path = trim($_POST['doc_manual_path'] ?? '');
+
+    $errors = [];
+    if ($title === '') $errors[] = 'Document title is required.';
+
+    // file_path resolution: new upload wins, else manual path, else keep existing.
+    $file_path = $existing;
+    $up = ms_upload_doc_pdf('doc_file', __DIR__ . '/../uploads/docs/');
+    if (!$up['ok']) $errors[] = $up['error'];
+    if ($up['path']) {
+        $file_path = $up['path'];
+        // If a new PDF was uploaded and the old file lived under admin/uploads/docs/, clean it up.
+        if ($id && $existing !== '' && strpos($existing, 'admin/uploads/docs/') === 0) {
+            $oldfs = __DIR__ . '/../../' . $existing;
+            if (is_file($oldfs)) @unlink($oldfs);
+        }
+    } elseif ($manual_path !== '') {
+        $file_path = $manual_path;
+    }
+
+    if ($file_path === '') $errors[] = 'A PDF file or a file path is required.';
+
+    if ($errors) {
+        set_flash('danger', implode(' ', $errors));
+        header('Location: index.php?page=managementsystems.php&tab=docs' . ($id ? '&edit_doc=' . $id : '&new_doc=1'));
+        exit;
+    }
+
+    if ($id) {
+        $stmt = $conn->prepare('UPDATE certification_documents SET title = ?, file_path = ?, sort_order = ?, is_active = ? WHERE id = ?');
+        $stmt->bind_param('ssiii', $title, $file_path, $sort_order, $is_active, $id);
+        $stmt->execute();
+        $stmt->close();
+        set_flash('success', 'Document updated.');
+    } else {
+        $stmt = $conn->prepare('INSERT INTO certification_documents (title, file_path, sort_order, is_active) VALUES (?, ?, ?, ?)');
+        $stmt->bind_param('ssii', $title, $file_path, $sort_order, $is_active);
+        $stmt->execute();
+        $stmt->close();
+        set_flash('success', 'Document added.');
+    }
+    header('Location: index.php?page=managementsystems.php&tab=docs');
+    exit;
+}
+
+// ── GET: quick toggle is_active on a doc ──────────────────────
+if (isset($_GET['toggle_doc'])) {
+    $id = (int)$_GET['toggle_doc'];
+    $stmt = $conn->prepare('UPDATE certification_documents SET is_active = 1 - is_active WHERE id = ?');
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $stmt->close();
+    set_flash('success', 'Active state toggled.');
+    header('Location: index.php?page=managementsystems.php&tab=docs');
+    exit;
+}
+
+// ── GET: delete a doc ─────────────────────────────────────────
+if (isset($_GET['delete_doc'])) {
+    $id = (int)$_GET['delete_doc'];
+    $sel = $conn->prepare('SELECT file_path FROM certification_documents WHERE id = ?');
+    $sel->bind_param('i', $id);
+    $sel->execute();
+    $row = $sel->get_result()->fetch_assoc();
+    $sel->close();
+    if ($row && !empty($row['file_path']) && strpos($row['file_path'], 'admin/uploads/docs/') === 0) {
+        $fs = __DIR__ . '/../../' . $row['file_path'];
+        if (is_file($fs)) @unlink($fs);
+    }
+    $stmt = $conn->prepare('DELETE FROM certification_documents WHERE id = ?');
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $stmt->close();
+    set_flash('success', 'Document deleted.');
+    header('Location: index.php?page=managementsystems.php&tab=docs');
+    exit;
+}
+
 // ── Load data ─────────────────────────────────────────────────
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 
 $orgs_res = $conn->query('SELECT * FROM certified_organisations ORDER BY sort_order ASC, id ASC');
 $orgs = $orgs_res ? $orgs_res->fetch_all(MYSQLI_ASSOC) : [];
+
+$docs_res = $conn->query('SELECT * FROM certification_documents ORDER BY sort_order ASC, id ASC');
+$docs = $docs_res ? $docs_res->fetch_all(MYSQLI_ASSOC) : [];
 
 $edit_org = null;
 $is_new_org = isset($_GET['new_org']);
@@ -196,8 +304,21 @@ if (isset($_GET['edit_org'])) {
     $stmt->close();
 }
 
-$active_tab = ($_GET['tab'] ?? '') === 'content' ? 'content' : 'orgs';
+$edit_doc = null;
+$is_new_doc = isset($_GET['new_doc']);
+if (isset($_GET['edit_doc'])) {
+    $stmt = $conn->prepare('SELECT * FROM certification_documents WHERE id = ?');
+    $eid = (int)$_GET['edit_doc'];
+    $stmt->bind_param('i', $eid);
+    $stmt->execute();
+    $edit_doc = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+}
+
+$active_tab = $_GET['tab'] ?? 'orgs';
+if (!in_array($active_tab, ['orgs', 'docs', 'content'], true)) $active_tab = 'orgs';
 if ($edit_org || $is_new_org) $active_tab = 'orgs';
+if ($edit_doc || $is_new_doc) $active_tab = 'docs';
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -208,6 +329,10 @@ if ($edit_org || $is_new_org) $active_tab = 'orgs';
             <a href="index.php?page=managementsystems.php&new_org=1" class="btn btn-sm btn-primary">
                 <i class="fas fa-plus me-1"></i> Add organisation
             </a>
+        <?php elseif ($active_tab === 'docs' && !$edit_doc && !$is_new_doc): ?>
+            <a href="index.php?page=managementsystems.php&new_doc=1" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i> Add document
+            </a>
         <?php endif; ?>
     </div>
 </div>
@@ -217,6 +342,12 @@ if ($edit_org || $is_new_org) $active_tab = 'orgs';
         <button class="nav-link <?= $active_tab === 'orgs' ? 'active' : '' ?>"
                 data-bs-toggle="tab" data-bs-target="#tab-orgs" type="button" role="tab">
             Certified Organisations <span class="badge bg-secondary ms-1"><?= count($orgs) ?></span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'docs' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-docs" type="button" role="tab">
+            Certification Documents <span class="badge bg-secondary ms-1"><?= count($docs) ?></span>
         </button>
     </li>
     <li class="nav-item" role="presentation">
@@ -353,6 +484,144 @@ if ($edit_org || $is_new_org) $active_tab = 'orgs';
                 <?php else: ?>
                     <div class="p-4 text-center text-muted">
                         No organisations yet. <a href="index.php?page=managementsystems.php&new_org=1">Add the first one</a>.
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- ============ TAB: Certification Documents ============ -->
+<div class="tab-pane fade <?= $active_tab === 'docs' ? 'show active' : '' ?>" id="tab-docs" role="tabpanel">
+
+    <?php if ($edit_doc || $is_new_doc):
+        $d = $edit_doc ?: [
+            'id' => 0, 'title' => '', 'file_path' => '',
+            'sort_order' => ($docs ? (max(array_column($docs, 'sort_order')) + 1) : 1),
+            'is_active' => 1,
+        ];
+        $is_uploaded = !empty($d['file_path']) && strpos($d['file_path'], 'admin/uploads/docs/') === 0;
+    ?>
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong><?= $edit_doc ? 'Edit document' : 'Add document' ?></strong>
+                <a href="index.php?page=managementsystems.php&tab=docs" class="btn btn-sm btn-link text-decoration-none">&larr; Back to list</a>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <?php if ($edit_doc): ?>
+                        <input type="hidden" name="doc_id" value="<?= (int)$d['id'] ?>">
+                    <?php endif; ?>
+                    <input type="hidden" name="doc_existing_path" value="<?= pc_h($d['file_path']) ?>">
+
+                    <div class="row g-3">
+                        <div class="col-md-9">
+                            <label class="form-label fw-bold">Title *</label>
+                            <input type="text" name="doc_title" class="form-control" required maxlength="500"
+                                   value="<?= pc_h($d['title']) ?>" placeholder="e.g. Procedure for Appeals Handling">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Sort order</label>
+                            <input type="number" name="doc_sort_order" class="form-control" value="<?= (int)$d['sort_order'] ?>">
+                            <div class="form-text">Lower = earlier.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">PDF file</label>
+                            <input type="file" name="doc_file" class="form-control" accept="application/pdf,.pdf">
+                            <div class="form-text">Upload a fresh PDF (up to 25 MB) — replaces the existing file. Leave empty to keep the current one.</div>
+                            <?php if (!empty($d['file_path'])): ?>
+                                <div class="mt-2 small">
+                                    Current:
+                                    <a href="../<?= pc_h($d['file_path']) ?>" target="_blank" rel="noopener"><?= pc_h(basename($d['file_path'])) ?></a>
+                                    <?= $is_uploaded ? '<span class="badge bg-success ms-2">Uploaded</span>' : '<span class="badge bg-secondary ms-2">External path</span>' ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="col-md-9">
+                            <label class="form-label fw-bold">Or external path / URL</label>
+                            <input type="text" name="doc_manual_path" class="form-control"
+                                   placeholder="e.g. CER_RU_028 RULES FOR THE USE OF THE CERTIFICATION MARK.pdf">
+                            <div class="form-text">Use this for PDFs already on the server (relative to web root) or full URLs. Overrides "current" if filled, but is ignored when a new PDF is uploaded above.</div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <div class="form-check">
+                                <input type="checkbox" name="doc_is_active" id="doc_is_active" value="1" class="form-check-input"
+                                       <?= (int)$d['is_active'] === 1 ? 'checked' : '' ?>>
+                                <label for="doc_is_active" class="form-check-label">Show on public page</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <a href="index.php?page=managementsystems.php&tab=docs" class="btn btn-link text-decoration-none">Cancel</a>
+                        <button type="submit" name="save_doc" value="1" class="btn btn-primary px-4">
+                            <i class="fas fa-save me-1"></i> <?= $edit_doc ? 'Save changes' : 'Add document' ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!$edit_doc && !$is_new_doc): ?>
+        <div class="card">
+            <div class="card-header">All certification documents (<?= count($docs) ?>)</div>
+            <div class="card-body p-0">
+                <?php if ($docs): ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70px;">Order</th>
+                                    <th>Title</th>
+                                    <th style="width: 110px;">Source</th>
+                                    <th style="width: 90px;" class="text-center">Active</th>
+                                    <th style="width: 200px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($docs as $row):
+                                    $uploaded = !empty($row['file_path']) && strpos($row['file_path'], 'admin/uploads/docs/') === 0;
+                                ?>
+                                    <tr>
+                                        <td><?= (int)$row['sort_order'] ?></td>
+                                        <td>
+                                            <?= pc_h($row['title']) ?>
+                                            <div class="small text-muted text-truncate" style="max-width: 460px;" title="<?= pc_h($row['file_path']) ?>"><?= pc_h($row['file_path']) ?></div>
+                                        </td>
+                                        <td>
+                                            <?php if ($uploaded): ?>
+                                                <span class="badge bg-success">Uploaded</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-secondary">External</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="index.php?page=managementsystems.php&tab=docs&toggle_doc=<?= (int)$row['id'] ?>" class="btn btn-sm btn-link p-0">
+                                                <?php if ((int)$row['is_active'] === 1): ?>
+                                                    <span class="badge bg-success">On</span>
+                                                <?php else: ?>
+                                                    <span class="badge bg-secondary">Off</span>
+                                                <?php endif; ?>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="../<?= pc_h($row['file_path']) ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">Open</a>
+                                            <a href="index.php?page=managementsystems.php&tab=docs&edit_doc=<?= (int)$row['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                                            <a href="index.php?page=managementsystems.php&tab=docs&delete_doc=<?= (int)$row['id'] ?>"
+                                               class="btn btn-sm btn-outline-danger"
+                                               onclick="return confirm('Delete this document?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="p-4 text-center text-muted">
+                        No documents yet. <a href="index.php?page=managementsystems.php&new_doc=1">Add the first one</a>.
                     </div>
                 <?php endif; ?>
             </div>
@@ -537,17 +806,7 @@ if ($edit_org || $is_new_org) $active_tab = 'orgs';
                 <label class="form-label">Section Title</label>
                 <input type="text" name="ms_docs_title" class="form-control" value="<?= pc_h($pc['ms_docs_title']) ?>">
             </div>
-            <?php for ($i = 1; $i <= 11; $i++): ?>
-            <div class="row g-2 mb-2 align-items-center">
-                <div class="col-md-1 text-end"><span class="text-muted">#<?= $i ?></span></div>
-                <div class="col-md-6">
-                    <input type="text" name="ms_doc_<?= $i ?>_title" class="form-control" placeholder="Document title shown on card" value="<?= pc_h($pc['ms_doc_'.$i.'_title']) ?>">
-                </div>
-                <div class="col-md-5">
-                    <input type="text" name="ms_doc_<?= $i ?>_url" class="form-control" placeholder="File path or URL (e.g. CER_RU_028.pdf)" value="<?= pc_h($pc['ms_doc_'.$i.'_url']) ?>">
-                </div>
-            </div>
-            <?php endfor; ?>
+            <small class="text-muted">Document cards (title, file, sort, on/off) are managed in the <strong>Certification Documents</strong> tab.</small>
         </div>
     </div>
 
