@@ -8,7 +8,6 @@ include_once 'includes/breadcrumb_helper.php';
 $ingelo_keys = [
     // Hero / breadcrumb
     'ingelo_hero_title',
-    'ingelo_img_hero',
     // Intro section
     'ingelo_intro_image',
     'ingelo_intro_image_alt',
@@ -56,7 +55,6 @@ $ingelo_keys = [
 
 $ingelo_defaults = [
     'ingelo_hero_title'                 => 'Ingelo Certification Scheme',
-    'ingelo_img_hero'                   => 'assets/img/bg/Ingelo.png',
     'ingelo_intro_image'                => 'assets/img/quality/ingelo-certification-black.png',
     'ingelo_intro_image_alt'            => 'Ingelo MSME Product Certification Mark',
     'ingelo_intro_title'                => 'Eswatini Standards Authority (ESWASA) Invites MSMEs to Participate',
@@ -290,7 +288,7 @@ $pc = pc_get_many($conn, $ingelo_keys, $ingelo_defaults);
     <main class="main-area fix">
 
         <!-- breadcrumb-area -->
-        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= pc_h(pc_image_src($pc['ingelo_img_hero'], get_breadcrumb_bg('ingelo', 'assets/img/bg/Ingelo.png'))) ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('ingelo', 'assets/img/bg/Ingelo.png') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
