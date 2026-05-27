@@ -197,6 +197,61 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             background: rgba(43, 51, 136, 0.06);
         }
 
+        /* ===== Pager (under the trainings list) ===== */
+        .trainings-pager {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(43, 51, 136, 0.12);
+        }
+        .trainings-pager .page-btn {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.25);
+            border-radius: 3px;
+            color: #2B3388;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .15s ease, border-color .15s ease;
+        }
+        .trainings-pager .page-btn:hover:not(:disabled):not(.is-current) {
+            background: rgba(43, 51, 136, 0.06);
+            border-color: rgba(43, 51, 136, 0.45);
+        }
+        .trainings-pager .page-btn.is-current {
+            background: #2B3388;
+            border-color: #2B3388;
+            color: #fff;
+            cursor: default;
+        }
+        .trainings-pager .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .trainings-pager .page-ellipsis {
+            color: #2B3388;
+            font-size: 13px;
+            padding: 0 4px;
+        }
+        .trainings-pager.is-hidden { display: none; }
+        @media (max-width: 575.98px) {
+            .trainings-pager .page-btn {
+                min-width: 30px;
+                height: 30px;
+                font-size: 12px;
+                padding: 0 8px;
+            }
+        }
+
         .training-card {
             --card-glow: rgba(43, 51, 136, 0.10);
             --card-glow-strong: rgba(43, 51, 136, 0.22);
@@ -609,6 +664,7 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
                             </button>
                         </div>
                         <div id="trainings-list"></div>
+                        <nav id="trainings-pager" class="trainings-pager is-hidden" aria-label="Trainings pagination"></nav>
                     </div>
 
                     <!-- Calendar sidebar -->
@@ -772,10 +828,29 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
         let currentDate = new Date(_now.getFullYear(), _now.getMonth(), 1);
         let selectedTrainingId = null;
 
+        // Pager state — 6 trainings per page; pager hides itself when only 1 page exists.
+        const PAGE_SIZE = 6;
+        let currentPage = 1;
+        function totalPages() { return Math.max(1, Math.ceil(trainings.length / PAGE_SIZE)); }
+        function pageFor(trainingId) {
+            const idx = trainings.findIndex(t => t.id === trainingId);
+            return idx < 0 ? 1 : Math.floor(idx / PAGE_SIZE) + 1;
+        }
+        function goToPage(p) {
+            const tp = totalPages();
+            const next = Math.min(Math.max(1, p), tp);
+            if (next === currentPage) return;
+            currentPage = next;
+            renderTrainingsList();
+            renderPager();
+        }
+
         function renderTrainingsList() {
             const list = document.getElementById('trainings-list');
             list.innerHTML = '';
-            trainings.forEach(t => {
+            const start = (currentPage - 1) * PAGE_SIZE;
+            const slice = trainings.slice(start, start + PAGE_SIZE);
+            slice.forEach(t => {
                 const card = document.createElement('div');
                 card.className = 'training-card' + (selectedTrainingId === t.id ? ' is-active' : '');
                 card.dataset.id = t.id;
@@ -822,7 +897,8 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             const resetBtn = document.getElementById('reset-filter');
             resetBtn.classList.toggle('visible', selectedTrainingId !== null);
 
-            // Jump calendar to the first session of the selected training
+            // Jump calendar to the first session of the selected training, and
+            // make sure the selected card's page is the one being shown.
             if (jumpCalendar && selectedTrainingId !== null) {
                 const t = trainings[selectedTrainingId];
                 const first = t.sessions[0];
@@ -830,9 +906,55 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
                     const [y, m] = first.start.split('-').map(Number);
                     currentDate = new Date(y, m - 1, 1);
                 }
+                const targetPage = pageFor(selectedTrainingId);
+                if (targetPage !== currentPage) currentPage = targetPage;
             }
             renderTrainingsList();
+            renderPager();
             renderCalendar();
+        }
+
+        function renderPager() {
+            const pager = document.getElementById('trainings-pager');
+            const tp = totalPages();
+            pager.innerHTML = '';
+            if (tp <= 1) {
+                pager.classList.add('is-hidden');
+                return;
+            }
+            pager.classList.remove('is-hidden');
+
+            function btn(label, page, opts) {
+                opts = opts || {};
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'page-btn' + (opts.current ? ' is-current' : '');
+                b.textContent = label;
+                if (opts.aria) b.setAttribute('aria-label', opts.aria);
+                if (opts.current) b.setAttribute('aria-current', 'page');
+                if (opts.disabled) b.disabled = true;
+                else b.addEventListener('click', () => goToPage(page));
+                return b;
+            }
+
+            pager.appendChild(btn('‹', currentPage - 1, { disabled: currentPage === 1, aria: 'Previous page' }));
+
+            // Number window: always show 1, last, current, neighbours; ellipsis for gaps.
+            const pages = new Set([1, tp, currentPage, currentPage - 1, currentPage + 1]);
+            const sorted = [...pages].filter(p => p >= 1 && p <= tp).sort((a, b) => a - b);
+            let prev = 0;
+            sorted.forEach(p => {
+                if (p - prev > 1) {
+                    const e = document.createElement('span');
+                    e.className = 'page-ellipsis';
+                    e.textContent = '…';
+                    pager.appendChild(e);
+                }
+                pager.appendChild(btn(String(p), p, { current: p === currentPage }));
+                prev = p;
+            });
+
+            pager.appendChild(btn('›', currentPage + 1, { disabled: currentPage === tp, aria: 'Next page' }));
         }
 
         function renderCalendar() {
@@ -909,6 +1031,7 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             selectedTrainingId = null;
             document.getElementById('reset-filter').classList.remove('visible');
             renderTrainingsList();
+            renderPager();
             renderCalendar();
         });
 
@@ -937,6 +1060,7 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
 
         renderLegend();
         renderTrainingsList();
+        renderPager();
         renderCalendar();
     </script>
 
