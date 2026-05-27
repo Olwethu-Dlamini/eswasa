@@ -2,67 +2,50 @@
 include_once __DIR__ . '/includes/db_connect.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
 include_once __DIR__ . '/includes/breadcrumb_helper.php';
+require __DIR__ . '/includes/training_families.php';
 
-// ── Structural training schedule (code/family/intakes/colours) ───────────────
-// Titles are CMS-driven; the rest is structural data the JS calendar needs.
-$train_cal_structural = [
-    1  => ['code' => 'QMS 02',  'family' => 'Quality',         'sessions' => [
-            ['start' => '2026-05-18', 'end' => '2026-05-22', 'label' => '18–22 May'],
-            ['start' => '2026-07-13', 'end' => '2026-07-17', 'label' => '13–17 July'],
-            ['start' => '2026-10-05', 'end' => '2026-10-09', 'label' => '5–9 October'],
-            ['start' => '2026-12-07', 'end' => '2026-12-11', 'label' => '7–11 December'],
-        ]],
-    2  => ['code' => 'QMS 03',  'family' => 'Auditing',        'sessions' => [
-            ['start' => '2026-07-20', 'end' => '2026-07-24', 'label' => '20–24 July'],
-            ['start' => '2026-09-07', 'end' => '2026-09-11', 'label' => '7–11 September'],
-        ]],
-    3  => ['code' => 'FSMS 02', 'family' => 'Food Safety',     'sessions' => [
-            ['start' => '2026-06-01', 'end' => '2026-06-05', 'label' => '1–5 June'],
-            ['start' => '2026-08-17', 'end' => '2026-08-21', 'label' => '17–21 August'],
-            ['start' => '2026-10-26', 'end' => '2026-10-30', 'label' => '26–30 October'],
-            ['start' => '2026-12-14', 'end' => '2026-12-18', 'label' => '14–18 December'],
-        ]],
-    4  => ['code' => 'FSMS 03', 'family' => 'Auditing',        'sessions' => [
-            ['start' => '2026-07-27', 'end' => '2026-07-31', 'label' => '27–31 July'],
-            ['start' => '2026-11-30', 'end' => '2026-12-04', 'label' => '30 November – 4 December'],
-        ]],
-    5  => ['code' => 'FS 01',   'family' => 'Food Safety',     'sessions' => [
-            ['start' => '2026-08-03', 'end' => '2026-08-07', 'label' => '3–7 August'],
-        ]],
-    6  => ['code' => 'OHS 02',  'family' => 'Health & Safety', 'sessions' => [
-            ['start' => '2026-06-08', 'end' => '2026-06-12', 'label' => '8–12 June'],
-            ['start' => '2026-08-24', 'end' => '2026-08-28', 'label' => '24–28 August'],
-            ['start' => '2026-11-02', 'end' => '2026-11-06', 'label' => '2–6 November'],
-        ]],
-    7  => ['code' => 'OHS 01',  'family' => 'Health & Safety', 'sessions' => [
-            ['start' => '2026-09-21', 'end' => '2026-09-25', 'label' => '21–25 September'],
-        ]],
-    8  => ['code' => 'RCA 02',  'family' => 'Health & Safety', 'sessions' => [
-            ['start' => '2026-08-10', 'end' => '2026-08-14', 'label' => '10–14 August'],
-        ]],
-    9  => ['code' => 'HM 02',   'family' => 'Hazmat',          'sessions' => [
-            ['start' => '2026-05-25', 'end' => '2026-05-29', 'label' => '25–29 May'],
-            ['start' => '2026-11-09', 'end' => '2026-11-13', 'label' => '9–13 November'],
-        ]],
-    10 => ['code' => 'EMS 02',  'family' => 'Environmental',   'sessions' => [
-            ['start' => '2026-06-15', 'end' => '2026-06-19', 'label' => '15–19 June'],
-            ['start' => '2026-09-14', 'end' => '2026-09-18', 'label' => '14–18 September'],
-            ['start' => '2026-11-23', 'end' => '2026-11-27', 'label' => '23–27 November'],
-        ]],
-    11 => ['code' => 'ERM 02',  'family' => 'Risk',            'sessions' => [
-            ['start' => '2026-06-22', 'end' => '2026-06-26', 'label' => '22–26 June'],
-            ['start' => '2026-10-19', 'end' => '2026-10-23', 'label' => '19–23 October'],
-        ]],
-    12 => ['code' => 'WDM 02',  'family' => 'Wellness',        'sessions' => [
-            ['start' => '2026-06-29', 'end' => '2026-07-03', 'label' => '29 June – 3 July'],
-        ]],
-    13 => ['code' => 'GAP 02',  'family' => 'Agriculture',     'sessions' => [
-            ['start' => '2026-07-06', 'end' => '2026-07-10', 'label' => '6–10 July'],
-            ['start' => '2026-10-12', 'end' => '2026-10-16', 'label' => '12–16 October'],
-        ]],
-];
+// ── Training sessions + intakes (DB-driven; edited via admin) ────────────────
+// Schema: training_sessions + training_intakes (see migration_2026_05_27.sql).
+$train_cal_sessions = [];
+$res = $conn->query('
+    SELECT id, code, family, title, location, duration, price, sort_order
+    FROM training_sessions
+    WHERE is_active = 1
+    ORDER BY sort_order ASC, id ASC
+');
+if ($res) {
+    while ($row = $res->fetch_assoc()) {
+        $row['intakes'] = [];
+        $train_cal_sessions[(int)$row['id']] = $row;
+    }
+}
+if ($train_cal_sessions) {
+    $ids = array_keys($train_cal_sessions);
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    $stmt = $conn->prepare("
+        SELECT session_id, start_date, end_date, label
+        FROM training_intakes
+        WHERE session_id IN ($placeholders)
+        ORDER BY session_id ASC, sort_order ASC, id ASC
+    ");
+    $types = str_repeat('i', count($ids));
+    $stmt->bind_param($types, ...$ids);
+    $stmt->execute();
+    $r = $stmt->get_result();
+    while ($row = $r->fetch_assoc()) {
+        $sid = (int)$row['session_id'];
+        if (isset($train_cal_sessions[$sid])) {
+            $train_cal_sessions[$sid]['intakes'][] = [
+                'start' => $row['start_date'],
+                'end'   => $row['end_date'],
+                'label' => $row['label'],
+            ];
+        }
+    }
+    $stmt->close();
+}
 
-// ── CMS keys + defaults ─────────────────────────────────────────────────────
+// ── Page-copy CMS keys (hero/breadcrumb/buttons/modal) ───────────────────────
 $train_cal_defaults = [
     // Breadcrumb / hero
     'train_cal_breadcrumb_home'        => 'Home',
@@ -99,32 +82,6 @@ $train_cal_defaults = [
     'train_cal_modal_consent'          => 'I agree to the Training Policies and consent to the processing of my personal data as described in the prospectus.',
     'train_cal_modal_submit_label'     => 'Submit Application',
 ];
-
-// Session slot defaults (13 slots — date/title/location/duration/price each)
-$train_cal_session_titles = [
-    1  => 'Quality Management Systems — SZNS ISO 9001:2015 — Understanding & Implementation',
-    2  => 'Quality Management Systems — Internal Auditing — SZNS ISO 19011:2018',
-    3  => 'Food Safety Management Systems — SZNS ISO 22000:2018 — Understanding & Implementation',
-    4  => 'Food Safety Management Systems — Internal Auditing — SZNS ISO 19011:2018',
-    5  => 'Hazard Analysis & Critical Control Points (HACCP) — SZNS ISO 10330:2020 — Understanding & Implementation',
-    6  => 'Occupational Health & Safety Management Systems — SZNS ISO 45001:2018 — Understanding & Implementation',
-    7  => 'SHE Rep — Safety, Health and Environment Representative',
-    8  => 'Root Cause Analysis / Incident Investigation — Understanding & Implementation',
-    9  => 'Hazmat — Hazardous Material — Understanding & Implementation',
-    10 => 'Environmental Management Systems — SZNS ISO 14001:2015 — Understanding & Implementation',
-    11 => 'Enterprise Risk Management — SZNS ISO 31000:2018 — Understanding & Implementation',
-    12 => 'Wellness and Disease Management Systems — SZNS SANS 16001:2013 — Understanding & Implementation',
-    13 => 'Global GAP — Integrated Farm Assurance',
-];
-foreach ($train_cal_session_titles as $n => $title) {
-    // Build a human-readable composite date from the structural intakes
-    $intake_labels = array_map(function ($s) { return $s['label']; }, $train_cal_structural[$n]['sessions']);
-    $train_cal_defaults["train_cal_session_{$n}_title"]    = $title;
-    $train_cal_defaults["train_cal_session_{$n}_date"]     = implode('; ', $intake_labels) . ' 2026';
-    $train_cal_defaults["train_cal_session_{$n}_location"] = 'Mbabane';
-    $train_cal_defaults["train_cal_session_{$n}_duration"] = '5 days';
-    $train_cal_defaults["train_cal_session_{$n}_price"]    = '';
-}
 
 $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
 ?>
@@ -751,32 +708,18 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
     <script src="assets/js/main.js"></script>
 
     <script>
-        // Colour palette pulled from admin/uploads/*-colored.svg + course-*.svg
-        // Each training has a family (used for the legend) and a colour (used everywhere).
-        const FAMILY_COLOURS = {
-            'Quality':         '#99CC00', // ISO 9001
-            'Auditing':        '#455A64', // ISO 19011
-            'Food Safety':     '#00B5C5', // ISO 22000 / HACCP
-            'Health & Safety': '#8C66DE', // ISO 45001
-            'Environmental':   '#F24B4B', // ISO 14001
-            'Hazmat':          '#FFC000', // hazard / warning
-            'Risk':            '#809CD0', // ISO 31000 (light blue)
-            'Wellness':        '#E85D75', // wellness
-            'Agriculture':     '#2E7D32'  // Global GAP
-        };
+        // Family colour map — single source of truth in includes/training_families.php,
+        // injected so the admin family dropdown and this page stay in sync.
+        const FAMILY_COLOURS = <?= json_encode($TRAINING_FAMILIES, JSON_UNESCAPED_UNICODE) ?>;
 
-        // 2026 ESWASA training schedule — titles CMS-driven, intakes structural
-        // Slots with an empty title are skipped (admin can blank a slot to hide it)
+        // Trainings + intakes loaded from training_sessions / training_intakes tables.
+        // Edited via admin/pages/training_calendar.php. is_active=0 rows are filtered server-side.
         const trainings = [
-<?php foreach ($train_cal_structural as $n => $row):
-    $title    = trim((string)($pc["train_cal_session_{$n}_title"] ?? ''));
-    if ($title === '') continue;
-    $code     = $row['code'];
-    $family   = $row['family'];
-    $sessions = $row['sessions'];
+<?php foreach ($train_cal_sessions as $row):
+    if (empty($row['intakes'])) continue; // a session with no intakes can't render meaningfully
 ?>
-            { code: <?= json_encode($code, JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($family, JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($title, JSON_UNESCAPED_UNICODE) ?>, sessions: [
-<?php foreach ($sessions as $s): ?>
+            { code: <?= json_encode($row['code'], JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($row['family'], JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($row['title'], JSON_UNESCAPED_UNICODE) ?>, sessions: [
+<?php foreach ($row['intakes'] as $s): ?>
                 { start: <?= json_encode($s['start']) ?>, end: <?= json_encode($s['end']) ?>, label: <?= json_encode($s['label'], JSON_UNESCAPED_UNICODE) ?> },
 <?php endforeach; ?>
             ]},
