@@ -260,7 +260,7 @@ if ($edit_session || $is_new) $active_tab = 'sessions';
             $s = $edit_session ?: [
                 'id' => 0, 'code' => '', 'family' => '', 'title' => '',
                 'location' => 'Mbabane', 'duration' => '5 days', 'price' => '',
-                'sort_order' => ($sessions ? (max(array_column($sessions, 'sort_order')) + 10) : 10),
+                'sort_order' => ($sessions ? (max(array_column($sessions, 'sort_order')) + 1) : 1),
                 'is_active' => 1,
             ];
         ?>

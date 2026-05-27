@@ -85,19 +85,36 @@ CREATE TABLE IF NOT EXISTS training_intakes (
 
 -- ── Seed: 13 sessions ────────────────────────────────────────────────
 INSERT IGNORE INTO training_sessions (id, code, family, title, location, duration, price, sort_order, is_active) VALUES
- (1,  'QMS 02',  'Quality',         'Quality Management Systems — SZNS ISO 9001:2015 — Understanding & Implementation', 'Mbabane', '5 days', '', 10,  1),
- (2,  'QMS 03',  'Auditing',        'Quality Management Systems — Internal Auditing — SZNS ISO 19011:2018',             'Mbabane', '5 days', '', 20,  1),
- (3,  'FSMS 02', 'Food Safety',     'Food Safety Management Systems — SZNS ISO 22000:2018 — Understanding & Implementation', 'Mbabane', '5 days', '', 30,  1),
- (4,  'FSMS 03', 'Auditing',        'Food Safety Management Systems — Internal Auditing — SZNS ISO 19011:2018',         'Mbabane', '5 days', '', 40,  1),
- (5,  'FS 01',   'Food Safety',     'Hazard Analysis & Critical Control Points (HACCP) — SZNS ISO 10330:2020 — Understanding & Implementation', 'Mbabane', '5 days', '', 50,  1),
- (6,  'OHS 02',  'Health & Safety', 'Occupational Health & Safety Management Systems — SZNS ISO 45001:2018 — Understanding & Implementation', 'Mbabane', '5 days', '', 60,  1),
- (7,  'OHS 01',  'Health & Safety', 'SHE Rep — Safety, Health and Environment Representative',                          'Mbabane', '5 days', '', 70,  1),
- (8,  'RCA 02',  'Health & Safety', 'Root Cause Analysis / Incident Investigation — Understanding & Implementation',    'Mbabane', '5 days', '', 80,  1),
- (9,  'HM 02',   'Hazmat',          'Hazmat — Hazardous Material — Understanding & Implementation',                     'Mbabane', '5 days', '', 90,  1),
- (10, 'EMS 02',  'Environmental',   'Environmental Management Systems — SZNS ISO 14001:2015 — Understanding & Implementation', 'Mbabane', '5 days', '', 100, 1),
- (11, 'ERM 02',  'Risk',            'Enterprise Risk Management — SZNS ISO 31000:2018 — Understanding & Implementation', 'Mbabane', '5 days', '', 110, 1),
- (12, 'WDM 02',  'Wellness',        'Wellness and Disease Management Systems — SZNS SANS 16001:2013 — Understanding & Implementation', 'Mbabane', '5 days', '', 120, 1),
- (13, 'GAP 02',  'Agriculture',     'Global GAP — Integrated Farm Assurance',                                           'Mbabane', '5 days', '', 130, 1);
+ (1,  'QMS 02',  'Quality',         'Quality Management Systems — SZNS ISO 9001:2015 — Understanding & Implementation', 'Mbabane', '5 days', '', 1,  1),
+ (2,  'QMS 03',  'Auditing',        'Quality Management Systems — Internal Auditing — SZNS ISO 19011:2018',             'Mbabane', '5 days', '', 2,  1),
+ (3,  'FSMS 02', 'Food Safety',     'Food Safety Management Systems — SZNS ISO 22000:2018 — Understanding & Implementation', 'Mbabane', '5 days', '', 3,  1),
+ (4,  'FSMS 03', 'Auditing',        'Food Safety Management Systems — Internal Auditing — SZNS ISO 19011:2018',         'Mbabane', '5 days', '', 4,  1),
+ (5,  'FS 01',   'Food Safety',     'Hazard Analysis & Critical Control Points (HACCP) — SZNS ISO 10330:2020 — Understanding & Implementation', 'Mbabane', '5 days', '', 5,  1),
+ (6,  'OHS 02',  'Health & Safety', 'Occupational Health & Safety Management Systems — SZNS ISO 45001:2018 — Understanding & Implementation', 'Mbabane', '5 days', '', 6,  1),
+ (7,  'OHS 01',  'Health & Safety', 'SHE Rep — Safety, Health and Environment Representative',                          'Mbabane', '5 days', '', 7,  1),
+ (8,  'RCA 02',  'Health & Safety', 'Root Cause Analysis / Incident Investigation — Understanding & Implementation',    'Mbabane', '5 days', '', 8,  1),
+ (9,  'HM 02',   'Hazmat',          'Hazmat — Hazardous Material — Understanding & Implementation',                     'Mbabane', '5 days', '', 9,  1),
+ (10, 'EMS 02',  'Environmental',   'Environmental Management Systems — SZNS ISO 14001:2015 — Understanding & Implementation', 'Mbabane', '5 days', '', 10, 1),
+ (11, 'ERM 02',  'Risk',            'Enterprise Risk Management — SZNS ISO 31000:2018 — Understanding & Implementation', 'Mbabane', '5 days', '', 11, 1),
+ (12, 'WDM 02',  'Wellness',        'Wellness and Disease Management Systems — SZNS SANS 16001:2013 — Understanding & Implementation', 'Mbabane', '5 days', '', 12, 1),
+ (13, 'GAP 02',  'Agriculture',     'Global GAP — Integrated Farm Assurance',                                           'Mbabane', '5 days', '', 13, 1);
+
+-- Re-affirm sort_order on the seeded rows by `code` (stable across envs).
+-- Idempotent — and renumbers any dev DB that already received the original
+-- 10/20/30 seed values to the cleaner 1..13 sequence.
+UPDATE training_sessions SET sort_order =  1 WHERE code = 'QMS 02';
+UPDATE training_sessions SET sort_order =  2 WHERE code = 'QMS 03';
+UPDATE training_sessions SET sort_order =  3 WHERE code = 'FSMS 02';
+UPDATE training_sessions SET sort_order =  4 WHERE code = 'FSMS 03';
+UPDATE training_sessions SET sort_order =  5 WHERE code = 'FS 01';
+UPDATE training_sessions SET sort_order =  6 WHERE code = 'OHS 02';
+UPDATE training_sessions SET sort_order =  7 WHERE code = 'OHS 01';
+UPDATE training_sessions SET sort_order =  8 WHERE code = 'RCA 02';
+UPDATE training_sessions SET sort_order =  9 WHERE code = 'HM 02';
+UPDATE training_sessions SET sort_order = 10 WHERE code = 'EMS 02';
+UPDATE training_sessions SET sort_order = 11 WHERE code = 'ERM 02';
+UPDATE training_sessions SET sort_order = 12 WHERE code = 'WDM 02';
+UPDATE training_sessions SET sort_order = 13 WHERE code = 'GAP 02';
 
 
 -- ── Seed: 28 intakes ─────────────────────────────────────────────────
