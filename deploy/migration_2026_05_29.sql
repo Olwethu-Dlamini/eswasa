@@ -10,8 +10,8 @@
 --      Mark card. The grid drops from 4 cards to 3; the Ingelo MSME mark
 --      (was slot 4) is promoted into slot 3, and slot 4 is deleted.
 --   2. Home "Our Affiliations" — replace the SABS logo (slot 6) with the
---      ARSO 2024 logo, and refresh the existing ARSO logo (slot 10) to the
---      same 2024 artwork.
+--      ARSO 2024 logo, drop the duplicate ARSO (old slot 10), and renumber
+--      ASTM (was slot 11) up into slot 10. Slider goes from 11 logos to 10.
 
 SET NAMES utf8mb4;
 
@@ -35,11 +35,17 @@ DELETE FROM page_content WHERE page_key REGEXP '^index_mark_4_';
 -- =====================================================================
 -- 2. Home Affiliations — SABS replaced by ARSO; ARSO logo refreshed
 -- =====================================================================
--- Slot 6 was SABS — repoint it to ARSO with the 2024 logo. Slot 10 was
--- already ARSO — refresh its logo to the same 2024 artwork.
+-- Slot 6 was SABS — repoint it to ARSO with the 2024 logo. The old ARSO
+-- (slot 10) is dropped to avoid a duplicate, and ASTM (was slot 11) is
+-- renumbered up into slot 10.
 INSERT INTO page_content (page_key, content) VALUES
   ('index_affiliation_6_logo',  'admin/uploads/arso-2024.png'),
   ('index_affiliation_6_url',   'https://www.arso-org.org/'),
   ('index_affiliation_6_alt',   'ARSO'),
-  ('index_affiliation_10_logo', 'admin/uploads/arso-2024.png')
+  ('index_affiliation_10_logo', 'admin/uploads/astm.png'),
+  ('index_affiliation_10_url',  'https://www.astm.org/'),
+  ('index_affiliation_10_alt',  'ASTM')
 ON DUPLICATE KEY UPDATE content = VALUES(content);
+
+-- Remove the now-unused 11th affiliation slot.
+DELETE FROM page_content WHERE page_key REGEXP '^index_affiliation_11_';

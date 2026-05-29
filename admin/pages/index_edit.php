@@ -181,7 +181,7 @@ for ($i = 1; $i <= 3; $i++) {
 $aff_text_keys  = [];
 $aff_url_keys   = [];
 $aff_image_keys = [];
-for ($i = 1; $i <= 11; $i++) {
+for ($i = 1; $i <= 10; $i++) {
     $aff_text_keys[]  = "index_affiliation_{$i}_alt";
     $aff_url_keys[]   = "index_affiliation_{$i}_url";
     $aff_image_keys[] = "index_affiliation_{$i}_logo";
@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_index'])) {
 $pc = pc_get_many($conn, array_merge($text_keys, $url_keys, $image_keys));
 $banners_rs = $conn->query("SELECT * FROM banners ORDER BY date_updated DESC, id DESC");
 
-$aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','SABS','SADCAS','SADC','SADCSTAN','ARSO','ASTM'];
+$aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADCSTAN','ASTM'];
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -421,10 +421,10 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','SABS','SADCAS','SADC','SADC
     <!-- Affiliations -->
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="mb-3">Affiliations Section (11 logos)</h5>
+            <h5 class="mb-3">Affiliations Section (10 logos)</h5>
             <p class="text-muted small">Logos appear in the seamless scrolling band. The same set is duplicated automatically for the loop.</p>
             <div class="row g-3">
-                <?php for ($i = 1; $i <= 11; $i++):
+                <?php for ($i = 1; $i <= 10; $i++):
                     $logo_key = "index_affiliation_{$i}_logo";
                     $current_logo = $pc[$logo_key] ?? '';
                     $default_alt = $aff_default_alts[$i - 1] ?? ('Affiliation ' . $i);

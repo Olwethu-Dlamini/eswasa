@@ -19,7 +19,7 @@ $pc_keys = [
     'index_mark_1_title','index_mark_1_desc','index_mark_1_image','index_mark_1_explore_url','index_mark_1_verify_url',
     'index_mark_2_title','index_mark_2_desc','index_mark_2_image','index_mark_2_explore_url','index_mark_2_verify_url',
     'index_mark_3_title','index_mark_3_desc','index_mark_3_image','index_mark_3_explore_url','index_mark_3_verify_url',
-    // Affiliations (1..11)
+    // Affiliations (1..10)
     'index_affiliation_1_logo','index_affiliation_1_url','index_affiliation_1_alt',
     'index_affiliation_2_logo','index_affiliation_2_url','index_affiliation_2_alt',
     'index_affiliation_3_logo','index_affiliation_3_url','index_affiliation_3_alt',
@@ -30,7 +30,6 @@ $pc_keys = [
     'index_affiliation_8_logo','index_affiliation_8_url','index_affiliation_8_alt',
     'index_affiliation_9_logo','index_affiliation_9_url','index_affiliation_9_alt',
     'index_affiliation_10_logo','index_affiliation_10_url','index_affiliation_10_alt',
-    'index_affiliation_11_logo','index_affiliation_11_url','index_affiliation_11_alt',
 ];
 $pc_defaults = [
     'index_discover_heading'     => 'Discover',
@@ -93,12 +92,9 @@ $pc_defaults = [
     'index_affiliation_9_logo'  => 'assets/img/sadcstan.jpg',
     'index_affiliation_9_url'   => 'https://www.sadcstan.org/',
     'index_affiliation_9_alt'   => 'SADCSTAN',
-    'index_affiliation_10_logo' => 'admin/uploads/arso-2024.png',
-    'index_affiliation_10_url'  => 'https://www.arso-org.org/',
-    'index_affiliation_10_alt'  => 'ARSO',
-    'index_affiliation_11_logo' => 'admin/uploads/astm.png',
-    'index_affiliation_11_url'  => 'https://www.astm.org/',
-    'index_affiliation_11_alt'  => 'ASTM',
+    'index_affiliation_10_logo' => 'admin/uploads/astm.png',
+    'index_affiliation_10_url'  => 'https://www.astm.org/',
+    'index_affiliation_10_alt'  => 'ASTM',
 ];
 $pc = pc_get_many($conn, $pc_keys, $pc_defaults);
 
@@ -1022,7 +1018,7 @@ if ($am_result) {
         <div class="affiliations-slider">
             <div class="slider-track d-flex flex-nowrap">
                 <?php
-                $affiliation_count = 11;
+                $affiliation_count = 10;
                 // Render twice: original set + duplicate for seamless infinite scroll
                 for ($pass = 0; $pass < 2; $pass++):
                     for ($i = 1; $i <= $affiliation_count; $i++):
