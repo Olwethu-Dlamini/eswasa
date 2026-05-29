@@ -170,7 +170,7 @@ for ($i = 1; $i <= 4; $i++) {
 $mark_text_keys  = [];
 $mark_url_keys   = [];
 $mark_image_keys = [];
-for ($i = 1; $i <= 4; $i++) {
+for ($i = 1; $i <= 3; $i++) {
     $mark_text_keys[]  = "index_mark_{$i}_title";
     $mark_text_keys[]  = "index_mark_{$i}_desc";
     $mark_url_keys[]   = "index_mark_{$i}_explore_url";
@@ -374,8 +374,8 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','SABS','SADCAS','SADC','SADC
     <!-- Certification Marks -->
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="mb-3">Certification Marks Section (4 cards)</h5>
-            <?php for ($i = 1; $i <= 4; $i++):
+            <h5 class="mb-3">Certification Marks Section (3 cards)</h5>
+            <?php for ($i = 1; $i <= 3; $i++):
                 $img_key = "index_mark_{$i}_image";
                 $current_img = $pc[$img_key] ?? '';
             ?>

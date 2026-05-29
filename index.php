@@ -15,11 +15,10 @@ $pc_keys = [
     'index_discover_2_title','index_discover_2_desc','index_discover_2_url',
     'index_discover_3_title','index_discover_3_desc','index_discover_3_url',
     'index_discover_4_title','index_discover_4_desc','index_discover_4_url',
-    // Certification Marks (1..4)
+    // Certification Marks (1..3)
     'index_mark_1_title','index_mark_1_desc','index_mark_1_image','index_mark_1_explore_url','index_mark_1_verify_url',
     'index_mark_2_title','index_mark_2_desc','index_mark_2_image','index_mark_2_explore_url','index_mark_2_verify_url',
     'index_mark_3_title','index_mark_3_desc','index_mark_3_image','index_mark_3_explore_url','index_mark_3_verify_url',
-    'index_mark_4_title','index_mark_4_desc','index_mark_4_image','index_mark_4_explore_url','index_mark_4_verify_url',
     // Affiliations (1..11)
     'index_affiliation_1_logo','index_affiliation_1_url','index_affiliation_1_alt',
     'index_affiliation_2_logo','index_affiliation_2_url','index_affiliation_2_alt',
@@ -61,16 +60,11 @@ $pc_defaults = [
     'index_mark_2_image'       => 'assets/img/quality/product-certification-black.png',
     'index_mark_2_explore_url' => 'Certification.php',
     'index_mark_2_verify_url'  => 'certification-status.php',
-    'index_mark_3_title'       => 'Compulsory Standards Quality Mark',
-    'index_mark_3_desc'        => 'A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.',
-    'index_mark_3_image'       => 'assets/img/quality/compulsory-standards-black.png',
-    'index_mark_3_explore_url' => 'Certification.php',
+    'index_mark_3_title'       => 'Ingelo MSME Product Certification Mark',
+    'index_mark_3_desc'        => 'A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers — helping them prove product quality, access new markets and grow with credibility.',
+    'index_mark_3_image'       => 'assets/img/quality/ingelo-certification-black.png',
+    'index_mark_3_explore_url' => 'ingelo.php',
     'index_mark_3_verify_url'  => 'certification-status.php',
-    'index_mark_4_title'       => 'Ingelo MSME Product Certification Mark',
-    'index_mark_4_desc'        => 'A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers — helping them prove product quality, access new markets and grow with credibility.',
-    'index_mark_4_image'       => 'assets/img/quality/ingelo-certification-black.png',
-    'index_mark_4_explore_url' => 'ingelo.php',
-    'index_mark_4_verify_url'  => 'certification-status.php',
 
     'index_affiliation_1_logo'  => 'admin/uploads/iso.png',
     'index_affiliation_1_url'   => 'https://www.iso.org/',
@@ -817,7 +811,7 @@ if ($am_result) {
     }
     .marks-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 28px;
     }
     .mark-item {
@@ -934,24 +928,13 @@ if ($am_result) {
             </div>
             <div class="mark-item">
                 <div class="mark-image">
-                    <img src="<?= pc_h(pc_image_src($pc['index_mark_3_image'], 'assets/img/quality/compulsory-standards-black.png')) ?>" alt="<?= pc_h($pc['index_mark_3_title']) ?>">
+                    <img src="<?= pc_h(pc_image_src($pc['index_mark_3_image'], 'assets/img/quality/ingelo-certification-black.png')) ?>" alt="<?= pc_h($pc['index_mark_3_title']) ?>">
                 </div>
                 <h3 class="mark-title"><?= pc_h($pc['index_mark_3_title']) ?></h3>
                 <p class="mark-desc"><?= pc_h($pc['index_mark_3_desc']) ?></p>
                 <div class="mark-actions">
                     <a href="<?= pc_h($pc['index_mark_3_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     <a href="<?= pc_h($pc['index_mark_3_verify_url']) ?>">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
-                </div>
-            </div>
-            <div class="mark-item">
-                <div class="mark-image">
-                    <img src="<?= pc_h(pc_image_src($pc['index_mark_4_image'], 'assets/img/quality/ingelo-certification-black.png')) ?>" alt="<?= pc_h($pc['index_mark_4_title']) ?>">
-                </div>
-                <h3 class="mark-title"><?= pc_h($pc['index_mark_4_title']) ?></h3>
-                <p class="mark-desc"><?= pc_h($pc['index_mark_4_desc']) ?></p>
-                <div class="mark-actions">
-                    <a href="<?= pc_h($pc['index_mark_4_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    <a href="<?= pc_h($pc['index_mark_4_verify_url']) ?>">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
