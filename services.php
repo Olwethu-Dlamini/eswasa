@@ -27,13 +27,12 @@ $pc = pc_get_many($conn, [
     'services_affil_title',
     'services_affil_subtitle',
 
-    // Affiliations (6)
+    // Affiliations (5)
     'services_affil_1_img', 'services_affil_1_alt', 'services_affil_1_url',
     'services_affil_2_img', 'services_affil_2_alt', 'services_affil_2_url',
     'services_affil_3_img', 'services_affil_3_alt', 'services_affil_3_url',
     'services_affil_4_img', 'services_affil_4_alt', 'services_affil_4_url',
     'services_affil_5_img', 'services_affil_5_alt', 'services_affil_5_url',
-    'services_affil_6_img', 'services_affil_6_alt', 'services_affil_6_url',
 ], [
     'services_breadcrumb_title' => 'Our Services',
 
@@ -85,17 +84,13 @@ $pc = pc_get_many($conn, [
     'services_affil_3_alt' => 'IEC',
     'services_affil_3_url' => 'https://www.iec.ch/',
 
-    'services_affil_4_img' => 'assets/img/SABS.png',
-    'services_affil_4_alt' => 'SABS',
-    'services_affil_4_url' => 'https://www.sabs.co.za/',
+    'services_affil_4_img' => 'admin/uploads/arso-2024.png',
+    'services_affil_4_alt' => 'ARSO',
+    'services_affil_4_url' => 'https://www.arso-org.org/',
 
-    'services_affil_5_img' => 'admin/uploads/arso.png',
-    'services_affil_5_alt' => 'ARSO',
-    'services_affil_5_url' => 'https://www.arso-org.org/',
-
-    'services_affil_6_img' => 'admin/uploads/astm.png',
-    'services_affil_6_alt' => 'ASTM',
-    'services_affil_6_url' => 'https://www.astm.org/',
+    'services_affil_5_img' => 'admin/uploads/astm.png',
+    'services_affil_5_alt' => 'ASTM',
+    'services_affil_5_url' => 'https://www.astm.org/',
 ]);
 ?>
 <!doctype html>
@@ -506,10 +501,10 @@ $pc = pc_get_many($conn, [
                 <div class="affiliations-slider position-relative overflow-hidden">
                     <div class="slider-track d-flex flex-nowrap">
                         <?php for ($pass = 0; $pass < 2; $pass++): ?>
-                            <?php for ($i = 1; $i <= 6; $i++): ?>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <div class="slider-item px-3">
                                     <a href="<?= pc_h($pc['services_affil_' . $i . '_url']) ?>" target="_blank" rel="noopener noreferrer">
-                                        <img src="<?= pc_h(pc_image_src($pc['services_affil_' . $i . '_img'], 'assets/img/SABS.png')) ?>" alt="<?= pc_h($pc['services_affil_' . $i . '_alt']) ?>" class="img-fluid affiliation-logo">
+                                        <img src="<?= pc_h(pc_image_src($pc['services_affil_' . $i . '_img'], 'assets/img/logo/ESWASA_LOGO.jpg')) ?>" alt="<?= pc_h($pc['services_affil_' . $i . '_alt']) ?>" class="img-fluid affiliation-logo">
                                     </a>
                                 </div>
                             <?php endfor; ?>

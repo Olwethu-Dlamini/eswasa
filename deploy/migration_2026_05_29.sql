@@ -12,6 +12,9 @@
 --   2. Home "Our Affiliations" — replace the SABS logo (slot 6) with the
 --      ARSO 2024 logo, drop the duplicate ARSO (old slot 10), and renumber
 --      ASTM (was slot 11) up into slot 10. Slider goes from 11 logos to 10.
+--   3. Services page "Our Affiliations" slider — remove SABS (slot 4),
+--      renumber ARSO into slot 4 (on the 2024 logo) and ASTM into slot 5.
+--      Slider goes from 6 logos to 5.
 
 SET NAMES utf8mb4;
 
@@ -49,3 +52,21 @@ ON DUPLICATE KEY UPDATE content = VALUES(content);
 
 -- Remove the now-unused 11th affiliation slot.
 DELETE FROM page_content WHERE page_key REGEXP '^index_affiliation_11_';
+
+
+-- =====================================================================
+-- 3. Services page Affiliations slider — SABS removed, single ARSO
+-- =====================================================================
+-- Slot 4 was SABS — replace with ARSO (2024 logo). Slot 5 was ARSO —
+-- renumber ASTM (was slot 6) up into slot 5. Slot 6 is dropped.
+INSERT INTO page_content (page_key, content) VALUES
+  ('services_affil_4_img', 'admin/uploads/arso-2024.png'),
+  ('services_affil_4_alt', 'ARSO'),
+  ('services_affil_4_url', 'https://www.arso-org.org/'),
+  ('services_affil_5_img', 'admin/uploads/astm.png'),
+  ('services_affil_5_alt', 'ASTM'),
+  ('services_affil_5_url', 'https://www.astm.org/')
+ON DUPLICATE KEY UPDATE content = VALUES(content);
+
+-- Remove the now-unused 6th affiliation slot.
+DELETE FROM page_content WHERE page_key REGEXP '^services_affil_6_';

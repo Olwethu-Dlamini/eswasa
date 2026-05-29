@@ -28,13 +28,12 @@ $text_keys = [
     'services_affil_title',
     'services_affil_subtitle',
 
-    // Affiliations (6) — alt / url (image is separate)
+    // Affiliations (5) — alt / url (image is separate)
     'services_affil_1_alt', 'services_affil_1_url',
     'services_affil_2_alt', 'services_affil_2_url',
     'services_affil_3_alt', 'services_affil_3_url',
     'services_affil_4_alt', 'services_affil_4_url',
     'services_affil_5_alt', 'services_affil_5_url',
-    'services_affil_6_alt', 'services_affil_6_url',
 ];
 
 $image_keys = [
@@ -43,7 +42,6 @@ $image_keys = [
     'services_affil_3_img',
     'services_affil_4_img',
     'services_affil_5_img',
-    'services_affil_6_img',
 ];
 
 // ── Save handler ─────────────────────────────────────────────
@@ -164,8 +162,8 @@ $card_labels = [
         </div>
     </div>
 
-    <!-- Affiliation Logos (6) -->
-    <?php for ($i = 1; $i <= 6; $i++): ?>
+    <!-- Affiliation Logos (5) -->
+    <?php for ($i = 1; $i <= 5; $i++): ?>
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">Affiliation <?= $i ?></h5>
