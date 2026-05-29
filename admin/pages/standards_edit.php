@@ -92,7 +92,6 @@ $text_keys = [
     'std_aff_3_name', 'std_aff_3_full', 'std_aff_3_url',
     'std_aff_4_name', 'std_aff_4_full', 'std_aff_4_url',
     'std_aff_5_name', 'std_aff_5_full', 'std_aff_5_url',
-    'std_aff_6_name', 'std_aff_6_full', 'std_aff_6_url',
 
     // Information Centre
     'std_info_section_title',
@@ -126,7 +125,6 @@ $image_keys = [
     'std_aff_3_image',
     'std_aff_4_image',
     'std_aff_5_image',
-    'std_aff_6_image',
     'std_nep_image',
 ];
 
@@ -569,7 +567,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 <textarea name="std_affiliations_intro" class="form-control" rows="2"><?= pc_h($pc['std_affiliations_intro']) ?></textarea>
             </div>
             <div class="row g-3">
-                <?php for ($i = 1; $i <= 6; $i++):
+                <?php for ($i = 1; $i <= 5; $i++):
                     $kn = "std_aff_{$i}_name";
                     $kf = "std_aff_{$i}_full";
                     $kl = "std_aff_{$i}_url";

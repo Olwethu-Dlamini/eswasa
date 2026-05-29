@@ -15,6 +15,9 @@
 --   3. Services page "Our Affiliations" slider — remove SABS (slot 4),
 --      renumber ARSO into slot 4 (on the 2024 logo) and ASTM into slot 5.
 --      Slider goes from 6 logos to 5.
+--   4. Standards page "Our Affiliations" grid — remove the SANS / SABS tile
+--      (slot 5), renumber ASTM into slot 5, and refresh the ARSO tile
+--      (slot 3) to the 2024 logo. Grid goes from 6 tiles to 5.
 
 SET NAMES utf8mb4;
 
@@ -70,3 +73,20 @@ ON DUPLICATE KEY UPDATE content = VALUES(content);
 
 -- Remove the now-unused 6th affiliation slot.
 DELETE FROM page_content WHERE page_key REGEXP '^services_affil_6_';
+
+
+-- =====================================================================
+-- 4. Standards page Affiliations grid — drop SANS / SABS tile
+-- =====================================================================
+-- Slot 5 was "SANS / SABS" — replace with ASTM (was slot 6). Refresh the
+-- ARSO tile (slot 3) to the 2024 logo. Slot 6 is dropped.
+INSERT INTO page_content (page_key, content) VALUES
+  ('std_aff_3_image', 'admin/uploads/arso-2024.png'),
+  ('std_aff_5_name',  'ASTM'),
+  ('std_aff_5_full',  'ASTM International'),
+  ('std_aff_5_image', 'admin/uploads/astm.png'),
+  ('std_aff_5_url',   'https://www.astm.org')
+ON DUPLICATE KEY UPDATE content = VALUES(content);
+
+-- Remove the now-unused 6th affiliation slot.
+DELETE FROM page_content WHERE page_key REGEXP '^std_aff_6_';

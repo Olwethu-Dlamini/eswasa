@@ -240,10 +240,9 @@ $std_defaults = [
     'std_affiliations_intro'         => 'ESWASA collaborates with international and regional standards bodies to source standards and harmonise national requirements with global best practice.',
     'std_aff_1_name'  => 'ISO',      'std_aff_1_full' => 'International Organization for Standardization', 'std_aff_1_image' => 'admin/uploads/iso.png',  'std_aff_1_url' => 'https://www.iso.org',
     'std_aff_2_name'  => 'IEC',      'std_aff_2_full' => 'International Electrotechnical Commission',      'std_aff_2_image' => 'admin/uploads/iec.png',  'std_aff_2_url' => 'https://www.iec.ch',
-    'std_aff_3_name'  => 'ARSO',     'std_aff_3_full' => 'African Organisation for Standardisation',       'std_aff_3_image' => 'admin/uploads/arso.png', 'std_aff_3_url' => '#',
+    'std_aff_3_name'  => 'ARSO',     'std_aff_3_full' => 'African Organisation for Standardisation',       'std_aff_3_image' => 'admin/uploads/arso-2024.png', 'std_aff_3_url' => '#',
     'std_aff_4_name'  => 'SADCSTAN', 'std_aff_4_full' => 'SADC Cooperation in Standardization',            'std_aff_4_image' => 'assets/img/sadcstan.jpg','std_aff_4_url' => '#',
-    'std_aff_5_name'  => 'SANS / SABS', 'std_aff_5_full' => 'South African National Standards',           'std_aff_5_image' => 'assets/img/SABS.png',    'std_aff_5_url' => 'https://www.sabs.co.za',
-    'std_aff_6_name'  => 'ASTM',     'std_aff_6_full' => 'ASTM International',                             'std_aff_6_image' => 'admin/uploads/astm.png', 'std_aff_6_url' => 'https://www.astm.org',
+    'std_aff_5_name'  => 'ASTM',     'std_aff_5_full' => 'ASTM International',                             'std_aff_5_image' => 'admin/uploads/astm.png', 'std_aff_5_url' => 'https://www.astm.org',
 
     'std_info_section_title'         => 'Information Centre',
     'std_info_about_title'           => 'About the Information Centre',
@@ -1013,10 +1012,9 @@ $pc = pc_get_many($conn, $std_keys, $std_defaults);
                         $affiliations = [
                             ['name'=>$pc['std_aff_1_name'], 'full'=>$pc['std_aff_1_full'], 'img'=>pc_image_src($pc['std_aff_1_image'], 'admin/uploads/iso.png'),  'url'=>$pc['std_aff_1_url']],
                             ['name'=>$pc['std_aff_2_name'], 'full'=>$pc['std_aff_2_full'], 'img'=>pc_image_src($pc['std_aff_2_image'], 'admin/uploads/iec.png'),  'url'=>$pc['std_aff_2_url']],
-                            ['name'=>$pc['std_aff_3_name'], 'full'=>$pc['std_aff_3_full'], 'img'=>pc_image_src($pc['std_aff_3_image'], 'admin/uploads/arso.png'), 'url'=>$pc['std_aff_3_url']],
+                            ['name'=>$pc['std_aff_3_name'], 'full'=>$pc['std_aff_3_full'], 'img'=>pc_image_src($pc['std_aff_3_image'], 'admin/uploads/arso-2024.png'), 'url'=>$pc['std_aff_3_url']],
                             ['name'=>$pc['std_aff_4_name'], 'full'=>$pc['std_aff_4_full'], 'img'=>pc_image_src($pc['std_aff_4_image'], 'assets/img/sadcstan.jpg'),'url'=>$pc['std_aff_4_url']],
-                            ['name'=>$pc['std_aff_5_name'], 'full'=>$pc['std_aff_5_full'], 'img'=>pc_image_src($pc['std_aff_5_image'], 'assets/img/SABS.png'),   'url'=>$pc['std_aff_5_url']],
-                            ['name'=>$pc['std_aff_6_name'], 'full'=>$pc['std_aff_6_full'], 'img'=>pc_image_src($pc['std_aff_6_image'], 'admin/uploads/astm.png'), 'url'=>$pc['std_aff_6_url']],
+                            ['name'=>$pc['std_aff_5_name'], 'full'=>$pc['std_aff_5_full'], 'img'=>pc_image_src($pc['std_aff_5_image'], 'admin/uploads/astm.png'), 'url'=>$pc['std_aff_5_url']],
                         ];
                         ?>
                         <div class="affiliation-grid">
