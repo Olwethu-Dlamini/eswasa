@@ -282,6 +282,12 @@ function render_paragraphs($text) {
             animation-play-state: paused;
             -webkit-animation-play-state: paused;
         }
+        /* Single accreditation logo — show static & centred, no marquee */
+        .slider-track.slider-track--static {
+            animation: none;
+            -webkit-animation: none;
+            justify-content: center;
+        }
         .slider-item {
             width: 280px;
             flex-shrink: 0;
@@ -649,14 +655,12 @@ function render_paragraphs($text) {
                 <p class="text-muted mt-3">Eswatini Standards Authority is accredited by SADCAS.</p>
             </div>
             <div class="affiliations-slider overflow-hidden">
-                <div class="slider-track d-flex flex-nowrap">
+                <div class="slider-track slider-track--static d-flex flex-nowrap justify-content-center">
                     <?php
                     $accs = [
                         ['src'=>'assets/img/SADCAS.png', 'href'=>'https://www.sadcas.org', 'alt'=>'SADCAS'],
-                        ['src'=>'assets/img/ILAC.JPG',  'href'=>'', 'alt'=>'ILAC'],
-                        ['src'=>'assets/img/iaf.webp',   'href'=>'https://www.iaf.nu/', 'alt'=>'IAF'],
                     ];
-                    foreach (array_merge($accs, $accs) as $a): ?>
+                    foreach ($accs as $a): ?>
                     <div class="slider-item">
                         <a href="<?= $a['href'] ?>" target="_blank" rel="noopener" class="logo-card-fixed">
                             <img src="<?= $a['src'] ?>" alt="<?= $a['alt'] ?>">
