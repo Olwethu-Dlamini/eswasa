@@ -47,7 +47,6 @@ $cal_keys = [
     'cal_brand_12_image', 'cal_brand_12_alt',
 
     // Section 6 — FAQ
-    'cal_faq_title',
     'cal_faq_1_question', 'cal_faq_1_intro',
     'cal_faq_1_1', 'cal_faq_1_2', 'cal_faq_1_3', 'cal_faq_1_4', 'cal_faq_1_5', 'cal_faq_1_6',
     'cal_faq_2_question', 'cal_faq_2_intro',
@@ -116,8 +115,7 @@ $cal_defaults = [
     'cal_brand_12_image'  => 'assets/img/brand/digi.PNG',
     'cal_brand_12_alt'    => 'Digi',
 
-    'cal_faq_title'       => 'Calibration FAQ',
-    'cal_faq_1_question'  => '1. What are the benefits of ESWASA calibration services?',
+    'cal_faq_1_question'  => 'What are the benefits of ESWASA calibration services?',
     'cal_faq_1_intro'     => 'Calibration services help organisations to:',
     'cal_faq_1_1'         => 'Improve measurement accuracy and reliability.',
     'cal_faq_1_2'         => 'Ensure compliance with applicable standards and regulatory requirements.',
@@ -125,7 +123,7 @@ $cal_defaults = [
     'cal_faq_1_4'         => 'Enhance customer confidence and product quality.',
     'cal_faq_1_5'         => 'Support traceability to recognised measurement standards.',
     'cal_faq_1_6'         => 'Improve operational efficiency and safety.',
-    'cal_faq_2_question'  => '2. Who can use ESWASA calibration services?',
+    'cal_faq_2_question'  => 'Who can use ESWASA calibration services?',
     'cal_faq_2_intro'     => 'Calibration services are available to:',
     'cal_faq_2_1'         => 'Industry and manufacturers.',
     'cal_faq_2_2'         => 'Laboratories.',
@@ -485,12 +483,9 @@ $pc = pc_get_many($conn, $cal_keys, $cal_defaults);
     </div>
 </div>
 
-                <!-- 6. Calibration FAQ -->
+                <!-- 6. Calibration FAQ — individual topic cards -->
                 <div class="highlighted-section">
-                    <h2 style="text-align: center;"><?= pc_h($pc['cal_faq_title']) ?></h2>
-                    <div class="section-divider mb-4"></div>
-
-                    <h4 class="mt-3"><?= pc_h($pc['cal_faq_1_question']) ?></h4>
+                    <h4 class="mt-0"><?= pc_h($pc['cal_faq_1_question']) ?></h4>
                     <p><?= pc_h($pc['cal_faq_1_intro']) ?></p>
                     <ul>
                         <li><?= pc_h($pc['cal_faq_1_1']) ?></li>
@@ -500,8 +495,10 @@ $pc = pc_get_many($conn, $cal_keys, $cal_defaults);
                         <li><?= pc_h($pc['cal_faq_1_5']) ?></li>
                         <li><?= pc_h($pc['cal_faq_1_6']) ?></li>
                     </ul>
+                </div>
 
-                    <h4 class="mt-4"><?= pc_h($pc['cal_faq_2_question']) ?></h4>
+                <div class="highlighted-section">
+                    <h4 class="mt-0"><?= pc_h($pc['cal_faq_2_question']) ?></h4>
                     <p><?= pc_h($pc['cal_faq_2_intro']) ?></p>
                     <ul>
                         <li><?= pc_h($pc['cal_faq_2_1']) ?></li>

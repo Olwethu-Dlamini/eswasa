@@ -37,7 +37,6 @@ $text_keys = [
     'cal_brand_10_alt', 'cal_brand_11_alt', 'cal_brand_12_alt',
 
     // Section 6 — FAQ
-    'cal_faq_title',
     'cal_faq_1_question', 'cal_faq_1_intro',
     'cal_faq_1_1', 'cal_faq_1_2', 'cal_faq_1_3', 'cal_faq_1_4', 'cal_faq_1_5', 'cal_faq_1_6',
     'cal_faq_2_question', 'cal_faq_2_intro',
@@ -210,10 +209,6 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">Section 6 &mdash; Calibration FAQ</h5>
-            <div class="mb-3">
-                <label class="form-label">Section title</label>
-                <input type="text" name="cal_faq_title" class="form-control" value="<?= pc_h($pc['cal_faq_title']) ?>">
-            </div>
 
             <h6 class="mt-3">FAQ 1</h6>
             <div class="mb-2">

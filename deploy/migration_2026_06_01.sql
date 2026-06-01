@@ -41,3 +41,17 @@ ON DUPLICATE KEY UPDATE content = VALUES(content);
 INSERT INTO page_content (page_key, content) VALUES
   ('index_discover_3_desc', 'National standards developed to protect public health and enable trade.')
 ON DUPLICATE KEY UPDATE content = VALUES(content);
+
+
+-- =====================================================================
+-- 4. Calibration page FAQ — drop the section title, de-number the
+--    questions, and split each topic into its own card. The title key
+--    is removed (front-end no longer renders it); questions lose their
+--    "1." / "2." prefixes.
+-- =====================================================================
+INSERT INTO page_content (page_key, content) VALUES
+  ('cal_faq_1_question', 'What are the benefits of ESWASA calibration services?'),
+  ('cal_faq_2_question', 'Who can use ESWASA calibration services?')
+ON DUPLICATE KEY UPDATE content = VALUES(content);
+
+DELETE FROM page_content WHERE page_key = 'cal_faq_title';
