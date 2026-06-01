@@ -10,11 +10,12 @@ $pc_keys = [
     'index_discover_heading',
     'index_marks_heading',
     'index_affiliations_heading',
-    // Discover cards (1..4)
+    // Discover cards (1..5)
     'index_discover_1_title','index_discover_1_desc','index_discover_1_url',
     'index_discover_2_title','index_discover_2_desc','index_discover_2_url',
     'index_discover_3_title','index_discover_3_desc','index_discover_3_url',
     'index_discover_4_title','index_discover_4_desc','index_discover_4_url',
+    'index_discover_5_title','index_discover_5_desc','index_discover_5_url',
     // Certification Marks (1..3)
     'index_mark_1_title','index_mark_1_desc','index_mark_1_image','index_mark_1_explore_url','index_mark_1_verify_url',
     'index_mark_2_title','index_mark_2_desc','index_mark_2_image','index_mark_2_explore_url','index_mark_2_verify_url',
@@ -45,9 +46,12 @@ $pc_defaults = [
     'index_discover_3_title' => 'Standards Development',
     'index_discover_3_desc'  => 'National standards developed with industry, government and consumer input to protect health and enable trade.',
     'index_discover_3_url'   => 'Standards.php',
-    'index_discover_4_title' => 'Training & Development',
+    'index_discover_4_title' => 'Training Academy',
     'index_discover_4_desc'  => 'Quality management, internal auditing and standards training aligned to international best practice.',
     'index_discover_4_url'   => 'training-about.php',
+    'index_discover_5_title' => 'Scales and Metrology Services',
+    'index_discover_5_desc'  => 'Calibration and verification of weighing scales, weighbridges and measuring instruments to ensure accuracy and fair trade.',
+    'index_discover_5_url'   => 'Calibration.php',
 
     'index_mark_1_title'       => 'Management Systems Certification Mark',
     'index_mark_1_desc'        => 'Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.',
@@ -709,7 +713,7 @@ if ($am_result) {
             </div>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             <div class="col-12 col-sm-6 col-lg-3">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
@@ -776,6 +780,27 @@ if ($am_result) {
                         <h4 class="title"><a href="<?= pc_h($pc['index_discover_4_url']) ?>"><b><?= pc_h($pc['index_discover_4_title']) ?></b></a></h4>
                         <p class="card-desc"><?= pc_h($pc['index_discover_4_desc']) ?></p>
                         <a href="<?= pc_h($pc['index_discover_4_url']) ?>" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="blog__post-item shine__animate-item">
+                    <div class="blog__post-content">
+                        <a href="<?= pc_h($pc['index_discover_5_url']) ?>">
+                            <svg class="discover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M24 8 V40"/>
+                                <path d="M15 40 H33"/>
+                                <path d="M8 14 H40"/>
+                                <circle cx="24" cy="8" r="1.8" fill="currentColor"/>
+                                <path d="M8 14 L4 24 M8 14 L12 24"/>
+                                <path d="M3 24 A6 4 0 0 0 13 24 Z"/>
+                                <path d="M40 14 L36 24 M40 14 L44 24"/>
+                                <path d="M35 24 A6 4 0 0 0 45 24 Z"/>
+                            </svg>
+                        </a>
+                        <h4 class="title"><a href="<?= pc_h($pc['index_discover_5_url']) ?>"><b><?= pc_h($pc['index_discover_5_title']) ?></b></a></h4>
+                        <p class="card-desc"><?= pc_h($pc['index_discover_5_desc']) ?></p>
+                        <a href="<?= pc_h($pc['index_discover_5_url']) ?>" class="cat">Read More <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>

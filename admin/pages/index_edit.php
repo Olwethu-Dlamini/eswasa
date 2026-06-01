@@ -161,7 +161,7 @@ $heading_keys = [
 
 $discover_text_keys = [];
 $discover_url_keys  = [];
-for ($i = 1; $i <= 4; $i++) {
+for ($i = 1; $i <= 5; $i++) {
     $discover_text_keys[] = "index_discover_{$i}_title";
     $discover_text_keys[] = "index_discover_{$i}_desc";
     $discover_url_keys[]  = "index_discover_{$i}_url";
@@ -349,9 +349,9 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADC
     <!-- Discover Cards -->
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="mb-3">Discover Section (4 cards)</h5>
+            <h5 class="mb-3">Discover Section (5 cards)</h5>
             <p class="text-muted small">Icons are fixed decorative SVGs and are not editable. Edit the title, description and link target.</p>
-            <?php for ($i = 1; $i <= 4; $i++): ?>
+            <?php for ($i = 1; $i <= 5; $i++): ?>
                 <div class="border rounded p-3 mb-3">
                     <h6 class="mb-3">Card <?= $i ?></h6>
                     <div class="mb-2">
