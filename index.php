@@ -536,7 +536,7 @@ if ($am_result) {
     }
 
     /* Discover cards — refined spacing, equal heights, hover */
-    .courses-area .row > [class*="col-"] { display: flex; }
+    .courses-area .row > [class*="col"] { display: flex; }
     .courses-area .blog__post-item {
         background: #fff;
         border: 1px solid rgba(43, 51, 136, 0.12);
@@ -713,8 +713,8 @@ if ($am_result) {
             </div>
         </div>
 
-        <div class="row g-4 justify-content-center">
-            <div class="col-12 col-sm-6 col-lg-3">
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-5">
+            <div class="col">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
                         <a href="<?= pc_h($pc['index_discover_1_url']) ?>">
@@ -729,7 +729,7 @@ if ($am_result) {
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-lg-3">
+            <div class="col">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
                         <a href="<?= pc_h($pc['index_discover_2_url']) ?>">
@@ -748,7 +748,7 @@ if ($am_result) {
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-lg-3">
+            <div class="col">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
                         <a href="<?= pc_h($pc['index_discover_3_url']) ?>">
@@ -766,7 +766,7 @@ if ($am_result) {
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-lg-3">
+            <div class="col">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
                         <a href="<?= pc_h($pc['index_discover_4_url']) ?>">
@@ -783,7 +783,7 @@ if ($am_result) {
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-lg-3">
+            <div class="col">
                 <div class="blog__post-item shine__animate-item">
                     <div class="blog__post-content">
                         <a href="<?= pc_h($pc['index_discover_5_url']) ?>">
