@@ -63,8 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cal'])) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'cal');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'cal');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'cal');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Calibration page saved.');
@@ -184,19 +189,22 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                     <div class="col-md-6 col-lg-4">
                         <div class="border rounded p-3 h-100">
                             <div class="fw-bold mb-2">Brand <?= $i ?></div>
-                            <?php if (!empty($current)): ?>
-                                <div class="mb-2">
-                                    <img src="../<?= pc_h(pc_image_src($current)) ?>" alt="" style="max-height:80px;max-width:100%;border:1px solid #ddd;background:#fff;padding:4px;">
-                                </div>
-                            <?php endif; ?>
+                            <div class="mb-2">
+                                <img data-crop-preview="<?= $img_key ?>_preview"
+                                     src="<?= !empty($current) ? '../' . pc_h(pc_image_src($current)) : '' ?>"
+                                     style="max-height:80px;max-width:100%;border:1px solid #ddd;background:#fff;padding:4px;<?= empty($current) ? 'display:none;' : '' ?>"
+                                     onload="this.style.display='inline-block'" alt="">
+                            </div>
                             <div class="mb-2">
                                 <label class="form-label small mb-1">Alt text</label>
                                 <input type="text" name="<?= $alt_key ?>" class="form-control form-control-sm" value="<?= pc_h($pc[$alt_key]) ?>">
                             </div>
                             <div>
                                 <label class="form-label small mb-1">Replace image</label>
-                                <input type="file" name="<?= $img_key ?>_file" accept="image/*" class="form-control form-control-sm">
-                                <div class="form-text small">Leave empty to keep current image.</div>
+                                <input type="file" name="<?= $img_key ?>_file" accept="image/*" class="form-control form-control-sm crop-input"
+                                       data-crop-label="Brand <?= $i ?> Logo">
+                                <input type="hidden" name="<?= $img_key ?>_cropped">
+                                <div class="form-text small">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                             </div>
                         </div>
                     </div>
