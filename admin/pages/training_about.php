@@ -60,8 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_train_about'])) 
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'train_about');
-        if ($path !== null) {
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'train_about');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'train_about');
+        }
+        if (is_string($path)) {
             $kv[$k] = $path;
         }
     }
@@ -194,13 +199,16 @@ $courses = [
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Card Image</label>
-                                    <?php if (!empty($pc[$img_key])): ?>
-                                        <div class="mb-2">
-                                            <img src="../<?= pc_h($img_src) ?>" alt="" style="max-height:120px;border:1px solid #ddd;background:#fff;padding:6px;">
-                                        </div>
-                                    <?php endif; ?>
-                                    <input type="file" name="train_about_course_<?= $i ?>_image_file" accept="image/*" class="form-control">
-                                    <small class="text-muted">Leave empty to keep current image.</small>
+                                    <div class="mb-2">
+                                        <img data-crop-preview="train_about_course_<?= $i ?>_image_preview"
+                                             src="<?= !empty($pc[$img_key]) ? '../' . pc_h($img_src) : '' ?>"
+                                             alt="" style="max-height:120px;border:1px solid #ddd;background:#fff;padding:6px;<?= empty($pc[$img_key]) ? 'display:none;' : '' ?>"
+                                             onload="this.style.display='inline-block'">
+                                    </div>
+                                    <input type="file" name="train_about_course_<?= $i ?>_image_file" accept="image/*" class="form-control crop-input"
+                                           data-crop-label="Course <?= $i ?> Image">
+                                    <input type="hidden" name="train_about_course_<?= $i ?>_image_cropped">
+                                    <small class="text-muted">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</small>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label">Course Overview (modal paragraph)</label>
