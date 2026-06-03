@@ -36,9 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_banner'])) {
         redirect_self();
     }
 
-    // Handle upload
+    // Handle upload — prefer the cropper's base64 payload; fall back to a
+    // raw file upload if the user picked a file the cropper passed through.
     $db_file_path = '';
-    if (!empty($_FILES['banner_image']['name'])) {
+    $crop_path = pc_save_base64_image($_POST['banner_image_cropped'] ?? '', $upload_dir_fs, 'banner');
+    if (is_string($crop_path)) {
+        // banners.file stores paths relative to admin/ (uploads/...)
+        $db_file_path = 'uploads/' . basename($crop_path);
+    } elseif (!empty($_FILES['banner_image']['name'])) {
         if ($_FILES['banner_image']['error'] !== UPLOAD_ERR_OK) {
             set_flash('danger', 'Upload failed (error ' . (int)$_FILES['banner_image']['error'] . ').');
             redirect_self();
@@ -203,8 +208,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_index'])) {
         $kv[$k] = $v;
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'index');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'index');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'index');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Home page content saved.');
@@ -234,7 +244,7 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADC
                 <i class="fas fa-plus me-1"></i> Add Banner
             </button>
         </div>
-        <p class="text-muted small mb-3">Banners appear in the rotating slider at the top of the home page. Recommended 1920 x 700 px. Max 5MB.</p>
+        <p class="text-muted small mb-3">Banners appear in the rotating slider at the top of the home page. Picking an image opens a cropper fixed at 1920 &times; 700 px so you see exactly what gets saved. Max 5MB.</p>
 
         <?php if ($banners_rs && $banners_rs->num_rows > 0): ?>
             <div class="table-responsive">
@@ -404,13 +414,16 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADC
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold">Mark Image</label>
-                            <?php if (!empty($current_img)): ?>
-                                <div class="mb-2">
-                                    <img src="../<?= pc_h(pc_image_src($current_img)) ?>" style="max-height:120px;max-width:100%;border:1px solid #ddd;padding:4px;background:#fff;" alt="">
-                                </div>
-                            <?php endif; ?>
-                            <input type="file" name="index_mark_<?= $i ?>_image_file" accept="image/*" class="form-control">
-                            <div class="form-text">Leave empty to keep current image.</div>
+                            <div class="mb-2">
+                                <img data-crop-preview="index_mark_<?= $i ?>_image_preview"
+                                     src="<?= !empty($current_img) ? '../' . pc_h(pc_image_src($current_img)) : '' ?>"
+                                     style="max-height:120px;max-width:100%;border:1px solid #ddd;padding:4px;background:#fff;<?= empty($current_img) ? 'display:none;' : '' ?>"
+                                     onload="this.style.display='inline-block'" alt="">
+                            </div>
+                            <input type="file" name="index_mark_<?= $i ?>_image_file" accept="image/*" class="form-control crop-input"
+                                   data-crop-label="Mark <?= $i ?> Image">
+                            <input type="hidden" name="index_mark_<?= $i ?>_image_cropped">
+                            <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                         </div>
                     </div>
                 </div>
@@ -432,14 +445,17 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADC
                     <div class="col-md-6 col-lg-4">
                         <div class="border rounded p-3 h-100">
                             <h6 class="mb-2">Affiliation <?= $i ?> <span class="text-muted small">(<?= htmlspecialchars($default_alt) ?>)</span></h6>
-                            <?php if (!empty($current_logo)): ?>
-                                <div class="mb-2 text-center" style="background:#fff;border:1px solid #eee;padding:8px;">
-                                    <img src="../<?= pc_h(pc_image_src($current_logo)) ?>" style="max-height:70px;max-width:100%;" alt="">
-                                </div>
-                            <?php endif; ?>
+                            <div class="mb-2 text-center" style="background:#fff;border:1px solid #eee;padding:8px;<?= empty($current_logo) ? 'display:none;' : '' ?>">
+                                <img data-crop-preview="index_affiliation_<?= $i ?>_logo_preview"
+                                     src="<?= !empty($current_logo) ? '../' . pc_h(pc_image_src($current_logo)) : '' ?>"
+                                     style="max-height:70px;max-width:100%;"
+                                     onload="this.parentNode.style.display='block'" alt="">
+                            </div>
                             <div class="mb-2">
                                 <label class="form-label small fw-bold">Logo image</label>
-                                <input type="file" name="index_affiliation_<?= $i ?>_logo_file" accept="image/*" class="form-control form-control-sm">
+                                <input type="file" name="index_affiliation_<?= $i ?>_logo_file" accept="image/*" class="form-control form-control-sm crop-input"
+                                       data-crop-label="Affiliation <?= $i ?> Logo">
+                                <input type="hidden" name="index_affiliation_<?= $i ?>_logo_cropped">
                             </div>
                             <div class="mb-2">
                                 <label class="form-label small fw-bold">Link URL</label>
@@ -477,12 +493,14 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADC
                     <input type="hidden" name="save_banner" value="1">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Image</label>
-                        <input type="file" class="form-control" name="banner_image" id="banner_image" accept="image/*">
+                        <input type="file" class="form-control crop-input" name="banner_image" id="banner_image" accept="image/*"
+                               data-crop-w="1920" data-crop-h="700" data-crop-label="Banner Image">
+                        <input type="hidden" name="banner_image_cropped" id="banner_image_cropped">
                         <div id="banner_current_preview" class="mt-2" style="display:none;">
-                            <small class="text-muted d-block">Current image:</small>
-                            <img id="banner_current_img" src="" style="max-height:120px;border:1px solid #ddd;border-radius:4px;">
+                            <small class="text-muted d-block" id="banner_preview_label">Current image:</small>
+                            <img id="banner_current_img" data-crop-preview="banner_image_preview" src="" style="max-height:120px;border:1px solid #ddd;border-radius:4px;">
                         </div>
-                        <small class="form-text text-muted">Recommended 1920 x 700 px. Max 5MB. JPG/PNG/GIF/WEBP. Leave empty to keep current.</small>
+                        <small class="form-text text-muted">Pick an image &mdash; the cropper opens at 1920 &times; 700 px so you see exactly what the slider will show. Max 5MB. Leave empty to keep current.</small>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Caption *</label>
@@ -517,6 +535,8 @@ function openAddBannerModal() {
     if (d) d.value = '';
     document.getElementById('banner_url').value = '';
     document.getElementById('banner_image').value = '';
+    document.getElementById('banner_image_cropped').value = '';
+    document.getElementById('banner_preview_label').innerText = 'Current image:';
     document.getElementById('banner_current_preview').style.display = 'none';
 }
 
@@ -528,6 +548,8 @@ function openEditBannerModal(b) {
     if (d) d.value = b.description || '';
     document.getElementById('banner_url').value = b.url || '';
     document.getElementById('banner_image').value = '';
+    document.getElementById('banner_image_cropped').value = '';
+    document.getElementById('banner_preview_label').innerText = 'Current image:';
     if (b.img_src) {
         document.getElementById('banner_current_img').src = b.img_src;
         document.getElementById('banner_current_preview').style.display = 'block';
@@ -535,4 +557,13 @@ function openEditBannerModal(b) {
         document.getElementById('banner_current_preview').style.display = 'none';
     }
 }
+
+// When the cropper applies a selection it fills banner_image_cropped and
+// updates the preview <img> — surface it even when adding a new banner.
+document.getElementById('banner_image_cropped').addEventListener('change', function () {
+    if (this.value) {
+        document.getElementById('banner_preview_label').innerText = 'New cropped image (saved on Save Banner):';
+        document.getElementById('banner_current_preview').style.display = 'block';
+    }
+});
 </script>
