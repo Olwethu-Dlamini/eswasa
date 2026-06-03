@@ -60,8 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_ingelo'])) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'ingelo');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'ingelo');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'ingelo');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Ingelo page saved.');
@@ -98,11 +103,16 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
             <h5 class="card-title">Intro Section</h5>
             <div class="mb-3">
                 <label class="form-label">Intro Image</label>
-                <?php if (!empty($pc['ingelo_intro_image'])): ?>
-                    <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc['ingelo_intro_image'])) ?>" style="max-height:120px;border:1px solid #ddd"></div>
-                <?php endif; ?>
-                <input type="file" name="ingelo_intro_image_file" accept="image/*" class="form-control">
-                <div class="form-text">Leave empty to keep current image.</div>
+                <div class="mb-2">
+                    <img data-crop-preview="ingelo_intro_image_preview"
+                         src="<?= !empty($pc['ingelo_intro_image']) ? '../' . pc_h(pc_image_src($pc['ingelo_intro_image'])) : '' ?>"
+                         style="max-height:120px;border:1px solid #ddd;<?= empty($pc['ingelo_intro_image']) ? 'display:none;' : '' ?>"
+                         onload="this.style.display='inline-block'" alt="">
+                </div>
+                <input type="file" name="ingelo_intro_image_file" accept="image/*" class="form-control crop-input"
+                       data-crop-label="Intro Image">
+                <input type="hidden" name="ingelo_intro_image_cropped">
+                <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Intro Image Alt Text</label>
