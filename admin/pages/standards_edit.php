@@ -135,8 +135,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_std'])) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'std');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'std');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'std');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Standards page saved.');
@@ -532,11 +537,16 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                         <label class="form-label">Name</label>
                         <input type="text" name="<?= $name ?>" class="form-control mb-2" value="<?= pc_h($pc[$name]) ?>" placeholder="e.g. Quality Management Systems">
                         <label class="form-label">Image</label>
-                        <?php if (!empty($pc[$img])): ?>
-                            <div class="mb-1"><img src="../<?= pc_h(pc_image_src($pc[$img])) ?>" style="max-height:80px;border:1px solid #ddd;background:#fff;padding:4px"></div>
-                        <?php endif; ?>
-                        <input type="file" name="<?= $img ?>_file" accept="image/*" class="form-control">
-                        <div class="form-text">Leave empty to keep current image.</div>
+                        <div class="mb-1">
+                            <img data-crop-preview="<?= $img ?>_preview"
+                                 src="<?= !empty($pc[$img]) ? '../' . pc_h(pc_image_src($pc[$img])) : '' ?>"
+                                 style="max-height:80px;border:1px solid #ddd;background:#fff;padding:4px;<?= empty($pc[$img]) ? 'display:none;' : '' ?>"
+                                 onload="this.style.display='inline-block'" alt="">
+                        </div>
+                        <input type="file" name="<?= $img ?>_file" accept="image/*" class="form-control crop-input"
+                               data-crop-label="Popular Standard <?= $i ?> Image">
+                        <input type="hidden" name="<?= $img ?>_cropped">
+                        <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                     </fieldset>
                 </div>
                 <?php endfor; ?>
@@ -583,11 +593,16 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                         <label class="form-label">URL</label>
                         <input type="text" name="<?= $kl ?>" class="form-control mb-2" value="<?= pc_h($pc[$kl]) ?>" placeholder="https://...">
                         <label class="form-label">Logo</label>
-                        <?php if (!empty($pc[$ki])): ?>
-                            <div class="mb-1"><img src="../<?= pc_h(pc_image_src($pc[$ki])) ?>" style="max-height:60px;border:1px solid #ddd;background:#fff;padding:4px"></div>
-                        <?php endif; ?>
-                        <input type="file" name="<?= $ki ?>_file" accept="image/*" class="form-control">
-                        <div class="form-text">Leave empty to keep current image.</div>
+                        <div class="mb-1">
+                            <img data-crop-preview="<?= $ki ?>_preview"
+                                 src="<?= !empty($pc[$ki]) ? '../' . pc_h(pc_image_src($pc[$ki])) : '' ?>"
+                                 style="max-height:60px;border:1px solid #ddd;background:#fff;padding:4px;<?= empty($pc[$ki]) ? 'display:none;' : '' ?>"
+                                 onload="this.style.display='inline-block'" alt="">
+                        </div>
+                        <input type="file" name="<?= $ki ?>_file" accept="image/*" class="form-control crop-input"
+                               data-crop-label="Affiliation <?= $i ?> Logo">
+                        <input type="hidden" name="<?= $ki ?>_cropped">
+                        <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                     </fieldset>
                 </div>
                 <?php endfor; ?>
@@ -644,11 +659,16 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
             </div>
             <div class="mb-3">
                 <label class="form-label">NEP Image</label>
-                <?php if (!empty($pc['std_nep_image'])): ?>
-                    <div class="mb-1"><img src="../<?= pc_h(pc_image_src($pc['std_nep_image'])) ?>" style="max-height:120px;border:1px solid #ddd"></div>
-                <?php endif; ?>
-                <input type="file" name="std_nep_image_file" accept="image/*" class="form-control">
-                <div class="form-text">Leave empty to keep current image.</div>
+                <div class="mb-1">
+                    <img data-crop-preview="std_nep_image_preview"
+                         src="<?= !empty($pc['std_nep_image']) ? '../' . pc_h(pc_image_src($pc['std_nep_image'])) : '' ?>"
+                         style="max-height:120px;border:1px solid #ddd;<?= empty($pc['std_nep_image']) ? 'display:none;' : '' ?>"
+                         onload="this.style.display='inline-block'" alt="">
+                </div>
+                <input type="file" name="std_nep_image_file" accept="image/*" class="form-control crop-input"
+                       data-crop-label="NEP (WTO/TBT) Image">
+                <input type="hidden" name="std_nep_image_cropped">
+                <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
             </div>
             <div class="mb-0">
                 <label class="form-label">NEP Image — Alt Text</label>
