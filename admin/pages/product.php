@@ -27,8 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_prod'])) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'prod');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw upload.
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'prod');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'prod');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
@@ -120,15 +124,18 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 <div class="col-md-6 mb-3">
                     <fieldset class="border rounded p-3 h-100">
                         <legend class="float-none w-auto px-2 fs-6">Image <?= $i ?></legend>
-                        <?php if (!empty($pc[$imgK])): ?>
-                            <div class="mb-2">
-                                <img src="../<?= pc_h(pc_image_src($pc[$imgK])) ?>" style="max-height:120px;border:1px solid #ddd">
-                            </div>
-                        <?php endif; ?>
+                        <div class="mb-2">
+                            <img data-crop-preview="<?= $imgK ?>_preview"
+                                 src="<?= !empty($pc[$imgK]) ? '../' . pc_h(pc_image_src($pc[$imgK])) : '' ?>"
+                                 style="max-height:120px;border:1px solid #ddd;<?= empty($pc[$imgK]) ? 'display:none;' : '' ?>"
+                                 onload="this.style.display='inline-block'" alt="">
+                        </div>
                         <div class="mb-2">
                             <label class="form-label">Replace Image</label>
-                            <input type="file" name="<?= $imgK ?>_file" accept="image/*" class="form-control">
-                            <div class="form-text">Leave empty to keep current image.</div>
+                            <input type="file" name="<?= $imgK ?>_file" accept="image/*" class="form-control crop-input"
+                                   data-crop-w="1200" data-crop-h="600" data-crop-label="Certified Product Photo <?= $i ?>">
+                            <input type="hidden" name="<?= $imgK ?>_cropped">
+                            <div class="form-text">Pick a photo &mdash; the cropper opens at 1200 &times; 600 px (matches the gallery). Leave empty to keep current.</div>
                         </div>
                         <div class="mb-0">
                             <label class="form-label">Alt Text</label>
