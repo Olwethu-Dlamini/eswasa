@@ -60,8 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cert'])) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'cert');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'cert');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'cert');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
@@ -140,11 +145,15 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label">Mark Image</label>
-                    <?php if (!empty($pc['cert_mark_' . $i . '_image'])): ?>
-                        <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc['cert_mark_' . $i . '_image'])) ?>" style="max-height:120px;border:1px solid #ddd;background:#f8f9fa;padding:8px"></div>
-                    <?php endif; ?>
-                    <input type="file" name="cert_mark_<?= $i ?>_image_file" accept="image/*" class="form-control">
-                    <div class="form-text">Leave empty to keep current image.</div>
+                    <div class="mb-2">
+                        <img data-crop-preview="cert_mark_<?= $i ?>_image_preview"
+                             src="<?= !empty($pc['cert_mark_' . $i . '_image']) ? '../' . pc_h(pc_image_src($pc['cert_mark_' . $i . '_image'])) : '' ?>"
+                             style="max-height:120px;border:1px solid #ddd;background:#f8f9fa;padding:8px;<?= empty($pc['cert_mark_' . $i . '_image']) ? 'display:none;' : '' ?>"
+                             onload="this.style.display='inline-block'" alt="">
+                    </div>
+                    <input type="file" name="cert_mark_<?= $i ?>_image_file" accept="image/*" class="form-control crop-input" data-crop-label="Certification Mark <?= $i ?>">
+                    <input type="hidden" name="cert_mark_<?= $i ?>_image_cropped">
+                    <div class="form-text">Pick an image — the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                 </div>
                 <div class="col-md-8">
                     <div class="mb-3">
@@ -208,11 +217,15 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label">Background Mark Image</label>
-                    <?php if (!empty($pc['cert_card_' . $i . '_image'])): ?>
-                        <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc['cert_card_' . $i . '_image'])) ?>" style="max-height:120px;border:1px solid #ddd;background:#f8f9fa;padding:8px"></div>
-                    <?php endif; ?>
-                    <input type="file" name="cert_card_<?= $i ?>_image_file" accept="image/*" class="form-control">
-                    <div class="form-text">Leave empty to keep current image.</div>
+                    <div class="mb-2">
+                        <img data-crop-preview="cert_card_<?= $i ?>_image_preview"
+                             src="<?= !empty($pc['cert_card_' . $i . '_image']) ? '../' . pc_h(pc_image_src($pc['cert_card_' . $i . '_image'])) : '' ?>"
+                             style="max-height:120px;border:1px solid #ddd;background:#f8f9fa;padding:8px;<?= empty($pc['cert_card_' . $i . '_image']) ? 'display:none;' : '' ?>"
+                             onload="this.style.display='inline-block'" alt="">
+                    </div>
+                    <input type="file" name="cert_card_<?= $i ?>_image_file" accept="image/*" class="form-control crop-input" data-crop-label="Benefit Card <?= $i ?> Image">
+                    <input type="hidden" name="cert_card_<?= $i ?>_image_cropped">
+                    <div class="form-text">Pick an image — the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                 </div>
                 <div class="col-md-8">
                     <div class="mb-3">
@@ -248,11 +261,15 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label">Steps Diagram Image</label>
-                    <?php if (!empty($pc['cert_steps_image'])): ?>
-                        <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc['cert_steps_image'])) ?>" style="max-height:160px;border:1px solid #ddd;background:#f8f9fa;padding:8px"></div>
-                    <?php endif; ?>
-                    <input type="file" name="cert_steps_image_file" accept="image/*" class="form-control">
-                    <div class="form-text">Leave empty to keep current image.</div>
+                    <div class="mb-2">
+                        <img data-crop-preview="cert_steps_image_preview"
+                             src="<?= !empty($pc['cert_steps_image']) ? '../' . pc_h(pc_image_src($pc['cert_steps_image'])) : '' ?>"
+                             style="max-height:160px;border:1px solid #ddd;background:#f8f9fa;padding:8px;<?= empty($pc['cert_steps_image']) ? 'display:none;' : '' ?>"
+                             onload="this.style.display='inline-block'" alt="">
+                    </div>
+                    <input type="file" name="cert_steps_image_file" accept="image/*" class="form-control crop-input" data-crop-label="Certification Steps Infographic">
+                    <input type="hidden" name="cert_steps_image_cropped">
+                    <div class="form-text">Pick an image — the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                 </div>
                 <div class="col-md-8">
                     <div class="mb-3">
