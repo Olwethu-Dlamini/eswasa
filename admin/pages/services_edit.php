@@ -51,8 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_services'])) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'services');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'services');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'services');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
@@ -170,11 +175,16 @@ $card_labels = [
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label">Logo Image</label>
-                    <?php if (!empty($pc['services_affil_' . $i . '_img'])): ?>
-                        <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc['services_affil_' . $i . '_img'])) ?>" style="max-height:100px;border:1px solid #ddd;background:#fff;padding:8px"></div>
-                    <?php endif; ?>
-                    <input type="file" name="services_affil_<?= $i ?>_img_file" accept="image/*" class="form-control">
-                    <div class="form-text">Leave empty to keep current image.</div>
+                    <div class="mb-2">
+                        <img data-crop-preview="services_affil_<?= $i ?>_img_preview"
+                             src="<?= !empty($pc['services_affil_' . $i . '_img']) ? '../' . pc_h(pc_image_src($pc['services_affil_' . $i . '_img'])) : '' ?>"
+                             style="max-height:100px;border:1px solid #ddd;background:#fff;padding:8px;<?= empty($pc['services_affil_' . $i . '_img']) ? 'display:none;' : '' ?>"
+                             onload="this.style.display='inline-block'" alt="">
+                    </div>
+                    <input type="file" name="services_affil_<?= $i ?>_img_file" accept="image/*" class="form-control crop-input"
+                           data-crop-label="Affiliation <?= $i ?> Logo">
+                    <input type="hidden" name="services_affil_<?= $i ?>_img_cropped">
+                    <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
                 </div>
                 <div class="col-md-8">
                     <div class="mb-3">
