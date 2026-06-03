@@ -80,8 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_ms'])) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
     foreach ($image_keys as $k) {
-        $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'ms');
-        if ($path !== null) $kv[$k] = $path;
+        // Prefer the cropper's base64 payload; fall back to a raw file
+        // upload (e.g. SVG logos the cropper passes through untouched).
+        $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'ms');
+        if (!is_string($path)) {
+            $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'ms');
+        }
+        if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
@@ -103,7 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_org'])) {
     if ($standard === '') $errors[] = 'Standard is required.';
 
     $logo_path = $existing;  // default: keep current
-    $up = pc_upload_image('org_logo_file', ADMIN_ROOT . '/uploads/orgs/', 'org');
+    // Prefer the cropper's base64 payload; fall back to a raw file upload
+    // (e.g. SVG logos the cropper passes through untouched).
+    $up = pc_save_base64_image($_POST['org_logo_cropped'] ?? '', ADMIN_ROOT . '/uploads/orgs/', 'org');
+    if (!is_string($up)) {
+        $up = pc_upload_image('org_logo_file', ADMIN_ROOT . '/uploads/orgs/', 'org');
+    }
     if ($up === false) {
         $errors[] = 'Logo upload failed (check file type — JPG/PNG/WebP/SVG/GIF — and size under 5 MB).';
     } elseif ($up) {
@@ -402,14 +412,19 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
 
                         <div class="col-md-8">
                             <label class="form-label fw-bold">Logo</label>
-                            <?php if (!empty($o['logo_path'])): ?>
-                                <div class="mb-2">
-                                    <img src="../<?= pc_h($o['logo_path']) ?>" style="max-height:80px;border:1px solid #ddd;padding:4px;background:#fff">
+                            <div class="mb-2">
+                                <img data-crop-preview="org_logo_preview"
+                                     src="<?= !empty($o['logo_path']) ? '../' . pc_h($o['logo_path']) : '' ?>"
+                                     style="max-height:80px;border:1px solid #ddd;padding:4px;background:#fff;<?= empty($o['logo_path']) ? 'display:none;' : '' ?>"
+                                     onload="this.style.display='inline-block'" alt="">
+                                <?php if (!empty($o['logo_path'])): ?>
                                     <code class="ms-2 small text-muted"><?= pc_h($o['logo_path']) ?></code>
-                                </div>
-                            <?php endif; ?>
-                            <input type="file" name="org_logo_file" class="form-control" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif">
-                            <div class="form-text">PNG / JPG / WebP / SVG / GIF up to 5 MB. Leave empty to keep current logo. Tiles without a logo render the name as a wordmark.</div>
+                                <?php endif; ?>
+                            </div>
+                            <input type="file" name="org_logo_file" class="form-control crop-input" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
+                                   data-crop-label="Organisation Logo">
+                            <input type="hidden" name="org_logo_cropped">
+                            <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). PNG / JPG / WebP / SVG / GIF up to 5 MB. Leave empty to keep current. Tiles without a logo render the name as a wordmark.</div>
                         </div>
                         <div class="col-md-4 d-flex align-items-end">
                             <div class="form-check">
@@ -702,11 +717,16 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label class="form-label">Image</label>
-                        <?php if (!empty($pc[$img_key])): ?>
-                            <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc[$img_key])) ?>" style="max-height:80px;border:1px solid #ddd"></div>
-                        <?php endif; ?>
-                        <input type="file" name="<?= $img_key ?>_file" accept="image/*" class="form-control form-control-sm">
-                        <small class="text-muted">Leave empty to keep current image.</small>
+                        <div class="mb-2">
+                            <img data-crop-preview="<?= $img_key ?>_preview"
+                                 src="<?= !empty($pc[$img_key]) ? '../' . pc_h(pc_image_src($pc[$img_key])) : '' ?>"
+                                 style="max-height:80px;border:1px solid #ddd;<?= empty($pc[$img_key]) ? 'display:none;' : '' ?>"
+                                 onload="this.style.display='inline-block'" alt="">
+                        </div>
+                        <input type="file" name="<?= $img_key ?>_file" accept="image/*" class="form-control form-control-sm crop-input"
+                               data-crop-label="Scheme Image">
+                        <input type="hidden" name="<?= $img_key ?>_cropped">
+                        <small class="text-muted">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</small>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Alt text</label>
@@ -747,11 +767,16 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Accreditation Logo</label>
-                    <?php if (!empty($pc['ms_accred_img'])): ?>
-                        <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc['ms_accred_img'])) ?>" style="max-height:120px;border:1px solid #ddd"></div>
-                    <?php endif; ?>
-                    <input type="file" name="ms_accred_img_file" accept="image/*" class="form-control">
-                    <small class="text-muted">Leave empty to keep current image.</small>
+                    <div class="mb-2">
+                        <img data-crop-preview="ms_accred_img_preview"
+                             src="<?= !empty($pc['ms_accred_img']) ? '../' . pc_h(pc_image_src($pc['ms_accred_img'])) : '' ?>"
+                             style="max-height:120px;border:1px solid #ddd;<?= empty($pc['ms_accred_img']) ? 'display:none;' : '' ?>"
+                             onload="this.style.display='inline-block'" alt="">
+                    </div>
+                    <input type="file" name="ms_accred_img_file" accept="image/*" class="form-control crop-input"
+                           data-crop-label="Accreditation Logo">
+                    <input type="hidden" name="ms_accred_img_cropped">
+                    <small class="text-muted">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</small>
                 </div>
             </div>
         </div>
@@ -831,11 +856,16 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Why-Certify Illustration</label>
-                    <?php if (!empty($pc['ms_why_img'])): ?>
-                        <div class="mb-2"><img src="../<?= pc_h(pc_image_src($pc['ms_why_img'])) ?>" style="max-width:100%;max-height:160px;border:1px solid #ddd"></div>
-                    <?php endif; ?>
-                    <input type="file" name="ms_why_img_file" accept="image/*" class="form-control">
-                    <small class="text-muted">Leave empty to keep current image.</small>
+                    <div class="mb-2">
+                        <img data-crop-preview="ms_why_img_preview"
+                             src="<?= !empty($pc['ms_why_img']) ? '../' . pc_h(pc_image_src($pc['ms_why_img'])) : '' ?>"
+                             style="max-width:100%;max-height:160px;border:1px solid #ddd;<?= empty($pc['ms_why_img']) ? 'display:none;' : '' ?>"
+                             onload="this.style.display='inline-block'" alt="">
+                    </div>
+                    <input type="file" name="ms_why_img_file" accept="image/*" class="form-control crop-input"
+                           data-crop-label="Why Certify Image">
+                    <input type="hidden" name="ms_why_img_cropped">
+                    <small class="text-muted">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</small>
                 </div>
             </div>
         </div>
