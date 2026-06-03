@@ -97,23 +97,51 @@
     var currentTarget = null;
     var currentW      = 0;
     var currentH      = 0;
+    var currentMime   = 'image/jpeg';
+    var fileQueue     = [];   // remaining files when a `multiple` input is cropped one-by-one
+    var queueTotal    = 0;
 
     function openFor(input) {
         if (!input || !input.files || !input.files[0]) return;
+        // Snapshot the FileList before clearing the input — File objects stay
+        // valid after input.value = ''.
+        var files = Array.prototype.slice.call(input.files);
+        // Reset the file input so the same file can be re-selected later.
+        input.value = '';
+        fileQueue  = input.multiple ? files : files.slice(0, 1);
+        queueTotal = fileQueue.length;
+        openNextFile(input);
+    }
+
+    function openNextFile(input) {
+        var file = fileQueue.shift();
+        if (!file) { closeOverlay(); return; }
         currentInput = input;
+        currentMime  = file.type || 'image/jpeg';
         currentW = parseInt(input.dataset.cropW || '0', 10);
         currentH = parseInt(input.dataset.cropH || '0', 10);
         var label = input.dataset.cropLabel || 'Image';
+        if (queueTotal > 1) {
+            label += ' (' + (queueTotal - fileQueue.length) + ' of ' + queueTotal + ')';
+        }
         titleEl.textContent = 'Crop: ' + label;
-        sizeEl.textContent  = currentW + ' x ' + currentH + ' px';
+        sizeEl.textContent  = (currentW > 0 && currentH > 0)
+            ? (currentW + ' x ' + currentH + ' px')
+            : 'Free crop — original size kept';
 
         // Locate the sibling hidden field that will hold the base64 result.
         // Convention: it has the same name as the file input + '_cropped'
-        // and lives in the same form.
-        var hiddenName = (input.name || '').replace(/_file$/, '') + '_cropped';
-        currentTarget  = input.form ? input.form.querySelector('[name="' + hiddenName + '"]') : null;
-        if (!currentTarget) {
-            console.warn('cropper: no hidden input named "' + hiddenName + '" found in form');
+        // and lives in the same form. For `multiple` inputs (name="foo[]")
+        // a hidden input foo_cropped[] is appended per applied crop instead.
+        var baseName   = (input.name || '').replace(/\[\]$/, '').replace(/_file$/, '');
+        if (input.multiple) {
+            currentTarget = null; // created on apply
+        } else {
+            var hiddenName = baseName + '_cropped';
+            currentTarget  = input.form ? input.form.querySelector('[name="' + hiddenName + '"]') : null;
+            if (!currentTarget) {
+                console.warn('cropper: no hidden input named "' + hiddenName + '" found in form');
+            }
         }
 
         // Match the live preview's aspect to the target crop so the user
@@ -125,7 +153,7 @@
         if (previewMeta) {
             previewMeta.textContent = (currentW > 0 && currentH > 0)
                 ? ('Output size: ' + currentW + ' × ' + currentH + ' px')
-                : '';
+                : 'Free crop — saved at the selected size.';
         }
 
         var reader = new FileReader();
@@ -146,31 +174,54 @@
             };
             imgEl.src = e.target.result;
         };
-        reader.readAsDataURL(input.files[0]);
-        // Reset the file input so the same file can be re-selected later.
-        input.value = '';
+        reader.readAsDataURL(file);
     }
 
     function applyAndClose() {
         if (!cropper) return closeOverlay();
-        var canvas = cropper.getCroppedCanvas(
-            currentW > 0 && currentH > 0
-                ? { width: currentW, height: currentH }
-                : {}
-        );
+        // Preserve transparency: PNG/WebP/GIF sources export as PNG; photos
+        // (JPEG) keep JPEG with a white fill behind any rotation gaps.
+        var keepAlpha = /image\/(png|webp|gif)/.test(currentMime);
+        var opts = currentW > 0 && currentH > 0
+            ? { width: currentW, height: currentH }
+            : {};
+        if (!keepAlpha) opts.fillColor = '#fff';
+        var canvas = cropper.getCroppedCanvas(opts);
         if (!canvas) return closeOverlay();
-        var dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-        if (currentTarget) {
+        var dataUrl = keepAlpha
+            ? canvas.toDataURL('image/png')
+            : canvas.toDataURL('image/jpeg', 0.92);
+
+        var input    = currentInput;
+        var form     = input ? input.form : null;
+        var baseName = input ? (input.name || '').replace(/\[\]$/, '').replace(/_file$/, '') : '';
+
+        if (input && input.multiple) {
+            // Append one hidden field per applied crop: <base>_cropped[]
+            if (form) {
+                var hidden = document.createElement('input');
+                hidden.type  = 'hidden';
+                hidden.name  = baseName + '_cropped[]';
+                hidden.value = dataUrl;
+                input.parentNode.insertBefore(hidden, input);
+            }
+        } else if (currentTarget) {
             currentTarget.value = dataUrl;
             // Surface a preview if there's a sibling .crop-preview image
-            if (currentInput) {
-                var form = currentInput.form;
-                var name = (currentInput.name || '').replace(/_file$/, '') + '_preview';
-                var prev = form && form.querySelector('[data-crop-preview="' + name + '"]');
+            if (form) {
+                var prev = form.querySelector('[data-crop-preview="' + baseName + '_preview"]');
                 if (prev) prev.src = dataUrl;
             }
             // Trigger change so any UI bindings update
             currentTarget.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        // More files queued from a `multiple` input? Keep the overlay open
+        // and move straight to the next one.
+        if (fileQueue.length > 0 && input) {
+            if (cropper) { cropper.destroy(); cropper = null; }
+            openNextFile(input);
+            return;
         }
         closeOverlay();
     }
@@ -180,6 +231,8 @@
         if (cropper) { cropper.destroy(); cropper = null; }
         currentInput = null;
         currentTarget = null;
+        fileQueue = [];
+        queueTotal = 0;
     }
 
     // Wire up controls
@@ -196,8 +249,15 @@
     // dynamically-rendered admin section is handled.
     document.addEventListener('change', function (e) {
         var t = e.target;
-        if (t && t.matches && t.matches('input[type="file"].crop-input')) {
-            openFor(t);
-        }
+        if (!(t && t.matches && t.matches('input[type="file"].crop-input'))) return;
+        if (!t.files || !t.files.length) return;
+        // SVGs stay vector and non-images (e.g. PDFs) aren't croppable —
+        // leave the input untouched so the normal upload path handles them.
+        // For multi-selects, every file must be croppable or none is intercepted.
+        var croppable = function (f) {
+            return /^image\//.test(f.type) && f.type !== 'image/svg+xml';
+        };
+        if (!Array.prototype.every.call(t.files, croppable)) return;
+        openFor(t);
     });
 })();
