@@ -40,6 +40,24 @@ function eswasa_save_event_image_upload(array $file, string $upload_dir, array $
     return $unique;
 }
 
+/**
+ * Save a base64 data-URL payload (from the admin cropper) into uploads/,
+ * returning the stored filename (or null on failure).
+ */
+function eswasa_save_event_image_base64(string $base64, string $upload_dir): ?string {
+    if ($base64 === '' || strpos($base64, 'data:image') !== 0) return null;
+    $parts = explode(';', $base64, 2);
+    if (count($parts) !== 2 || strpos($parts[1], ',') === false) return null;
+    $ext = 'jpg';
+    if (strpos($parts[0], 'image/png') !== false)  $ext = 'png';
+    if (strpos($parts[0], 'image/webp') !== false) $ext = 'webp';
+    $decoded = base64_decode(explode(',', $parts[1], 2)[1]);
+    if ($decoded === false || $decoded === '') return null;
+    $unique = 'event_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(3)), 0, 6) . '.' . $ext;
+    if (file_put_contents($upload_dir . $unique, $decoded) === false) return null;
+    return $unique;
+}
+
 // Handle DELETE a single gallery image (admin remove button)
 if (isset($_GET['delete_image']) && isset($_GET['edit'])) {
     $img_id = (int)$_GET['delete_image'];
@@ -138,13 +156,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $existing_count = eswasa_count_event_images($conn, $id);
     $remaining_slots = max(0, $MAX_IMAGES - $existing_count);
 
-    if (!empty($_FILES['images']) && is_array($_FILES['images']['name'])) {
-        // Find current max sort_order to append after it
-        $next_order = 0;
-        if ($r = $conn->query("SELECT COALESCE(MAX(sort_order), -1) + 1 AS n FROM eswasa_event_images WHERE event_id = " . (int)$id)) {
-            $next_order = (int)($r->fetch_assoc()['n'] ?? 0);
+    // Gather gallery sources: cropped base64 payloads from the cropper modal
+    // (images_cropped[]) plus any raw uploads the cropper passed through.
+    $gallery_sources = [];
+    if (!empty($_POST['images_cropped']) && is_array($_POST['images_cropped'])) {
+        foreach ($_POST['images_cropped'] as $b64) {
+            if (is_string($b64) && $b64 !== '') {
+                $gallery_sources[] = ['kind' => 'base64', 'data' => $b64];
+            }
         }
-
+    }
+    if (!empty($_FILES['images']) && is_array($_FILES['images']['name'])) {
         $names = $_FILES['images']['name'];
         $count = count($names);
         for ($i = 0; $i < $count; $i++) {
@@ -156,10 +178,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'size' => $_FILES['images']['size'][$i] ?? 0,
             ];
             if (empty($f['name'])) continue;
+            $gallery_sources[] = ['kind' => 'file', 'data' => $f];
+        }
+    }
 
+    if ($gallery_sources) {
+        // Find current max sort_order to append after it
+        $next_order = 0;
+        if ($r = $conn->query("SELECT COALESCE(MAX(sort_order), -1) + 1 AS n FROM eswasa_event_images WHERE event_id = " . (int)$id)) {
+            $next_order = (int)($r->fetch_assoc()['n'] ?? 0);
+        }
+
+        foreach ($gallery_sources as $src) {
             if ($remaining_slots <= 0) { $skipped_over_cap++; continue; }
 
-            $saved = eswasa_save_event_image_upload($f, $upload_dir, $allowed_ext);
+            $saved = ($src['kind'] === 'base64')
+                ? eswasa_save_event_image_base64($src['data'], $upload_dir)
+                : eswasa_save_event_image_upload($src['data'], $upload_dir, $allowed_ext);
             if (!$saved) { $invalid_count++; continue; }
 
             if ($ins = $conn->prepare("INSERT INTO eswasa_event_images (event_id, image, sort_order) VALUES (?, ?, ?)")) {
@@ -357,13 +392,14 @@ $remaining = max(0, $MAX_IMAGES - $existing_count);
                     </div>
                 <?php endif; ?>
 
-                <input type="file" name="images[]" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple
+                <input type="file" name="images[]" class="form-control crop-input" accept=".jpg,.jpeg,.png,.webp" multiple
+                       data-crop-w="1600" data-crop-h="900" data-crop-label="Event Photo"
                        <?= ($edit_event && $remaining <= 0) ? 'disabled' : '' ?>>
                 <div class="form-text">
                     <?php if ($edit_event && $remaining <= 0): ?>
                         Gallery is full. Remove an image to free a slot.
                     <?php else: ?>
-                        JPG/PNG/WEBP. First image becomes the cover. Hold Ctrl/Cmd or Shift to pick multiple files.
+                        JPG/PNG/WEBP. Each picked photo opens the cropper at 1600 &times; 900 px &mdash; crop them one after another. First image becomes the cover. Hold Ctrl/Cmd or Shift to pick multiple files.
                     <?php endif; ?>
                 </div>
             </div>
