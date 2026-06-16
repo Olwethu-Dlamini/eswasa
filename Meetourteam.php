@@ -11,6 +11,7 @@ $pc = pc_get_many($conn, [
     'team_section_council_title',
     'team_section_executive_title',
     'team_staff_group_photo',
+    'team_staff_photo_visible',
 ], [
     'team_hero_title'              => 'Meet Our Team',
     'team_intro_body'              => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
@@ -18,6 +19,7 @@ $pc = pc_get_many($conn, [
     'team_section_council_title'   => 'Members of the Council',
     'team_section_executive_title' => 'Executive Team',
     'team_staff_group_photo'       => 'admin/uploads/staff_group_photo.jpg',
+    'team_staff_photo_visible'     => '1',
 ]);
 
 // Team members from dedicated table (live rows only — is_vacant = 0).
@@ -533,7 +535,8 @@ try {
                 </div>
                 <?php endif; ?>
 
-                <!-- Rectangular Group Photo -->
+                <!-- Rectangular Group Photo (toggled from admin: team_staff_photo_visible) -->
+                <?php if (($pc['team_staff_photo_visible'] ?? '1') === '1'): ?>
                 <div class="text-center">
                     <div class="staff-photo-container mx-auto">
                         <img src="<?= pc_h(pc_image_src($pc['team_staff_group_photo'], 'admin/uploads/staff_group_photo.jpg')) ?>" alt="ESWASA Staff Group Photo" class="staff-photo">
@@ -542,6 +545,7 @@ try {
                         </div>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
     </main>

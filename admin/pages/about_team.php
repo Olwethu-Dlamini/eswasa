@@ -22,6 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             pc_save($conn, 'team_staff_group_photo', $staff_path);
         }
 
+        // Show/hide toggle for the staff group photo on the public page.
+        // Unchecked box is absent from POST → '0'.
+        pc_save($conn, 'team_staff_photo_visible', !empty($_POST['team_staff_photo_visible']) ? '1' : '0');
+
         $text_keys = [
             'team_hero_title',
             'team_intro_body',
@@ -139,6 +143,7 @@ $pc = pc_get_many($conn, [
     'team_section_council_title',
     'team_section_executive_title',
     'team_staff_group_photo',
+    'team_staff_photo_visible',
 ], [
     'team_hero_title'              => 'Meet Our Team',
     'team_intro_body'              => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
@@ -146,6 +151,7 @@ $pc = pc_get_many($conn, [
     'team_section_council_title'   => 'Members of the Council',
     'team_section_executive_title' => 'Executive Team',
     'team_staff_group_photo'       => 'admin/uploads/staff_group_photo.jpg',
+    'team_staff_photo_visible'     => '1',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -230,6 +236,17 @@ if (isset($_GET['edit'])) {
 
             <hr>
             <h6 class="mb-3 text-muted">ESWASA Staff Group Photo</h6>
+
+            <div class="form-check form-switch mb-3">
+                <input type="checkbox" name="team_staff_photo_visible" value="1"
+                       class="form-check-input" id="team_staff_photo_visible"
+                       <?= ($pc['team_staff_photo_visible'] ?? '1') === '1' ? 'checked' : '' ?>>
+                <label class="form-check-label fw-bold" for="team_staff_photo_visible">
+                    Show staff group photo on public page
+                </label>
+                <div class="form-text">Untick to hide the photo from the Meet Our Team page without deleting it. The uploaded image is kept either way.</div>
+            </div>
+
             <div class="mb-3">
                 <?php
                     $staff_photo_src = pc_image_src($pc['team_staff_group_photo'], 'admin/uploads/staff_group_photo.jpg');
