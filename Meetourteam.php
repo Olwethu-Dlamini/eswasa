@@ -10,14 +10,12 @@ $pc = pc_get_many($conn, [
     'team_section_main_title',
     'team_section_council_title',
     'team_section_executive_title',
-    'team_staff_group_photo',
 ], [
     'team_hero_title'              => 'Meet Our Team',
     'team_intro_body'              => 'Meet the leadership team dedicated to helping you achieve compliance, ensure quality, and promote the sustainability of Eswatini’s industries.',
     'team_section_main_title'      => 'Our Council and Management',
     'team_section_council_title'   => 'Members of the Council',
     'team_section_executive_title' => 'Executive Team',
-    'team_staff_group_photo'       => 'admin/uploads/staff_group_photo.jpg',
 ]);
 
 // Team members from dedicated table (live rows only — is_vacant = 0).
@@ -277,54 +275,49 @@ try {
             margin: 0 auto;
         }
 
-        /* Staff group photo */
-        .staff-photo-container {
+        /* Staff disciplines infographic (replaces the former group photo —
+           visualises the functional areas named in the paragraph above). */
+        .staff-disciplines {
             width: 100%;
             max-width: 900px;
-            /* Always exactly 5:2 (= 900:360) regardless of parent width.
-               The earlier padding-bottom:40% trick measured against the
-               parent's width and stretched the box past the cropper's
-               aspect ratio on wider parents, causing object-fit: cover
-               to crop the saved image. */
-            aspect-ratio: 5 / 2;
-            background: rgba(43, 51, 136, 0.04);
-            border: 1px solid rgba(43, 51, 136, 0.15);
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
         }
-        .staff-photo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
+        .discipline-card {
+            background-color: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.12);
+            border-radius: 4px;
+            padding: 26px 18px 22px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
         }
-        .staff-photo[src]:not([src=""]) {
-            display: block !important;
+        .discipline-card:hover {
+            border-color: rgba(43, 51, 136, 0.40);
+            box-shadow: 0 6px 16px rgba(43, 51, 136, 0.10);
+            transform: translateY(-3px);
         }
-        .staff-photo-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: transparent;
-            color: rgba(43, 51, 136, 0.55);
-            display: none; /* hidden by default — only shows when no image src */
+        .discipline-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #2B3388;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-style: italic;
-            font-size: 14px;
-            text-align: center;
-            padding: 0 20px;
+            margin-bottom: 14px;
         }
-        .staff-photo[src=""] + .staff-photo-placeholder,
-        .staff-photo:not([src]) + .staff-photo-placeholder {
-            display: flex;
+        .discipline-icon svg { width: 28px; height: 28px; }
+        .discipline-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: #2B3388;
+            margin: 0;
+            line-height: 1.35;
         }
 
         /* ========== Mobile responsive ========== */
@@ -352,6 +345,10 @@ try {
         }
         @media (max-width: 575.98px) {
             .team-members { grid-template-columns: repeat(2, 1fr); }
+            .staff-disciplines { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+            .discipline-card { padding: 22px 12px 18px; }
+            .discipline-icon { width: 48px; height: 48px; }
+            .discipline-icon svg { width: 24px; height: 24px; }
             .team-card { padding: 18px 14px; }
             .team-name { font-size: 13px; }
             .team-role { font-size: 12px; }
@@ -533,13 +530,37 @@ try {
                 </div>
                 <?php endif; ?>
 
-                <!-- Rectangular Group Photo -->
-                <div class="text-center">
-                    <div class="staff-photo-container mx-auto">
-                        <img src="<?= pc_h(pc_image_src($pc['team_staff_group_photo'], 'admin/uploads/staff_group_photo.jpg')) ?>" alt="ESWASA Staff Group Photo" class="staff-photo">
-                        <div class="staff-photo-placeholder">
-                            Staff Group Photo<br><em>(900 × 360 px recommended)</em>
+                <!-- Disciplines infographic (functional areas the staff cover) -->
+                <div class="staff-disciplines" role="list">
+                    <div class="discipline-card" role="listitem">
+                        <div class="discipline-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
                         </div>
+                        <p class="discipline-name">Standardisation</p>
+                    </div>
+                    <div class="discipline-card" role="listitem">
+                        <div class="discipline-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 1 1 9-9"/><path d="M12 12l4-3"/><circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/></svg>
+                        </div>
+                        <p class="discipline-name">Metrology</p>
+                    </div>
+                    <div class="discipline-card" role="listitem">
+                        <div class="discipline-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 8a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-8V3"/><path d="M7.5 15h9"/></svg>
+                        </div>
+                        <p class="discipline-name">Testing</p>
+                    </div>
+                    <div class="discipline-card" role="listitem">
+                        <div class="discipline-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="5.5"/><path d="M8.5 13L7 21l5-2.7L17 21l-1.5-8"/></svg>
+                        </div>
+                        <p class="discipline-name">Certification</p>
+                    </div>
+                    <div class="discipline-card" role="listitem">
+                        <div class="discipline-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+                        </div>
+                        <p class="discipline-name">Quality Assurance</p>
                     </div>
                 </div>
             </div>
