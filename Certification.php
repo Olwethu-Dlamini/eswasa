@@ -67,8 +67,8 @@ $cert_keys_defaults = [
     // Section 3 — Steps
     'cert_steps_title'           => 'Your Certification Journey Made Simple',
     'cert_steps_subtitle'        => 'We guide you every step of the way - no stress, no surprises',
-    'cert_steps_image'           => 'assets/img/steps-to-certification.jpg',
-    'cert_steps_image_alt'       => 'Steps to Certification: Gap Analysis, Training and Documentation, Internal Audit and MRM, Audit and Certification, ISO Certified',
+    'cert_steps_image'           => 'assets/img/steps-to-certification.svg',
+    'cert_steps_image_alt'       => 'Steps to Certification: Documentation, Implementation, Certification Audit',
 
     // Section 4 — CTA
     'cert_cta_title'             => 'Begin Your Certification Journey',
@@ -320,65 +320,13 @@ $cert_split_list = function ($text) {
             .mark-actions { gap: 18px; }
             .mark-actions a { font-size: 12.5px; }
         }
-        /* ── Steps to certification (on-theme HTML infographic) ── */
-        .cert-steps {
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-            gap: 8px;
-            max-width: 880px;
-            margin: 0 auto;
-        }
-        .cert-step {
-            flex: 1 1 0;
-            background: #fff;
-            border: 1px solid rgba(43, 51, 136, 0.15);
-            border-radius: 4px;
-            padding: 30px 18px 24px;
+        /* ── Steps to certification image section ── */
+        .steps-img-section {
             text-align: center;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        .cert-step-num {
-            position: absolute;
-            top: 10px;
-            left: 14px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: rgba(43, 51, 136, 0.45);
-        }
-        .cert-step-icon {
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            background: #2B3388;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 14px;
-        }
-        .cert-step-icon svg { width: 28px; height: 28px; }
-        .cert-step-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #2B3388;
-            margin: 0;
-            line-height: 1.3;
-        }
-        .cert-step-arrow {
-            display: flex;
-            align-items: center;
-            flex: 0 0 auto;
-            color: rgba(43, 51, 136, 0.40);
-            font-size: 1.1rem;
-        }
-        @media (max-width: 767.98px) {
-            .cert-steps { flex-direction: column; align-items: stretch; gap: 6px; max-width: 340px; }
-            .cert-step-arrow { justify-content: center; transform: rotate(90deg); padding: 2px 0; }
+        .steps-img-section img {
+            max-width: 100%;
+            height: auto;
         }
 
         /* Cert-split cards — "Why Certify" + "Our Focus Areas" */
@@ -643,30 +591,8 @@ $cert_split_list = function ($text) {
                     <div class="section-divider"></div>
                     <p class="lead mt-3" style="text-align: center;"><?= pc_h($pc['cert_steps_subtitle']) ?></p>
                 </div>
-                <div class="cert-steps" role="list" aria-label="Certification steps">
-                    <div class="cert-step" role="listitem">
-                        <span class="cert-step-num">Step 1</span>
-                        <span class="cert-step-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-                        </span>
-                        <h3 class="cert-step-title">Documentation</h3>
-                    </div>
-                    <div class="cert-step-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
-                    <div class="cert-step" role="listitem">
-                        <span class="cert-step-num">Step 2</span>
-                        <span class="cert-step-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>
-                        </span>
-                        <h3 class="cert-step-title">Implementation</h3>
-                    </div>
-                    <div class="cert-step-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></div>
-                    <div class="cert-step" role="listitem">
-                        <span class="cert-step-num">Step 3</span>
-                        <span class="cert-step-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 21l5-2.7L17 21l-1.5-7"/></svg>
-                        </span>
-                        <h3 class="cert-step-title">Certification Audit</h3>
-                    </div>
+                <div class="steps-img-section">
+                    <img src="<?= pc_h(pc_image_src($pc['cert_steps_image'], 'assets/img/steps-to-certification.svg')) ?>" alt="<?= pc_h($pc['cert_steps_image_alt']) ?>">
                 </div>
             </div>
         </section>
