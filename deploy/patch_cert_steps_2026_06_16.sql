@@ -5,5 +5,5 @@
 -- the stored image at it and refresh the alt text. Safe to re-run.
 UPDATE page_content SET content = 'assets/img/steps-to-certification.svg'
   WHERE page_key = 'cert_steps_image';
-UPDATE page_content SET content = 'Steps to Certification: Documentation, Implementation, Certification Audit'
+UPDATE page_content SET content = 'Steps to Certification: Training and Documentation, Audit and Certification, ISO Certified'
   WHERE page_key = 'cert_steps_image_alt';

@@ -68,7 +68,7 @@ $cert_keys_defaults = [
     'cert_steps_title'           => 'Your Certification Journey Made Simple',
     'cert_steps_subtitle'        => 'We guide you every step of the way - no stress, no surprises',
     'cert_steps_image'           => 'assets/img/steps-to-certification.svg',
-    'cert_steps_image_alt'       => 'Steps to Certification: Documentation, Implementation, Certification Audit',
+    'cert_steps_image_alt'       => 'Steps to Certification: Training and Documentation, Audit and Certification, ISO Certified',
 
     // Section 4 — CTA
     'cert_cta_title'             => 'Begin Your Certification Journey',
