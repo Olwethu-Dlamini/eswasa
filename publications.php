@@ -7,7 +7,39 @@ require __DIR__ . '/includes/cms_keys_publications.php';
 
 $pc = pc_get_many($conn, $publications_keys, $publications_defaults);
 
-$result = $conn->query("SELECT * FROM eswasa_publications ORDER BY published_date DESC");
+// ── Grouped "folders" ─────────────────────────────────────────────
+// Sections come from eswasa_publication_groups (system type groups + custom
+// folders), ordered by sort_order. Each publication lands in its custom folder
+// (group_id) if assigned, otherwise the system group matching its pub_type.
+// Groups with no publications are not rendered.
+$groups = [];
+if ($gres = $conn->query("SELECT * FROM eswasa_publication_groups ORDER BY sort_order ASC, id ASC")) {
+    while ($g = $gres->fetch_assoc()) {
+        $groups[(int)$g['id']] = $g;
+    }
+}
+$type_to_group = [];
+foreach ($groups as $gid => $g) {
+    if (!empty($g['type_key'])) $type_to_group[$g['type_key']] = $gid;
+}
+
+$buckets = []; // group_id => array of publication rows (newest first)
+if ($pres = $conn->query("SELECT * FROM eswasa_publications ORDER BY published_date DESC, id DESC")) {
+    while ($pub = $pres->fetch_assoc()) {
+        $gid = !empty($pub['group_id']) ? (int)$pub['group_id'] : null;
+        // Assigned folder missing (e.g. deleted) → fall back to the type group.
+        if ($gid === null || !isset($groups[$gid])) {
+            $gid = $type_to_group[$pub['pub_type']] ?? null;
+        }
+        if ($gid === null) continue; // unknown type with no home — skip defensively
+        $buckets[$gid][] = $pub;
+    }
+}
+
+$has_any_pub = false;
+foreach ($groups as $gid => $g) {
+    if (!empty($buckets[$gid])) { $has_any_pub = true; break; }
+}
 
 function pub_type_label(string $t): string {
     return [
@@ -70,6 +102,31 @@ function pub_file_url(string $stored): string {
         }
         .info-box.is-intro p { text-align: left; margin-bottom: 12px; }
         .info-box.is-intro p:last-child { margin-bottom: 0; }
+
+        /* Grouped folders */
+        .pub-group { margin-bottom: 38px; }
+        .pub-group:last-child { margin-bottom: 0; }
+        .pub-group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #2B3388;
+            margin: 0 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(43, 51, 136, 0.15);
+        }
+        .pub-group-title i { font-size: 1rem; color: rgba(43, 51, 136, 0.65); }
+        .pub-group-count {
+            margin-left: auto;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(43, 51, 136, 0.70);
+            border: 1px solid rgba(43, 51, 136, 0.20);
+            border-radius: 999px;
+            padding: 1px 10px;
+        }
 
         /* Documents list — row-style, not cards */
         .pub-list {
@@ -205,41 +262,51 @@ function pub_file_url(string $stored): string {
                 <h2><?= pc_h($pc['publications_section_title']) ?></h2>
                 <div class="section-divider mb-4" style="margin-left: 0; margin-right: 0;"></div>
 
-                <?php if ($result && $result->num_rows > 0): ?>
-                    <div class="pub-list">
-                        <?php while ($pub = $result->fetch_assoc()): ?>
-                            <?php
-                            $url = pub_file_url($pub['file_path']);
-                            $fullPath = __DIR__ . '/admin/uploads/' . $pub['file_path'];
-                            $sizeStr = '';
-                            if (file_exists($fullPath)) {
-                                $bytes = filesize($fullPath);
-                                $sizeStr = $bytes >= 1048576
-                                    ? round($bytes / 1048576, 1) . ' MB'
-                                    : round($bytes / 1024, 0) . ' KB';
-                            }
-                            ?>
-                            <div class="pub-row">
-                                <span class="pub-icon" aria-hidden="true"><i class="fas fa-file-pdf"></i></span>
-                                <div class="pub-main">
-                                    <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="pub-title">
-                                        <?= htmlspecialchars($pub['title']) ?>
-                                    </a>
-                                    <div class="pub-meta">
-                                        <span class="pub-badge"><?= htmlspecialchars(pub_type_label($pub['pub_type'])) ?></span>
-                                        <span>Published <?= date('d M Y', strtotime($pub['published_date'])) ?></span>
-                                        <?php if ($sizeStr !== ''): ?>
-                                            <span class="sep">&middot;</span>
-                                            <span>PDF, <?= $sizeStr ?></span>
-                                        <?php endif; ?>
+                <?php if ($has_any_pub): ?>
+                    <?php foreach ($groups as $gid => $g): ?>
+                        <?php if (empty($buckets[$gid])) continue; // hide empty folders ?>
+                        <div class="pub-group">
+                            <h3 class="pub-group-title">
+                                <i class="fas fa-folder" aria-hidden="true"></i>
+                                <?= htmlspecialchars($g['name']) ?>
+                                <span class="pub-group-count"><?= count($buckets[$gid]) ?></span>
+                            </h3>
+                            <div class="pub-list">
+                                <?php foreach ($buckets[$gid] as $pub): ?>
+                                    <?php
+                                    $url = pub_file_url($pub['file_path']);
+                                    $fullPath = __DIR__ . '/admin/uploads/' . $pub['file_path'];
+                                    $sizeStr = '';
+                                    if (file_exists($fullPath)) {
+                                        $bytes = filesize($fullPath);
+                                        $sizeStr = $bytes >= 1048576
+                                            ? round($bytes / 1048576, 1) . ' MB'
+                                            : round($bytes / 1024, 0) . ' KB';
+                                    }
+                                    ?>
+                                    <div class="pub-row">
+                                        <span class="pub-icon" aria-hidden="true"><i class="fas fa-file-pdf"></i></span>
+                                        <div class="pub-main">
+                                            <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="pub-title">
+                                                <?= htmlspecialchars($pub['title']) ?>
+                                            </a>
+                                            <div class="pub-meta">
+                                                <span class="pub-badge"><?= htmlspecialchars(pub_type_label($pub['pub_type'])) ?></span>
+                                                <span>Published <?= date('d M Y', strtotime($pub['published_date'])) ?></span>
+                                                <?php if ($sizeStr !== ''): ?>
+                                                    <span class="sep">&middot;</span>
+                                                    <span>PDF, <?= $sizeStr ?></span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="pub-download">
+                                            <i class="fas fa-download me-1"></i>Download
+                                        </a>
                                     </div>
-                                </div>
-                                <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="pub-download">
-                                    <i class="fas fa-download me-1"></i>Download
-                                </a>
+                                <?php endforeach; ?>
                             </div>
-                        <?php endwhile; ?>
-                    </div>
+                        </div>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <div class="pub-empty">
                         <?= pc_h($pc['publications_empty_state']) ?>

@@ -71,6 +71,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_publications_con
     exit;
 }
 
+// ── POST: FOLDER actions (create / update / delete custom groups) ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folder_action'])) {
+    $fa = $_POST['folder_action'];
+
+    if ($fa === 'create') {
+        $name = pc_strip_text($_POST['name'] ?? '');
+        $sort = (int)($_POST['sort_order'] ?? 0);
+        if ($name === '') {
+            set_flash('error', 'Folder name is required.');
+        } else {
+            $stmt = $conn->prepare('INSERT INTO eswasa_publication_groups (name, type_key, sort_order, is_system) VALUES (?, NULL, ?, 0)');
+            $stmt->bind_param('si', $name, $sort);
+            set_flash($stmt->execute() ? 'success' : 'error', $stmt->error ? 'Database error: ' . $conn->error : 'Folder created.');
+            $stmt->close();
+        }
+    } elseif ($fa === 'update') {
+        // Rename / reorder. Allowed for system and custom groups alike.
+        $id   = (int)($_POST['id'] ?? 0);
+        $name = pc_strip_text($_POST['name'] ?? '');
+        $sort = (int)($_POST['sort_order'] ?? 0);
+        if ($id > 0 && $name !== '') {
+            $stmt = $conn->prepare('UPDATE eswasa_publication_groups SET name = ?, sort_order = ? WHERE id = ?');
+            $stmt->bind_param('sii', $name, $sort, $id);
+            set_flash($stmt->execute() ? 'success' : 'error', $stmt->error ? 'Database error: ' . $conn->error : 'Folder updated.');
+            $stmt->close();
+        } else {
+            set_flash('error', 'Folder name is required.');
+        }
+    } elseif ($fa === 'delete') {
+        // Only custom (non-system) folders can be deleted. Their documents
+        // fall back to auto-by-type (group_id cleared); files are untouched.
+        $id  = (int)($_POST['id'] ?? 0);
+        $chk = $conn->prepare('SELECT is_system FROM eswasa_publication_groups WHERE id = ?');
+        $chk->bind_param('i', $id);
+        $chk->execute();
+        $row = $chk->get_result()->fetch_assoc();
+        $chk->close();
+        if ($row && (int)$row['is_system'] === 0) {
+            $u = $conn->prepare('UPDATE eswasa_publications SET group_id = NULL WHERE group_id = ?');
+            $u->bind_param('i', $id);
+            $u->execute();
+            $u->close();
+            $d = $conn->prepare('DELETE FROM eswasa_publication_groups WHERE id = ?');
+            $d->bind_param('i', $id);
+            $d->execute();
+            $d->close();
+            set_flash('success', 'Folder deleted. Its documents are back to Auto (by type).');
+        } else {
+            set_flash('error', 'System type folders cannot be deleted.');
+        }
+    }
+    header('Location: index.php?page=publications_edit.php&tab=folders');
+    exit;
+}
+
 // ── POST: CREATE / UPDATE publication ─────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = pc_strip_text($_POST['title'] ?? '');
@@ -81,6 +136,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $allowed_types = ['standard', 'report', 'guidance', 'newsletter', 'annual_report'];
     if (!in_array($pub_type, $allowed_types, true)) $pub_type = 'report';
+
+    // Custom-folder assignment. Empty = "Auto (by type)" => NULL. Validate the
+    // id is an existing custom (non-system) folder; otherwise fall back to NULL.
+    $group_id = !empty($_POST['group_id']) ? (int)$_POST['group_id'] : null;
+    if ($group_id !== null) {
+        $gchk = $conn->prepare('SELECT id FROM eswasa_publication_groups WHERE id = ? AND is_system = 0');
+        $gchk->bind_param('i', $group_id);
+        $gchk->execute();
+        if (!$gchk->get_result()->fetch_assoc()) $group_id = null;
+        $gchk->close();
+    }
 
     if (!$title || !$published_date || !$description) {
         set_flash('error', 'Title, Description, and Published Date are required.');
@@ -108,11 +174,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $oldFile = __DIR__ . '/../uploads/' . $oldRow['file_path'];
                 if (is_file($oldFile)) @unlink($oldFile);
             }
-            $stmt = $conn->prepare('UPDATE eswasa_publications SET title = ?, description = ?, pub_type = ?, file_path = ?, published_date = ? WHERE id = ?');
-            $stmt->bind_param('sssssi', $title, $description, $pub_type, $file_path, $published_date, $id);
+            $stmt = $conn->prepare('UPDATE eswasa_publications SET title = ?, description = ?, pub_type = ?, group_id = ?, file_path = ?, published_date = ? WHERE id = ?');
+            $stmt->bind_param('sssissi', $title, $description, $pub_type, $group_id, $file_path, $published_date, $id);
         } else {
-            $stmt = $conn->prepare('UPDATE eswasa_publications SET title = ?, description = ?, pub_type = ?, published_date = ? WHERE id = ?');
-            $stmt->bind_param('ssssi', $title, $description, $pub_type, $published_date, $id);
+            $stmt = $conn->prepare('UPDATE eswasa_publications SET title = ?, description = ?, pub_type = ?, group_id = ?, published_date = ? WHERE id = ?');
+            $stmt->bind_param('sssisi', $title, $description, $pub_type, $group_id, $published_date, $id);
         }
         $msg = 'Publication updated.';
     } else {
@@ -121,8 +187,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php?page=publications_edit.php&tab=documents');
             exit;
         }
-        $stmt = $conn->prepare('INSERT INTO eswasa_publications (title, description, pub_type, file_path, published_date) VALUES (?, ?, ?, ?, ?)');
-        $stmt->bind_param('sssss', $title, $description, $pub_type, $file_path, $published_date);
+        $stmt = $conn->prepare('INSERT INTO eswasa_publications (title, description, pub_type, group_id, file_path, published_date) VALUES (?, ?, ?, ?, ?, ?)');
+        $stmt->bind_param('sssiss', $title, $description, $pub_type, $group_id, $file_path, $published_date);
         $msg = 'Publication added.';
     }
 
@@ -174,7 +240,27 @@ if (isset($_GET['edit'])) {
 
 $pc = pc_get_many($conn, $publications_keys, $publications_defaults);
 
-$active_tab = ($_GET['tab'] ?? '') === 'content' ? 'content' : 'documents';
+// Folders (groups) with a live document count per group: a publication counts
+// toward a group if it is explicitly assigned (group_id) OR auto-matched by type.
+$all_groups = [];
+$custom_groups = [];
+$gq = $conn->query(
+    'SELECT g.*, (
+        SELECT COUNT(*) FROM eswasa_publications p
+        WHERE p.group_id = g.id
+           OR (p.group_id IS NULL AND p.pub_type = g.type_key)
+     ) AS pub_count
+     FROM eswasa_publication_groups g
+     ORDER BY g.sort_order ASC, g.id ASC'
+);
+if ($gq) {
+    while ($g = $gq->fetch_assoc()) {
+        $all_groups[] = $g;
+        if (!(int)$g['is_system']) $custom_groups[] = $g;
+    }
+}
+
+$active_tab = in_array(($_GET['tab'] ?? ''), ['content', 'folders', 'documents'], true) ? $_GET['tab'] : 'documents';
 if ($edit_pub) $active_tab = 'documents';
 
 function pub_type_label_admin(string $t): string {
@@ -211,6 +297,12 @@ function pub_type_label_admin(string $t): string {
         <button class="nav-link <?= $active_tab === 'documents' ? 'active' : '' ?>"
                 data-bs-toggle="tab" data-bs-target="#tab-documents" type="button" role="tab">
             Documents
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'folders' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-folders" type="button" role="tab">
+            Folders
         </button>
     </li>
     <li class="nav-item" role="presentation">
@@ -260,6 +352,19 @@ function pub_type_label_admin(string $t): string {
                                 <input type="date" name="published_date" class="form-control" required
                                        value="<?= htmlspecialchars($edit_pub['published_date']) ?>">
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Folder</label>
+                            <select name="group_id" class="form-select">
+                                <option value="">Auto (by type)</option>
+                                <?php foreach ($custom_groups as $cg): ?>
+                                    <option value="<?= (int)$cg['id'] ?>" <?= ((int)($edit_pub['group_id'] ?? 0) === (int)$cg['id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($cg['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="form-text">"Auto" groups this document under its Type. Pick a custom folder to override.</div>
                         </div>
 
                         <div class="mb-3">
@@ -334,6 +439,78 @@ function pub_type_label_admin(string $t): string {
                 <?php else: ?>
                     <p class="text-muted mb-0">No publications yet. <a href="#" data-bs-toggle="modal" data-bs-target="#addPublicationModal">Add your first publication</a>.</p>
                 <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TAB: Folders ========== -->
+    <div class="tab-pane fade <?= $active_tab === 'folders' ? 'show active' : '' ?>" id="tab-folders" role="tabpanel">
+        <p class="text-muted small mb-3">
+            Sections shown on the Publications page, in order. <strong>System</strong> folders auto-collect documents by their Type and can be renamed/reordered but not deleted. Add your own <strong>custom</strong> folders and assign documents to them on the Documents tab. A folder with no documents is hidden on the public page.
+        </p>
+
+        <div class="card mb-4">
+            <div class="card-header">Add Custom Folder</div>
+            <div class="card-body">
+                <form method="POST" class="row g-2 align-items-end">
+                    <input type="hidden" name="folder_action" value="create">
+                    <div class="col-md-7">
+                        <label class="form-label fw-bold">Folder name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Financial Statements" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Order</label>
+                        <input type="number" name="sort_order" class="form-control" value="100">
+                        <div class="form-text">Lower shows first.</div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">All Folders (<?= count($all_groups) ?>)</div>
+            <div class="card-body">
+                <div class="d-none d-md-flex align-items-center gap-2 px-1 pb-2 mb-1 border-bottom small text-muted fw-bold">
+                    <span style="width:80px">Order</span>
+                    <span class="flex-grow-1">Name</span>
+                    <span style="width:110px">Kind</span>
+                    <span style="width:50px">Docs</span>
+                    <span style="width:140px">Actions</span>
+                </div>
+                <?php foreach ($all_groups as $g): ?>
+                    <div class="d-flex align-items-center gap-2 flex-wrap border-bottom py-2">
+                        <!-- update form: order + name + save -->
+                        <form method="POST" class="d-flex align-items-center gap-2 flex-grow-1 mb-0" style="min-width:0">
+                            <input type="hidden" name="folder_action" value="update">
+                            <input type="hidden" name="id" value="<?= (int)$g['id'] ?>">
+                            <input type="number" name="sort_order" class="form-control form-control-sm"
+                                   value="<?= (int)$g['sort_order'] ?>" style="width:80px" aria-label="Sort order">
+                            <input type="text" name="name" class="form-control form-control-sm flex-grow-1"
+                                   value="<?= htmlspecialchars($g['name']) ?>" required aria-label="Folder name" style="min-width:120px">
+                            <span style="width:110px">
+                                <?php if ((int)$g['is_system']): ?>
+                                    <span class="badge bg-secondary">System</span>
+                                <?php else: ?>
+                                    <span class="badge bg-primary">Custom</span>
+                                <?php endif; ?>
+                            </span>
+                            <span style="width:50px" class="text-muted"><?= (int)$g['pub_count'] ?></span>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                        </form>
+                        <!-- separate delete form (siblings, never nested) -->
+                        <?php if (!(int)$g['is_system']): ?>
+                            <form method="POST" class="mb-0"
+                                  onsubmit="return confirm('Delete this folder? Its documents return to Auto (by type). Files are not deleted.');">
+                                <input type="hidden" name="folder_action" value="delete">
+                                <input type="hidden" name="id" value="<?= (int)$g['id'] ?>">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
@@ -440,6 +617,16 @@ function pub_type_label_admin(string $t): string {
                             <label class="form-label fw-bold">Published Date *</label>
                             <input type="date" name="published_date" class="form-control" required>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Folder</label>
+                        <select name="group_id" class="form-select">
+                            <option value="">Auto (by type)</option>
+                            <?php foreach ($custom_groups as $cg): ?>
+                                <option value="<?= (int)$cg['id'] ?>"><?= htmlspecialchars($cg['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="form-text">"Auto" groups this document under its Type. Pick a custom folder to override.</div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">PDF File *</label>
