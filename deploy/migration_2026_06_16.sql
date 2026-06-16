@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS eswasa_publication_groups (
     created_at  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY uq_type_key (type_key),
     INDEX idx_sort (sort_order)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── 2. SEED the 5 system type groups (idempotent) ─────────────
 -- NULL type_keys (custom folders) are exempt from the unique key, so this only

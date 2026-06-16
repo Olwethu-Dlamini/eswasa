@@ -248,7 +248,7 @@ $gq = $conn->query(
     'SELECT g.*, (
         SELECT COUNT(*) FROM eswasa_publications p
         WHERE p.group_id = g.id
-           OR (p.group_id IS NULL AND p.pub_type = g.type_key)
+           OR (p.group_id IS NULL AND p.pub_type = g.type_key COLLATE utf8mb4_unicode_ci)
      ) AS pub_count
      FROM eswasa_publication_groups g
      ORDER BY g.sort_order ASC, g.id ASC'

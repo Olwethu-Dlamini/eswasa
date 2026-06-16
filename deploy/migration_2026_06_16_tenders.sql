@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS eswasa_tenders (
     closing_date   DATE NOT NULL,
     created_at     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_closing (closing_date)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ── 2. Tender documents (the bid-document pack) ───────────────
 -- Multiple PDFs per tender, each with a display label. Cascade on tender delete
@@ -28,4 +28,4 @@ CREATE TABLE IF NOT EXISTS eswasa_tender_documents (
     sort_order  INT NOT NULL DEFAULT 0,
     created_at  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_tender (tender_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
