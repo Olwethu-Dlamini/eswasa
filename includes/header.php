@@ -110,6 +110,7 @@
                                             <ul class="sub-menu">
                                                 <li><a href="events.php">Events</a></li>
                                                 <li><a href="vacancies.php">Vacancies</a></li>
+                                                <li><a href="tenders.php">Tenders</a></li>
                                                 <li><a href="publications.php">Publications</a></li>
                                                 <li><a href="announcements.php">Announcements</a></li>
                                                 <li><a href="faq.php">FAQ</a></li>
