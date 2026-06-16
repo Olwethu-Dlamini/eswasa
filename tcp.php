@@ -188,6 +188,39 @@ $pc = pc_get_many($conn, $tcp_keys, $tcp_defaults);
         .application-section a { color: #2B3388; }
         .application-section a:hover { color: #2B3388; }
 
+        /* TC Registration Form download */
+        .tc-form-box {
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-left: 3px solid #2B3388;
+            border-radius: 4px;
+            background: rgba(43, 51, 136, 0.04);
+            padding: 26px 28px;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .tc-form-text { flex: 1 1 320px; }
+        .tc-form-text h3 { color: #2B3388; font-weight: 700; font-size: 1.2rem; margin: 0 0 6px; }
+        .tc-form-text p { color: #2B3388; margin: 0; line-height: 1.6; }
+        .tc-form-btn {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #2B3388;
+            color: #fff;
+            border: 1px solid #2B3388;
+            border-radius: 4px;
+            padding: 12px 22px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color .15s ease, color .15s ease;
+        }
+        .tc-form-btn:hover { background: #fff; color: #2B3388; }
+
         @media (max-width: 767.98px) {
             .intro-box { padding: 20px; }
             .tc-benefit-card { padding: 20px; min-height: 0; margin-bottom: 20px; }
@@ -195,6 +228,8 @@ $pc = pc_get_many($conn, $tcp_keys, $tcp_defaults);
             .icon-box { top: 20px; left: 16px; }
             .application-section { padding: 20px; }
             .breadcrumb-content .title { font-size: 1.5rem; }
+            .tc-form-box { padding: 20px; }
+            .tc-form-btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -275,6 +310,17 @@ $pc = pc_get_many($conn, $tcp_keys, $tcp_defaults);
                     <p><strong><?= pc_h($pc['tcp_apply_eligibility']) ?></strong></p>
                     <a href="<?= pc_h($pc['tcp_apply_button_url']) ?>" class="btn btn-tc mt-2" target="_blank"><?= pc_h($pc['tcp_apply_button_text']) ?></a>
                     <p class="mt-3"><?= pc_h($pc['tcp_apply_contact_label']) ?> <a href="mailto:<?= pc_h($pc['tcp_apply_contact_email']) ?>"><?= pc_h($pc['tcp_apply_contact_email']) ?></a>.</p>
+                </div>
+
+                <!-- Technical Committee Registration Form (downloadable) -->
+                <div class="tc-form-box">
+                    <div class="tc-form-text">
+                        <h3><i class="fas fa-file-download me-2"></i>Join a Technical Committee</h3>
+                        <p>Download the Technical Committee Registration Form, complete it, and return it to us to apply to serve on a technical committee.</p>
+                    </div>
+                    <a href="assets/forms/TEC_SDU_FO_004_Technical_Committee_Registration_Form.doc" class="tc-form-btn" target="_blank" rel="noopener">
+                        <i class="fas fa-file-word" aria-hidden="true"></i> TC Registration Form (DOC)
+                    </a>
                 </div>
 
                 <div class="text-center my-5">
