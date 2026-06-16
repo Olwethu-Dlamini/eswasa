@@ -151,7 +151,7 @@ $pc = pc_get_many($conn, [
     'team_section_council_title'   => 'Members of the Council',
     'team_section_executive_title' => 'Executive Team',
     'team_staff_group_photo'       => 'admin/uploads/staff_group_photo.jpg',
-    'team_staff_photo_visible'     => '1',
+    'team_staff_photo_visible'     => '0', // hidden by default; admin opts in
 ]);
 
 // ---------------------------------------------------------------------------
@@ -240,7 +240,7 @@ if (isset($_GET['edit'])) {
             <div class="form-check form-switch mb-3">
                 <input type="checkbox" name="team_staff_photo_visible" value="1"
                        class="form-check-input" id="team_staff_photo_visible"
-                       <?= ($pc['team_staff_photo_visible'] ?? '1') === '1' ? 'checked' : '' ?>>
+                       <?= ($pc['team_staff_photo_visible'] ?? '0') === '1' ? 'checked' : '' ?>>
                 <label class="form-check-label fw-bold" for="team_staff_photo_visible">
                     Show staff group photo on public page
                 </label>

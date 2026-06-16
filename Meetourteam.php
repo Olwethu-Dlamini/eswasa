@@ -19,7 +19,10 @@ $pc = pc_get_many($conn, [
     'team_section_council_title'   => 'Members of the Council',
     'team_section_executive_title' => 'Executive Team',
     'team_staff_group_photo'       => 'admin/uploads/staff_group_photo.jpg',
-    'team_staff_photo_visible'     => '1',
+    // Hidden by default — the photo only shows once an admin ticks the
+    // "Show staff group photo" switch and saves. (The picture is not the
+    // real team, so it must not appear via a fallback.)
+    'team_staff_photo_visible'     => '0',
 ]);
 
 // Team members from dedicated table (live rows only — is_vacant = 0).
@@ -536,7 +539,7 @@ try {
                 <?php endif; ?>
 
                 <!-- Rectangular Group Photo (toggled from admin: team_staff_photo_visible) -->
-                <?php if (($pc['team_staff_photo_visible'] ?? '1') === '1'): ?>
+                <?php if (($pc['team_staff_photo_visible'] ?? '0') === '1'): ?>
                 <div class="text-center">
                     <div class="staff-photo-container mx-auto">
                         <img src="<?= pc_h(pc_image_src($pc['team_staff_group_photo'], 'admin/uploads/staff_group_photo.jpg')) ?>" alt="ESWASA Staff Group Photo" class="staff-photo">
