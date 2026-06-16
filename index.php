@@ -1084,7 +1084,7 @@ if ($am_result) {
   <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v23.0&appId=395042390636886"></script>
 
-<div class="fb-page" data-href="https://www.facebook.com/eswasaupdates" data-tabs="timeline" data-width="" data-height="900" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/eswasaupdates" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/eswasaupdates">Eswatini Standards Authority - SWASA</a></blockquote></div>
+<div class="fb-page" data-href="https://www.facebook.com/eswasaupdates" data-tabs="timeline" data-width="" data-height="900" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/eswasaupdates" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/eswasaupdates">Eswatini Standards Authority - ESWASA</a></blockquote></div>
 
 </div>
 

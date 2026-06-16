@@ -91,8 +91,8 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title><?= pc_h($pc['train_cal_hero_title']) ?> - SWASA</title>
-    <meta name="description" content="View the upcoming training calendar for SWASA. Access the prospectus and apply for courses.">
+    <title><?= pc_h($pc['train_cal_hero_title']) ?> - ESWASA</title>
+    <meta name="description" content="View the upcoming training calendar for ESWASA. Access the prospectus and apply for courses.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">

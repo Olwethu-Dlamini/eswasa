@@ -219,7 +219,7 @@ if (!function_exists('train_about_list_items')) {
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Training - About - ESWASA</title>
-    <meta name="description" content="Discover SWASA's comprehensive training programs designed to empower excellence through knowledge.">
+    <meta name="description" content="Discover ESWASA's comprehensive training programs designed to empower excellence through knowledge.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
