@@ -30,12 +30,6 @@ $cert_keys_defaults = [
     'cert_mark_2_desc'           => 'A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing — giving buyers confidence in quality and safety.',
     'cert_mark_2_explore_url'    => 'Certification.php',
 
-    'cert_mark_3_image'          => 'assets/img/quality/compulsory-standards-black.png',
-    'cert_mark_3_alt'            => 'Compulsory Standards Quality Mark',
-    'cert_mark_3_title'          => 'Compulsory Standards Quality Mark',
-    'cert_mark_3_desc'           => 'A mandatory mark applied to products covered by compulsory technical regulations in Eswatini. Demonstrates compliance has been proven through comprehensive assessment and ongoing surveillance, protecting consumers and supporting fair trade.',
-    'cert_mark_3_explore_url'    => 'Certification.php',
-
     'cert_mark_4_image'          => 'assets/img/quality/ingelo-certification-black.png',
     'cert_mark_4_alt'            => 'Ingelo MSME Product Certification Mark',
     'cert_mark_4_title'          => 'Ingelo MSME Product Certification Mark',
@@ -242,7 +236,7 @@ $cert_split_list = function ($text) {
         /* Certification Marks grid — mirrors index.php pattern */
         .marks-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 28px;
         }
         .mark-item {
@@ -511,17 +505,6 @@ $cert_split_list = function ($text) {
                         <p class="mark-desc"><?= pc_h($pc['cert_mark_2_desc']) ?></p>
                         <div class="mark-actions">
                             <a href="<?= pc_h($pc['cert_mark_2_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-                    <div class="mark-item">
-                        <div class="mark-image">
-                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_3_image'], 'assets/img/quality/compulsory-standards-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_3_alt']) ?>">
-                        </div>
-                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_3_title']) ?></h3>
-                        <p class="mark-desc"><?= pc_h($pc['cert_mark_3_desc']) ?></p>
-                        <div class="mark-actions">
-                            <a href="<?= pc_h($pc['cert_mark_3_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                             <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
