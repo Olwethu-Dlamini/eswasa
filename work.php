@@ -206,12 +206,47 @@ try {
             color: #2B3388;
         }
 
+        /* Public Review Comment Form download */
+        .review-form-box {
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-left: 3px solid #2B3388;
+            border-radius: 4px;
+            background: rgba(43, 51, 136, 0.04);
+            padding: 26px 28px;
+            margin-top: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .review-form-text { flex: 1 1 320px; }
+        .review-form-text h3 { color: #2B3388; font-weight: 700; font-size: 1.2rem; margin: 0 0 6px; }
+        .review-form-text p { color: #2B3388; margin: 0; line-height: 1.6; }
+        .review-form-btn {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #2B3388;
+            color: #fff;
+            border: 1px solid #2B3388;
+            border-radius: 4px;
+            padding: 12px 22px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color .15s ease, color .15s ease;
+        }
+        .review-form-btn:hover { background: #fff; color: #2B3388; }
+
         @media (max-width: 767.98px) {
             .intro-box { padding: 24px; margin: 24px 0 32px 0; }
             .intro-box h3 { font-size: 1.2rem; }
             .wp-list-item { flex-direction: column; align-items: flex-start; padding: 16px; }
             .wp-status { text-align: left; padding-left: 0; min-width: 0; margin-top: 10px; }
             .breadcrumb-content .title { font-size: 1.5rem; }
+            .review-form-box { padding: 20px; }
+            .review-form-btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -281,6 +316,17 @@ try {
                         </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
+                </div>
+
+                <!-- Public Review Comment Form (downloadable) -->
+                <div class="review-form-box">
+                    <div class="review-form-text">
+                        <h3>Public Review &ndash; Submit Your Comments</h3>
+                        <p>Commenting on a draft standard during its public review period? Download the comment form, complete it, and send us your input before the review closes.</p>
+                    </div>
+                    <a href="assets/forms/TEC_SDU_FO_006_Public_Review_Comment_Form.pdf" target="_blank" rel="noopener" class="review-form-btn">
+                        <i class="fas fa-file-pdf" aria-hidden="true"></i> Public Review Comment Form (PDF)
+                    </a>
                 </div>
 
                 <div class="text-center my-5 pt-4">
