@@ -266,7 +266,7 @@ $std_defaults = [
     'std_cta_btn_1_label'            => 'Contact Standards Unit',
     'std_cta_btn_1_url'              => 'contact.php',
     'std_cta_btn_2_label'            => 'Join a Technical Committee',
-    'std_cta_btn_2_url'              => '#technical-committees',
+    'std_cta_btn_2_url'              => 'tcp.php',
     'std_cta_btn_3_label'            => 'Visit estore',
     'std_cta_btn_3_url'              => 'https://estore.eswasa.co.sz/',
 ];
@@ -665,6 +665,64 @@ $pc = pc_get_many($conn, $std_keys, $std_defaults);
             line-height: 1.35;
         }
 
+        /* Related Standards services — teaser cards linking to dedicated pages */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 8px;
+        }
+        .related-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-left: 3px solid #2B3388;
+            border-radius: 4px;
+            padding: 22px 24px;
+            text-decoration: none;
+            color: #2B3388;
+            transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+        }
+        .related-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: #2B3388;
+        }
+        .related-card .related-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 6px;
+            background: rgba(43, 51, 136, 0.08);
+            color: #2B3388;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+        .related-card h4 {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0 0 6px;
+        }
+        .related-card p {
+            color: #2B3388;
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 0 0 14px;
+            flex-grow: 1;
+        }
+        .related-card .related-link {
+            font-weight: 600;
+            color: #2B3388;
+        }
+        .related-card .related-link i { transition: transform .15s ease; }
+        .related-card:hover .related-link i { transform: translateX(3px); }
+
         /* Information Centre image */
         .info-centre-img {
             display: block;
@@ -779,8 +837,9 @@ $pc = pc_get_many($conn, $std_keys, $std_defaults);
                 <!-- Section nav (anchor-jump) -->
                 <nav class="standards-nav mb-4">
                     <a href="#standards-development">Standards Development</a>
-                    <a href="#technical-committees">Technical Committees &amp; Work Programmes</a>
-                    <a href="#purchase-standards">Purchase Standards</a>
+                    <a href="tcp.php">Technical Committees</a>
+                    <a href="work.php">Work Programmes</a>
+                    <a href="purchase.php">Purchase Standards</a>
                     <a href="#information-centre">Information Centre</a>
                 </nav>
 
@@ -887,145 +946,32 @@ $pc = pc_get_many($conn, $std_keys, $std_defaults);
                     </div>
                 </div>
 
-                <!-- ============ TECHNICAL COMMITTEES & WORK PROGRAMMES ============ -->
-                <div id="technical-committees" class="section-anchor">
-                    <h2 class="display-6 fw-bold text-center mt-5 mb-3"><?= pc_h($pc['std_tc_section_title']) ?></h2>
+                <!-- ============ EXPLORE STANDARDS SERVICES (teasers → dedicated pages) ============ -->
+                <div id="standards-services">
+                    <h2 class="display-6 fw-bold text-center mt-5 mb-3">Explore Standards Services</h2>
                     <div class="section-divider mb-4"></div>
-
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_tc_about_title']) ?></h3>
-                        <?= pc_paragraphs_html($pc['std_tc_about_body']) ?>
-                    </div>
-
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_tc_benefits_title']) ?></h3>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="tc-benefit-card">
-                                    <h4><?= pc_h($pc['std_tc_benefit_1_title']) ?></h4>
-                                    <p><?= pc_h($pc['std_tc_benefit_1_body']) ?></p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="tc-benefit-card">
-                                    <h4><?= pc_h($pc['std_tc_benefit_2_title']) ?></h4>
-                                    <p><?= pc_h($pc['std_tc_benefit_2_body']) ?></p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="tc-benefit-card">
-                                    <h4><?= pc_h($pc['std_tc_benefit_3_title']) ?></h4>
-                                    <p><?= pc_h($pc['std_tc_benefit_3_body']) ?></p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="tc-benefit-card">
-                                    <h4><?= pc_h($pc['std_tc_benefit_4_title']) ?></h4>
-                                    <p><?= pc_h($pc['std_tc_benefit_4_body']) ?></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_tc_apply_title']) ?></h3>
-                        <?= pc_paragraphs_html($pc['std_tc_apply_body']) ?>
-                        <div class="mt-3">
-                            <a href="<?= pc_h($pc['std_tc_portal_url']) ?>" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-external-link-alt me-2"></i>Visit the TC Portal</a>
-                            <a href="<?= pc_h($pc['std_tc_register_url']) ?>" class="btn btn-primary"><i class="fas fa-user-plus me-2"></i>Register Interest</a>
-                        </div>
-                    </div>
-
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_workprog_title']) ?></h3>
-                        <?= pc_paragraphs_html($pc['std_workprog_body']) ?>
-                        <div class="mt-3">
-                            <a href="<?= pc_h($pc['std_workprog_url']) ?>" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-calendar-alt me-2"></i>View Work Programme</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ============ PURCHASE STANDARDS ============ -->
-                <div id="purchase-standards" class="section-anchor">
-                    <h2 class="display-6 fw-bold text-center mt-5 mb-3"><?= pc_h($pc['std_purchase_section_title']) ?></h2>
-                    <div class="section-divider mb-4"></div>
-
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_sales_title']) ?></h3>
-                        <?= pc_paragraphs_html($pc['std_sales_body']) ?>
-                        <div class="mt-3">
-                            <a href="<?= pc_h($pc['std_estore_url']) ?>" target="_blank" rel="noopener" class="btn btn-primary"><i class="fas fa-shopping-cart me-2"></i>Visit the ESWASA estore</a>
-                            <a href="<?= pc_h($pc['std_catalogue_url']) ?>" class="btn btn-primary"><i class="fas fa-book me-2"></i>View Standards Catalogue</a>
-                        </div>
-                    </div>
-
-                    <!-- Most Popular Standards (training-page card pattern) -->
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_popular_title']) ?></h3>
-                        <p><?= pc_h($pc['std_popular_intro']) ?></p>
-                        <?php
-                        $popular = [
-                            ['code'=>$pc['std_popular_1_code'], 'name'=>$pc['std_popular_1_name'], 'img'=>pc_image_src($pc['std_popular_1_image'], 'admin/uploads/certificate-iso-9001-colored.svg')],
-                            ['code'=>$pc['std_popular_2_code'], 'name'=>$pc['std_popular_2_name'], 'img'=>pc_image_src($pc['std_popular_2_image'], 'admin/uploads/certificate-iso-14001-colored.svg')],
-                            ['code'=>$pc['std_popular_3_code'], 'name'=>$pc['std_popular_3_name'], 'img'=>pc_image_src($pc['std_popular_3_image'], 'admin/uploads/course-iso-22000.svg')],
-                            ['code'=>$pc['std_popular_4_code'], 'name'=>$pc['std_popular_4_name'], 'img'=>pc_image_src($pc['std_popular_4_image'], 'admin/uploads/certificate-iso-45001-colored.svg')],
-                            ['code'=>$pc['std_popular_5_code'], 'name'=>$pc['std_popular_5_name'], 'img'=>pc_image_src($pc['std_popular_5_image'], 'admin/uploads/course-iso-19011.svg')],
-                            ['code'=>$pc['std_popular_6_code'], 'name'=>$pc['std_popular_6_name'], 'img'=>pc_image_src($pc['std_popular_6_image'], 'admin/uploads/certificate-iso-27001-colored.svg')],
-                        ];
-                        ?>
-                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center mt-2">
-                            <?php foreach ($popular as $s): if ($s['code']==='' && $s['name']==='') continue; ?>
-                            <div class="col">
-                                <div class="card border-0 shadow-sm rounded-3 text-center transition-all hover-lift h-100">
-                                    <div class="add2cart_image">
-                                        <img src="<?= pc_h($s['img']) ?>" alt="<?= pc_h($s['code']) ?> — <?= pc_h($s['name']) ?>" class="img-fluid rounded-top">
-                                    </div>
-                                    <div class="add2cart_details p-4">
-                                        <div class="con_cont">
-                                            <span class="popular-code"><?= pc_h($s['code']) ?></span>
-                                            <a class="add2cart_prod_name d-block mb-3 fw-bold"><?= pc_h($s['name']) ?></a>
-                                            <a href="<?= pc_h($pc['std_estore_url']) ?>" target="_blank" rel="noopener" class="add2cart_btn btn btn-primary btn-sm">
-                                                <i class="fas fa-shopping-cart me-1"></i>Purchase
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <p class="small text-muted mt-4 mb-0 text-center">
-                            For the complete list, browse the <a href="<?= pc_h($pc['std_catalogue_url']) ?>" style="color:#2B3388; text-decoration:underline; font-weight:600;">Standards Catalogue</a> or visit the <a href="<?= pc_h($pc['std_estore_url']) ?>" target="_blank" rel="noopener" style="color:#2B3388; text-decoration:underline; font-weight:600;">estore</a>.
-                        </p>
-                    </div>
-
-                    <!-- Copyrights -->
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_copyright_title']) ?></h3>
-                        <?= pc_paragraphs_html($pc['std_copyright_body']) ?>
-                    </div>
-
-                    <!-- Our Affiliations -->
-                    <div class="highlighted-section">
-                        <h3><?= pc_h($pc['std_affiliations_title']) ?></h3>
-                        <p><?= pc_h($pc['std_affiliations_intro']) ?></p>
-                        <?php
-                        $affiliations = [
-                            ['name'=>$pc['std_aff_1_name'], 'full'=>$pc['std_aff_1_full'], 'img'=>pc_image_src($pc['std_aff_1_image'], 'admin/uploads/iso.png'),  'url'=>$pc['std_aff_1_url']],
-                            ['name'=>$pc['std_aff_2_name'], 'full'=>$pc['std_aff_2_full'], 'img'=>pc_image_src($pc['std_aff_2_image'], 'admin/uploads/iec.png'),  'url'=>$pc['std_aff_2_url']],
-                            ['name'=>$pc['std_aff_3_name'], 'full'=>$pc['std_aff_3_full'], 'img'=>pc_image_src($pc['std_aff_3_image'], 'admin/uploads/arso-2024.png'), 'url'=>$pc['std_aff_3_url']],
-                            ['name'=>$pc['std_aff_4_name'], 'full'=>$pc['std_aff_4_full'], 'img'=>pc_image_src($pc['std_aff_4_image'], 'assets/img/sadcstan.jpg'),'url'=>$pc['std_aff_4_url']],
-                            ['name'=>$pc['std_aff_5_name'], 'full'=>$pc['std_aff_5_full'], 'img'=>pc_image_src($pc['std_aff_5_image'], 'admin/uploads/astm.png'), 'url'=>$pc['std_aff_5_url']],
-                        ];
-                        ?>
-                        <div class="affiliation-grid">
-                            <?php foreach ($affiliations as $a): if ($a['name'] === '') continue; ?>
-                                <a class="affiliation-tile" href="<?= pc_h($a['url']) ?>" <?= $a['url'] === '#' ? 'title="Link coming soon"' : 'target="_blank" rel="noopener"' ?>>
-                                    <img src="<?= pc_h($a['img']) ?>" alt="<?= pc_h($a['name']) ?> logo">
-                                    <div class="affiliation-name"><?= pc_h($a['name']) ?></div>
-                                    <div class="affiliation-full"><?= pc_h($a['full']) ?></div>
-                                </a>
-                            <?php endforeach; ?>
-                        </div>
+                    <p class="text-center mb-4" style="max-width:760px; margin-left:auto; margin-right:auto;">
+                        Beyond developing standards, ESWASA runs Technical Committees, publishes Work Programmes, and sells national and international standards. Each has its own dedicated page.
+                    </p>
+                    <div class="related-grid">
+                        <a class="related-card" href="tcp.php">
+                            <span class="related-icon"><i class="fas fa-users"></i></span>
+                            <h4>Technical Committees</h4>
+                            <p>Join an ESWASA Technical Committee and help develop the Eswatini National Standards (SZNS) for your sector.</p>
+                            <span class="related-link">Technical Committee Platform <i class="fas fa-arrow-right ms-1"></i></span>
+                        </a>
+                        <a class="related-card" href="work.php">
+                            <span class="related-icon"><i class="fas fa-calendar-alt"></i></span>
+                            <h4><?= pc_h($pc['std_workprog_title']) ?></h4>
+                            <p>Review current and scheduled standards development and revision projects, and submit public review comments.</p>
+                            <span class="related-link">View Work Programmes <i class="fas fa-arrow-right ms-1"></i></span>
+                        </a>
+                        <a class="related-card" href="purchase.php">
+                            <span class="related-icon"><i class="fas fa-shopping-cart"></i></span>
+                            <h4><?= pc_h($pc['std_purchase_section_title']) ?></h4>
+                            <p>Purchase SZNS and international standards via the ESWASA office or the online estore, and browse our most popular standards.</p>
+                            <span class="related-link">Purchase Standards <i class="fas fa-arrow-right ms-1"></i></span>
+                        </a>
                     </div>
                 </div>
 
