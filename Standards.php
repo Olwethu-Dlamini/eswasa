@@ -834,15 +834,6 @@ $pc = pc_get_many($conn, $std_keys, $std_defaults);
 
         <section class="py-5">
             <div class="container">
-                <!-- Section nav (anchor-jump) -->
-                <nav class="standards-nav mb-4">
-                    <a href="#standards-development">Standards Development</a>
-                    <a href="tcp.php">Technical Committees</a>
-                    <a href="work.php">Work Programmes</a>
-                    <a href="purchase.php">Purchase Standards</a>
-                    <a href="#information-centre">Information Centre</a>
-                </nav>
-
                 <!-- ============ STANDARDS DEVELOPMENT ============ -->
                 <div id="standards-development">
 
