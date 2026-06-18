@@ -29,7 +29,7 @@ INSERT INTO eswasa_faq (category, question, answer, sort_order) VALUES
 
 ('standards',
  'How do I become a Technical Committee member?',
- 'ESWASA periodically publishes Notices of Intent and calls for Technical Committee participation. Interested stakeholders may submit:\n\n• A curriculum vitae (CV)\n• Areas of expertise\n• Organisational affiliation (where applicable)\n\nMembership is assessed to ensure balanced stakeholder representation and technical competence.\n\nFor more information, see the Technical Committee Platform: Standards.php#technical-committees',
+ 'ESWASA periodically publishes Notices of Intent and calls for Technical Committee participation. Interested stakeholders may submit:\n\n• A curriculum vitae (CV)\n• Areas of expertise\n• Organisational affiliation (where applicable)\n\nMembership is assessed to ensure balanced stakeholder representation and technical competence.\n\nFor more information, see the Technical Committee Platform: tcp.php',
  9),
 
 ('standards',
