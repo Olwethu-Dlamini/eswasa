@@ -676,18 +676,18 @@ $pc = pc_get_many($conn, $std_keys, $std_defaults);
             display: flex;
             flex-direction: column;
             background: #fff;
-            border: 1px solid rgba(43, 51, 136, 0.15);
-            border-left: 3px solid #2B3388;
+            border: 1px solid rgba(43, 51, 136, 0.12);
             border-radius: 4px;
             padding: 22px 24px;
             text-decoration: none;
             color: #2B3388;
+            box-shadow: 0 3px 12px rgba(43, 51, 136, 0.16);
             transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease;
         }
         .related-card:hover {
-            border-color: #2B3388;
-            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
-            transform: translateY(-2px);
+            border-color: rgba(43, 51, 136, 0.25);
+            box-shadow: 0 10px 26px rgba(43, 51, 136, 0.26);
+            transform: translateY(-3px);
             text-decoration: none;
             color: #2B3388;
         }

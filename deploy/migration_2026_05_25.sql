@@ -477,10 +477,10 @@ REPLACE INTO `page_content` VALUES (569,'std_process_step_6_title',NULL,'Approva
 REPLACE INTO `page_content` VALUES (570,'std_process_step_6_body',NULL,'The ESWASA Standards Approvals Committee (SAC) reviews the Final Draft Standard (FDS) on technical grounds and determines whether it may advance to publication.','2026-05-25 04:28:17');
 REPLACE INTO `page_content` VALUES (571,'std_process_step_7_title',NULL,'Endorsement Stage','2026-05-25 04:28:17');
 REPLACE INTO `page_content` VALUES (572,'std_process_step_7_body',NULL,'Final approval as an Eswatini National Standard rests with the ESWASA Council. The availability of the approved standard is notified in the Government Gazette.','2026-05-25 04:28:17');
-REPLACE INTO `page_content` VALUES (573,'std_process_step_7_pill',NULL,'Ôëñ 30 days','2026-05-25 04:28:17');
+REPLACE INTO `page_content` VALUES (573,'std_process_step_7_pill',NULL,'≤ 30 days','2026-05-25 04:28:17');
 REPLACE INTO `page_content` VALUES (574,'std_process_step_8_title',NULL,'Publication Stage','2026-05-25 04:28:17');
 REPLACE INTO `page_content` VALUES (575,'std_process_step_8_body',NULL,'Once endorsed by the ESWASA Council, the text is ready for publication as a published Eswatini National Standard (SZNS).','2026-05-25 04:28:17');
-REPLACE INTO `page_content` VALUES (576,'std_process_step_8_pill',NULL,'Ôëñ 60 days','2026-05-25 04:28:17');
+REPLACE INTO `page_content` VALUES (576,'std_process_step_8_pill',NULL,'≤ 60 days','2026-05-25 04:28:17');
 REPLACE INTO `page_content` VALUES (577,'std_proposal_title',NULL,'Submitting a Standards Proposal','2026-05-25 04:28:17');
 REPLACE INTO `page_content` VALUES (578,'std_proposal_portal_url',NULL,'https://tc.eswasa.co.sz/proposal.php','2026-05-25 04:28:17');
 REPLACE INTO `page_content` VALUES (579,'std_proposal_email_primary',NULL,'standards@eswasa.co.sz','2026-05-25 04:28:17');
