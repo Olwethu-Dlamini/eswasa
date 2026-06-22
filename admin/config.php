@@ -4,18 +4,21 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', "");
-define('DB_NAME', 'eswasa');
+// Database configuration + environment (errors, credentials) live in one
+// place: includes/env.php. It defines DB_HOST / DB_USER / DB_PASS / DB_NAME.
+require_once __DIR__ . '/../includes/env.php';
 
 // Create connection
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    if (APP_ENV === 'development') {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    error_log('DB connection failed: ' . $conn->connect_error);
+    http_response_code(503);
+    die('The admin area is temporarily unavailable. Please try again shortly.');
 }
 $conn->set_charset("utf8mb4");
 
