@@ -149,6 +149,10 @@ function submenu_open($pages, $current) {
                 <?= nav_link('users.php', $current_page, 'fa-user-shield', 'Users') ?>
             </li>
 
+            <li class="nav-item">
+                <?= nav_link('site_settings.php', $current_page, 'fa-gear', 'Site Settings') ?>
+            </li>
+
             <li class="nav-item mt-3 border-top pt-3">
                 <!-- Theme toggle -->
                 <div class="px-3 d-flex align-items-center justify-content-between mb-2">

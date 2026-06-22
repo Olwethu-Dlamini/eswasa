@@ -1,5 +1,21 @@
+<?php
+// Fetch the Google Analytics ID (set in Admin → Site Settings). Defensive:
+// only runs if a DB connection is in scope, never breaks the page if absent.
+$ga4_id = '';
+if (isset($conn) && $conn instanceof mysqli) {
+    if ($res = @$conn->query("SELECT content FROM page_content WHERE page_key='site_ga4_id' LIMIT 1")) {
+        if ($row = $res->fetch_assoc()) {
+            $ga4_id = trim((string)$row['content']);
+        }
+    }
+}
+// Only emit a well-formed id, so nothing odd can be injected into the page.
+if (!preg_match('/^(G|UA|GTM)-[A-Z0-9-]+$/i', $ga4_id)) {
+    $ga4_id = '';
+}
+?>
 <footer style="
-    background-color: #2B3388; 
+    background-color: #2B3388;
     color: #fff; 
     padding: 24px 0 16px; 
     font-family: Arial, Helvetica, sans-serif;
@@ -54,3 +70,13 @@
         </div>
     </div>
 </footer>
+<?php if ($ga4_id !== ''): ?>
+<!-- Google Analytics 4 — configured in Admin → Site Settings -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?= rawurlencode($ga4_id) ?>"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '<?= htmlspecialchars($ga4_id, ENT_QUOTES) ?>');
+</script>
+<?php endif; ?>
