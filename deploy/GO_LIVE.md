@@ -59,8 +59,9 @@ Then import into the production DB (phpMyAdmin Import, or
 
 **After import, run these idempotent patches** (safe to re-run):
 ```
-deploy/patch_fix_mojibake_2026_06_17.sql      # repairs any legacy mojibake
-deploy/patch_banner_urls_2026_06_22.sql       # staging-domain banner links
+deploy/patch_fix_mojibake_2026_06_17.sql       # repairs any legacy mojibake
+deploy/patch_banner_urls_2026_06_22.sql        # staging-domain banner links
+deploy/migration_activity_log_2026_06_22.sql   # creates the audit-trail table
 ```
 Quick check (both should return 0):
 ```sql
@@ -153,6 +154,21 @@ WHERE username = 'admin';
   (Skip if your host isn't Apache or `AllowOverride` is off.)
 
 ---
+
+## 7b. Post-launch config (new admin/SEO features)
+
+- **Analytics**: Admin → **Site Settings** → paste your Google Analytics 4 ID
+  (`G-XXXXXXXXXX`). Tracking turns on site-wide immediately; blank = off.
+- **Audit trail**: Admin → **Activity Log** now records logins, user changes and
+  content edits (needs the `activity_log` migration from §2).
+- **Domain in SEO files**: `robots.txt`, `sitemap.xml`, and the homepage
+  canonical/Open Graph URLs use `https://www.eswasa.co.sz/`. If the live domain
+  differs, find-and-replace that host in those three places.
+- **Submit the sitemap**: in Google Search Console, add the property and submit
+  `https://<your-domain>/sitemap.xml`.
+- **.htaccess**: ships in the bundle and works automatically on Apache (gzip,
+  caching, file protection). No action needed; remove a block only if your host
+  errors on it.
 
 ## 8. Smoke test (do this right after go-live)
 
