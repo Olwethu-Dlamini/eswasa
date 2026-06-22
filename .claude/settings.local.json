@@ -73,7 +73,8 @@
       "Bash(git -C C:/laragon/www/eswasa add customer-feedback.php includes/cms_keys_customer_feedback.php)",
       "Bash(git -C C:/laragon/www/eswasa add admin/pages/customer_feedback.php admin/index.php admin/includes/sidebar.php)",
       "Bash(git -C C:/laragon/www/eswasa add policies.php includes/cms_keys_policies.php admin/sql/migrate_policies.sql)",
-      "Bash(git -C C:/laragon/www/eswasa add admin/pages/policies_edit.php admin/index.php admin/includes/sidebar.php)"
+      "Bash(git -C C:/laragon/www/eswasa add admin/pages/policies_edit.php admin/index.php admin/includes/sidebar.php)",
+      "Bash($PHP *)"
     ]
   }
 }
