@@ -27,13 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_role'] = $user['role'];
             $_SESSION['username'] = $user['username'];
 
+            log_activity($conn, 'login', 'users#' . (int)$user['id'], 'Successful login');
             header('Location: index.php?page=index_edit.php');
             exit();
         } else {
             $error = 'Invalid password.';
+            log_activity($conn, 'login.failed', null, 'Wrong password for username: ' . $username);
         }
     } else {
         $error = 'User not found.';
+        log_activity($conn, 'login.failed', null, 'Unknown username: ' . $username);
     }
 }
 ?>

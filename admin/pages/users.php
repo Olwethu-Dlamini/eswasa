@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_user'])) {
         }
         if ($stmt && $stmt->execute()) {
             set_flash('success', 'User updated.');
+            log_activity($conn, 'user.update', 'users#' . $id, 'Updated user ' . $username);
         } else {
             set_flash('danger', 'Update failed: ' . ($conn->error ?? 'unknown error'));
         }
@@ -53,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_user'])) {
         $stmt->bind_param('ssss', $username, $email, $role, $hash);
         if ($stmt && $stmt->execute()) {
             set_flash('success', 'User created.');
+            log_activity($conn, 'user.create', 'users#' . $conn->insert_id, 'Created user ' . $username . ' (' . $email . ')');
         } else {
             $msg = $conn->error ?? 'unknown error';
             // Friendlier dup-key message
@@ -81,6 +83,7 @@ if (isset($_GET['delete_user'])) {
     $stmt->bind_param('i', $del_id);
     if ($stmt && $stmt->execute()) {
         set_flash('success', 'User deleted.');
+        log_activity($conn, 'user.delete', 'users#' . $del_id, 'Deleted user');
     } else {
         set_flash('danger', 'Delete failed.');
     }

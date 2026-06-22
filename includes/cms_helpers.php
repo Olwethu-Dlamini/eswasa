@@ -66,6 +66,16 @@ if (!function_exists('pc_save_many')) {
                 $errors[] = (string)$k;
             }
         }
+        // Audit trail (admin only — log_activity is defined in admin/config.php).
+        if (function_exists('log_activity') && count($kv) > 0) {
+            $saved = count($kv) - count($errors);
+            if ($saved > 0) {
+                $page = isset($_GET['page']) ? basename((string)$_GET['page']) : 'admin';
+                $keys = implode(', ', array_slice(array_keys($kv), 0, 5));
+                if (count($kv) > 5) $keys .= ', …';
+                log_activity($conn, 'content.save', $page, $saved . ' field(s): ' . $keys);
+            }
+        }
         return $errors;
     }
 }

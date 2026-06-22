@@ -77,3 +77,26 @@ function redirect_self() {
     header('Location: ' . $url);
     exit;
 }
+
+// Record an entry in the audit trail (activity_log table). Best-effort:
+// never throws and never blocks the action if logging fails (e.g. the table
+// hasn't been migrated yet on a fresh host).
+//   $action  short verb, e.g. 'login', 'user.create', 'content.save'
+//   $entity  what was acted on, e.g. 'users#5' or 'Home Page'
+//   $details optional human-readable extra context
+function log_activity(mysqli $conn, string $action, ?string $entity = null, ?string $details = null) {
+    $uid   = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : null;
+    $uname = $_SESSION['username'] ?? null;
+    $ip    = $_SERVER['REMOTE_ADDR'] ?? null;
+    $stmt  = @$conn->prepare(
+        "INSERT INTO activity_log (user_id, username, action, entity, details, ip_address)
+         VALUES (?, ?, ?, ?, ?, ?)"
+    );
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param('isssss', $uid, $uname, $action, $entity, $details, $ip);
+    $ok = @$stmt->execute();
+    $stmt->close();
+    return $ok;
+}

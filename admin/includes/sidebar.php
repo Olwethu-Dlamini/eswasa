@@ -150,6 +150,10 @@ function submenu_open($pages, $current) {
             </li>
 
             <li class="nav-item">
+                <?= nav_link('activity_log.php', $current_page, 'fa-clipboard-list', 'Activity Log') ?>
+            </li>
+
+            <li class="nav-item">
                 <?= nav_link('site_settings.php', $current_page, 'fa-gear', 'Site Settings') ?>
             </li>
 
