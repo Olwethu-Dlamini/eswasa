@@ -49,8 +49,8 @@ try {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>ESWASA - Meet Our Team</title>
-    <meta name="description" content="">
+    <title>Meet Our Team &amp; Board — Eswatini Standards Authority (ESWASA)</title>
+    <meta name="description" content="Meet the leadership, board and team behind the Eswatini Standards Authority (ESWASA) driving standards, certification and quality assurance in Eswatini.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
     <!-- Place favicon.ico in the root directory -->

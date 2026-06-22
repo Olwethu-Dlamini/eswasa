@@ -127,9 +127,18 @@ if ($am_result) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>ESWASA - Eswatini Standards Authority</title>
-    <meta name="description" content="">
+    <title>Eswatini Standards Authority (ESWASA) — Standards, Certification &amp; Metrology</title>
+    <meta name="description" content="ESWASA is Eswatini's national standards body — developing national standards and providing accredited certification, quality marks, training and metrology services.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="https://www.eswasa.co.sz/">
+    <!-- Open Graph / social sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Eswatini Standards Authority">
+    <meta property="og:title" content="Eswatini Standards Authority (ESWASA)">
+    <meta property="og:description" content="Eswatini's national standards body — national standards, accredited certification, quality marks, training and metrology services.">
+    <meta property="og:url" content="https://www.eswasa.co.sz/">
+    <meta property="og:image" content="https://www.eswasa.co.sz/assets/img/logo/ESWASA_LOGO.jpg">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
     <!-- CSS here -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
