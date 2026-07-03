@@ -1,0 +1,68 @@
+/* Shared CTA Button Styles — works anywhere */
+.btn-cta {
+    background: #2B3388;
+    color: #fff;
+    padding: 14px 30px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 8px 10px;
+    border: 2px solid #2B3388;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    cursor: pointer;
+}
+.btn-cta:hover {
+    background: rgba(43, 51, 136, 0.85);
+    border-color: rgba(43, 51, 136, 0.85);
+    color: #fff;
+}
+
+/* CTA Journey Section Styles */
+.cta-journey-section {
+    background: rgba(43, 51, 136, 0.06);
+    padding: 80px 0;
+    width: 100%;
+    clear: both;
+    display: block;
+    float: none;
+}
+.cta-journey-section .cta-title {
+    color: #2B3388;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+    position: relative;
+    padding-bottom: 18px;
+}
+.cta-journey-section .cta-title::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: #2B3388;
+}
+.cta-journey-section .cta-subtitle {
+    color: rgba(43, 51, 136, 0.75);
+    font-size: 15px;
+    margin-bottom: 35px;
+}
+
+@media (max-width: 767.98px) {
+    .cta-journey-section {
+        padding: 50px 0;
+    }
+    .cta-journey-section .cta-title {
+        font-size: 26px;
+    }
+    .btn-cta {
+        padding: 12px 22px;
+        font-size: 14px;
+        margin: 6px 5px;
+    }
+}
