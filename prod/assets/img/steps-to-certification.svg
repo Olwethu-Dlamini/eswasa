@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" fill="none">
+  <defs>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- ===================== STEP 01: Training and Documentation ===================== -->
+  <g>
+    <!-- colour arc (open-left C on the right of the circle) -->
+    <path d="M164,70.3 A92 92 0 1 1 164,229.7" stroke="#14264A" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <circle cx="210" cy="150" r="82" fill="#fff" stroke="#ECECEC" stroke-width="1.5" filter="url(#soft)"/>
+    <text x="210" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#14264A">01</text>
+    <line x1="194" y1="138" x2="226" y2="138" stroke="#14264A" stroke-width="1.5"/>
+    <text x="210" y="166" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#14264A">TRAINING AND</text>
+    <text x="210" y="187" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#14264A">DOCUMENTATION</text>
+    <!-- small icon badge: document + check -->
+    <g>
+      <circle cx="320" cy="200" r="24" fill="#fff" stroke="#ECECEC" stroke-width="1.5" filter="url(#soft)"/>
+      <g transform="translate(320,200)" stroke="#14264A" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="-6" y="-8" width="12" height="16" rx="2"/>
+        <path d="M-3,0 l2,2 l5,-6"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ===================== STEP 02: Audit and Certification ===================== -->
+  <g>
+    <path d="M554,70.3 A92 92 0 1 1 554,229.7" stroke="#ED1C24" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <circle cx="600" cy="150" r="82" fill="#fff" stroke="#ECECEC" stroke-width="1.5" filter="url(#soft)"/>
+    <text x="600" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#14264A">02</text>
+    <line x1="584" y1="138" x2="616" y2="138" stroke="#14264A" stroke-width="1.5"/>
+    <text x="600" y="166" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#14264A">AUDIT AND</text>
+    <text x="600" y="187" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#14264A">CERTIFICATION</text>
+    <!-- small icon badge: magnifier + check -->
+    <g>
+      <circle cx="710" cy="200" r="24" fill="#fff" stroke="#ECECEC" stroke-width="1.5" filter="url(#soft)"/>
+      <g transform="translate(710,200)" stroke="#14264A" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="-2" cy="-2" r="5.5"/>
+        <line x1="2.2" y1="2.2" x2="7.5" y2="7.5"/>
+        <path d="M-4.4,-2.4 l1.6,1.6 l3,-3.4"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ===================== STEP 03: ISO Certified ===================== -->
+  <g>
+    <path d="M944,70.3 A92 92 0 1 1 944,229.7" stroke="#27AE60" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <circle cx="990" cy="150" r="82" fill="#fff" stroke="#ECECEC" stroke-width="1.5" filter="url(#soft)"/>
+    <text x="990" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#14264A">03</text>
+    <line x1="974" y1="138" x2="1006" y2="138" stroke="#14264A" stroke-width="1.5"/>
+    <text x="990" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#14264A">ISO CERTIFIED</text>
+    <!-- small icon badge: shield + check -->
+    <g>
+      <circle cx="1100" cy="200" r="24" fill="#fff" stroke="#ECECEC" stroke-width="1.5" filter="url(#soft)"/>
+      <g transform="translate(1100,200)" stroke="#14264A" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M0,-9 l8,3 v5 c0,4.5 -3.3,6.8 -8,9 c-4.7,-2.2 -8,-4.5 -8,-9 v-5 z"/>
+        <path d="M-3.4,0 l2,2 l4.4,-4.6"/>
+      </g>
+    </g>
+  </g>
+</svg>
