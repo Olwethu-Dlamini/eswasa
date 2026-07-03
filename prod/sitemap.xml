@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ESWASA sitemap. If the production domain differs from www.eswasa.co.sz,
+  find-and-replace the host below (and in robots.txt). Add a new <url> block
+  when you add a public page.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.eswasa.co.sz/index.php</loc><priority>1.0</priority></url>
+  <url><loc>https://www.eswasa.co.sz/about-us.php</loc><priority>0.8</priority></url>
+  <url><loc>https://www.eswasa.co.sz/Meetourteam.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/services.php</loc><priority>0.8</priority></url>
+  <url><loc>https://www.eswasa.co.sz/Standards.php</loc><priority>0.8</priority></url>
+  <url><loc>https://www.eswasa.co.sz/Certification.php</loc><priority>0.8</priority></url>
+  <url><loc>https://www.eswasa.co.sz/managementsystems.php</loc><priority>0.7</priority></url>
+  <url><loc>https://www.eswasa.co.sz/product.php</loc><priority>0.7</priority></url>
+  <url><loc>https://www.eswasa.co.sz/ingelo.php</loc><priority>0.7</priority></url>
+  <url><loc>https://www.eswasa.co.sz/Calibration.php</loc><priority>0.7</priority></url>
+  <url><loc>https://www.eswasa.co.sz/certification-status.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/tcp.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/work.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/purchase.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/training-about.php</loc><priority>0.7</priority></url>
+  <url><loc>https://www.eswasa.co.sz/training-calendar.php</loc><priority>0.7</priority></url>
+  <url><loc>https://www.eswasa.co.sz/publications.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/events.php</loc><priority>0.5</priority></url>
+  <url><loc>https://www.eswasa.co.sz/announcements.php</loc><priority>0.5</priority></url>
+  <url><loc>https://www.eswasa.co.sz/tenders.php</loc><priority>0.5</priority></url>
+  <url><loc>https://www.eswasa.co.sz/vacancies.php</loc><priority>0.5</priority></url>
+  <url><loc>https://www.eswasa.co.sz/faq.php</loc><priority>0.5</priority></url>
+  <url><loc>https://www.eswasa.co.sz/contact.php</loc><priority>0.7</priority></url>
+  <url><loc>https://www.eswasa.co.sz/policies.php</loc><priority>0.4</priority></url>
+  <url><loc>https://www.eswasa.co.sz/service-charter.php</loc><priority>0.4</priority></url>
+  <url><loc>https://www.eswasa.co.sz/customer-feedback.php</loc><priority>0.4</priority></url>
+  <url><loc>https://www.eswasa.co.sz/disclaimer.php</loc><priority>0.2</priority></url>
+  <url><loc>https://www.eswasa.co.sz/terms.php</loc><priority>0.2</priority></url>
+  <url><loc>https://www.eswasa.co.sz/privacy.php</loc><priority>0.2</priority></url>
+</urlset>
