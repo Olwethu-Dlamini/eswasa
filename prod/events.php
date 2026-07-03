@@ -1,0 +1,362 @@
+<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Events - ESWASA</title>
+    <meta name="description" content="Stay updated with upcoming events, workshops, and conferences organized by the Eswatini Standards Authority (ESWASA).">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/tg-cursor.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- Keep other CSS if needed, but main.css should include your custom styles -->
+    <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: #2B3388 !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
+        .btn-event {
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
+            margin: 5px;
+        }
+        .btn-event:hover {
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
+        }
+
+        /* Event item — borders over shadows. Equal-height cards in a row. */
+        .events__item {
+            transition: border-color .25s ease, box-shadow .25s ease;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .events__item:hover {
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
+        }
+        .events__item-thumb { position: relative; }
+        .events__item-thumb img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .events__item-content {
+            padding: 16px;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .events__item-content .title {
+            font-size: 1.05rem;
+            margin: 0 0 10px;
+            line-height: 1.35;
+            min-height: 2.7em; /* hold 2 lines so card titles align */
+        }
+        .events__item-content .title a {
+            color: #2B3388;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .events__item-content .title a:hover {
+            color: #2B3388;
+        }
+        .events__meta {
+            margin-top: auto;
+            color: #2B3388;
+            font-size: 0.9rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 10px;
+        }
+        .events__meta .location i,
+        .events__meta .event-date i { margin-right: 4px; }
+        .events__meta .event-date {
+            font-size: 0.8rem;
+            color: rgba(43, 51, 136, 0.75);
+        }
+        .events__meta .sep {
+            color: rgba(43, 51, 136, 0.35);
+        }
+
+        /* Recent Events Sidebar */
+        .rc-post-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(43, 51, 136, 0.12);
+        }
+        .rc-post-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .rc-post-thumb {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            overflow: hidden;
+            border-radius: 3px;
+            border: 1px solid rgba(43, 51, 136, 0.12);
+        }
+        .rc-post-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .rc-post-content .title a {
+            font-size: 0.95rem;
+            line-height: 1.3;
+            color: #2B3388;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .rc-post-content .title a:hover {
+            color: #2B3388;
+        }
+        .rc-post-content .date {
+            font-size: 0.8rem;
+            color: #2B3388;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* Pagination — theme-aligned */
+        .pagination__wrap ul li a {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.25);
+            color: #2B3388 !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 0.95rem !important;
+            font-weight: 600 !important;
+            min-width: 45px;
+            width: auto;
+            padding: 0 14px;
+        }
+        .pagination__wrap ul li.active a,
+        .pagination__wrap ul li a:hover {
+            background: #2B3388;
+            border-color: #2B3388;
+            color: #fff !important;
+        }
+
+        @media (max-width: 767.98px) {
+            .events__item-thumb img { height: 170px; }
+            .rc-post-thumb { width: 52px; height: 52px; }
+            .pagination__wrap ul li a { min-width: 38px; height: 38px; font-size: 0.9rem !important; padding: 0 10px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="scroll__top scroll-to-target" data-target="html">
+        <i class="fas fa-angle-up"></i>
+    </button>
+    <?php include("includes/header.php")?>
+
+    <?php
+    $conn->set_charset("utf8mb4");
+
+    // Pagination — 6 events per page
+    $per_page = 6;
+    $page = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
+
+    $total_events = 0;
+    if ($cnt = $conn->query("SELECT COUNT(*) AS c FROM eswasa_events")) {
+        $row = $cnt->fetch_assoc();
+        $total_events = (int)($row['c'] ?? 0);
+    }
+    $total_pages = max(1, (int)ceil($total_events / $per_page));
+    if ($page > $total_pages) $page = $total_pages;
+    $offset = ($page - 1) * $per_page;
+
+    // Page slice — ORDER BY date ASC. Bind LIMIT/OFFSET as params (mysqli supports it).
+    $result = null;
+    if ($stmt = $conn->prepare("SELECT * FROM eswasa_events ORDER BY event_date ASC LIMIT ? OFFSET ?")) {
+        $stmt->bind_param('ii', $per_page, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    }
+
+    // Fetch recent events for sidebar (latest 4)
+    $recent_result = $conn->query("
+        SELECT id, title, event_date, image
+        FROM eswasa_events
+        ORDER BY event_date DESC
+        LIMIT 4
+    ");
+    ?>
+
+    <main class="main-area fix">
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('events', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-content">
+                            <nav class="breadcrumb">
+                                <span><a href="index.php">Home</a></span>
+                                <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
+                                <span>Events</span>
+                            </nav>
+                            <h3 class="title">Our ESWASA Events</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="events-area section-pt-120 section-pb-90">
+            <div class="container">
+                <div class="row">
+                    <!-- Main Events Grid -->
+                    <div class="col-xl-9 col-lg-8">
+                        <div class="row events__wrapper">
+                            <?php if ($result && $result->num_rows > 0): ?>
+                                <?php while ($event = $result->fetch_assoc()): ?>
+                                    <?php
+                                    $date = date('d M, Y', strtotime($event['event_date']));
+                                    $image = !empty($event['image']) ? 'admin/uploads/' . htmlspecialchars($event['image']) : 'assets/img/default-event.jpg';
+                                    ?>
+                                    <div class="col-xl-4 col-md-6 d-flex">
+                                        <div class="events__item shine__animate-item">
+                                            <div class="events__item-thumb">
+                                                <a href="event-details.php?id=<?= (int)$event['id'] ?>" class="shine__animate-link">
+                                                    <img src="<?= $image ?>" alt="<?= htmlspecialchars($event['title']) ?>">
+                                                </a>
+                                            </div>
+                                            <div class="events__item-content">
+                                                <h4 class="title">
+                                                    <a href="event-details.php?id=<?= (int)$event['id'] ?>">
+                                                        <?= htmlspecialchars($event['title']) ?>
+                                                    </a>
+                                                </h4>
+                                                <div class="events__meta">
+                                                    <span class="location">
+                                                        <i class="fas fa-map-marker-alt"></i><?= htmlspecialchars($event['location'] ?: 'Online') ?>
+                                                    </span>
+                                                    <span class="sep">&middot;</span>
+                                                    <span class="event-date">
+                                                        <i class="far fa-calendar-alt"></i><?= $date ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endwhile; ?>
+                            <?php else: ?>
+                                <div class="col-12">
+                                    <p class="text-center py-5">No upcoming events scheduled.</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if ($total_pages > 1): ?>
+                            <nav class="pagination__wrap mt-30" aria-label="Events pagination">
+                                <ul class="list-wrap">
+                                    <?php if ($page > 1): ?>
+                                        <li><a href="?p=<?= $page - 1 ?>" aria-label="Previous page">&laquo; Prev</a></li>
+                                    <?php endif; ?>
+                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                        <li class="<?= $i === $page ? 'active' : '' ?>">
+                                            <a href="?p=<?= $i ?>"><?= $i ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <?php if ($page < $total_pages): ?>
+                                        <li><a href="?p=<?= $page + 1 ?>" aria-label="Next page">Next &raquo;</a></li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="col-xl-3 col-lg-4 order-2 order-lg-0">
+                        <div class="events__sidebar">
+                            <!-- Filter Form (non-functional for now) -->
+                            <div class="blog-widget">
+                                <h4 class="widget-title">Find Your Events</h4>
+                                <div class="events__sidebar-filter">
+                                    <form action="#" method="GET">
+                                        <div class="form-grp mb-2">
+                                            <input type="text" class="form-control" placeholder="Keywords" name="q">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Recent Events -->
+                            <?php if ($recent_result && $recent_result->num_rows > 0): ?>
+                            <div class="blog-widget">
+                                <h4 class="widget-title">Recent ESWASA Events</h4>
+                                <?php while ($event = $recent_result->fetch_assoc()): ?>
+                                    <?php
+                                    $thumb = !empty($event['image']) ? 'admin/uploads/' . htmlspecialchars($event['image']) : 'assets/img/default-thumb.jpg';
+                                    $date = date('d M, Y', strtotime($event['event_date']));
+                                    ?>
+                                    <div class="rc-post-item">
+                                        <div class="rc-post-thumb">
+                                            <a href="event-details.php?id=<?= (int)$event['id'] ?>">
+                                                <img src="<?= $thumb ?>" alt="<?= htmlspecialchars($event['title']) ?>">
+                                            </a>
+                                        </div>
+                                        <div class="rc-post-content">
+                                            <h4 class="title">
+                                                <a href="event-details.php?id=<?= (int)$event['id'] ?>">
+                                                    <?= htmlspecialchars($event['title']) ?>
+                                                </a>
+                                            </h4>
+                                            <span class="date"><i class="far fa-calendar-alt"></i> <?= $date ?></span>
+                                        </div>
+                                    </div>
+                                <?php endwhile; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <?php include("includes/footer.php")?>
+
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/tg-cursor.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

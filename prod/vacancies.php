@@ -1,0 +1,484 @@
+<?php
+include_once __DIR__ . '/includes/db_connect.php';
+$conn->set_charset('utf8mb4');
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+
+require __DIR__ . '/includes/cms_keys_vacancies.php';
+$pc = pc_get_many($conn, $vacancies_keys, $vacancies_defaults);
+
+// Render apply body with [email] placeholder → mailto link
+$apply_email_html = '<a href="mailto:' . pc_h($pc['vacancies_hr_email']) . '">' . pc_h($pc['vacancies_hr_email']) . '</a>';
+$apply_body_html = str_replace('[email]', $apply_email_html, pc_paragraphs_html($pc['vacancies_apply_body']));
+?>
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Vacancies - ESWASA</title>
+    <meta name="description" content="Explore current job opportunities at the Eswatini Standards Authority (ESWASA).">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/select2.min.css">
+    <link rel="stylesheet" href="assets/css/odometer.css">
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/aos.css">
+    <link rel="stylesheet" href="assets/css/spacing.css">
+    <link rel="stylesheet" href="assets/css/tg-cursor.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: #2B3388 !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
+        /* BASE STYLES & BRANDING */
+        :root {
+            --eswasa-blue: #2B3388;
+            --eswasa-dark: rgba(43, 51, 136, 0.85);
+            --eswasa-light-blue: rgba(43, 51, 136, 0.04);
+        }
+
+        .vacancy-area {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .vacancy-card {
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            padding: 25px;
+            margin-bottom: 25px;
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        .vacancy-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
+        }
+        .vacancy-title {
+            color: #2B3388;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+        }
+        .vacancy-meta {
+            color: #2B3388;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(43, 51, 136, 0.15);
+        }
+        .vacancy-meta span {
+            margin-right: 25px;
+            display: inline-block;
+        }
+        .vacancy-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .vacancy-description ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        .vacancy-description ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: #2B3388;
+        }
+        .vacancy-description ul li::before {
+            content: "—";
+            color: #2B3388;
+            font-weight: normal;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        .vacancy-application-link a {
+            display: inline-block;
+            background-color: #2B3388;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid #2B3388;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .vacancy-application-link a:hover {
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
+        }
+
+        /* General Application Info Box */
+        .info-box {
+            background-color: rgba(43, 51, 136, 0.04);
+            border-radius: 4px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+        }
+        .info-box h3 {
+            color: #2B3388;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        /* Intro variant — canonical centered title + 60px section-divider */
+        .info-box.is-intro { text-align: center; }
+        .info-box.is-intro h3 { margin-bottom: 0; }
+        .info-box.is-intro .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 24px;
+            border-radius: 0;
+        }
+        .info-box.is-intro p { text-align: left; }
+        .info-box p a {
+            color: #2B3388;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .info-box p a:hover {
+            color: #2B3388;
+            text-decoration: underline;
+        }
+
+        /* Modal Styles - Match Public Page Exactly */
+        #vacancyModal .modal-content {
+            border-radius: 4px;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
+        }
+        #vacancyModal .modal-header {
+            background-color: rgba(43, 51, 136, 0.04);
+            border-bottom: 1px solid rgba(43, 51, 136, 0.15);
+            padding: 20px 30px;
+        }
+        #vacancyModal .modal-title {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        #vacancyModal .modal-body {
+            padding: 30px;
+        }
+        #vacancyModal .modal-meta {
+            color: #2B3388;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(43, 51, 136, 0.15);
+        }
+        #vacancyModal .modal-meta span {
+            margin-right: 25px;
+            display: inline-block;
+        }
+
+        /* Description & Responsibilities in Modal */
+        #vacancyModal .vacancy-full-description {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        #vacancyModal .vacancy-full-responsibilities h5 {
+            margin: 20px 0 15px 0;
+            color: #2B3388;
+            font-weight: 700;
+        }
+        #vacancyModal .vacancy-full-responsibilities ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        #vacancyModal .vacancy-full-responsibilities ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: #2B3388;
+        }
+        #vacancyModal .vacancy-full-responsibilities ul li::before {
+            content: "—";
+            color: #2B3388;
+            font-weight: normal;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        /* Modal Buttons */
+        #vacancyModal .btn-apply {
+            background-color: #2B3388;
+            color: #fff;
+            border: 1px solid #2B3388;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        #vacancyModal .btn-apply:hover {
+            background-color: rgba(43, 51, 136, 0.85);
+            border-color: rgba(43, 51, 136, 0.85);
+            color: #fff;
+        }
+        #vacancyModal .btn-secondary {
+            background-color: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.30);
+            padding: 10px 20px;
+            border-radius: 4px;
+            color: #2B3388;
+        }
+        #vacancyModal .btn-secondary:hover {
+            background-color: #2B3388;
+            color: #fff;
+            border-color: #2B3388;
+        }
+
+        @media (max-width: 767.98px) {
+            .vacancy-card {
+                padding: 18px;
+            }
+            .vacancy-title {
+                font-size: 1.2rem;
+            }
+            .vacancy-meta span {
+                display: block;
+                margin-right: 0;
+                margin-bottom: 4px;
+            }
+            .info-box {
+                padding: 18px;
+            }
+            #vacancyModal .modal-body {
+                padding: 20px;
+            }
+            #vacancyModal .modal-header {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="scroll__top scroll-to-target" data-target="html">
+        <i class="fas fa-angle-up"></i>
+    </button>
+    <?php include("includes/header.php")?>
+
+    <?php
+    $vacancies = $conn->query("
+        SELECT * FROM eswasa_vacancies
+        WHERE closing_date >= CURDATE()
+        ORDER BY closing_date ASC
+    ");
+    ?>
+
+    <main class="main-area fix">
+
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('vacancies', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-content">
+                            <nav class="breadcrumb">
+                                <span><a href="index.php"><?= pc_h($pc['vacancies_breadcrumb_home_label']) ?></a></span>
+                                <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
+                                <span><?= pc_h($pc['vacancies_breadcrumb_current_label']) ?></span>
+                            </nav>
+                            <h3 class="title"><?= pc_h($pc['vacancies_breadcrumb_title']) ?></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="vacancy-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        
+                        <div class="info-box is-intro">
+                            <h3><?= pc_h($pc['vacancies_intro_title']) ?></h3>
+                            <div class="section-divider"></div>
+                            <?= pc_paragraphs_html($pc['vacancies_intro_body']) ?>
+                        </div>
+
+                        <h2><?= pc_h($pc['vacancies_section_title']) ?></h2>
+                        <div class="section-divider" style="margin-left: 0; margin-right: 0; margin-bottom: 25px;"></div>
+                        
+                        <?php if ($vacancies && $vacancies->num_rows > 0): ?>
+                            <?php while ($v = $vacancies->fetch_assoc()): ?>
+                                <div class="vacancy-card" onclick="showVacancyDetails(
+                                    '<?= addslashes($v['title']) ?>',
+                                    '<?= addslashes($v['location']) ?>',
+                                    '<?= date('Y-m-d', strtotime($v['closing_date'])) ?>',
+                                    `<?= addslashes($v['description']) ?>`,
+                                    `<?= addslashes($v['responsibilities']) ?>`
+                                )">
+                                    <h4 class="vacancy-title"><?= htmlspecialchars($v['title']) ?></h4>
+                                    <div class="vacancy-meta">
+                                        <span>Location: <?= htmlspecialchars($v['location']) ?></span>
+                                        <span>Closing Date: <?= date('Y-m-d', strtotime($v['closing_date'])) ?></span>
+                                    </div>
+                                    <div class="vacancy-description">
+                                        <p><?= nl2br(htmlspecialchars($v['description'])) ?></p>
+                                        <?php if (!empty($v['responsibilities'])): ?>
+                                            <p><strong>Key Responsibilities:</strong></p>
+                                            <ul>
+                                                <?php
+                                                $lines = explode("\n", trim($v['responsibilities']));
+                                                $count = 0;
+                                                foreach ($lines as $line):
+                                                    $line = trim($line);
+                                                    if (!empty($line) && $count < 3):
+                                                        $count++;
+                                                ?>
+                                                        <li><?= htmlspecialchars($line) ?></li>
+                                                <?php
+                                                    endif;
+                                                endforeach;
+                                                if (count(array_filter($lines)) > 3): ?>
+                                                    <li><em>...and more responsibilities</em></li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="vacancy-application-link">
+                                        <a href="#" onclick="event.stopPropagation(); showVacancyDetails(
+                                            '<?= addslashes($v['title']) ?>',
+                                            '<?= addslashes($v['location']) ?>',
+                                            '<?= date('Y-m-d', strtotime($v['closing_date'])) ?>',
+                                            `<?= addslashes($v['description']) ?>`,
+                                            `<?= addslashes($v['responsibilities']) ?>`
+                                        ); return false;">View Details & Apply</a>
+                                    </div>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <div class="text-center py-5">
+                                <p><?= pc_h($pc['vacancies_empty_state']) ?></p>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="info-box" style="margin-top: 30px;">
+                            <h3><?= pc_h($pc['vacancies_apply_title']) ?></h3>
+                            <?= $apply_body_html ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Single Modal for Vacancy Details -->
+    <div class="modal fade" id="vacancyModal" tabindex="-1" aria-labelledby="vacancyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="vacancyModalLabel">Position Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-meta">
+                        <span>Location: <span id="modalLocation"></span></span>
+                        <span>Closing Date: <span id="modalClosingDate"></span></span>
+                    </div>
+                    
+                    <div class="vacancy-full-description" id="modalFullDescription"></div>
+                    
+                    <div class="vacancy-full-responsibilities" id="modalFullResponsibilities"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="#" class="btn-apply" id="applyEmailLink" target="_blank">Apply for this Position</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php include("includes/footer.php")?>
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/tg-cursor.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    
+    <script>
+        var ESWASA_HR_EMAIL = <?= json_encode($pc['vacancies_hr_email']) ?>;
+
+        function showVacancyDetails(title, location, closingDate, description, responsibilities) {
+            // Set title
+            document.getElementById('vacancyModalLabel').textContent = title;
+            
+            // Set meta
+            document.getElementById('modalLocation').textContent = location;
+            document.getElementById('modalClosingDate').textContent = closingDate;
+            
+            // Set description
+            document.getElementById('modalFullDescription').innerHTML = 
+                '<p>' + description.replace(/\n/g, '<br>') + '</p>';
+            
+            // Set responsibilities
+            const respContainer = document.getElementById('modalFullResponsibilities');
+            if (responsibilities && responsibilities.trim()) {
+                const lines = responsibilities.split('\n').filter(line => line.trim() !== '');
+                let html = '<p><strong>Key Responsibilities:</strong></p><ul>';
+                lines.forEach(line => {
+                    html += '<li>' + line.trim() + '</li>';
+                });
+                html += '</ul>';
+                respContainer.innerHTML = html;
+            } else {
+                respContainer.innerHTML = '';
+            }
+            
+            // Set email link
+            const emailSubject = encodeURIComponent('Job Application: ' + title);
+            const emailBody = encodeURIComponent(
+                'Dear ESWASA Hiring Team,\n\n' +
+                'I am writing to apply for the position of ' + title + '.\n\n' +
+                'Please find my CV and cover letter attached.\n\n' +
+                'Thank you for your consideration.\n\n' +
+                'Best regards,\n[Your Name]'
+            );
+            document.getElementById('applyEmailLink').href =
+                'mailto:' + ESWASA_HR_EMAIL + '?subject=' + emailSubject + '&body=' + emailBody;
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('vacancyModal'));
+            modal.show();
+        }
+    </script>
+
+</body>
+</html>

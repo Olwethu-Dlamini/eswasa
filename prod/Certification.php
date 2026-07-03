@@ -1,0 +1,622 @@
+<?php
+require_once __DIR__ . '/includes/env.php';
+require_once __DIR__ . '/includes/db_connect.php';
+require_once __DIR__ . '/includes/cms_helpers.php';
+include_once __DIR__ . '/includes/breadcrumb_helper.php';
+
+$cert_keys_defaults = [
+    // Breadcrumb / hero
+    'cert_breadcrumb_title'      => 'Certification Services',
+
+    // Section 1 — Your Path to Quality Excellence
+    'cert_path_title'            => 'Your Path to Quality Excellence',
+    'cert_path_intro'            => 'The core business of the ESWASA Certification department is the provision of an independent, third-party conformity assessment service for systems and products, in accordance with requirements of ISO/IEC 17021 for management systems certification and ISO/IEC 17065 for product certification.',
+    'cert_why_title'             => 'Why Certify',
+    'cert_why_body'              => 'Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.',
+    'cert_focus_title'           => 'Our Focus Areas',
+    'cert_focus_body'            => 'The department mainly focuses on Management Systems Certification, Ingelo Certification, Product Certification (ESWASA Mark), Testing Services, and Scales and Metrology Services.',
+
+    // Marks grid — 4 cards
+    'cert_mark_1_image'          => 'assets/img/quality/management-mark-black.png',
+    'cert_mark_1_alt'            => 'Management Systems Certification Mark',
+    'cert_mark_1_title'          => 'Management Systems Certification Mark',
+    'cert_mark_1_desc'           => 'Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.',
+    'cert_mark_1_explore_url'    => 'managementsystems.php',
+
+    'cert_mark_2_image'          => 'assets/img/quality/product-certification-black.png',
+    'cert_mark_2_alt'            => 'Product Certification Mark',
+    'cert_mark_2_title'          => 'Product Certification Mark',
+    'cert_mark_2_desc'           => 'A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing — giving buyers confidence in quality and safety.',
+    'cert_mark_2_explore_url'    => 'Certification.php',
+
+    'cert_mark_4_image'          => 'assets/img/quality/ingelo-certification-black.png',
+    'cert_mark_4_alt'            => 'Ingelo MSME Product Certification Mark',
+    'cert_mark_4_title'          => 'Ingelo MSME Product Certification Mark',
+    'cert_mark_4_desc'           => 'A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers — helping them prove product quality, access new markets and grow with credibility.',
+    'cert_mark_4_explore_url'    => 'ingelo.php',
+
+    // Section 2 — Benefits
+    'cert_benefits_title'        => 'What Certification Can Do For Your Business',
+    'cert_benefits_intro'        => 'Businesses with ESWASA Certification benefit from a competitive edge, greater access to local and international trade opportunities and increased market access. They achieve organisational objectives and manage their risks.',
+
+    'cert_card_1_title'          => 'Boost Your Market Presence',
+    'cert_card_1_body'           => 'Imagine walking into new markets with confidence, knowing your products meet the highest standards. ESWASA certification opens doors to government tenders, international exports, and premium customers who demand quality assurance.',
+    'cert_card_1_list_label'     => "You'll be able to:",
+    'cert_card_1_list'           => "Access lucrative government contracts\nExport to regional markets seamlessly\nCharge premium prices for certified quality\nStand out from your competitors",
+    'cert_card_1_image'          => 'assets/img/quality/product-certification-black.png',
+    'cert_card_1_image_alt'      => 'Product Mark',
+    'cert_card_1_btn_label'      => 'Explore Product Certification',
+    'cert_card_1_btn_url'        => 'product.php',
+
+    'cert_card_2_title'          => 'Streamline Your Operations',
+    'cert_card_2_body'           => 'Stop wasting resources on inefficient processes. Our management system certification helps you create workflows that save time, reduce errors, and cut costs. Many businesses save up to 30% on operational expenses after certification.',
+    'cert_card_2_list_label'     => "You'll experience:",
+    'cert_card_2_list'           => "Reduced product defects and returns\nFaster response to customer needs\nImproved employee productivity\nBetter resource utilisation",
+    'cert_card_2_image'          => 'assets/img/quality/management-mark-black.png',
+    'cert_card_2_image_alt'      => 'Management Mark',
+    'cert_card_2_btn_label'      => 'Discover Management Systems',
+    'cert_card_2_btn_url'        => 'managementsystems.php',
+
+    // Section 3 — Steps
+    'cert_steps_title'           => 'Your Certification Journey Made Simple',
+    'cert_steps_subtitle'        => 'We guide you every step of the way - no stress, no surprises',
+    'cert_steps_image'           => 'assets/img/steps-to-certification.svg',
+    'cert_steps_image_alt'       => 'Steps to Certification: Training and Documentation, Audit and Certification, ISO Certified',
+
+    // Section 4 — CTA
+    'cert_cta_title'             => 'Begin Your Certification Journey',
+    'cert_cta_subtitle'          => 'Begin your certification journey with ESWASA today.',
+    'cert_cta_1_label'           => 'Contact Us',
+    'cert_cta_1_url'             => 'contact.php',
+    'cert_cta_2_label'           => 'Request Quote',
+    'cert_cta_2_url'             => 'qoute_certification.php',
+    'cert_cta_3_label'           => 'Training Programs',
+    'cert_cta_3_url'             => 'training-about.php',
+];
+$pc = pc_get_many($conn, array_keys($cert_keys_defaults), $cert_keys_defaults);
+
+// Helper for rendering newline-separated bullet lists
+$cert_split_list = function ($text) {
+    $lines = preg_split("/\r\n|\n|\r/", (string)$text);
+    return array_values(array_filter(array_map('trim', $lines), function ($l) { return $l !== ''; }));
+};
+?>
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Certification Services - ESWASA</title>
+    <meta name="description" content="ESWASA certification services — independent third-party conformity assessment for management systems, products, testing, and metrology.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
+    <!-- CSS here -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/select2.min.css">
+    <link rel="stylesheet" href="assets/css/odometer.css">
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/aos.css">
+    <link rel="stylesheet" href="assets/css/spacing.css">
+    <link rel="stylesheet" href="assets/css/tg-cursor.css">
+    <link rel="stylesheet" type="text/css" href="rs-plugin/css/settings.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="assets/css/extralayers.css" media="screen">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="includes/cta-section.css">
+
+    <style>
+        /* ========== ESWASA Theme Base (locked spec: #2B3388, #fff, Arial 15px) ========== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            color: #2B3388;
+        }
+        body h1, body h2, body h3, body h4, body h5, body h6 {
+            font-family: Arial, sans-serif;
+            color: #2B3388;
+        }
+        body p, body li, body span, body a, body div, body button, body input, body label, body textarea, body table, body th, body td {
+            font-family: Arial, sans-serif;
+        }
+        .text-muted { color: #2B3388 !important; }
+        .breadcrumb-content .breadcrumb a,
+        .breadcrumb-content .breadcrumb span,
+        .breadcrumb-content .title { color: #fff !important; }
+        .breadcrumb-separator i { color: #fff !important; }
+        .bg-light { background-color: rgba(43, 51, 136, 0.04) !important; }
+
+        /* Canonical section title — matches training-*, qoute, services pages */
+        .display-6 {
+            color: #2B3388;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .section-divider {
+            width: 60px;
+            height: 2px;
+            background: #2B3388;
+            margin: 16px auto 0;
+            border-radius: 0;
+        }
+
+        /* Intro card — wraps important descriptive paragraphs */
+        .intro-card {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-left: 3px solid #2B3388;
+            border-radius: 4px;
+            padding: 26px 28px;
+            max-width: 920px;
+            margin: 0 auto;
+            transition: border-color .25s ease, box-shadow .25s ease;
+        }
+        .intro-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.08);
+        }
+
+        /* Featured intro card — first card under the title.
+           Drops the blue left accent and uses a stronger always-on shadow. */
+        .intro-card.intro-card-featured {
+            border: 1px solid rgba(43, 51, 136, 0.10);
+            border-left: 1px solid rgba(43, 51, 136, 0.10);
+            box-shadow: 0 10px 28px rgba(43, 51, 136, 0.22);
+        }
+        .intro-card.intro-card-featured:hover {
+            border-color: rgba(43, 51, 136, 0.25);
+            box-shadow: 0 16px 36px rgba(43, 51, 136, 0.28);
+        }
+        .intro-card p {
+            margin: 0;
+            color: #2B3388;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .cert-section {
+            padding: 50px 0;
+        }
+        .cert-card {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.08);
+            border-radius: 4px;
+            padding: 32px 28px;
+            margin: 10px 0;
+            box-shadow: 0 10px 28px rgba(43, 51, 136, 0.22);
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cert-card .card-mark {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 210px;
+            height: 210px;
+            object-fit: contain;
+            opacity: 1;
+            pointer-events: none;
+        }
+        .cert-card:hover {
+            border-color: rgba(43, 51, 136, 0.20);
+            box-shadow: 0 16px 36px rgba(43, 51, 136, 0.28);
+            transform: translateY(-3px);
+        }
+        .cert-card h3 {
+            color: #2B3388;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .cert-card p {
+            font-size: 15px;
+            line-height: 1.65;
+            margin-bottom: 16px;
+            color: #2B3388;
+        }
+        .btn-cert {
+            background: #2B3388;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 10px 0 0;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-cert:hover {
+            background: rgba(43, 51, 136, 0.85);
+            color: #fff;
+        }
+        /* Certification Marks grid — mirrors index.php pattern */
+        .marks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+        .mark-item {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            padding: 30px 24px 22px;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+        }
+        .mark-item:hover {
+            border-color: #2B3388;
+            box-shadow: 0 8px 22px rgba(43, 51, 136, 0.10);
+            transform: translateY(-3px);
+        }
+        .mark-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+        .mark-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .mark-title {
+            color: #2B3388;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin: 0 0 14px;
+        }
+        .mark-desc {
+            color: #2B3388;
+            font-size: 13.5px;
+            line-height: 1.65;
+            margin: 0 0 22px;
+            flex: 1;
+        }
+        .mark-actions {
+            display: flex;
+            justify-content: center;
+            gap: 22px;
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid rgba(43, 51, 136, 0.10);
+        }
+        .mark-actions a {
+            color: #2B3388;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity .2s ease, color .2s ease;
+        }
+        .mark-actions a:hover { text-decoration: underline; }
+        .mark-actions a i { font-size: 11px; transition: transform .2s ease; }
+        .mark-actions a:hover i { transform: translateX(2px); }
+        @media (max-width: 991.98px) {
+            .marks-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+            .mark-image { height: 180px; }
+        }
+        @media (max-width: 575.98px) {
+            .marks-grid { grid-template-columns: 1fr; gap: 16px; }
+            .mark-item { padding: 24px 20px 18px; }
+            .mark-image { height: 170px; margin-bottom: 18px; }
+            .mark-title { font-size: 15px; }
+            .mark-desc { font-size: 13px; margin-bottom: 18px; }
+            .mark-actions { gap: 18px; }
+            .mark-actions a { font-size: 12.5px; }
+        }
+        /* ── Steps to certification image section ── */
+        .steps-img-section {
+            text-align: center;
+        }
+        .steps-img-section img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Cert-split cards — "Why Certify" + "Our Focus Areas" */
+        .cert-split-card {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.08);
+            border-radius: 4px;
+            padding: 26px 26px 24px;
+            height: 100%;
+            box-shadow: 0 10px 28px rgba(43, 51, 136, 0.22);
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+        }
+        .cert-split-card:hover {
+            border-color: rgba(43, 51, 136, 0.20);
+            box-shadow: 0 16px 36px rgba(43, 51, 136, 0.28);
+            transform: translateY(-3px);
+        }
+        .cert-split-card-title {
+            color: #2B3388;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 14px;
+            line-height: 1.3;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        .cert-split-card-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 36px;
+            height: 2px;
+            background: #2B3388;
+        }
+        .cert-split-card p {
+            color: #2B3388;
+            font-size: 15px;
+            line-height: 1.65;
+            margin: 0;
+        }
+        @media (max-width: 991.98px) {
+            .cert-split-left .cert-split-card {
+                margin-bottom: 16px;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .cert-split-card { padding: 22px 20px; }
+            .cert-split-card-title { font-size: 1.05rem; }
+            .cert-split-card p { font-size: 0.95rem; }
+        }
+
+        /* ── Page-wide mobile layout ── */
+        @media (max-width: 991.98px) {
+            .cert-section { padding: 40px 0; }
+            .cert-card { padding: 26px 22px; }
+            .cert-card h3 { font-size: 1.35rem; }
+            .cert-card p { font-size: 0.98rem; }
+            .cert-card .card-mark { width: 150px; height: 150px; opacity: 0.6; }
+            .cert-images { gap: 22px; }
+            .cert-image-item { max-width: 170px; }
+        }
+        @media (max-width: 767.98px) {
+            section.breadcrumb-area .title { font-size: 1.6rem; }
+            .cert-section { padding: 32px 0; }
+            section h2 { font-size: 1.45rem !important; }
+            section h4 { font-size: 1.05rem !important; }
+            .display-6 { font-size: 1.55rem !important; }
+            .intro-card { padding: 20px 18px; }
+            .intro-card p { font-size: 0.95rem; line-height: 1.6; }
+            .cert-images { gap: 16px; }
+            .cert-image-item { max-width: 45%; }
+            .cert-image-item img { max-height: 90px; width: auto; }
+            .cert-image-item p { font-size: 0.88rem; }
+            .cert-image-item small { font-size: 0.78rem; line-height: 1.35; display: inline-block; }
+            .cert-card { padding: 22px 18px; }
+            .cert-card h3 { font-size: 1.2rem; }
+            .cert-card p, .cert-card ul li { font-size: 0.95rem; }
+            .cert-card .card-mark {
+                position: static;
+                display: block;
+                width: 130px;
+                height: 130px;
+                opacity: 1;
+                margin: 8px auto 18px;
+            }
+            .btn-cert { width: 100%; text-align: center; margin-right: 0; padding: 12px 20px; }
+        }
+        @media (max-width: 575.98px) {
+            section h2 { font-size: 1.3rem !important; }
+            .cert-card .card-mark { width: 110px; height: 110px; }
+            .cert-image-item { max-width: 47%; }
+            .cert-image-item img { max-height: 75px; }
+        }
+
+        /* Subtitle / lead — align with site spec (16px) */
+        body .lead { font-size: 16px; line-height: 1.7; font-weight: 400; }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="spinner">
+            <div class="sk-dot1"></div><div class="sk-dot2"></div>
+            <div class="rect3"></div><div class="rect4"></div>
+            <div class="rect5"></div>
+        </div>
+    </div>
+    <!-- Scroll-top -->
+    <button class="scroll__top scroll-to-target" data-target="html">
+        <i class="fas fa-angle-up"></i>
+    </button>
+
+    <!-- header-area -->
+    <?php include("includes/header.php")?>
+
+    <!-- main-area -->
+    <main class="main-area fix">
+
+        <!-- breadcrumb-area -->
+        <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('certification', 'assets/img/bg/breadcrumb_bg.jpg') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-content">
+                            <nav class="breadcrumb">
+                                <span property="itemListElement" typeof="ListItem">
+                                    <a href="index.php">Home</a>
+                                </span>
+                                <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
+                                <span property="itemListElement" typeof="ListItem">Certification</span>
+                            </nav>
+                            <h1 class="title"><?= pc_h($pc['cert_breadcrumb_title']) ?></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- breadcrumb-area-end -->
+
+        <!-- Certification Images with Meaning -->
+        <section class="cert-section">
+            <div class="container">
+                <div class="main_title centered upper mb-4 text-center">
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['cert_path_title']) ?></h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="intro-card intro-card-featured mb-5">
+                    <p><?= pc_h($pc['cert_path_intro']) ?></p>
+                </div>
+                <div class="row mb-4 cert-split g-3">
+                    <div class="col-lg-6 cert-split-left">
+                        <div class="cert-split-card">
+                            <h4 class="cert-split-card-title"><?= pc_h($pc['cert_why_title']) ?></h4>
+                            <p><?= pc_h($pc['cert_why_body']) ?></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 cert-split-right">
+                        <div class="cert-split-card">
+                            <h4 class="cert-split-card-title"><?= pc_h($pc['cert_focus_title']) ?></h4>
+                            <p><?= pc_h($pc['cert_focus_body']) ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="marks-grid">
+                    <div class="mark-item">
+                        <div class="mark-image">
+                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_1_image'], 'assets/img/quality/management-mark-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_1_alt']) ?>">
+                        </div>
+                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_1_title']) ?></h3>
+                        <p class="mark-desc"><?= pc_h($pc['cert_mark_1_desc']) ?></p>
+                        <div class="mark-actions">
+                            <a href="<?= pc_h($pc['cert_mark_1_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="mark-item">
+                        <div class="mark-image">
+                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_2_image'], 'assets/img/quality/product-certification-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_2_alt']) ?>">
+                        </div>
+                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_2_title']) ?></h3>
+                        <p class="mark-desc"><?= pc_h($pc['cert_mark_2_desc']) ?></p>
+                        <div class="mark-actions">
+                            <a href="<?= pc_h($pc['cert_mark_2_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="mark-item">
+                        <div class="mark-image">
+                            <img src="<?= pc_h(pc_image_src($pc['cert_mark_4_image'], 'assets/img/quality/ingelo-certification-black.png')) ?>" alt="<?= pc_h($pc['cert_mark_4_alt']) ?>">
+                        </div>
+                        <h3 class="mark-title"><?= pc_h($pc['cert_mark_4_title']) ?></h3>
+                        <p class="mark-desc"><?= pc_h($pc['cert_mark_4_desc']) ?></p>
+                        <div class="mark-actions">
+                            <a href="<?= pc_h($pc['cert_mark_4_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certification Benefits -->
+        <section class="cert-section">
+            <div class="container">
+                <div class="main_title centered upper mb-4 text-center">
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['cert_benefits_title']) ?></h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="intro-card mb-5">
+                    <p><?= pc_h($pc['cert_benefits_intro']) ?></p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="cert-card">
+                            <h3><?= pc_h($pc['cert_card_1_title']) ?></h3>
+                            <p><?= pc_h($pc['cert_card_1_body']) ?></p>
+                            <p><strong><?= pc_h($pc['cert_card_1_list_label']) ?></strong></p>
+                            <ul>
+                                <?php foreach ($cert_split_list($pc['cert_card_1_list']) as $item): ?>
+                                    <li><?= pc_h($item) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <img src="<?= pc_h(pc_image_src($pc['cert_card_1_image'], 'assets/img/quality/product-certification-black.png')) ?>" alt="<?= pc_h($pc['cert_card_1_image_alt']) ?>" class="card-mark">
+                            <a href="<?= pc_h($pc['cert_card_1_btn_url']) ?>" class="btn-cert"><?= pc_h($pc['cert_card_1_btn_label']) ?></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="cert-card">
+                            <h3><?= pc_h($pc['cert_card_2_title']) ?></h3>
+                            <p><?= pc_h($pc['cert_card_2_body']) ?></p>
+                            <p><strong><?= pc_h($pc['cert_card_2_list_label']) ?></strong></p>
+                            <ul>
+                                <?php foreach ($cert_split_list($pc['cert_card_2_list']) as $item): ?>
+                                    <li><?= pc_h($item) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <img src="<?= pc_h(pc_image_src($pc['cert_card_2_image'], 'assets/img/quality/management-mark-black.png')) ?>" alt="<?= pc_h($pc['cert_card_2_image_alt']) ?>" class="card-mark">
+                            <a href="<?= pc_h($pc['cert_card_2_btn_url']) ?>" class="btn-cert"><?= pc_h($pc['cert_card_2_btn_label']) ?></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Steps to Certification -->
+        <section class="cert-section bg-light">
+            <div class="container">
+                <div class="text-center mb-4" style="text-align: center;">
+                    <h2 style="color: #2B3388; text-align: center;"><?= pc_h($pc['cert_steps_title']) ?></h2>
+                    <div class="section-divider"></div>
+                    <p class="lead mt-3" style="text-align: center;"><?= pc_h($pc['cert_steps_subtitle']) ?></p>
+                </div>
+                <div class="steps-img-section">
+                    <img src="<?= pc_h(pc_image_src($pc['cert_steps_image'], 'assets/img/steps-to-certification.svg')) ?>" alt="<?= pc_h($pc['cert_steps_image_alt']) ?>">
+                </div>
+            </div>
+        </section>
+
+
+        <section class="cta-journey-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h2 class="cta-title"><?= pc_h($pc['cert_cta_title']) ?></h2>
+                        <p class="cta-subtitle"><?= pc_h($pc['cert_cta_subtitle']) ?></p>
+                        <a href="<?= pc_h($pc['cert_cta_1_url']) ?>" class="btn-cta"><?= pc_h($pc['cert_cta_1_label']) ?></a>
+                        <a href="<?= pc_h($pc['cert_cta_2_url']) ?>" class="btn-cta"><?= pc_h($pc['cert_cta_2_label']) ?></a>
+                        <a href="<?= pc_h($pc['cert_cta_3_url']) ?>" class="btn-cta"><?= pc_h($pc['cert_cta_3_label']) ?></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <!-- main-area-end -->
+
+    <!-- footer-area -->
+    <?php include("includes/footer.php")?>
+    <!-- footer-area-end -->
+
+    <!-- JS here -->
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/isotope.pkgd.min.js"></script>
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/jquery.odometer.min.js"></script>
+    <script src="assets/js/jquery.appear.js"></script>
+    <script src="assets/js/tween-max.min.js"></script>
+    <script src="assets/js/select2.min.js"></script>
+    <script src="assets/js/slick.min.js"></script>
+    <script src="assets/js/slick-animation.min.js"></script>
+    <script src="assets/js/tg-cursor.min.js"></script>
+    <script src="assets/js/form-contact.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
