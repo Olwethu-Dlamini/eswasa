@@ -24,6 +24,16 @@ $unread_messages = 0;
 if ($r = @$conn->query("SELECT COUNT(*) AS c FROM eswasa_contact_messages WHERE status = 'new'")) {
     $unread_messages = (int)($r->fetch_assoc()['c'] ?? 0);
 }
+
+// Quote requests that could not be attributed to a service. The three service
+// inboxes each filter on their own source, so before this an unattributed
+// request was stored and then invisible. The link only appears when there is
+// something stranded, so the nav stays clean in the normal case.
+// See spec item A3.
+$unsorted_quotes = 0;
+if ($r = @$conn->query("SELECT COUNT(*) AS c FROM eswasa_quote_requests WHERE source = 'other'")) {
+    $unsorted_quotes = (int)($r->fetch_assoc()['c'] ?? 0);
+}
 function is_active_group($pages, $current) {
     return in_array($current, $pages) ? 'active' : '';
 }
@@ -158,6 +168,12 @@ function submenu_open($pages, $current) {
             <li class="nav-item">
                 <?= nav_link('contact_edit.php', $current_page, 'fa-envelope', 'Contact Us', $unread_messages) ?>
             </li>
+
+            <?php if ($unsorted_quotes > 0): ?>
+                <li class="nav-item">
+                    <?= nav_link('qoute_other.php', $current_page, 'fa-inbox', 'Unsorted Quotes', $unsorted_quotes) ?>
+                </li>
+            <?php endif; ?>
 
             <li class="nav-item">
                 <?= nav_link('users.php', $current_page, 'fa-user-shield', 'Users') ?>

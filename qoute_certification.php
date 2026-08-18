@@ -1,4 +1,9 @@
 <?php
+// Start the session before any output: the quote result banner further down
+// reads attachment-rejection messages left in the session by
+// process_quote.php, and session_start() cannot run once headers are sent.
+// See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md, item A3.
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/includes/env.php';
 include 'includes/db_connect.php';
 include_once 'includes/breadcrumb_helper.php';
@@ -213,6 +218,12 @@ include_once 'includes/breadcrumb_helper.php';
         </section>
         <!-- breadcrumb-area-end -->
 
+        <?php /* Submission outcome. Without this the page redirected back
+               with ?quote_sent=1 and showed the visitor nothing at all.
+               See spec item A3. */ ?>
+        <?php include __DIR__ . '/includes/quote_result_banner.php'; ?>
+
+
         <div class="container py-5">
             <!-- Section Header -->
             <div class="main_title centered upper mb-5 text-center">
@@ -228,6 +239,12 @@ include_once 'includes/breadcrumb_helper.php';
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <form id="certQuoteForm" action="process_quote.php" method="POST" enctype="multipart/form-data">
+                        <?php /* Explicit source tag. process_quote.php otherwise has to
+                               guess from HTTP_REFERER, which browsers and privacy
+                               settings can strip — a stripped referrer files the
+                               request under "other", where no inbox showed it.
+                               See spec item A3. */ ?>
+                        <input type="hidden" name="quote_source" value="certification">
                         <!-- Contact Information -->
                         <div class="form-section">
                             <h3 class="form-section-title">Organisation Details</h3>
@@ -360,8 +377,8 @@ include_once 'includes/breadcrumb_helper.php';
                             </div>
                             <div class="mb-3">
                                 <label for="attachments" class="form-label">Upload Documents (Optional)</label>
-                                <input type="file" class="form-control" id="attachments" name="documents[]" multiple accept=".pdf,.doc,.docx,.jpg,.png">
-                                <div class="form-text">e.g., Process flowcharts, product specs, previous audit reports</div>
+                                <input type="file" class="form-control" id="attachments" name="documents[]" multiple accept="application/pdf,.pdf">
+                                <div class="form-text">e.g., Process flowcharts, product specs, previous audit reports <strong>PDF files only, up to 10&nbsp;MB each, maximum 5 files.</strong></div>
                             </div>
                             <div class="mb-3">
                                 <label for="comments" class="form-label">Additional Comments</label>

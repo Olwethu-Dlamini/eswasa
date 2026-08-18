@@ -34,6 +34,33 @@ UPDATE page_content
    AND content LIKE 'admin/downloads/%';
 
 -- ─────────────────────────────────────────────────────────────────────
+-- A3 — Backfill requester names on existing quote requests
+--
+-- process_quote.php looked for "full_name" but the individual training form
+-- posts "full_names" (plural), so those submissions stored contact_name as
+-- NULL and the admin inbox showed a dash instead of the requester's name.
+-- The alias list is fixed; this recovers the names already stored inside the
+-- raw_form JSON. Guarded so it only touches rows that are actually missing a
+-- name and actually have one to recover.
+-- ─────────────────────────────────────────────────────────────────────
+UPDATE eswasa_quote_requests
+   SET contact_name = JSON_UNQUOTE(JSON_EXTRACT(raw_form, '$.full_names'))
+ WHERE (contact_name IS NULL OR contact_name = '')
+   AND raw_form IS NOT NULL
+   AND JSON_VALID(raw_form)
+   AND JSON_EXTRACT(raw_form, '$.full_names') IS NOT NULL
+   AND JSON_UNQUOTE(JSON_EXTRACT(raw_form, '$.full_names')) <> '';
+
+-- Same for the company form's organisation field, for completeness.
+UPDATE eswasa_quote_requests
+   SET organization = JSON_UNQUOTE(JSON_EXTRACT(raw_form, '$.company_name'))
+ WHERE (organization IS NULL OR organization = '')
+   AND raw_form IS NOT NULL
+   AND JSON_VALID(raw_form)
+   AND JSON_EXTRACT(raw_form, '$.company_name') IS NOT NULL
+   AND JSON_UNQUOTE(JSON_EXTRACT(raw_form, '$.company_name')) <> '';
+
+-- ─────────────────────────────────────────────────────────────────────
 -- A7 — Purge the redirect-loop noise from the audit trail
 --
 -- Deleting a user looped (redirect_self() did not strip delete_user), so
