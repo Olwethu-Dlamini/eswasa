@@ -93,6 +93,23 @@ $pc = pc_get_many($conn, $service_charter_keys, $service_charter_defaults);
             margin-bottom: 10px;
         }
         .charter-block ul { padding-left: 20px; margin: 0; }
+        /* The site-wide theme sets `a, button { color: #fff }` and only colours
+           links on hover, so any link inside these white cards rendered white on
+           white — invisible until hovered. That predates the charter blocks
+           becoming editable; making a whole bullet a link simply made it
+           obvious. Links here take the same indigo as the surrounding text.
+           Underline appears on hover so a link is still distinguishable from
+           the plain bullets around it, which share this colour. */
+        .charter-block a {
+            color: #2B3388;
+            text-decoration: none;
+        }
+        .charter-block a:hover,
+        .charter-block a:focus {
+            color: #1A2060;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
 
         /* Service Standards grid — flat cells (no blue left bar) */
         .commitment-grid {

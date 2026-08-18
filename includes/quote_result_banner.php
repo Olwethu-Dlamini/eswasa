@@ -22,6 +22,25 @@
 if (!isset($_GET['quote_sent'])) {
     return;
 }
+?>
+<style>
+/* The site-wide theme sets `a, button { color: #fff }`, so links inside these
+   pale Bootstrap alerts would render white on a light background — invisible
+   until hovered. Take the alert's own text colour instead, underlined so they
+   still read as links. Scoped to this banner so nothing else is affected. */
+.quote-result a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+}
+.quote-result a:hover,
+.quote-result a:focus {
+    color: inherit;
+    opacity: .78;
+}
+</style>
+<?php
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -34,7 +53,7 @@ $quote_ok = $_GET['quote_sent'] === '1';
 $quote_attach_errors = $_SESSION['quote_attachment_errors'] ?? [];
 unset($_SESSION['quote_attachment_errors']);
 ?>
-<div class="container">
+<div class="container quote-result">
     <?php if ($quote_ok): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <h5 class="alert-heading mb-1">
