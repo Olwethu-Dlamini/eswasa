@@ -35,6 +35,7 @@ $text_keys = [
     'cal_brand_4_alt', 'cal_brand_5_alt', 'cal_brand_6_alt',
     'cal_brand_7_alt', 'cal_brand_8_alt', 'cal_brand_9_alt',
     'cal_brand_10_alt', 'cal_brand_11_alt', 'cal_brand_12_alt',
+    // 13-20 appended below the array.
 
     // Section 6 — FAQ
     'cal_faq_1_question', 'cal_faq_1_intro',
@@ -55,6 +56,12 @@ $image_keys = [
     'cal_brand_7_image',  'cal_brand_8_image',  'cal_brand_9_image',
     'cal_brand_10_image', 'cal_brand_11_image', 'cal_brand_12_image',
 ];
+// Spare brand capacity, so brands can be added without a code change.
+// See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C1).
+for ($i = 13; $i <= 20; $i++) {
+    $text_keys[]  = "cal_brand_{$i}_alt";
+    $image_keys[] = "cal_brand_{$i}_image";
+}
 
 // ── Save handler ──────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cal'])) {
@@ -65,6 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cal'])) {
     foreach ($image_keys as $k) {
         // Prefer the cropper's base64 payload; fall back to a raw file
         // upload (e.g. SVG logos the cropper passes through untouched).
+        // "Remove" wins over everything: it clears the slot so the brand
+        // disappears from the page. Previously an image was only ever written,
+        // never cleared, so a brand could not be removed at all — and with all
+        // twelve slots occupied, none could be added either. See spec C1.
+        if (!empty($_POST[$k . '_remove'])) {
+            $kv[$k] = '';
+            $alt_k = str_replace('_image', '_alt', $k);
+            $kv[$alt_k] = '';
+            continue;
+        }
         $path = pc_save_base64_image($_POST[$k . '_cropped'] ?? '', ADMIN_ROOT . '/uploads/', 'cal');
         if (!is_string($path)) {
             $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'cal');
@@ -181,7 +198,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 <input type="text" name="cal_brands_title" class="form-control" value="<?= pc_h($pc['cal_brands_title']) ?>">
             </div>
             <div class="row g-3">
-                <?php for ($i = 1; $i <= 12; $i++):
+                <?php for ($i = 1; $i <= 20; $i++):
                     $img_key = 'cal_brand_' . $i . '_image';
                     $alt_key = 'cal_brand_' . $i . '_alt';
                     $current = $pc[$img_key] ?? '';
@@ -205,6 +222,14 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                                        data-crop-label="Brand <?= $i ?> Logo">
                                 <input type="hidden" name="<?= $img_key ?>_cropped">
                                 <div class="form-text small">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" value="1"
+                                       name="<?= $img_key ?>_remove" id="<?= $img_key ?>_remove"
+                                       <?= empty($current) ? 'disabled' : '' ?>>
+                                <label class="form-check-label small text-danger" for="<?= $img_key ?>_remove">
+                                    Remove this brand
+                                </label>
                             </div>
                         </div>
                     </div>

@@ -44,6 +44,8 @@ $cal_keys = [
     'cal_brand_10_image', 'cal_brand_10_alt',
     'cal_brand_11_image', 'cal_brand_11_alt',
     'cal_brand_12_image', 'cal_brand_12_alt',
+    // Slots 13-20 are spare capacity so brands can be added from the CMS
+    // without a code change. Empty slots render nothing. See spec C1.
 
     // Section 6 — FAQ
     'cal_faq_1_question', 'cal_faq_1_intro',
@@ -57,6 +59,10 @@ $cal_keys = [
     'cal_cta_btn1_label', 'cal_cta_btn1_url',
     'cal_cta_btn2_label', 'cal_cta_btn2_url',
 ];
+for ($i = 13; $i <= 20; $i++) {
+    $cal_keys[] = "cal_brand_{$i}_image";
+    $cal_keys[] = "cal_brand_{$i}_alt";
+}
 
 $cal_defaults = [
     'cal_breadcrumb_title' => 'Scales & Metrology Services',
@@ -89,31 +95,11 @@ $cal_defaults = [
     'cal_purpose_6'     => 'To reduce Downtime',
 
     'cal_brands_title'    => 'We Also Supply and Service the Following Brands:',
-    'cal_brand_1_image'   => 'assets/img/brand/lmi.PNG',
-    'cal_brand_1_alt'     => 'LMI',
-    'cal_brand_2_image'   => 'assets/img/brand/mass.PNG',
-    'cal_brand_2_alt'     => 'Massamatic',
-    'cal_brand_3_image'   => 'assets/img/brand/ishida.PNG',
-    'cal_brand_3_alt'     => 'Ishida',
-    'cal_brand_4_image'   => 'assets/img/brand/zemic.PNG',
-    'cal_brand_4_alt'     => 'Zemic',
-    'cal_brand_5_image'   => 'assets/img/brand/avery.PNG',
-    'cal_brand_5_alt'     => 'Avery Weigh-Tronix',
-    'cal_brand_6_image'   => 'assets/img/brand/trek.PNG',
-    'cal_brand_6_alt'     => 'Trek',
-    'cal_brand_7_image'   => 'assets/img/brand/syslec.PNG',
-    'cal_brand_7_alt'     => 'Systec',
-    'cal_brand_8_image'   => 'assets/img/brand/shekel.PNG',
-    'cal_brand_8_alt'     => 'Shekel',
-    'cal_brand_9_image'   => 'assets/img/brand/laumus.PNG',
-    'cal_brand_9_alt'     => 'Laumas',
-    'cal_brand_10_image'  => 'assets/img/brand/adam.PNG',
-    'cal_brand_10_alt'    => 'Adam Equipment',
-    'cal_brand_11_image'  => 'assets/img/brand/mattler.PNG',
-    'cal_brand_11_alt'    => 'Mettler Toledo',
-    'cal_brand_12_image'  => 'assets/img/brand/digi.PNG',
-    'cal_brand_12_alt'    => 'Digi',
-
+    // Brand logos deliberately have no code defaults. pc_get_many() falls back
+    // to a default whenever a stored value is empty, so a populated default
+    // would resurrect any brand an editor removed — removal could never work.
+    // All brands live in page_content and are managed from the CMS.
+    // See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C1).
     'cal_faq_1_question'  => 'What are the benefits of ESWASA calibration services?',
     'cal_faq_1_intro'     => 'Calibration services help organisations to:',
     'cal_faq_1_1'         => 'Improve measurement accuracy and reliability.',
@@ -441,49 +427,22 @@ $pc = pc_get_many($conn, $cal_keys, $cal_defaults);
 <div class="highlighted-section">
     <h2 style="text-align: center;"><?= pc_h($pc['cal_brands_title']) ?></h2>
     <div class="section-divider mb-4"></div>
-    <div class="row g-4 justify-content-center">
-        <!-- Row 1 -->
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_1_image'], 'assets/img/brand/lmi.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_1_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_2_image'], 'assets/img/brand/mass.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_2_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_3_image'], 'assets/img/brand/ishida.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_3_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_4_image'], 'assets/img/brand/zemic.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_4_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-
-        <!-- Row 2 -->
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_5_image'], 'assets/img/brand/avery.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_5_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_6_image'], 'assets/img/brand/trek.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_6_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_7_image'], 'assets/img/brand/syslec.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_7_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_8_image'], 'assets/img/brand/shekel.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_8_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-
-        <!-- Row 3 -->
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_9_image'], 'assets/img/brand/laumus.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_9_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_10_image'], 'assets/img/brand/adam.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_10_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_11_image'], 'assets/img/brand/mattler.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_11_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-        <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-            <img src="<?= pc_h(pc_image_src($pc['cal_brand_12_image'], 'assets/img/brand/digi.PNG')) ?>" alt="<?= pc_h($pc['cal_brand_12_alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-        </div>
-    </div>
+      <div class="row g-4 justify-content-center">
+          <?php
+          // One tile per non-empty brand slot. Twenty slots are available; the
+          // editor can clear any of them, and a cleared slot renders nothing —
+          // previously each slot was hardcoded with its own fallback image, so a
+          // brand could never actually be removed from the page.
+          // See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C1).
+          for ($i = 1; $i <= 20; $i++):
+              $bimg = trim((string)($pc["cal_brand_{$i}_image"] ?? ''));
+              if ($bimg === '') continue;
+          ?>
+          <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
+              <img src="<?= pc_h(pc_image_src($bimg)) ?>" alt="<?= pc_h($pc["cal_brand_{$i}_alt"] ?? '') ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
+          </div>
+          <?php endfor; ?>
+      </div>
 </div>
 
                 <!-- 6. Calibration FAQ — individual topic cards -->
