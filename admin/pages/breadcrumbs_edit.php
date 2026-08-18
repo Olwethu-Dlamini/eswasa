@@ -12,7 +12,14 @@ if (!is_dir($upload_dir)) {
 $pages = [
     'services'            => ['Our Services',           'services.php',             'assets/img/bg.png'],
     'calibration'         => ['Calibration',            'Calibration.php',          'assets/img/bg/calibrationbg.png'],
+    // These four were requested by front-end pages via get_breadcrumb_bg() but
+    // had no entry here, so their banner images could never be changed from the
+    // CMS. See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2, B6).
+    'about-us'            => ['About Us (Who Are We)',  'about-us.php',             'assets/img/bg.png'],
     'certification'       => ['Certification',          'Certification.php',        'assets/img/bg/breadcrumb_bg.jpg'],
+    'certification_status'=> ['Certification Status',   'certification-status.php', 'assets/img/bg/breadcrumb_bg.jpg'],
+    'event-details'       => ['Event Details',          'event-details.php',        'assets/img/bg/breadcrumb_bg.jpg'],
+    'tenders'             => ['Tenders',                'tenders.php',              'assets/img/bg/breadcrumb_bg.jpg'],
     'contact'             => ['Contact Us',             'contact.php',              'assets/img/bg/breadcrumb_bg.jpg'],
     // 'contactcalibration' removed — the page is retired and now 301s to
     // qoute_calibration.php, which replaces it in the list below. See spec A1.

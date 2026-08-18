@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
 
     $image_updates = [];
     $image_errors  = [];
-    $image_keys = ['about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner', 'about_breadcrumb_bg'];
+    $image_keys = ['about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner'];
 
     // Check uploads dir is writable before attempting image saves
     $uploads_writable = is_dir($upload_dir) && is_writable($upload_dir);
@@ -95,7 +95,7 @@ $keys = [
     'about_val_transparency','about_val_people','about_val_responsiveness',
     'about_val_innovation','about_val_professionalism',
     'about_img_vision','about_img_mission','about_img_team', 'about_img_banner',
-    'about_breadcrumb_title','about_breadcrumb_bg'
+    'about_breadcrumb_title'
 ];
 
 $placeholders = implode(',', array_fill(0, count($keys), '?'));
@@ -153,12 +153,16 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                     <input type="text" class="form-control" name="about_breadcrumb_title" value="<?= e($pc['about_breadcrumb_title']??'Who We Are') ?>" placeholder="e.g. Who We Are">
                     <small class="text-muted">The heading displayed on the breadcrumb banner</small>
                 </div>
+                <?php // The breadcrumb image moved to the central Breadcrumb Images
+                      // screen, which every other page already used. Keeping a second
+                      // editor for the same image here would mean one of the two
+                      // silently had no effect. See spec item B2. ?>
                 <div class="col-md-6">
-                    <div class="card p-3 border shadow-sm">
-                        <label class="mb-2 fw-bold">Background Image <small class="text-muted">(1920x400)</small></label>
-                        <div class="logo-card-fixed mb-2"><img id="prev_about_breadcrumb_bg" src="<?= img_preview_src($pc['about_breadcrumb_bg']??'assets/img/bg.png') ?>"></div>
-                        <input type="file" class="form-control" accept="image/*" onchange="initCropper(this, 'about_breadcrumb_bg', 1920, 400)">
-                        <input type="hidden" name="about_breadcrumb_bg_cropped" id="about_breadcrumb_bg_cropped">
+                    <label class="form-label fw-bold">Background Image</label>
+                    <div class="alert alert-light border mb-0 py-2 px-3 small">
+                        Managed centrally under
+                        <a href="index.php?page=breadcrumbs_edit.php">Breadcrumb Images</a>
+                        &rarr; <strong>About Us (Who Are We)</strong>, alongside every other page banner.
                     </div>
                 </div>
             </div>

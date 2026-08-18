@@ -34,7 +34,7 @@ $text_keys = [
     'train_about_policy_acceptance_tab','train_about_policy_acceptance_title','train_about_policy_acceptance_body',
     'train_about_policy_cancellations_tab','train_about_policy_cancellations_title','train_about_policy_cancellations_body',
     'train_about_policy_fees_tab','train_about_policy_fees_title','train_about_policy_fees_body',
-    'train_about_bank_title','train_about_bank_name','train_about_bank_account_name','train_about_bank_account_number','train_about_bank_branch_code','train_about_bank_branch_name','train_about_bank_note',
+    'train_about_bank_title','train_about_bank_name','train_about_bank_account_name','train_about_bank_account_number','train_about_bank_branch_code','train_about_bank_branch_name','train_about_bank_swift','train_about_bank_note',
     'train_about_policy_travel_tab','train_about_policy_travel_title','train_about_policy_travel_body',
     'train_about_policy_inhouse_tab','train_about_policy_inhouse_title','train_about_policy_inhouse_body',
     'train_about_policy_assessments_tab','train_about_policy_assessments_title',
@@ -366,6 +366,13 @@ $courses = [
                         <label class="form-label">Branch Name</label>
                         <input type="text" name="train_about_bank_branch_name" class="form-control"
                                value="<?= pc_h($pc['train_about_bank_branch_name']) ?>">
+                    </div>
+                    <?php // The page shows a SWIFT code but the editor had no field for it,
+                          // so it could only be changed in code. See spec item B6. ?>
+                    <div class="col-md-6">
+                        <label class="form-label">SWIFT Code</label>
+                        <input type="text" name="train_about_bank_swift" class="form-control"
+                               value="<?= pc_h($pc['train_about_bank_swift']) ?>">
                     </div>
                     <div class="col-12">
                         <label class="form-label">Footnote (under banking table)</label>

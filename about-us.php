@@ -1,6 +1,11 @@
 <?php
 // about-us.php — pulls content from page_content table
 require_once('includes/db_connect.php');
+// Breadcrumb images are managed centrally under Breadcrumb Images in the admin.
+// This page previously used a private about_breadcrumb_bg key instead, which is
+// why it was the one page missing from that screen.
+// See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2).
+require_once('includes/breadcrumb_helper.php');
 
 // ── Load all about_* keys in one query ───────────────────────
 $keys = [
@@ -8,7 +13,7 @@ $keys = [
     'about_val_transparency', 'about_val_people', 'about_val_responsiveness',
     'about_val_innovation', 'about_val_professionalism',
     'about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner',
-    'about_breadcrumb_title', 'about_breadcrumb_bg'
+    'about_breadcrumb_title'
 ];
 $placeholders = implode(',', array_fill(0, count($keys), '?'));
 $types = str_repeat('s', count($keys));
@@ -39,7 +44,6 @@ $defaults = [
     'about_img_team'            => 'assets/img/blog_thumb10.jpg',
     'about_img_banner'          => 'assets/img/blog_thumb11.jpg',
     'about_breadcrumb_title'    => 'Who We Are',
-    'about_breadcrumb_bg'       => 'assets/img/bg.png',
 ];
 foreach ($defaults as $k => $v) {
     if (empty($pc[$k])) $pc[$k] = $v;
@@ -457,7 +461,7 @@ function render_paragraphs($text) {
 
 <main class="main-area fix">
     <!-- breadcrumb-area -->
-    <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= htmlspecialchars($pc['about_breadcrumb_bg']) ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <section class="breadcrumb-area breadcrumb-bg" style="background-image: url('<?= get_breadcrumb_bg('about-us', 'assets/img/bg.png') ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <div class="container">
             <div class="row">
                 <div class="col-12">
