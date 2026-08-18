@@ -44,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // -- Add or Update team member --
+    // The LinkedIn URL field was removed on request: no member had ever been
+    // given one (0 of 9), and the public page rendered nothing for it. The
+    // eswasa_team_members.social_linkedin column is deliberately left in
+    // place — dropping it gains nothing and makes this harder to reverse.
+    // See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B5).
     if ($action === 'add' || $action === 'update') {
         $id          = $action === 'update' ? (int)($_POST['id'] ?? 0) : 0;
         $name        = pc_strip_text($_POST['name'] ?? '');
@@ -51,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $section_raw = (string)($_POST['section'] ?? 'management');
         $section     = in_array($section_raw, ['council','management','staff'], true) ? $section_raw : 'management';
         $bio         = pc_strip_text($_POST['bio'] ?? '');
-        $linkedin    = pc_strip_text($_POST['social_linkedin'] ?? '');
         $sort_order  = (int)($_POST['sort_order'] ?? 0);
         $is_vacant   = !empty($_POST['is_vacant']) ? 1 : 0;
 
@@ -75,11 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $photo = $photo_path ?? '';
             $stmt = $conn->prepare(
                 "INSERT INTO eswasa_team_members
-                    (name, role, photo, bio, section, social_linkedin, sort_order, is_vacant)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                    (name, role, photo, bio, section, sort_order, is_vacant)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)"
             );
             // s s s s s s i i  → 6 strings + 2 ints
-            $stmt->bind_param('ssssssii', $name, $role, $photo, $bio, $section, $linkedin, $sort_order, $is_vacant);
+            $stmt->bind_param('sssssii', $name, $role, $photo, $bio, $section, $sort_order, $is_vacant);
             $msg = 'Team member added.';
         } else {
             if ($id <= 0) {
@@ -90,17 +94,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($photo_path !== null) {
                 $stmt = $conn->prepare(
                     "UPDATE eswasa_team_members
-                        SET name = ?, role = ?, photo = ?, bio = ?, section = ?, social_linkedin = ?, sort_order = ?, is_vacant = ?
+                        SET name = ?, role = ?, photo = ?, bio = ?, section = ?, sort_order = ?, is_vacant = ?
                       WHERE id = ?"
                 );
-                $stmt->bind_param('ssssssiii', $name, $role, $photo_path, $bio, $section, $linkedin, $sort_order, $is_vacant, $id);
+                $stmt->bind_param('sssssiii', $name, $role, $photo_path, $bio, $section, $sort_order, $is_vacant, $id);
             } else {
                 $stmt = $conn->prepare(
                     "UPDATE eswasa_team_members
-                        SET name = ?, role = ?, bio = ?, section = ?, social_linkedin = ?, sort_order = ?, is_vacant = ?
+                        SET name = ?, role = ?, bio = ?, section = ?, sort_order = ?, is_vacant = ?
                       WHERE id = ?"
                 );
-                $stmt->bind_param('sssssiii', $name, $role, $bio, $section, $linkedin, $sort_order, $is_vacant, $id);
+                $stmt->bind_param('ssssiii', $name, $role, $bio, $section, $sort_order, $is_vacant, $id);
             }
             $msg = 'Team member updated.';
         }
@@ -460,10 +464,6 @@ $section_meta = [
                         <textarea name="bio" class="form-control" rows="3" placeholder="Short bio (optional)."></textarea>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">LinkedIn URL</label>
-                        <input type="url" name="social_linkedin" class="form-control" placeholder="https://www.linkedin.com/in/...">
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -545,11 +545,6 @@ $section_meta = [
                 <textarea name="bio" class="form-control" rows="3"><?= pc_h($edit_member['bio']) ?></textarea>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold">LinkedIn URL</label>
-                <input type="url" name="social_linkedin" class="form-control"
-                       value="<?= pc_h($edit_member['social_linkedin']) ?>">
-            </div>
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Save Changes</button>

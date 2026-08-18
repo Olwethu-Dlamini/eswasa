@@ -423,9 +423,6 @@ try {
                             <h4 class="team-name"><?= pc_h($council_chair['name']) ?></h4>
                             <p class="team-role"><?= pc_h($council_chair['role']) ?></p>
                             <div class="team-social">
-                                <?php if (!empty($council_chair['social_linkedin'])): ?>
-                                    <a href="<?= pc_h($council_chair['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -439,9 +436,6 @@ try {
                                 <h4 class="team-name"><?= pc_h($c['name']) ?></h4>
                                 <p class="team-role"><?= pc_h($c['role']) ?></p>
                                 <div class="team-social">
-                                    <?php if (!empty($c['social_linkedin'])): ?>
-                                        <a href="<?= pc_h($c['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -473,9 +467,6 @@ try {
                                 <p class="team-bio"><?= pc_h($mgmt_leader['bio']) ?></p>
                             <?php endif; ?>
                             <div class="team-social">
-                                <?php if (!empty($mgmt_leader['social_linkedin'])): ?>
-                                    <a href="<?= pc_h($mgmt_leader['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -492,9 +483,6 @@ try {
                                     <p class="team-bio"><?= pc_h($m['bio']) ?></p>
                                 <?php endif; ?>
                                 <div class="team-social">
-                                    <?php if (!empty($m['social_linkedin'])): ?>
-                                        <a href="<?= pc_h($m['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -528,9 +516,6 @@ try {
                                     <p class="team-bio"><?= pc_h($s['bio']) ?></p>
                                 <?php endif; ?>
                                 <div class="team-social">
-                                    <?php if (!empty($s['social_linkedin'])): ?>
-                                        <a href="<?= pc_h($s['social_linkedin']) ?>" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
