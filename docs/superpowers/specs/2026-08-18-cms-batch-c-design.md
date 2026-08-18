@@ -2,6 +2,7 @@
 
 **Date:** 2026-08-18
 **Status:** **implemented and pushed to `main`** (2026-08-18)
+**Predecessors:** Batch A (bugs) and Batch B (structure & parity), both on `main`
 
 | Item | Commit | Outcome |
 |------|--------|---------|
@@ -32,7 +33,6 @@ thumbnail strip, and the calendar's own indexing and rendering functions run
 against the page's own data with deliberately overlapping intakes. This
 catches logic faults but not visual ones — the pill layout and the sidebar
 fade should still be eyeballed in a browser.
-**Predecessors:** Batch A (bugs) and Batch B (structure & parity), both on `main`
 
 Batch C is the remaining UAT items: things the CMS cannot currently do, rather
 than things it does wrongly. Verification uses the local replica described in
