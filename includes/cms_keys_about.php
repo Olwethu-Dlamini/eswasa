@@ -30,6 +30,10 @@ $about_keys = [
     'about_val_professionalism_title',
     // Affiliations + accreditation logo strips, previously hardcoded PHP arrays.
     'about_affiliations_title', 'about_accreditation_title', 'about_accreditation_body',
+    // The picture at the centre of the Core Values wheel. It was hardcoded as
+    // "about core.jpg", so the one image actually on the page was the one image
+    // the CMS could not change.
+    'about_values_image',
 ];
 for ($i = 1; $i <= 10; $i++) {
     $about_keys[] = "about_affiliation_{$i}_logo";
@@ -81,6 +85,8 @@ $about_defaults = [
     'about_affiliation_6_logo' => 'assets/img/WTO.png',          'about_affiliation_6_alt' => 'WTO',      'about_affiliation_6_url' => 'https://www.wto.org',
     'about_affiliation_7_logo' => 'assets/img/AP.png',           'about_affiliation_7_alt' => 'AP',       'about_affiliation_7_url' => '',
     'about_affiliation_8_logo' => 'assets/img/sadcstan.jpg',     'about_affiliation_8_alt' => 'sadcstan', 'about_affiliation_8_url' => '',
+
+    'about_values_image' => 'admin/uploads/about-core.jpg',
 
     'about_accreditation_1_logo' => 'assets/img/SADCAS.png', 'about_accreditation_1_alt' => 'SADCAS', 'about_accreditation_1_url' => 'https://www.sadcas.org',
 ];

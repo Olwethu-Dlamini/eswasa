@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
 
     $image_updates = [];
     $image_errors  = [];
-    $image_keys = ['about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner'];
+    $image_keys = ['about_values_image'];
     // Affiliation and accreditation logo strips were a hardcoded PHP array on
     // about-us.php until Batch B. See spec item B2.
     for ($i = 1; $i <= 10; $i++) { $image_keys[] = "about_affiliation_{$i}_logo"; }
@@ -139,7 +139,31 @@ $keys = $about_keys;
 $pc = pc_get_many($conn, $keys, $about_defaults);
 
 function e($v) { return htmlspecialchars($v ?? ''); }
-function img_preview_src($path) { return '../' . ltrim($path, '/'); }
+/**
+ * Web path for an image preview in this editor.
+ *
+ * An empty value used to return just "../", which the browser requests as a
+ * page and then draws as a broken-image icon. Invisible until Batch B added
+ * fourteen logo slots here, most of them empty — five broken icons on one
+ * screen. See spec item C5 / UI pass.
+ */
+function img_preview_src($path) {
+    $p = trim((string)$path);
+    return $p === '' ? '' : '../' . ltrim($p, '/');
+}
+
+/** An image preview, or a neutral "no image yet" tile when the slot is unset. */
+function img_preview_tag($id, $path) {
+    $src = img_preview_src($path);
+    if ($src === '') {
+        return '<div class="logo-card-fixed mb-2 img-preview-empty">'
+             . '<img id="prev_' . htmlspecialchars($id) . '" alt="" hidden>'
+             . '<span>No image yet</span></div>';
+    }
+    return '<div class="logo-card-fixed mb-2">'
+         . '<img id="prev_' . htmlspecialchars($id) . '" src="' . htmlspecialchars($src) . '" alt="">'
+         . '</div>';
+}
 ?>
 
 <style>
@@ -241,24 +265,28 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
       <div class="card-body">
         <h5>Images</h5>
 
-            <div class="row g-4">
-                <?php foreach(['about_img_banner'=>'Intro Banner','about_img_team'=>'Team Banner','about_img_vision'=>'Vision','about_img_mission'=>'Mission'] as $k=>$l):
-                    $isBanner = (strpos($k, 'banner') !== false || $k === 'about_img_team');
-                    $w = 1200; $h = $isBanner ? 350 : 560;
-                ?>
-                <div class="col-md-6">
-                    <div class="card p-3 border shadow-sm">
-                        <label class="mb-2 fw-bold"><?= $l ?> <small class="text-muted">(<?= $w ?>×<?= $h ?>)</small></label>
-                        <div class="logo-card-fixed mb-2"><img id="prev_<?= $k ?>" src="<?= img_preview_src($pc[$k]??'') ?>"></div>
-                        <input type="file" class="form-control" accept="image/*" onchange="initCropper(this, '<?= $k ?>', <?= $w ?>, <?= $h ?>)">
-                        <input type="hidden" name="<?= $k ?>_cropped" id="<?= $k ?>_cropped">
-                    </div>
+        <?php /* Only one image actually appears on the About Us page: the picture at
+                 the centre of the Core Values wheel. The four fields that used to sit
+                 here — Intro Banner, Team Banner, Vision, Mission — were left over
+                 from an earlier design; about-us.php referenced none of them, so an
+                 editor could upload to all four and see no change on the site.
+                 They are removed rather than left to mislead. The stored values and
+                 the uploaded files are untouched, so restoring them is a template
+                 change if that design ever comes back. */ ?>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card p-3 border shadow-sm">
+                    <label class="mb-2 fw-bold">Core Values picture <small class="text-muted">(square, 800&times;800)</small></label>
+                    <?= img_preview_tag('about_values_image', $pc['about_values_image'] ?? '') ?>
+                    <input type="file" class="form-control" accept="image/*" onchange="initCropper(this, 'about_values_image', 800, 800)">
+                    <input type="hidden" name="about_values_image_cropped" id="about_values_image_cropped">
+                    <div class="form-text">Sits in the middle of the Core Values wheel on the public page.</div>
                 </div>
-                <?php endforeach; ?>
             </div>
-        
+        </div>
       </div>
     </div>
+
     <div class="card mb-3">
       <div class="card-body">
         <h5>Affiliations &amp; Accreditation</h5>
@@ -277,7 +305,7 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                 <div class="col-md-6 col-lg-4">
                     <div class="card p-3 border shadow-sm h-100">
                         <label class="mb-2 fw-bold small">Affiliation <?= $i ?></label>
-                        <div class="logo-card-fixed mb-2"><img id="prev_<?= $kl ?>" src="<?= img_preview_src($pc[$kl]??'') ?>"></div>
+                        <?= img_preview_tag($kl, $pc[$kl] ?? '') ?>
                         <input type="file" class="form-control form-control-sm mb-2" accept="image/*" onchange="initCropper(this, '<?= $kl ?>', 400, 240)">
                         <input type="hidden" name="<?= $kl ?>_cropped" id="<?= $kl ?>_cropped">
                         <label class="form-label small mb-1">Name (also the image's alt text)</label>
@@ -308,7 +336,7 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                 <div class="col-md-6 col-lg-3">
                     <div class="card p-3 border shadow-sm h-100">
                         <label class="mb-2 fw-bold small">Accrediting body <?= $i ?></label>
-                        <div class="logo-card-fixed mb-2"><img id="prev_<?= $kl ?>" src="<?= img_preview_src($pc[$kl]??'') ?>"></div>
+                        <?= img_preview_tag($kl, $pc[$kl] ?? '') ?>
                         <input type="file" class="form-control form-control-sm mb-2" accept="image/*" onchange="initCropper(this, '<?= $kl ?>', 400, 240)">
                         <input type="hidden" name="<?= $kl ?>_cropped" id="<?= $kl ?>_cropped">
                         <label class="form-label small mb-1">Name</label>

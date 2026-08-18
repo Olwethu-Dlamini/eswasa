@@ -532,7 +532,7 @@ function render_paragraphs($text) {
                         </div>
                     </div>
                     <div class="col-lg-6 text-center">
-                        <img src="about core.jpg" alt="Core Values" class="values-center-image">
+                        <img src="<?= pc_h(pc_image_src($pc['about_values_image'], 'admin/uploads/about-core.jpg')) ?>" alt="<?= pc_h($pc['about_heading_values']) ?>" class="values-center-image">
                     </div>
                     <div class="col-lg-3">
                         <div class="value-card-custom">
