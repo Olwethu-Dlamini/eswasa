@@ -1,0 +1,74 @@
+ESWASA CMS — files to upload to production
+Baseline: 896a88b   Target: ed5f41e   Generated: 2026-08-18
+
+DO NOT UPLOAD:
+  includes/env.php   <- holds YOUR live database password. The copy in the
+                        repository has placeholders and would overwrite it.
+
+Run after uploading:
+  mysql -u eswasa1 -p admin_eswasa < admin/sql/upgrade_2026_08_18.sql
+
+mod     admin/config.php
+mod     admin/css/style.css
+NEW     admin/includes/document_field.php
+mod     admin/includes/sidebar.php
+mod     admin/index.php
+mod     admin/js/cropper-modal.js
+mod     admin/js/main.js
+mod     admin/pages/about_edit.php
+mod     admin/pages/about_team.php
+mod     admin/pages/announcements_edit.php
+mod     admin/pages/breadcrumbs_edit.php
+mod     admin/pages/calibration_edit.php
+mod     admin/pages/cert_status_edit.php
+mod     admin/pages/certification_edit.php
+mod     admin/pages/contact_edit.php
+mod     admin/pages/customer_feedback.php
+mod     admin/pages/events_edit.php
+mod     admin/pages/faq_edit.php
+mod     admin/pages/index_edit.php
+mod     admin/pages/ingelo.php
+mod     admin/pages/managementsystems.php
+mod     admin/pages/policies_edit.php
+mod     admin/pages/product.php
+mod     admin/pages/publications_edit.php
+mod     admin/pages/purchase.php
+NEW     admin/pages/qoute_other.php
+mod     admin/pages/service_charter.php
+mod     admin/pages/services_edit.php
+mod     admin/pages/site_settings.php
+mod     admin/pages/standards_edit.php
+mod     admin/pages/tcp.php
+mod     admin/pages/tenders_edit.php
+mod     admin/pages/training_about.php
+mod     admin/pages/training_calendar.php
+mod     admin/pages/users.php
+mod     admin/pages/vacancies_edit.php
+mod     admin/pages/work.php
+NEW     admin/sql/batch_a_data_fixes.sql
+NEW     admin/sql/batch_b_data_fixes.sql
+NEW     admin/sql/drop_dead_tables.sql
+NEW     admin/uploads/about-core.jpg
+mod     .gitignore
+mod     Calibration.php
+mod     Meetourteam.php
+mod     Standards.php
+NEW     TEC_SDU_FO_002- Standards Proposal Form.doc
+NEW     TEC_SDU_FO_002- Standards Proposal Form.pdf
+mod     about-us.php
+NEW     assets/img/team-placeholder.svg
+mod     contact.php
+mod     contactcalibration.php
+mod     includes/cms_helpers.php
+NEW     includes/cms_keys_about.php
+mod     includes/cms_keys_service_charter.php
+mod     includes/header.php
+NEW     includes/quote_result_banner.php
+mod     process_quote.php
+mod     qoute_calibration.php
+mod     qoute_certification.php
+mod     qoute_training.php
+mod     service-charter.php
+mod     tcp.php
+mod     training-about.php
+mod     training-calendar.php
