@@ -49,8 +49,25 @@ function getCurrentUser($conn) {
     return null;
 }
 
-// Set a flash message in session
+// Set a flash message in session.
+//
+// $type is rendered straight into a Bootstrap "alert-{$type}" class, so it has
+// to be a real Bootstrap variant. 25 call sites across seven editors used
+// 'error', which is not one — alert-error has no styling, so those messages
+// (every one of them a validation or database failure) appeared as unstyled
+// black text with no red box, and were routinely missed. The call sites are
+// fixed; this mapping means a future typo degrades to a visible alert instead
+// of an invisible one.
+// See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md, item X1.
 function set_flash($type, $message) {
+    $aliases = ['error' => 'danger', 'warn' => 'warning', 'ok' => 'success'];
+    $type = $aliases[$type] ?? $type;
+
+    $valid = ['primary','secondary','success','danger','warning','info','light','dark'];
+    if (!in_array($type, $valid, true)) {
+        $type = 'info';
+    }
+
     $_SESSION['flash'] = [
         'type' => $type,
         'message' => $message

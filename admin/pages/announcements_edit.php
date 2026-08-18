@@ -90,20 +90,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($announcement_type, $allowed_types, true)) $announcement_type = 'news';
 
     if ($external_link !== '' && !filter_var($external_link, FILTER_VALIDATE_URL)) {
-        set_flash('error', 'External link must be a valid URL.');
+        set_flash('danger', 'External link must be a valid URL.');
         header('Location: index.php?page=announcements_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
         exit;
     }
 
     if (!$title || !$published_date || !$description) {
-        set_flash('error', 'Title, Description, and Published Date are required.');
+        set_flash('danger', 'Title, Description, and Published Date are required.');
         header('Location: index.php?page=announcements_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
         exit;
     }
 
     $upload = announcements_upload('file', __DIR__ . '/../uploads/announcements/');
     if (!$upload['ok']) {
-        set_flash('error', $upload['error']);
+        set_flash('danger', $upload['error']);
         header('Location: index.php?page=announcements_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
         exit;
     }
@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt && $stmt->execute()) {
         set_flash('success', $msg);
     } else {
-        set_flash('error', 'Database error: ' . $conn->error);
+        set_flash('danger', 'Database error: ' . $conn->error);
     }
     if ($stmt) $stmt->close();
     header('Location: index.php?page=announcements_edit.php&tab=list');

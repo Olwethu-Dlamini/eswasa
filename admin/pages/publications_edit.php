@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folder_action'])) {
         $name = pc_strip_text($_POST['name'] ?? '');
         $sort = (int)($_POST['sort_order'] ?? 0);
         if ($name === '') {
-            set_flash('error', 'Folder name is required.');
+            set_flash('danger', 'Folder name is required.');
         } else {
             $stmt = $conn->prepare('INSERT INTO eswasa_publication_groups (name, type_key, sort_order, is_system) VALUES (?, NULL, ?, 0)');
             $stmt->bind_param('si', $name, $sort);
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folder_action'])) {
             set_flash($stmt->execute() ? 'success' : 'error', $stmt->error ? 'Database error: ' . $conn->error : 'Folder updated.');
             $stmt->close();
         } else {
-            set_flash('error', 'Folder name is required.');
+            set_flash('danger', 'Folder name is required.');
         }
     } elseif ($fa === 'delete') {
         // Only custom (non-system) folders can be deleted. Their documents
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['folder_action'])) {
             $d->close();
             set_flash('success', 'Folder deleted. Its documents are back to Auto (by type).');
         } else {
-            set_flash('error', 'System type folders cannot be deleted.');
+            set_flash('danger', 'System type folders cannot be deleted.');
         }
     }
     header('Location: index.php?page=publications_edit.php&tab=folders');
@@ -149,14 +149,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$title || !$published_date || !$description) {
-        set_flash('error', 'Title, Description, and Published Date are required.');
+        set_flash('danger', 'Title, Description, and Published Date are required.');
         header('Location: index.php?page=publications_edit.php&tab=documents' . ($id ? "&edit=$id" : ''));
         exit;
     }
 
     $upload = publications_upload_pdf('file', __DIR__ . '/../uploads/publications/');
     if (!$upload['ok']) {
-        set_flash('error', $upload['error']);
+        set_flash('danger', $upload['error']);
         header('Location: index.php?page=publications_edit.php&tab=documents' . ($id ? "&edit=$id" : ''));
         exit;
     }
@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $msg = 'Publication updated.';
     } else {
         if (!$file_path) {
-            set_flash('error', 'A PDF file is required when creating a publication.');
+            set_flash('danger', 'A PDF file is required when creating a publication.');
             header('Location: index.php?page=publications_edit.php&tab=documents');
             exit;
         }
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt && $stmt->execute()) {
         set_flash('success', $msg);
     } else {
-        set_flash('error', 'Database error: ' . $conn->error);
+        set_flash('danger', 'Database error: ' . $conn->error);
     }
     if ($stmt) $stmt->close();
     header('Location: index.php?page=publications_edit.php&tab=documents');

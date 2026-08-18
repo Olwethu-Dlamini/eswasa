@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = !empty($_POST['id']) ? (int)$_POST['id'] : null;
 
     if (!$title || !$closing_date || !$description) {
-        set_flash('error', 'Title, Closing Date, and Description are required.');
+        set_flash('danger', 'Title, Closing Date, and Description are required.');
         header("Location: index.php?page=vacancies_edit.php&tab=positions" . ($id ? "&edit=$id" : ""));
         exit;
     }
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->execute()) {
         set_flash('success', $msg);
     } else {
-        set_flash('error', 'Database error: ' . $conn->error);
+        set_flash('danger', 'Database error: ' . $conn->error);
     }
     $stmt->close();
     header("Location: index.php?page=vacancies_edit.php&tab=positions");

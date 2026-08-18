@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_tender'])) {
     $id           = !empty($_POST['id']) ? (int)$_POST['id'] : null;
 
     if (!$title || !$description || !$published || !$closing) {
-        set_flash('error', 'Title, Description, Published Date and Closing Date are required.');
+        set_flash('danger', 'Title, Description, Published Date and Closing Date are required.');
         header('Location: index.php?page=tenders_edit.php' . ($id ? "&edit=$id" : ''));
         exit;
     }
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_tender'])) {
 
     $docErr = tenders_process_documents($conn, (int)$tender_id);
     if ($docErr) {
-        set_flash('error', $docErr . ' (Tender saved; fix the document and re-upload.)');
+        set_flash('danger', $docErr . ' (Tender saved; fix the document and re-upload.)');
         header('Location: index.php?page=tenders_edit.php&edit=' . (int)$tender_id);
         exit;
     }

@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate required fields
     if (!$title || !$event_date) {
-        set_flash('error', 'Title and Date are required.');
+        set_flash('danger', 'Title and Date are required.');
         header("Location: index.php?page=events_edit.php" . ($id ? "&edit=$id" : ""));
         exit;
     }
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$stmt || !$stmt->execute()) {
-        set_flash('error', 'Database error: ' . $conn->error);
+        set_flash('danger', 'Database error: ' . $conn->error);
         header("Location: index.php?page=events_edit.php" . ($id ? "&edit=$id" : ""));
         exit;
     }
@@ -273,7 +273,7 @@ if (isset($_GET['delete'])) {
             }
         }
     } else {
-        set_flash('error', 'Failed to delete event.');
+        set_flash('danger', 'Failed to delete event.');
     }
     $stmt->close();
     header("Location: index.php?page=events_edit.php");

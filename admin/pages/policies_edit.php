@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = !empty($_POST['id']) ? (int)$_POST['id'] : null;
 
     if (!$title || !$description) {
-        set_flash('error', 'Title and Description are required.');
+        set_flash('danger', 'Title and Description are required.');
         header('Location: index.php?page=policies_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
         exit;
     }
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file_path = $existing_file_path; // default: keep existing
     if ($is_internal) {
         if ($internal_path === '') {
-            set_flash('error', 'Internal page URL is required for internal policies.');
+            set_flash('danger', 'Internal page URL is required for internal policies.');
             header('Location: index.php?page=policies_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
             exit;
         }
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $upload = policies_upload_pdf('file', __DIR__ . '/../uploads/policies/');
         if (!$upload['ok']) {
-            set_flash('error', $upload['error']);
+            set_flash('danger', $upload['error']);
             header('Location: index.php?page=policies_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
             exit;
         }
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$file_path) {
-        set_flash('error', 'A PDF file (or internal page URL) is required.');
+        set_flash('danger', 'A PDF file (or internal page URL) is required.');
         header('Location: index.php?page=policies_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
         exit;
     }
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt && $stmt->execute()) {
         set_flash('success', $msg);
     } else {
-        set_flash('error', 'Database error: ' . $conn->error);
+        set_flash('danger', 'Database error: ' . $conn->error);
     }
     if ($stmt) $stmt->close();
     header('Location: index.php?page=policies_edit.php&tab=list');

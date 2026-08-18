@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($category, $allowed_categories, true)) $category = 'general';
 
     if (!$question || !$answer) {
-        set_flash('error', 'Question and Answer are required.');
+        set_flash('danger', 'Question and Answer are required.');
         header('Location: index.php?page=faq_edit.php&tab=list' . ($id ? "&edit=$id" : ''));
         exit;
     }
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt && $stmt->execute()) {
         set_flash('success', $msg);
     } else {
-        set_flash('error', 'Database error: ' . $conn->error);
+        set_flash('danger', 'Database error: ' . $conn->error);
     }
     if ($stmt) $stmt->close();
     header('Location: index.php?page=faq_edit.php&tab=list');
