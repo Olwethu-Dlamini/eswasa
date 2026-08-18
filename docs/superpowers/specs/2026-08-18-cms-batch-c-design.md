@@ -1,7 +1,37 @@
 # ESWASA CMS — Batch C ("New capability") design
 
 **Date:** 2026-08-18
-**Status:** approved, implementing
+**Status:** **implemented and pushed to `main`** (2026-08-18)
+
+| Item | Commit | Outcome |
+|------|--------|---------|
+| C6 save guard | `27a653d` | The POST that emptied 131 keys in Batch B now changes only what it carries |
+| C2 document uploads | `49a80b1` | 7 fields converted; a second live 404 (the TC Apply button) found and fixed |
+| C1 brands | `44fb4e3` | Add and remove both work; 12 slots → 20 |
+| C3 image previews | `0e1e053` | Thumbnails with per-image remove, in the shared cropper |
+| C4 calendar pills | `361dfce` | Every training on a day renders as its own clickable pill |
+| C5 interface polish | `bfd32de` | Sidebar fade/nowrap, accordion conflict, page-jump, reduced motion |
+
+### Notes from implementation
+
+**C1 needed a second fix nobody predicted.** Adding a "remove" control was
+not enough: `pc_get_many()` falls back to a code default whenever a stored
+value is empty, so the populated per-brand defaults resurrected any brand an
+editor removed. Removal only works because those defaults were deleted and
+`page_content` became the single source of truth for brands.
+
+**C2 found another dead link.** `tcp_apply_button_url` pointed at
+`admin/uploads/tc_membership_application.pdf`, which has never existed — the
+Technical Committee "Apply" button was 404ing exactly like the prospectus in
+Batch A. Repointed at the registration form that is in the repository.
+
+**Verification without a browser.** No Chrome is installed on this machine and
+jsdom is not available, so the three JavaScript items were verified by
+executing the shipped source against a minimal DOM stub: the cropper's
+thumbnail strip, and the calendar's own indexing and rendering functions run
+against the page's own data with deliberately overlapping intakes. This
+catches logic faults but not visual ones — the pill layout and the sidebar
+fade should still be eyeballed in a browser.
 **Predecessors:** Batch A (bugs) and Batch B (structure & parity), both on `main`
 
 Batch C is the remaining UAT items: things the CMS cannot currently do, rather
