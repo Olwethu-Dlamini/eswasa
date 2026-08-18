@@ -17,6 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
     $image_updates = [];
     $image_errors  = [];
     $image_keys = ['about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner'];
+    // Affiliation and accreditation logo strips were a hardcoded PHP array on
+    // about-us.php until Batch B. See spec item B2.
+    for ($i = 1; $i <= 10; $i++) { $image_keys[] = "about_affiliation_{$i}_logo"; }
+    for ($i = 1; $i <= 4;  $i++) { $image_keys[] = "about_accreditation_{$i}_logo"; }
 
     // Check uploads dir is writable before attempting image saves
     $uploads_writable = is_dir($upload_dir) && is_writable($upload_dir);
@@ -66,6 +70,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
         'about_breadcrumb_title'    => pc_strip_text($_POST['about_breadcrumb_title']    ?? ''),
     ];
 
+    // Section headings + logo strip labels, all hardcoded before Batch B.
+    $extra_text_keys = [
+        'about_heading_main', 'about_heading_visionmission', 'about_heading_vision',
+        'about_heading_mission', 'about_heading_values', 'about_heading_history',
+        'about_val_transparency_title', 'about_val_responsiveness_title',
+        'about_val_people_title', 'about_val_innovation_title',
+        'about_val_professionalism_title',
+        'about_affiliations_title', 'about_accreditation_title', 'about_accreditation_body',
+    ];
+    for ($i = 1; $i <= 10; $i++) {
+        $extra_text_keys[] = "about_affiliation_{$i}_alt";
+        $extra_text_keys[] = "about_affiliation_{$i}_url";
+    }
+    for ($i = 1; $i <= 4; $i++) {
+        $extra_text_keys[] = "about_accreditation_{$i}_alt";
+        $extra_text_keys[] = "about_accreditation_{$i}_url";
+    }
+    foreach ($extra_text_keys as $k) {
+        $text_fields[$k] = pc_strip_text($_POST[$k] ?? '');
+    }
+
     $all = array_merge($text_fields, $image_updates);
 
     $upsert = $conn->prepare("INSERT INTO page_content (page_key, content) VALUES (?, ?) ON DUPLICATE KEY UPDATE content = VALUES(content)");
@@ -90,22 +115,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
 }
 
 // ── Load Values ──────────────────────────────────────────────
-$keys = [
-    'about_intro','about_vision','about_mission','about_history',
-    'about_val_transparency','about_val_people','about_val_responsiveness',
-    'about_val_innovation','about_val_professionalism',
-    'about_img_vision','about_img_mission','about_img_team', 'about_img_banner',
-    'about_breadcrumb_title'
-];
+// Keys and defaults come from the shared registry, so this editor and
+// about-us.php can never drift apart. Defaults are applied for keys with no
+// stored row yet, otherwise the form would show blank logo and heading fields
+// for content the page is visibly rendering. See spec item B2.
+require_once __DIR__ . '/../../includes/cms_keys_about.php';
+$keys = $about_keys;
 
-$placeholders = implode(',', array_fill(0, count($keys), '?'));
-$stmt = $conn->prepare("SELECT page_key, content FROM page_content WHERE page_key IN ($placeholders)");
-$stmt->bind_param(str_repeat('s', count($keys)), ...$keys);
-$stmt->execute();
-$r = $stmt->get_result();
-$pc = [];
-while ($row = $r->fetch_assoc()) $pc[$row['page_key']] = $row['content'];
-$stmt->close();
+$pc = pc_get_many($conn, $keys, $about_defaults);
 
 function e($v) { return htmlspecialchars($v ?? ''); }
 function img_preview_src($path) { return '../' . ltrim($path, '/'); }
@@ -143,6 +160,7 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-values" type="button">Core Values</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-history" type="button">History</button></li>
         <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-images" type="button">Images</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-affiliations" type="button">Affiliations</button></li>
     </ul>
 
     <div class="tab-content">
@@ -167,17 +185,25 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="tab-intro"><textarea class="form-control" name="about_intro" rows="5"><?= e($pc['about_intro']??'') ?></textarea></div>
-        <div class="tab-pane fade" id="tab-vision"><textarea class="form-control" name="about_vision" rows="4"><?= e($pc['about_vision']??'') ?></textarea></div>
-        <div class="tab-pane fade" id="tab-mission"><textarea class="form-control" name="about_mission" rows="4"><?= e($pc['about_mission']??'') ?></textarea></div>
+        <div class="tab-pane fade" id="tab-intro"><div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_main" value="<?= e($pc['about_heading_main']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_intro" rows="5"><?= e($pc['about_intro']??'') ?></textarea></div>
+        <div class="tab-pane fade" id="tab-vision"><div class="mb-3"><label class="form-label fw-bold">Section heading (covers Vision &amp; Mission)</label><input type="text" class="form-control" name="about_heading_visionmission" value="<?= e($pc['about_heading_visionmission']??'') ?>"></div><div class="mb-3"><label class="form-label fw-bold">"Vision" sub-heading</label><input type="text" class="form-control" name="about_heading_vision" value="<?= e($pc['about_heading_vision']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_vision" rows="4"><?= e($pc['about_vision']??'') ?></textarea></div>
+        <div class="tab-pane fade" id="tab-mission"><div class="mb-3"><label class="form-label fw-bold">"Mission" sub-heading</label><input type="text" class="form-control" name="about_heading_mission" value="<?= e($pc['about_heading_mission']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_mission" rows="4"><?= e($pc['about_mission']??'') ?></textarea></div>
         <div class="tab-pane fade" id="tab-values">
+            <div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_values" value="<?= e($pc['about_heading_values']??'') ?>"></div>
             <div class="row g-3">
                 <?php foreach(['about_val_transparency'=>'Transparency','about_val_people'=>'People','about_val_responsiveness'=>'Responsiveness','about_val_innovation'=>'Innovation','about_val_professionalism'=>'Professionalism'] as $k=>$l): ?>
-                <div class="col-md-6"><label class="form-label"><?= $l ?></label><textarea class="form-control" name="<?= $k ?>" rows="2"><?= e($pc[$k]??'') ?></textarea></div>
+                <div class="col-md-6">
+                    <div class="border rounded p-2 h-100">
+                        <label class="form-label small mb-1">Value name <span class="text-muted">(was <?= $l ?>)</span></label>
+                        <input type="text" class="form-control form-control-sm mb-2" name="<?= $k ?>_title" value="<?= e($pc[$k.'_title']??'') ?>">
+                        <label class="form-label small mb-1">Description</label>
+                        <textarea class="form-control form-control-sm" name="<?= $k ?>" rows="2"><?= e($pc[$k]??'') ?></textarea>
+                    </div>
+                </div>
                 <?php endforeach; ?>
             </div>
         </div>
-        <div class="tab-pane fade" id="tab-history"><textarea class="form-control" name="about_history" rows="10"><?= e($pc['about_history']??'') ?></textarea></div>
+        <div class="tab-pane fade" id="tab-history"><div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_history" value="<?= e($pc['about_heading_history']??'') ?>"></div><label class="form-label fw-bold">Body (separate paragraphs with a blank line)</label><textarea class="form-control" name="about_history" rows="10"><?= e($pc['about_history']??'') ?></textarea></div>
         <div class="tab-pane fade" id="tab-images">
             <div class="row g-4">
                 <?php foreach(['about_img_banner'=>'Intro Banner','about_img_team'=>'Team Banner','about_img_vision'=>'Vision','about_img_mission'=>'Mission'] as $k=>$l):
@@ -193,6 +219,69 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                     </div>
                 </div>
                 <?php endforeach; ?>
+            </div>
+        </div>
+
+        <?php /* Affiliations + accreditation logo strips. These were a hardcoded PHP
+                 array inside about-us.php until Batch B, so adding or removing a body
+                 the Authority belongs to needed a developer.
+                 See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2). */ ?>
+        <div class="tab-pane fade" id="tab-affiliations">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Affiliations heading</label>
+                <input type="text" class="form-control" name="about_affiliations_title" value="<?= e($pc['about_affiliations_title']??'') ?>">
+            </div>
+            <p class="text-muted small">Ten slots. Leave a logo empty to hide that slot &mdash; the strip shortens automatically.</p>
+            <div class="row g-3">
+                <?php for ($i = 1; $i <= 10; $i++):
+                    $kl = "about_affiliation_{$i}_logo";
+                    $ka = "about_affiliation_{$i}_alt";
+                    $ku = "about_affiliation_{$i}_url";
+                ?>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card p-3 border shadow-sm h-100">
+                        <label class="mb-2 fw-bold small">Affiliation <?= $i ?></label>
+                        <div class="logo-card-fixed mb-2"><img id="prev_<?= $kl ?>" src="<?= img_preview_src($pc[$kl]??'') ?>"></div>
+                        <input type="file" class="form-control form-control-sm mb-2" accept="image/*" onchange="initCropper(this, '<?= $kl ?>', 400, 240)">
+                        <input type="hidden" name="<?= $kl ?>_cropped" id="<?= $kl ?>_cropped">
+                        <label class="form-label small mb-1">Name (also the image's alt text)</label>
+                        <input type="text" class="form-control form-control-sm mb-2" name="<?= $ka ?>" value="<?= e($pc[$ka]??'') ?>" placeholder="e.g. ISO">
+                        <label class="form-label small mb-1">Website</label>
+                        <input type="text" class="form-control form-control-sm" name="<?= $ku ?>" value="<?= e($pc[$ku]??'') ?>" placeholder="https://...">
+                    </div>
+                </div>
+                <?php endfor; ?>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Accreditation heading</label>
+                <input type="text" class="form-control" name="about_accreditation_title" value="<?= e($pc['about_accreditation_title']??'') ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Accreditation caption</label>
+                <input type="text" class="form-control" name="about_accreditation_body" value="<?= e($pc['about_accreditation_body']??'') ?>">
+            </div>
+            <div class="row g-3">
+                <?php for ($i = 1; $i <= 4; $i++):
+                    $kl = "about_accreditation_{$i}_logo";
+                    $ka = "about_accreditation_{$i}_alt";
+                    $ku = "about_accreditation_{$i}_url";
+                ?>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card p-3 border shadow-sm h-100">
+                        <label class="mb-2 fw-bold small">Accrediting body <?= $i ?></label>
+                        <div class="logo-card-fixed mb-2"><img id="prev_<?= $kl ?>" src="<?= img_preview_src($pc[$kl]??'') ?>"></div>
+                        <input type="file" class="form-control form-control-sm mb-2" accept="image/*" onchange="initCropper(this, '<?= $kl ?>', 400, 240)">
+                        <input type="hidden" name="<?= $kl ?>_cropped" id="<?= $kl ?>_cropped">
+                        <label class="form-label small mb-1">Name</label>
+                        <input type="text" class="form-control form-control-sm mb-2" name="<?= $ka ?>" value="<?= e($pc[$ka]??'') ?>" placeholder="e.g. SADCAS">
+                        <label class="form-label small mb-1">Website</label>
+                        <input type="text" class="form-control form-control-sm" name="<?= $ku ?>" value="<?= e($pc[$ku]??'') ?>" placeholder="https://...">
+                    </div>
+                </div>
+                <?php endfor; ?>
             </div>
         </div>
     </div>

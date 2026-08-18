@@ -1,20 +1,20 @@
 <?php
 // about-us.php — pulls content from page_content table
 require_once('includes/db_connect.php');
+// Shared CMS helpers (pc_h, pc_image_src, ...). This page previously escaped
+// with htmlspecialchars() directly and defined its own paragraph renderer; it
+// now uses the same helpers as every other page, which is also what the
+// newly-editable headings and logo strips below rely on.
+require_once('includes/cms_helpers.php');
 // Breadcrumb images are managed centrally under Breadcrumb Images in the admin.
 // This page previously used a private about_breadcrumb_bg key instead, which is
 // why it was the one page missing from that screen.
 // See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2).
 require_once('includes/breadcrumb_helper.php');
 
-// ── Load all about_* keys in one query ───────────────────────
-$keys = [
-    'about_intro', 'about_vision', 'about_mission', 'about_history',
-    'about_val_transparency', 'about_val_people', 'about_val_responsiveness',
-    'about_val_innovation', 'about_val_professionalism',
-    'about_img_vision', 'about_img_mission', 'about_img_team', 'about_img_banner',
-    'about_breadcrumb_title'
-];
+require_once('includes/cms_keys_about.php');
+$keys = $about_keys;
+
 $placeholders = implode(',', array_fill(0, count($keys), '?'));
 $types = str_repeat('s', count($keys));
 
@@ -28,23 +28,8 @@ while ($row = $res->fetch_assoc()) {
 }
 $stmt->close();
 
-// Fallback defaults
-$defaults = [
-    'about_intro'              => 'The Eswatini Standards Authority (ESWASA) is a government parastatal organisation within the Ministry of Commerce, Industry, and Trade (MCIT) that was established under the Standards and Quality Act (10) 2003, amended in 2023. ESWASA is a national standards body mandated to develop, promote, and enforce standards and quality assurance in Eswatini.',
-    'about_vision'             => 'A competitive and Sustainable Trade Environment informed by effective standardization and conformity assurance in Eswatini.',
-    'about_mission'            => 'We provide and promote internationally recognized quality standards and conformity assessment services to improve business performance, minimize health and safety risks and ensure environmental integrity in collaboration with regulators.',
-    'about_history'            => "The Eswatini Standards Authority (ESWASA) is a parastatal organisation within the Ministry of Commerce, Industry, and Trade established by the Eswatini government under the Standards and Quality Act (10) of 2003, amended in 2023.\n\nESWASA is mandated by this Act to promote quality and standards in local businesses, government, and industry.",
-    'about_val_transparency'   => 'We conduct our business with honesty, openness, and integrity in all standardization processes.',
-    'about_val_people'         => 'We prioritize people—building trust, collaboration, and mutually beneficial relationships with stakeholders.',
-    'about_val_responsiveness' => 'We act promptly and effectively to meet the evolving needs of our customers, markets, and partners.',
-    'about_val_innovation'     => 'We embrace creative thinking and continuous improvement to enhance our standards and services.',
-    'about_val_professionalism'=> 'We uphold the highest standards of competence, reliability, and accountability in all our operations.',
-    'about_img_vision'          => 'assets/img/maguga.jpg',
-    'about_img_mission'         => 'assets/img/vision.jpg',
-    'about_img_team'            => 'assets/img/blog_thumb10.jpg',
-    'about_img_banner'          => 'assets/img/blog_thumb11.jpg',
-    'about_breadcrumb_title'    => 'Who We Are',
-];
+// Fallback defaults come from the shared registry above.
+$defaults = $about_defaults;
 foreach ($defaults as $k => $v) {
     if (empty($pc[$k])) $pc[$k] = $v;
 }
@@ -485,7 +470,7 @@ function render_paragraphs($text) {
                 <div class="col-lg-10 text-center">
                     <div class="about-content">
                         <div class="section__title mb-4">
-                            <h2 class="title" style="color: #2B3388;">About Us</h2>
+                            <h2 class="title" style="color: #2B3388;"><?= pc_h($pc['about_heading_main']) ?></h2>
                             <div class="section-divider"></div>
                         </div>
                         <div class="mt-4 lead px-2">
@@ -501,7 +486,7 @@ function render_paragraphs($text) {
         <div class="container">
             <!-- VISION AND MISSION -->
             <div class="text-center mt-3 mb-4">
-                <h2 class="fw-bold" style="color: #2B3388;">Vision &amp; Mission</h2>
+                <h2 class="fw-bold" style="color: #2B3388;"><?= pc_h($pc['about_heading_visionmission']) ?></h2>
                 <div class="section-divider"></div>
             </div>
             <div class="row g-4 mb-5">
@@ -510,7 +495,7 @@ function render_paragraphs($text) {
                         <div class="vm-icon" aria-hidden="true">
                             <i class="fas fa-eye"></i>
                         </div>
-                        <h3>Vision</h3>
+                        <h3><?= pc_h($pc['about_heading_vision']) ?></h3>
                         <p><?= htmlspecialchars($pc['about_vision']) ?></p>
                     </div>
                 </div>
@@ -519,7 +504,7 @@ function render_paragraphs($text) {
                         <div class="vm-icon" aria-hidden="true">
                             <i class="fas fa-compass"></i>
                         </div>
-                        <h3>Mission</h3>
+                        <h3><?= pc_h($pc['about_heading_mission']) ?></h3>
                         <p><?= htmlspecialchars($pc['about_mission']) ?></p>
                     </div>
                 </div>
@@ -527,7 +512,7 @@ function render_paragraphs($text) {
 
             <!-- CORE VALUES -->
             <div class="text-center mt-5 mb-4">
-                <h2 class="fw-bold" style="color: #2B3388;">Our Core Values</h2>
+                <h2 class="fw-bold" style="color: #2B3388;"><?= pc_h($pc['about_heading_values']) ?></h2>
                 <div class="section-divider"></div>
             </div>
 
@@ -542,7 +527,7 @@ function render_paragraphs($text) {
                                     <polyline points="16 24 22 30 33 18" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </div>
-                            <h4>Transparency</h4>
+                            <h4><?= pc_h($pc['about_val_transparency_title']) ?></h4>
                             <p><?= htmlspecialchars($pc['about_val_transparency']) ?></p>
                         </div>
                     </div>
@@ -554,7 +539,7 @@ function render_paragraphs($text) {
                             <div class="value-icon-circle" aria-hidden="true">
                                 <i class="fas fa-handshake fa-icon"></i>
                             </div>
-                            <h4>Responsiveness</h4>
+                            <h4><?= pc_h($pc['about_val_responsiveness_title']) ?></h4>
                             <p><?= htmlspecialchars($pc['about_val_responsiveness']) ?></p>
                         </div>
                     </div>
@@ -574,7 +559,7 @@ function render_paragraphs($text) {
                                     <circle cx="14" cy="14" r="5.5"/>
                                 </svg>
                             </div>
-                            <h4>People-Centricity</h4>
+                            <h4><?= pc_h($pc['about_val_people_title']) ?></h4>
                             <p><?= htmlspecialchars($pc['about_val_people']) ?></p>
                         </div>
                     </div>
@@ -586,7 +571,7 @@ function render_paragraphs($text) {
                                     <i class="fas fa-globe fa-stack-1x"></i>
                                 </span>
                             </div>
-                            <h4>Innovation</h4>
+                            <h4><?= pc_h($pc['about_val_innovation_title']) ?></h4>
                             <p><?= htmlspecialchars($pc['about_val_innovation']) ?></p>
                         </div>
                     </div>
@@ -602,7 +587,7 @@ function render_paragraphs($text) {
                                     <path d="M47 40 V28 C47 24 45 22 40 22 C38 22 36 23 35 24 V40 Z"/>
                                 </svg>
                             </div>
-                            <h4>Professionalism</h4>
+                            <h4><?= pc_h($pc['about_val_professionalism_title']) ?></h4>
                             <p><?= htmlspecialchars($pc['about_val_professionalism']) ?></p>
                         </div>
                     </div>
@@ -611,7 +596,7 @@ function render_paragraphs($text) {
 
             <!-- HISTORY -->
             <div class="info-section mt-5 mb-5">
-                <h3>Brief History</h3>
+                <h3><?= pc_h($pc['about_heading_history']) ?></h3>
                 <?= render_paragraphs($pc['about_history']) ?>
             </div>
 
@@ -622,26 +607,30 @@ function render_paragraphs($text) {
     <section class="bg_color3 py-5">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold" style="color: #2B3388;">Our Affiliations</h2>
+                <h2 class="fw-bold" style="color: #2B3388;"><?= pc_h($pc['about_affiliations_title']) ?></h2>
                 <div class="section-divider"></div>
             </div>
             <div class="affiliations-slider overflow-hidden">
                 <div class="slider-track d-flex flex-nowrap">
                     <?php
-                    $affs = [
-                        ['src'=>'admin/uploads/itu.png',  'alt'=>'ITU',  'href'=>'https://www.itu.int/'],
-                        ['src'=>'admin/uploads/iso.png',  'alt'=>'ISO',  'href'=>'https://www.iso.org/'],
-                        ['src'=>'admin/uploads/iec.png',  'alt'=>'IEC',  'href'=>'https://www.iec.ch/'],
-                        ['src'=>'admin/uploads/arso-2024.png', 'alt'=>'ARSO', 'href'=>'https://www.arso-org.org/'],
-                        ['src'=>'admin/uploads/astm.png', 'alt'=>'ASTM', 'href'=>'https://www.astm.org/'],
-                        ['src'=>'assets/img/WTO.png',    'alt'=>'WTO',  'href'=>'https://www.wto.org'],
-                        ['src'=>'assets/img/AP.png',    'alt'=>'AP',  'href'=>''],
-                        ['src'=>'assets/img/sadcstan.jpg',    'alt'=>'sadcstan',  'href'=>''],
-                    ];
+                    // Logos come from page_content (Affiliations section of the About Us
+                    // editor) rather than a hardcoded array. Ten slots; blank ones are
+                    // skipped, so the strip length changes without a code edit.
+                    // See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2).
+                    $affs = [];
+                    for ($i = 1; $i <= 10; $i++) {
+                        $src = trim((string)($pc["about_affiliation_{$i}_logo"] ?? ''));
+                        if ($src === '') continue;
+                        $affs[] = [
+                            'src'  => $src,
+                            'alt'  => (string)($pc["about_affiliation_{$i}_alt"] ?? ''),
+                            'href' => (string)($pc["about_affiliation_{$i}_url"] ?? ''),
+                        ];
+                    }
                     foreach (array_merge($affs, $affs) as $a): ?>
                     <div class="slider-item">
-                        <a href="<?= $a['href'] ?>" target="_blank" rel="noopener" class="logo-card-fixed">
-                            <img src="<?= $a['src'] ?>" alt="<?= $a['alt'] ?>">
+                        <a href="<?= pc_h($a['href']) ?>" target="_blank" rel="noopener" class="logo-card-fixed">
+                            <img src="<?= pc_h(pc_image_src($a['src'])) ?>" alt="<?= pc_h($a['alt']) ?>">
                         </a>
                     </div>
                     <?php endforeach; ?>
@@ -654,20 +643,28 @@ function render_paragraphs($text) {
     <section class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5 px-3">
-                <h2 class="fw-bold" style="color: #2B3388;">ESWASA Accreditation</h2>
+                <h2 class="fw-bold" style="color: #2B3388;"><?= pc_h($pc['about_accreditation_title']) ?></h2>
                 <div class="section-divider"></div>
-                <p class="text-muted mt-3">Eswatini Standards Authority is accredited by SADCAS.</p>
+                <p class="text-muted mt-3"><?= pc_h($pc['about_accreditation_body']) ?></p>
             </div>
             <div class="affiliations-slider overflow-hidden">
                 <div class="slider-track slider-track--static d-flex flex-nowrap justify-content-center">
                     <?php
-                    $accs = [
-                        ['src'=>'assets/img/SADCAS.png', 'href'=>'https://www.sadcas.org', 'alt'=>'SADCAS'],
-                    ];
+                    // Accreditation logos — same pattern, four slots. See spec B2.
+                    $accs = [];
+                    for ($i = 1; $i <= 4; $i++) {
+                        $src = trim((string)($pc["about_accreditation_{$i}_logo"] ?? ''));
+                        if ($src === '') continue;
+                        $accs[] = [
+                            'src'  => $src,
+                            'alt'  => (string)($pc["about_accreditation_{$i}_alt"] ?? ''),
+                            'href' => (string)($pc["about_accreditation_{$i}_url"] ?? ''),
+                        ];
+                    }
                     foreach ($accs as $a): ?>
                     <div class="slider-item">
-                        <a href="<?= $a['href'] ?>" target="_blank" rel="noopener" class="logo-card-fixed">
-                            <img src="<?= $a['src'] ?>" alt="<?= $a['alt'] ?>">
+                        <a href="<?= pc_h($a['href']) ?>" target="_blank" rel="noopener" class="logo-card-fixed">
+                            <img src="<?= pc_h(pc_image_src($a['src'])) ?>" alt="<?= pc_h($a['alt']) ?>">
                         </a>
                     </div>
                     <?php endforeach; ?>
