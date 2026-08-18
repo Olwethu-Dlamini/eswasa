@@ -1,7 +1,44 @@
 # ESWASA CMS — Batch B ("Structure & parity") design
 
 **Date:** 2026-08-18
-**Status:** approved, implementing
+**Status:** **implemented and pushed to `main`** (2026-08-18)
+
+| Item | Commit | Outcome |
+|------|--------|---------|
+| B1 sidebar order | `04c8805` | Sidebar now matches the public nav exactly |
+| B2 About Us | `72bb6de`, `3f9de38` | Breadcrumb on the shared system; 13 headings, 10 affiliation slots and 4 accreditation slots editable |
+| B3 Standards | `247358f` | **Mostly a false alarm** — see the correction below. One dead editor card hidden |
+| B4 Service Charter | `20e1695` | All five charter blocks editable; the "remains in code" notice is gone |
+| B5 LinkedIn | `1e75a10` | Removed from both forms and the public page; 0 members affected |
+| B6 stale content | `72bb6de` | 74 dead rows deleted (905 → 831); 4 breadcrumb slugs and the bank SWIFT field added |
+
+### Correction to B3
+
+The spec claimed `std_sector_1..8` and `std_info_item_1..4` had no inputs.
+**Both were wrong.** They are generated in `for` loops with interpolated `name`
+attributes, so a literal grep could not see them, but they render and save
+correctly (confirmed 8/8 and 4/4). The editor also already had section anchors
+and a jump nav, and once the dead card was hidden its section order already
+matched the live page — so the planned reorder was unnecessary too.
+
+What was real: an "Our Affiliations" card offering ~25 fields that reach
+nothing. `Standards.php` declares `std_affiliations_*` and `std_aff_1..6_*`,
+ships populated defaults and carries the finished grid CSS, but no markup
+renders any of it. Hidden behind a `$std_affiliations_live` flag on the
+reporter's instruction, with keys, defaults and CSS left intact.
+
+**Lesson for future audits in this codebase:** interpolated key names
+(`"prefix_{$i}_field"`) are common, so a literal search for `name="key"`
+systematically under-reports coverage. The same mistake produced 30 false
+positives on `index.php` during the Batch B audit. Check for loops before
+concluding a field is missing.
+
+### Verification
+
+Every public page returns 200 with no PHP notices, warnings or fatals, and
+every admin page likewise. Visible text was diffed across all 36 public pages
+before and after: only `service-charter.php` differs, and only where a link
+now covers a whole bullet rather than a phrase inside it (B4, deliberate).
 **Predecessor:** `2026-08-18-cms-batch-a-design.md` (implemented, on `main`)
 
 Batch B makes the CMS mirror the live site: the nav order, and the content
