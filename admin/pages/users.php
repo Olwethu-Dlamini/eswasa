@@ -6,6 +6,14 @@ if (!defined('ESWASA_ADMIN')) {
 
 $current_user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
 
+// The first account created is the super user and cannot be deleted by anyone,
+// including itself. Without this, an admin can delete every account and lock
+// the organisation out of its own CMS with no way back in short of editing the
+// database by hand. Enforced server-side below as well as hidden in the UI, so
+// a hand-crafted ?delete_user=1 URL can't bypass it.
+// See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md, item A7.
+const SUPER_USER_ID = 1;
+
 // ---- POST: add / update user ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_user'])) {
     $id       = isset($_POST['id']) ? (int)$_POST['id'] : 0;
@@ -57,8 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_user'])) {
             log_activity($conn, 'user.create', 'users#' . $conn->insert_id, 'Created user ' . $username . ' (' . $email . ')');
         } else {
             $msg = $conn->error ?? 'unknown error';
-            // Friendlier dup-key message
-            if (str_contains($msg, 'Duplicate entry')) {
+            // Friendlier dup-key message.
+            // strpos() rather than str_contains(): the latter is PHP 8 only,
+            // and on a PHP 7.4 host this line fataled with "call to undefined
+            // function" — so adding a user with a duplicate username produced
+            // a white screen instead of this message. See spec item A7.
+            if (strpos($msg, 'Duplicate entry') !== false) {
                 $msg = 'A user with that username or email already exists.';
             }
             set_flash('danger', 'Create failed: ' . $msg);
@@ -77,6 +89,10 @@ if (isset($_GET['delete_user'])) {
     }
     if ($del_id === $current_user_id) {
         set_flash('danger', 'You cannot delete the account you are logged in as.');
+        redirect_self();
+    }
+    if ($del_id === SUPER_USER_ID) {
+        set_flash('danger', 'The primary administrator account cannot be deleted.');
         redirect_self();
     }
     $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
@@ -131,6 +147,9 @@ if ($rs) {
                             <?php if ((int)$u['id'] === $current_user_id): ?>
                                 <span class="badge bg-info ms-2">you</span>
                             <?php endif; ?>
+                            <?php if ((int)$u['id'] === SUPER_USER_ID): ?>
+                                <span class="badge bg-secondary ms-2" title="The primary administrator account cannot be deleted.">primary admin</span>
+                            <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($u['email']) ?></td>
                         <td class="small text-muted"><?= htmlspecialchars($u['created_at']) ?></td>
@@ -140,7 +159,7 @@ if ($rs) {
                                     onclick="openEditUserModal(<?= (int)$u['id'] ?>, '<?= htmlspecialchars(addslashes($u['username'])) ?>', '<?= htmlspecialchars(addslashes($u['email'])) ?>')">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <?php if ((int)$u['id'] !== $current_user_id): ?>
+                            <?php if ((int)$u['id'] !== $current_user_id && (int)$u['id'] !== SUPER_USER_ID): ?>
                                 <a href="?page=users.php&delete_user=<?= (int)$u['id'] ?>"
                                    class="btn btn-sm btn-outline-danger"
                                    onclick="return confirm('Delete user &quot;<?= htmlspecialchars(addslashes($u['username'])) ?>&quot;? This cannot be undone.');">

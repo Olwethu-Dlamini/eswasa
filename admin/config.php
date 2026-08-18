@@ -63,14 +63,31 @@ function set_flash($type, $message) {
 function redirect_self() {
     $url = $_SERVER['SCRIPT_NAME']; // e.g. /admin/index.php
     $params = $_GET;
-    // Drop one-shot action params so refreshing the redirect target
-    // doesn't re-trigger them.
-    unset(
-        $params['delete'],
-        $params['delete_banner'],
-        $params['delete_quote'],
-        $params['quote_sent']
-    );
+
+    // Drop one-shot action params so refreshing the redirect target doesn't
+    // re-trigger them.
+    //
+    // This used to be a hand-maintained list, and delete_user was missing from
+    // it. The consequence was not a missed cleanup but an infinite redirect:
+    // users.php deleted the row, called redirect_self(), and the redirect
+    // target still carried delete_user=N — so the handler ran again, and again,
+    // until the browser gave up with ERR_TOO_MANY_REDIRECTS. The user was
+    // deleted on the first pass, but the page never came back, so it looked
+    // like deletion was broken. The production audit log shows 80 identical
+    // user.delete rows written across two attempts, seconds apart.
+    //
+    // Matching any delete* parameter closes the whole class rather than this
+    // one instance. Verified safe: of the 17 delete* handlers in the admin,
+    // only two finish via redirect_self() (delete_quote and delete_user); the
+    // rest use an explicit header('Location: ...') that never carries the
+    // parameter forward.
+    // See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md, item A7.
+    foreach (array_keys($params) as $key) {
+        if (strpos($key, 'delete') === 0) {
+            unset($params[$key]);
+        }
+    }
+    unset($params['quote_sent']);
     if (!empty($params)) {
         $url .= '?' . http_build_query($params);
     }
