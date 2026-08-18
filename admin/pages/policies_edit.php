@@ -58,7 +58,7 @@ function policies_upload_pdf(string $field, string $upload_dir, int $max_bytes =
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_policies_content'])) {
     $kv = [];
     foreach ($policies_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Page content saved.');

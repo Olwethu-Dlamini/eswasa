@@ -200,7 +200,7 @@ $image_keys = array_merge($mark_image_keys, $aff_image_keys);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_index'])) {
     $kv = [];
     foreach ($text_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     foreach ($url_keys as $k) {
         $v = trim((string)($_POST[$k] ?? ''));

@@ -101,7 +101,7 @@ function train_cal_upload_pdf(string $field, int $max_bytes = 26214400): ?string
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_train_cal_content'])) {
     $kv = [];
     foreach ($page_text_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
 
     // A newly uploaded PDF wins over whatever is in the URL box; otherwise the

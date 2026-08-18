@@ -63,7 +63,7 @@ function publications_upload_pdf(string $field, string $upload_dir, int $max_byt
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_publications_content'])) {
     $kv = [];
     foreach ($publications_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Page content saved.');

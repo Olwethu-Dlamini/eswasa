@@ -36,7 +36,7 @@ $image_keys = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_tcp'])) {
     $kv = [];
     foreach ($text_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     foreach ($image_keys as $k) {
         $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'tcp');

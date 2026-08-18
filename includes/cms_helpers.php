@@ -18,6 +18,35 @@ if (!function_exists('pc_strip_text')) {
     }
 }
 
+if (!function_exists('pc_post_value')) {
+    /**
+     * Read one editor field out of $_POST.
+     *
+     * Returns null when the key is absent from the submission, and the cleaned
+     * string when it is present — including when present but empty.
+     *
+     * Editors previously wrote pc_strip_text($_POST[$k] ?? ''), which cannot
+     * tell "the user cleared this box" from "this field was never submitted".
+     * Both became an empty string, so any truncated, scripted or interrupted
+     * request blanked every field it happened not to include. That is not
+     * reachable through the browser — a form always submits all its inputs —
+     * but it destroyed content twice during testing: one POST carrying a single
+     * field emptied 131 std_* keys.
+     *
+     * Paired with pc_save_many(), which skips nulls, an absent field now means
+     * "leave alone" while a submitted empty field still clears the value.
+     *
+     * See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C6).
+     */
+    function pc_post_value(string $key): ?string
+    {
+        if (!array_key_exists($key, $_POST)) {
+            return null;
+        }
+        return pc_strip_text(is_array($_POST[$key]) ? '' : (string)$_POST[$key]);
+    }
+}
+
 if (!function_exists('pc_get_many')) {
     function pc_get_many(mysqli $conn, array $keys, array $defaults = []): array
     {
@@ -61,6 +90,13 @@ if (!function_exists('pc_save_many')) {
     function pc_save_many(mysqli $conn, array $kv): array
     {
         $errors = [];
+        // A null value means "this field was not submitted, leave it alone" —
+        // see pc_post_value(). An empty string still writes an empty value, so
+        // clearing a field through the form works as before. Nulls are dropped
+        // here rather than in each editor so every caller is protected.
+        // See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C6).
+        $kv = array_filter($kv, static function ($v) { return $v !== null; });
+
         foreach ($kv as $k => $v) {
             if (!pc_save($conn, (string)$k, (string)$v)) {
                 $errors[] = (string)$k;

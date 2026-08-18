@@ -24,7 +24,7 @@ $image_keys = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_prod'])) {
     $kv = [];
     foreach ($text_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     foreach ($image_keys as $k) {
         // Prefer the cropper's base64 payload; fall back to a raw upload.

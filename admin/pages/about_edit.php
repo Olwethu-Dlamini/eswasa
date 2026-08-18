@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
         $extra_text_keys[] = "about_accreditation_{$i}_url";
     }
     foreach ($extra_text_keys as $k) {
-        $text_fields[$k] = pc_strip_text($_POST[$k] ?? '');
+        $text_fields[$k] = pc_post_value($k);
     }
 
     $all = array_merge($text_fields, $image_updates);

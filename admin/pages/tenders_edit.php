@@ -79,7 +79,7 @@ function tenders_process_documents(mysqli $conn, int $tender_id): ?string {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_tenders_content'])) {
     $kv = [];
     foreach ($tenders_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Page content saved.');

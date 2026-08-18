@@ -6,7 +6,7 @@ require __DIR__ . '/../../includes/cms_keys_service_charter.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_service_charter'])) {
     $kv = [];
     foreach ($service_charter_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');

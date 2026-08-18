@@ -23,7 +23,7 @@ require __DIR__ . '/../../includes/cms_keys_customer_feedback.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_customer_feedback_content'])) {
     $kv = [];
     foreach ($customer_feedback_keys as $k) {
-        $kv[$k] = pc_strip_text($_POST[$k] ?? '');
+        $kv[$k] = pc_post_value($k);
     }
     $errs = pc_save_many($conn, $kv);
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Page content saved.');
