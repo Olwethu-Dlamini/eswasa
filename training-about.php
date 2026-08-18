@@ -849,7 +849,10 @@ if (!function_exists('train_about_list_items')) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-enroll">Enroll Now</button>
+                        <!-- Was a bare <button> with no href and no JS handler, so
+                             clicking it did nothing in all seven course modals.
+                             See docs/.../2026-08-18-cms-batch-a-design.md (A5). -->
+                        <a href="purchase.php" class="btn btn-enroll">Enroll Now</a>
                     </div>
                 </div>
             </div>
