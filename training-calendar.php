@@ -404,6 +404,39 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             position: relative;
         }
         .day.empty { cursor: default; }
+        /* Day pills — one per training running that day. A single-training day
+           keeps its old appearance because the pill fills the cell; multiple
+           trainings split the cell into horizontal bands.
+           See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C4). */
+        .day .day-number {
+            position: absolute; top: 2px; left: 4px;
+            font-size: 11px; line-height: 1; z-index: 2;
+            pointer-events: none; opacity: .85;
+        }
+        .day-pills {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column; gap: 1px;
+            border-radius: 3px; overflow: hidden;
+        }
+        .day-pill {
+            flex: 1 1 0; min-height: 0;
+            border: none; padding: 0;
+            font-size: 10px; font-weight: 700; line-height: 1; letter-spacing: .2px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            transition: filter .15s ease;
+        }
+        .day-pill:hover { filter: brightness(.88); }
+        .day-pill:focus-visible { outline: 2px solid #2B3388; outline-offset: -2px; }
+        /* With one training the code would collide with the day number, so it is
+           hidden and the colour alone carries the meaning, exactly as before. */
+        .day-pills:not(.day-pills--multi) .day-pill { font-size: 0; }
+        /* Four or more: scroll inside the cell rather than squashing the pills
+           into unreadable slivers or breaking the grid alignment. */
+        .day-pills--multi { overflow-y: auto; scrollbar-width: none; }
+        .day-pills--multi::-webkit-scrollbar { display: none; }
+        .day-pills--multi .day-pill { min-height: 13px; }
         .day.has-event {
             cursor: pointer;
             font-weight: 700;
@@ -584,6 +617,8 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             .training-title { font-size: 14px; }
             .training-card { padding: 14px; }
             .day { font-size: 12px; }
+            /* Codes will not fit in a mobile cell; fall back to colour bands. */
+            .day-pills--multi .day-pill { font-size: 0; min-height: 10px; }
             .prospectus-link { font-size: 13px; padding: 8px 14px; }
         }
         @media (max-width: 575.98px) {
@@ -821,7 +856,11 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             t.id = idx;
             t.sessions.forEach(s => {
                 eachDateInRange(s.start, s.end, (key) => {
-                    eventByDate[key] = { training: t, session: s };
+                    // One date can carry several trainings. This used to be a
+                    // plain assignment, so a later training silently overwrote an
+                    // earlier one and only the last was ever shown or clickable.
+                    // See docs/.../2026-08-18-cms-batch-c-design.md (C4).
+                    (eventByDate[key] = eventByDate[key] || []).push({ training: t, session: s });
                 });
             });
         });
@@ -996,19 +1035,45 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
                         const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                         if (dateKey === today) dayDiv.classList.add('today');
 
-                        if (eventByDate[dateKey]) {
-                            const { training, session } = eventByDate[dateKey];
+                        const entries = eventByDate[dateKey];
+                        if (entries && entries.length) {
                             dayDiv.classList.add('has-event');
                             dayDiv.dataset.date = dateKey;
-                            // Apply the training's colour inline (dimmed class overrides via !important)
-                            dayDiv.style.backgroundColor = training.color;
-                            dayDiv.style.borderColor = training.color;
-                            dayDiv.style.color = textOn(training.color);
                             if (selectedDates && !selectedDates.has(dateKey)) {
                                 dayDiv.classList.add('dimmed');
                             }
-                            dayDiv.title = `${training.code} — ${training.title} (${session.label})`;
-                            dayDiv.addEventListener('click', () => openApplyModal(training, session));
+
+                            // One pill per training running that day, stacked inside
+                            // the cell. Each pill is separately clickable; the cell
+                            // itself is not, so a day with three trainings is
+                            // unambiguous. A single-training day keeps its previous
+                            // look because the pill fills the cell.
+                            const stack = document.createElement('div');
+                            stack.className = 'day-pills' + (entries.length > 1 ? ' day-pills--multi' : '');
+
+                            entries.forEach(({ training, session }) => {
+                                const pill = document.createElement('button');
+                                pill.type = 'button';
+                                pill.className = 'day-pill';
+                                pill.style.backgroundColor = training.color;
+                                pill.style.color = textOn(training.color);
+                                pill.textContent = training.code;
+                                pill.title = `${training.code} — ${training.title} (${session.label})`;
+                                pill.setAttribute('aria-label',
+                                    `Apply for ${training.code}, ${training.title}, ${session.label}`);
+                                pill.addEventListener('click', (ev) => {
+                                    ev.stopPropagation();
+                                    openApplyModal(training, session);
+                                });
+                                stack.appendChild(pill);
+                            });
+
+                            const num = document.createElement('span');
+                            num.className = 'day-number';
+                            num.textContent = day;
+                            dayDiv.textContent = '';
+                            dayDiv.appendChild(num);
+                            dayDiv.appendChild(stack);
                         }
                         calendarBody.appendChild(dayDiv);
                         day++;
