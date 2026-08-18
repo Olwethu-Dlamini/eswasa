@@ -368,3 +368,126 @@ body {
         scroll-behavior: auto !important;
     }
 }
+
+/* ══════════════════════════════════════════════
+   EDITOR CHROME
+   One visual system across every content editor.
+
+   The editors had grown three different shapes: some tabbed, one with a
+   jump-nav, and about fifteen as a single long scroll — services_edit is
+   sixteen cards deep with no way to navigate it. The markup underneath is
+   already consistent (30 of 34 pages share the same header block, and
+   sections are always an <h5> inside a card), so the shape can be unified
+   here and in main.js rather than by rewriting twenty forms.
+
+   Deliberately NOT converting everything to tabs: tabs are what caused the
+   Add-document bug on Management Systems, where a control was gated on
+   server-side tab state while the tabs themselves switched client-side.
+   A section rail gives the same "chunked, jump straight there" feel without
+   hiding content from Ctrl+F or from the page's own save handler.
+════════════════════════════════════════════════ */
+
+/* ── Page header ─────────────────────────────── */
+#mainContent > .d-flex.border-bottom,
+#mainContent > div > .d-flex.border-bottom {
+    border-bottom-width: 2px !important;
+    border-bottom-color: var(--bs-emphasis-color) !important;
+    margin-bottom: 1.5rem !important;
+}
+#mainContent h1.h2 {
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+/* ── Section rail (built by main.js) ─────────── */
+.editor-rail {
+    position: sticky;
+    top: 72px;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 10px 0 12px;
+    margin-bottom: 1.25rem;
+    background: var(--bs-body-bg);
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.editor-rail__label {
+    flex: 0 0 100%;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+    margin-bottom: 2px;
+}
+.editor-rail a {
+    font-size: 0.8rem;
+    line-height: 1;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color .15s, border-color .15s, color .15s;
+}
+.editor-rail a:hover {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
+.editor-rail a.is-current {
+    background: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: #fff;
+}
+
+/* ── Section headings inside cards ───────────── */
+#mainContent .card .card-body > h5 {
+    scroll-margin-top: 150px;
+    font-size: 1rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    padding-bottom: 0.6rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+/* A short accent tick, so a section start reads at a glance in a long scroll. */
+#mainContent .card .card-body > h5::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 0.95em;
+    margin-right: 0.55rem;
+    vertical-align: -0.12em;
+    background: var(--bs-primary);
+    border-radius: 2px;
+}
+
+/* Cards shouldn't light up on hover in an editor — it reads as clickable. */
+#mainContent .card:hover { border-color: var(--bs-border-color); }
+
+/* ── Sticky save bar (built by main.js) ──────── */
+.editor-savebar {
+    position: sticky;
+    bottom: 0;
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin: 1.5rem -1rem -1.5rem;
+    padding: 12px 1rem;
+    background: var(--bs-body-bg);
+    border-top: 1px solid var(--bs-border-color);
+    box-shadow: 0 -6px 18px -14px rgba(0,0,0,.5);
+}
+.editor-savebar__hint {
+    margin-right: auto;
+    font-size: 0.8rem;
+    color: var(--bs-secondary-color);
+}
+@media (max-width: 575.98px) {
+    .editor-savebar { margin-left: -0.75rem; margin-right: -0.75rem; }
+    .editor-savebar__hint { display: none; }
+}

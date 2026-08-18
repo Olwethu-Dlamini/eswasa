@@ -229,6 +229,7 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADC
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Home Page</h1>
+    <a href="../index.php" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <p class="text-muted">Everything that appears on the home page — the rotating slider, the Discover cards, Certification Marks and Affiliations.</p>

@@ -102,7 +102,7 @@ function faq_category_label_admin(string $c): string {
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">FAQ</h1>
     <div class="d-flex gap-2">
-        <a href="../faq.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+        <a href="../faq.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFaqModal">
             + Add Question
         </button>

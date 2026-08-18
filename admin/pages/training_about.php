@@ -92,7 +92,7 @@ $courses = [
 
 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Training Academy (About)</h1>
-    <a href="../training-about.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+    <a href="../training-about.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <form method="POST" enctype="multipart/form-data">

@@ -188,7 +188,7 @@ if (isset($_GET['edit'])) {
         <h1 class="h2 mb-1">Meet Our Team</h1>
         <small class="text-muted">Manage the <strong>Council</strong> and <strong>Executive Team</strong> shown on the public Meet Our Team page.</small>
     </div>
-    <a href="../Meetourteam.php" target="_blank" class="btn btn-outline-secondary btn-sm">View Public Page</a>
+    <a href="../Meetourteam.php" target="_blank" class="btn btn-outline-secondary btn-sm">View page</a>
 </div>
 
 <!-- ============================================================

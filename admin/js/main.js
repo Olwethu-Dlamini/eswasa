@@ -154,3 +154,142 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+/* ══════════════════════════════════════════════
+   EDITOR CHROME
+   Gives every content editor the same shape without rewriting any form.
+
+   Two problems this solves. Editors had grown three different layouts —
+   tabbed, jump-nav, and a plain scroll — and the plain ones got long:
+   services_edit is sixteen cards deep with no navigation and the Save button
+   only at the very bottom. So: build a section rail from the headings each
+   page already has, and keep Save permanently in reach.
+
+   Both are additive. Nothing is moved, hidden, or re-parented, so no form
+   loses an input and no page's save handler sees a different POST.
+════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+    var main = document.getElementById('mainContent');
+    if (!main) return;
+
+    /* ── Section rail ────────────────────────────
+       Only worth showing when there is enough to navigate; on a two-section
+       page it is noise. Tabbed editors are skipped — they already chunk their
+       content, and a rail pointing into hidden panes would scroll to nothing. */
+    var isTabbed = !!main.querySelector('[data-bs-toggle="tab"]');
+    var headings = Array.prototype.filter.call(
+        main.querySelectorAll('.card .card-body > h5'),
+        function (h) { return h.textContent.trim() !== ''; }
+    );
+
+    if (!isTabbed && headings.length >= 3) {
+        var rail = document.createElement('nav');
+        rail.className = 'editor-rail';
+        rail.setAttribute('aria-label', 'Sections on this page');
+
+        var label = document.createElement('span');
+        label.className = 'editor-rail__label';
+        label.textContent = 'Jump to';
+        rail.appendChild(label);
+
+        headings.forEach(function (h, i) {
+            if (!h.id) h.id = 'sec-auto-' + i;
+            var a = document.createElement('a');
+            a.href = '#' + h.id;
+            // Headings can carry an accent tick and entities; use the text only.
+            var text = h.textContent.replace(/\s+/g, ' ').trim();
+            a.textContent = text.length > 34 ? text.slice(0, 33).trimEnd() + '…' : text;
+            if (text.length > 34) a.title = text;
+            rail.appendChild(a);
+        });
+
+        // Sits directly under the page header so it is the first thing after
+        // the title, not floating in the middle of the form.
+        var header = main.querySelector('.d-flex.border-bottom');
+        if (header && header.parentNode) {
+            header.parentNode.insertBefore(rail, header.nextSibling);
+        } else {
+            main.insertBefore(rail, main.firstChild);
+        }
+
+        // Mark whichever section is currently in view.
+        if ('IntersectionObserver' in window) {
+            var links = {};
+            headings.forEach(function (h) {
+                links[h.id] = rail.querySelector('a[href="#' + h.id + '"]');
+            });
+            var seen = new Set();
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) seen.add(e.target.id); else seen.delete(e.target.id);
+                });
+                headings.forEach(function (h) {
+                    if (links[h.id]) links[h.id].classList.remove('is-current');
+                });
+                for (var i = 0; i < headings.length; i++) {
+                    if (seen.has(headings[i].id)) {
+                        if (links[headings[i].id]) links[headings[i].id].classList.add('is-current');
+                        break;
+                    }
+                }
+            }, { rootMargin: '-150px 0px -60% 0px' });
+            headings.forEach(function (h) { io.observe(h); });
+        }
+    }
+
+    /* ── Sticky save bar ─────────────────────────
+       The primary submit is often at the bottom of a very long form. Rather
+       than move it — which would change which form it belongs to — a fixed bar
+       proxies a click through to the real button, so the page's own handler
+       runs exactly as before.
+
+       Buttons inside a modal are skipped: those are "Add ..." actions for a
+       dialog, not the page's save. */
+    var candidates = Array.prototype.filter.call(
+        main.querySelectorAll('button[type="submit"].btn-primary, input[type="submit"].btn-primary'),
+        function (b) {
+            if (b.closest('.modal')) return false;
+            // Only a POST form saves anything. The Activity Log's only primary
+            // button submits a GET filter, and a sticky bar telling someone
+            // their changes are unsaved would be nonsense on a read-only page.
+            var form = b.form || b.closest('form');
+            return !!form && (form.method || 'get').toLowerCase() === 'post';
+        }
+    );
+
+    // Only promote a save when there is exactly one, and the page hasn't
+    // already got its own sticky save. Several editors carry more than one
+    // primary submit belonging to different forms — Publications has a page
+    // save and a per-folder save — and a bar wired to the wrong one would
+    // submit the wrong form. Where it is ambiguous, leave the page alone.
+    var alreadySticky = !!main.querySelector('.save-pill, .editor-savebar');
+    var realSave = (candidates.length === 1 && !alreadySticky) ? candidates[0] : null;
+
+    if (realSave) {
+        var bar = document.createElement('div');
+        bar.className = 'editor-savebar';
+
+        var hint = document.createElement('span');
+        hint.className = 'editor-savebar__hint';
+        hint.textContent = 'Changes are not saved until you use this button.';
+        bar.appendChild(hint);
+
+        var proxy = document.createElement('button');
+        proxy.type = 'button';
+        proxy.className = 'btn btn-primary';
+        proxy.innerHTML = realSave.innerHTML;
+        proxy.addEventListener('click', function () { realSave.click(); });
+        bar.appendChild(proxy);
+
+        main.appendChild(bar);
+
+        // With a bar always visible, the original at the foot of the page is a
+        // duplicate. Hide it rather than remove it: the form still owns it, so
+        // the proxy's click submits exactly what it always did.
+        var originalRow = realSave.parentNode;
+        if (originalRow && originalRow !== main) {
+            realSave.style.visibility = 'hidden';
+            realSave.style.position = 'absolute';
+            realSave.style.pointerEvents = 'none';
+        }
+    }
+});

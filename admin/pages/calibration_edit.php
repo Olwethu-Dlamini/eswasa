@@ -98,7 +98,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Edit Scales &amp; Metrology Page</h1>
-    <a href="../Calibration.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+    <a href="../Calibration.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <form method="POST" enctype="multipart/form-data">

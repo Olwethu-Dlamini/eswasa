@@ -146,7 +146,7 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
 
 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">About Us</h1>
-    <a href="../about-us.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+    <a href="../about-us.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <form method="post" id="aboutForm">

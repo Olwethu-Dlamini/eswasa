@@ -78,6 +78,7 @@ $messages = $conn->query("SELECT * FROM eswasa_contact_messages ORDER BY created
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Contact Page</h1>
+    <a href="../contact.php" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <?php if (!empty($_SESSION['flash'])): ?>

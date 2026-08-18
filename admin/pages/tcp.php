@@ -70,8 +70,9 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
     <div>
         <h1 class="h2 mb-1">Technical Committee Platform</h1>
-        <p class="text-muted mb-0">Edit the content shown on <a href="../tcp.php" target="_blank">tcp.php</a>. Breadcrumb background is managed under <em>Breadcrumb Images</em>.</p>
+        <p class="text-muted mb-0">Breadcrumb background is managed under <em>Breadcrumb Images</em>.</p>
     </div>
+    <a href="../tcp.php" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <form method="POST" enctype="multipart/form-data">

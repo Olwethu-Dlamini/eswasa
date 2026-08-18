@@ -18,7 +18,7 @@ $pc = pc_get_many($conn, $service_charter_keys, $service_charter_defaults);
 
 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Service Charter</h1>
-    <a href="../service-charter.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+    <a href="../service-charter.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <?php if (!empty($_SESSION['flash'])): ?>

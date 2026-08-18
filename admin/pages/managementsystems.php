@@ -334,7 +334,7 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Management Systems Certification</h1>
     <div class="d-flex gap-2">
-        <a href="../managementsystems.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+        <a href="../managementsystems.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
         <?php // The Add buttons used to live here, gated on $active_tab. That
               // is server-side state set from ?tab=, but the tabs below are
               // Bootstrap client-side tabs that swap panes without reloading

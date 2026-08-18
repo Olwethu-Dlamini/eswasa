@@ -90,7 +90,7 @@ if ($edit_vacancy) $active_tab = 'positions';
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Vacancies</h1>
     <div class="d-flex gap-2">
-        <a href="../vacancies.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+        <a href="../vacancies.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVacancyModal">
             + Add Vacancy
         </button>

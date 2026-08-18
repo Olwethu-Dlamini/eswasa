@@ -77,7 +77,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 
 <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Purchase Standards</h1>
-    <a href="../purchase.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+    <a href="../purchase.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <form method="POST" enctype="multipart/form-data">

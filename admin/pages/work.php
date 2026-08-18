@@ -120,7 +120,7 @@ if (isset($_GET['edit'])) {
         <h1 class="h2 mb-1">Work Programmes</h1>
         <small class="text-muted">Manage the page meta, intro, CTAs and the unlimited programme list shown on the public <code>work.php</code> page.</small>
     </div>
-    <a href="../work.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+    <a href="../work.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <style>

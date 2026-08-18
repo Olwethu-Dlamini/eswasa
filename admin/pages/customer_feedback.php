@@ -83,7 +83,7 @@ function fb_stars(int $n): string {
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Customer Feedback</h1>
-    <a href="../customer-feedback.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Form</a>
+    <a href="../customer-feedback.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
 <?php if (!empty($_SESSION['flash'])): ?>

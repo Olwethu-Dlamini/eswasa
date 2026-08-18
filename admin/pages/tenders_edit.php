@@ -208,7 +208,7 @@ if ($edit_tender) $active_tab = 'documents';
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Tenders</h1>
     <div class="d-flex gap-2">
-        <a href="../tenders.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
+        <a href="../tenders.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
         <?php if (!$edit_tender): ?>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTenderModal">+ Add Tender</button>
         <?php endif; ?>
