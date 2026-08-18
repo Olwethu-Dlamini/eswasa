@@ -9,46 +9,70 @@ if (!is_dir($upload_dir)) {
 }
 
 // ── Page definitions: slug => [label, frontend file, default image] ──
-$pages = [
-    'services'            => ['Our Services',           'services.php',             'assets/img/bg.png'],
-    'calibration'         => ['Calibration',            'Calibration.php',          'assets/img/bg/calibrationbg.png'],
-    // These four were requested by front-end pages via get_breadcrumb_bg() but
-    // had no entry here, so their banner images could never be changed from the
-    // CMS. See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2, B6).
-    'about-us'            => ['About Us (Who Are We)',  'about-us.php',             'assets/img/bg.png'],
-    'certification'       => ['Certification',          'Certification.php',        'assets/img/bg/breadcrumb_bg.jpg'],
-    'certification_status'=> ['Certification Status',   'certification-status.php', 'assets/img/bg/breadcrumb_bg.jpg'],
-    'event-details'       => ['Event Details',          'event-details.php',        'assets/img/bg/breadcrumb_bg.jpg'],
-    'tenders'             => ['Tenders',                'tenders.php',              'assets/img/bg/breadcrumb_bg.jpg'],
-    'contact'             => ['Contact Us',             'contact.php',              'assets/img/bg/breadcrumb_bg.jpg'],
-    // 'contactcalibration' removed — the page is retired and now 301s to
-    // qoute_calibration.php, which replaces it in the list below. See spec A1.
-    'disclaimer'          => ['Disclaimer',             'disclaimer.php',           'assets/img/bg.png'],
-    'events'              => ['Events',                 'events.php',               'assets/img/bg/breadcrumb_bg.jpg'],
-    'faq'                 => ['FAQ',                    'faq.php',                  'assets/img/bg/breadcrumb_bg.jpg'],
-    'ingelo'              => ['Ingelo',                 'ingelo.php',               'assets/img/bg/Ingelo.png'],
-    'managementsystems'   => ['Management Systems',     'managementsystems.php',    'assets/img/bg/breadcrumb_bg.jpg'],
-    'meetourteam'         => ['Meet Our Team',          'Meetourteam.php',          'assets/img/bg/bg.png'],
-    'privacy'             => ['Privacy Policy',         'privacy.php',              'assets/img/bg.png'],
-    'product'             => ['Product Certification',  'product.php',              'assets/img/bg/breadcrumb_bg.jpg'],
-    'publications'        => ['Publications',           'publications.php',         'assets/img/bg/breadcrumb_bg.jpg'],
-    'purchase'            => ['Purchase Standards',      'purchase.php',            'assets/img/bg/breadcrumb_bg.jpg'],
-    'qoute'               => ['Request Quote',          'qoute.php',               'assets/img/bg/breadcrumb_bg.jpg'],
-    'qoute_calibration'   => ['Calibration Quote',      'qoute_calibration.php',   'assets/img/bg/breadcrumb_bg.jpg'],
-    'qoute_certification' => ['Certification Quote',    'qoute_certification.php', 'assets/img/bg/breadcrumb_bg.jpg'],
-    'qoute_training'      => ['Training Quote',         'qoute_training.php',      'assets/img/bg/breadcrumb_bg.jpg'],
-    'standards'           => ['Standards',              'Standards.php',            'assets/img/bg/breadcrumb_bg.jpg'],
-    'tcp'                 => ['Technical Committee',    'tcp.php',                  'assets/img/bg/breadcrumb_bg.jpg'],
-    'terms'               => ['Terms & Conditions',     'terms.php',               'assets/img/bg.png'],
-    'training_about'      => ['Training Academy',       'training-about.php',      'assets/img/bg/breadcrumb_bg.jpg'],
-    'training_calendar'   => ['Training Calendar',      'training-calendar.php',   'assets/img/bg/breadcrumb_bg.jpg'],
-    'vacancies'           => ['Vacancies',              'vacancies.php',           'assets/img/bg/breadcrumb_bg.jpg'],
-    'work'                => ['Work Programmes',        'work.php',                'assets/img/bg/breadcrumb_bg.jpg'],
-    'announcements'       => ['Announcements',          'announcements.php',       'assets/img/bg/breadcrumb_bg.jpg'],
-    'service-charter'     => ['Service Charter',        'service-charter.php',     'assets/img/bg/breadcrumb_bg.jpg'],
-    'customer-feedback'   => ['Customer Feedback',      'customer-feedback.php',   'assets/img/bg/breadcrumb_bg.jpg'],
-    'policies'            => ['Policies',               'policies.php',            'assets/img/bg/breadcrumb_bg.jpg'],
+// Grouped and ordered to follow the public navigation, so finding a page's
+// banner here mirrors finding the page on the site. Previously this was
+// alphabetical with later additions appended, which made a 33-tile grid hard
+// to scan. The group headings also give the page a section rail, the same as
+// every other editor.
+$page_groups = [
+    'About Us'       => [
+        'about-us'              => ['About Us (Who Are We)',  'about-us.php',             'assets/img/bg.png'],
+        'meetourteam'           => ['Meet Our Team',          'Meetourteam.php',          'assets/img/bg/bg.png'],
+    ],
+    'Our Services'   => [
+        'services'              => ['Our Services',           'services.php',             'assets/img/bg.png'],
+    ],
+    'Training'       => [
+        'training_about'        => ['Training Academy',       'training-about.php',      'assets/img/bg/breadcrumb_bg.jpg'],
+        'training_calendar'     => ['Training Calendar',      'training-calendar.php',   'assets/img/bg/breadcrumb_bg.jpg'],
+        'qoute_training'        => ['Training Quote',         'qoute_training.php',      'assets/img/bg/breadcrumb_bg.jpg'],
+    ],
+    'Certification'  => [
+        'certification'         => ['Certification',          'Certification.php',        'assets/img/bg/breadcrumb_bg.jpg'],
+        'managementsystems'     => ['Management Systems',     'managementsystems.php',    'assets/img/bg/breadcrumb_bg.jpg'],
+        'product'               => ['Product Certification',  'product.php',              'assets/img/bg/breadcrumb_bg.jpg'],
+        'ingelo'                => ['Ingelo',                 'ingelo.php',               'assets/img/bg/Ingelo.png'],
+        'certification_status'  => ['Certification Status',   'certification-status.php', 'assets/img/bg/breadcrumb_bg.jpg'],
+        'qoute_certification'   => ['Certification Quote',    'qoute_certification.php', 'assets/img/bg/breadcrumb_bg.jpg'],
+    ],
+    'Calibration'    => [
+        'calibration'           => ['Calibration',            'Calibration.php',          'assets/img/bg/calibrationbg.png'],
+        'qoute_calibration'     => ['Calibration Quote',      'qoute_calibration.php',   'assets/img/bg/breadcrumb_bg.jpg'],
+    ],
+    'Standards'      => [
+        'standards'             => ['Standards',              'Standards.php',            'assets/img/bg/breadcrumb_bg.jpg'],
+        'tcp'                   => ['Technical Committee',    'tcp.php',                  'assets/img/bg/breadcrumb_bg.jpg'],
+        'work'                  => ['Work Programmes',        'work.php',                'assets/img/bg/breadcrumb_bg.jpg'],
+        'purchase'              => ['Purchase Standards',      'purchase.php',            'assets/img/bg/breadcrumb_bg.jpg'],
+    ],
+    'Updates'        => [
+        'events'                => ['Events',                 'events.php',               'assets/img/bg/breadcrumb_bg.jpg'],
+        'event-details'         => ['Event Details',          'event-details.php',        'assets/img/bg/breadcrumb_bg.jpg'],
+        'vacancies'             => ['Vacancies',              'vacancies.php',           'assets/img/bg/breadcrumb_bg.jpg'],
+        'tenders'               => ['Tenders',                'tenders.php',              'assets/img/bg/breadcrumb_bg.jpg'],
+        'publications'          => ['Publications',           'publications.php',         'assets/img/bg/breadcrumb_bg.jpg'],
+        'announcements'         => ['Announcements',          'announcements.php',       'assets/img/bg/breadcrumb_bg.jpg'],
+        'faq'                   => ['FAQ',                    'faq.php',                  'assets/img/bg/breadcrumb_bg.jpg'],
+    ],
+    'Customer Care'  => [
+        'service-charter'       => ['Service Charter',        'service-charter.php',     'assets/img/bg/breadcrumb_bg.jpg'],
+        'customer-feedback'     => ['Customer Feedback',      'customer-feedback.php',   'assets/img/bg/breadcrumb_bg.jpg'],
+        'policies'              => ['Policies',               'policies.php',            'assets/img/bg/breadcrumb_bg.jpg'],
+    ],
+    'Contact'        => [
+        'contact'               => ['Contact Us',             'contact.php',              'assets/img/bg/breadcrumb_bg.jpg'],
+    ],
+    'Other & Legal'  => [
+        'qoute'                 => ['Request Quote',          'qoute.php',               'assets/img/bg/breadcrumb_bg.jpg'],
+        'privacy'               => ['Privacy Policy',         'privacy.php',              'assets/img/bg.png'],
+        'terms'                 => ['Terms & Conditions',     'terms.php',               'assets/img/bg.png'],
+        'disclaimer'            => ['Disclaimer',             'disclaimer.php',           'assets/img/bg.png'],
+    ],
 ];
+
+// Flat map for the save handler and anything else that wants every page.
+$pages = [];
+foreach ($page_groups as $__g) { foreach ($__g as $__slug => $__info) { $pages[$__slug] = $__info; } }
 
 // ── Save handler ──────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_breadcrumbs'])) {
@@ -164,8 +188,16 @@ function bc_preview($slug, $current, $default) {
 <form method="post" id="breadcrumbsForm">
     <input type="hidden" name="save_breadcrumbs" value="1">
 
-    <div class="row g-3">
-        <?php foreach ($pages as $slug => $info):
+    <?php // One card per navigation group, in the same order as the public menu.
+          // Each group heading is an <h5> inside a card, which is the pattern the
+          // rest of the CMS uses — so this page picks up the shared section rail
+          // and looks like every other editor. See spec item C5 / UI pass. ?>
+    <?php foreach ($page_groups as $group_name => $group_pages): ?>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5><?= htmlspecialchars($group_name) ?> <span class="text-muted fw-normal" style="font-size:.8rem;">(<?= count($group_pages) ?>)</span></h5>
+        <div class="row g-3">
+        <?php foreach ($group_pages as $slug => $info):
             $label   = $info[0];
             $file    = $info[1];
             $default = $info[2];
@@ -200,7 +232,10 @@ function bc_preview($slug, $current, $default) {
             </div>
         </div>
         <?php endforeach; ?>
+        </div>
+      </div>
     </div>
+    <?php endforeach; ?>
 
     <div class="mt-4 pt-3 border-top text-end">
         <button type="submit" class="btn btn-primary px-5 shadow-sm">
