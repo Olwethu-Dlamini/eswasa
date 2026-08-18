@@ -16,14 +16,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
         redirect_self();
     }
 
+    // Where contact-form notifications are emailed. Blank falls back to the
+    // default at send time; anything non-blank must be a valid address, or a
+    // typo would silently send notifications nowhere. See spec item A2.
+    $notify = trim($_POST['site_contact_notify_email'] ?? '');
+    if ($notify !== '' && !filter_var($notify, FILTER_VALIDATE_EMAIL)) {
+        set_flash('danger', 'That notification email address is not valid. Nothing was saved.');
+        redirect_self();
+    }
+
     pc_save($conn, 'site_ga4_id', $ga4);
-    set_flash('success', $ga4 === '' ? 'Analytics disabled.' : 'Analytics ID saved.');
+    pc_save($conn, 'site_contact_notify_email', $notify);
+    set_flash('success', 'Settings saved.');
     redirect_self();
 }
 
 // ---- Current values ----
-$settings = pc_get_many($conn, ['site_ga4_id'], ['site_ga4_id' => '']);
-$ga4_id = $settings['site_ga4_id'];
+$settings = pc_get_many($conn, ['site_ga4_id', 'site_contact_notify_email'], [
+    'site_ga4_id'               => '',
+    'site_contact_notify_email' => '',
+]);
+$ga4_id       = $settings['site_ga4_id'];
+$notify_email = $settings['site_contact_notify_email'];
 ?>
 
 <div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -47,6 +61,22 @@ $ga4_id = $settings['site_ga4_id'];
                         <code>G-XXXXXXXXXX</code>). The tracking code is then added to
                         every public page automatically. Leave blank to turn tracking off.
                         <br>Find it in Google Analytics → Admin → Data Streams → your stream.
+                    </small>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header"><i class="fas fa-envelope me-2"></i>Contact Form Notifications</div>
+                <div class="card-body">
+                    <label class="form-label">Send new contact messages to</label>
+                    <input type="email" class="form-control" name="site_contact_notify_email"
+                           value="<?= htmlspecialchars($notify_email) ?>"
+                           placeholder="info@eswasa.co.sz">
+                    <small class="form-text text-muted d-block mt-2">
+                        When someone submits the Contact Us form, a copy is emailed here.
+                        Leave blank to use <code>info@eswasa.co.sz</code>.
+                        <br>Every message is also saved in the admin regardless of email
+                        delivery &mdash; see <strong>Contact Us</strong> in the sidebar.
                     </small>
                 </div>
             </div>

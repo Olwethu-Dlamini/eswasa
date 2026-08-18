@@ -1,4 +1,14 @@
 <?php
+// The validation-error path below stores the message and the visitor's typed
+// values in the session, then redirects. Previously session_start() was only
+// called inside that error branch, so the GET that renders the page never
+// opened a session and the message was always lost — the visitor got a blank
+// form with no explanation. Start it up front, before any output.
+// See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md, item A2.
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 include_once 'includes/db_connect.php';
 include_once 'includes/breadcrumb_helper.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
@@ -74,12 +84,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = '';
     
     // Validate
+    // Phone is validated on digit count, not on total string length. The old
+    // rule (/^[0-9+\s\-()]{10,}$/) required 10+ characters, which silently
+    // rejected ordinary Eswatini mobile numbers — "7612 3456" is 8 digits and
+    // 9 characters, so it failed and the enquiry was lost. Counting digits
+    // accepts local and international formats alike: 7612 3456,
+    // +268 7612 3456, (+268) 7612-3456. See spec item A2.
+    $phone_digits = preg_replace('/\D+/', '', $phone);
+
     if (!$name || !$email || !$phone || !$subject || !$message) {
         $error = 'All fields are required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Invalid email address.';
-    } elseif (!preg_match('/^[0-9+\s\-\(\)]{10,}$/', $phone)) {
-        $error = 'Invalid phone number.';
+    } elseif (strlen($phone_digits) < 7 || strlen($phone_digits) > 15) {
+        $error = 'Please enter a valid phone number (at least 7 digits).';
     } else {
         // Save to database
         require_once 'includes/db_connect.php';
@@ -88,8 +106,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('sssss', $name, $email, $phone, $subject, $message);
         
         if ($stmt->execute()) {
-            // Send email
-            $to = 'info@eswasa.co.sz';
+            // The message is now safely in eswasa_contact_messages and visible
+            // in the admin inbox. The email below is a best-effort extra
+            // notification — if the host can't send mail, the enquiry is still
+            // not lost. Never let a mail failure surface to the visitor.
+            //
+            // Recipient is configurable in the admin under Site Settings.
+            $notify = pc_get_many($conn, ['site_contact_notify_email'], [
+                'site_contact_notify_email' => 'info@eswasa.co.sz',
+            ]);
+            $to = filter_var($notify['site_contact_notify_email'], FILTER_VALIDATE_EMAIL)
+                ? $notify['site_contact_notify_email']
+                : 'info@eswasa.co.sz';
             $email_subject = "New Contact Form Submission: $subject";
             $email_body = "
                 <h3>New Message from ESWASA Website</h3>
@@ -102,12 +130,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <hr>
                 <p><em>Sent on: " . date('F j, Y \a\t g:i A') . "</em></p>
             ";
+            // From: must be an address this domain is authorised to send as,
+            // otherwise SPF/DMARC fails and receiving servers silently drop
+            // the mail. It previously used the visitor's own address, which is
+            // exactly that failure — which is why nothing ever arrived while
+            // rows kept landing in the database. The visitor goes in Reply-To
+            // instead, so hitting reply still works. See spec item A2.
+            $from_domain = $_SERVER['HTTP_HOST'] ?? 'eswasa.co.sz';
+            $from_domain = preg_replace('/^www\.|:\d+$/', '', strtolower($from_domain));
+            $from_address = 'no-reply@' . $from_domain;
+
+            // Header-injection guard: a newline in either field would let a
+            // submitter append arbitrary headers.
+            $safe_reply_to = preg_replace('/[\r\n]+/', ' ', $email);
+            $safe_from_name = preg_replace('/[\r\n]+/', ' ', $name);
+
             $headers = "MIME-Version: 1.0\r\n";
             $headers .= "Content-type:text/html;charset=UTF-8\r\n";
-            $headers .= "From: " . htmlspecialchars($name) . " <" . htmlspecialchars($email) . ">\r\n";
-            
-            mail($to, $email_subject, $email_body, $headers);
-            
+            $headers .= "From: ESWASA Website <" . $from_address . ">\r\n";
+            $headers .= "Reply-To: " . $safe_from_name . " <" . $safe_reply_to . ">\r\n";
+
+            @mail($to, $email_subject, $email_body, $headers);
+
             // ✅ Redirect to prevent resubmission
             header("Location: contact.php?success=1");
             exit;
@@ -117,9 +161,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
     
-    // On error: store in session and redirect
+    // On error: store in session and redirect. The session is already open
+    // (started at the top of this file), so the message and the typed values
+    // survive the redirect and are rendered back to the visitor.
     if ($error) {
-        session_start();
         $_SESSION['contact_error'] = $error;
         $_SESSION['contact_data'] = [
             'name' => $name,

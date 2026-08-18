@@ -5,10 +5,24 @@ if (!defined('ESWASA_ADMIN')) {
 }
 $current_page = basename($_GET['page'] ?? 'index_edit.php');
 
-function nav_link($page, $current, $icon, $label) {
+function nav_link($page, $current, $icon, $label, $badge = 0) {
     $active = ($current === $page) ? 'active' : '';
-    return '<a class="nav-link '.$active.'" href="index.php?page='.$page.'">
-        <i class="fas '.$icon.' fa-fw me-2"></i><span>'.$label.'</span></a>';
+    // Optional unread counter, e.g. new contact messages. Rendered only when
+    // there is something to see, so the nav stays quiet otherwise.
+    $badge_html = $badge > 0
+        ? '<span class="badge bg-danger rounded-pill ms-auto">'.(int)$badge.'</span>'
+        : '';
+    return '<a class="nav-link d-flex align-items-center '.$active.'" href="index.php?page='.$page.'">
+        <i class="fas '.$icon.' fa-fw me-2"></i><span>'.$label.'</span>'.$badge_html.'</a>';
+}
+
+// Unread contact messages, shown as a badge next to "Contact Us". Best-effort:
+// a missing table must never break the nav. Contact-form notification email is
+// unreliable on shared hosting, so this badge is the dependable signal that
+// something new has arrived. See spec item A2.
+$unread_messages = 0;
+if ($r = @$conn->query("SELECT COUNT(*) AS c FROM eswasa_contact_messages WHERE status = 'new'")) {
+    $unread_messages = (int)($r->fetch_assoc()['c'] ?? 0);
 }
 function is_active_group($pages, $current) {
     return in_array($current, $pages) ? 'active' : '';
@@ -142,7 +156,7 @@ function submenu_open($pages, $current) {
             </li>
 
             <li class="nav-item">
-                <?= nav_link('contact_edit.php', $current_page, 'fa-envelope', 'Contact Us') ?>
+                <?= nav_link('contact_edit.php', $current_page, 'fa-envelope', 'Contact Us', $unread_messages) ?>
             </li>
 
             <li class="nav-item">
