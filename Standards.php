@@ -181,7 +181,7 @@ $std_defaults = [
     'std_proposal_portal_url'        => 'https://tc.eswasa.co.sz/proposal.php',
     'std_proposal_email_primary'     => 'standards@eswasa.co.sz',
     'std_proposal_email_secondary'   => 'info@eswasa.co.sz',
-    'std_proposal_form_url'          => 'admin/uploads/standards_proposal_form.pdf',
+    'std_proposal_form_url'          => 'TEC_SDU_FO_002- Standards Proposal Form.pdf',
     'std_proposal_form_label'        => 'Download Proposal Form (PDF)',
     'std_proposal_note'              => 'Note: Proposals should include the title and scope of the standard, socio-economic impacts, intended uses, and justification. Priority is given to standards supporting national priorities (e.g. food security, infrastructure, MSME competitiveness, emerging technologies).',
 
