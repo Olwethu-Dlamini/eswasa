@@ -8,3 +8,18 @@ Thumbs.db
 *.swp
 .audit-screenshots/
 .verify/out/
+
+# ── Database dumps ───────────────────────────────────────────────────
+# Production dumps contain password hashes and personal data (names,
+# email addresses, phone numbers from contact and quote submissions).
+# This is a public repository — never commit them.
+*.sql
+# ...except schema/data migrations, which are code and belong in git.
+# (Note: .gitignore has no inline comments — keep these on their own lines.)
+!admin/sql/
+!admin/sql/*.sql
+
+# ── Visitor-uploaded files ───────────────────────────────────────────
+# Attachments submitted through the public quote forms are customer
+# documents, not site assets.
+admin/uploads/quotes/
