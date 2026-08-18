@@ -185,75 +185,60 @@ $pc = pc_get_many($conn, $service_charter_keys, $service_charter_defaults);
                 <div class="row">
                     <div class="col-lg-12">
 
+                        <?php /* These five blocks were hardcoded until Batch B; they now come
+                                 from page_content with the previous wording as defaults, so the
+                                 page renders identically until someone edits it.
+                                 See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B4). */ ?>
                         <div class="charter-block">
-                            <h3>Who We Are</h3>
-                            <p>The Eswatini Standards Authority (ESWASA) is the national standards body of the Kingdom of Eswatini. We develop national standards, operate certification and testing services, provide metrology and calibration support, and represent Eswatini in regional and international standardisation bodies.</p>
+                            <h3><?= pc_h($pc['charter_who_title']) ?></h3>
+                            <?= pc_paragraphs_html($pc['charter_who_body']) ?>
                         </div>
 
                         <div class="charter-block">
-                            <h3>Our Service Standards</h3>
-                            <p>We commit to the following service standards across all interactions:</p>
+                            <h3><?= pc_h($pc['charter_standards_title']) ?></h3>
+                            <p><?= pc_h($pc['charter_standards_intro']) ?></p>
                             <div class="commitment-grid">
+                                <?php for ($i = 1; $i <= 8; $i++):
+                                    $cl = trim((string)$pc["charter_commit_{$i}_label"]);
+                                    $cb = trim((string)$pc["charter_commit_{$i}_body"]);
+                                    if ($cl === '' && $cb === '') continue; ?>
                                 <div class="commitment-item">
-                                    <strong>Acknowledgement</strong>
-                                    <span>We acknowledge written enquiries within 3 working days.</span>
+                                    <strong><?= pc_h($cl) ?></strong>
+                                    <span><?= pc_h($cb) ?></span>
                                 </div>
-                                <div class="commitment-item">
-                                    <strong>Full response</strong>
-                                    <span>We provide a substantive response within 14 working days, or update you if more time is needed.</span>
-                                </div>
-                                <div class="commitment-item">
-                                    <strong>Quotation requests</strong>
-                                    <span>Service quotations issued within 5 working days of receipt of complete information.</span>
-                                </div>
-                                <div class="commitment-item">
-                                    <strong>Certification applications</strong>
-                                    <span>Application receipt confirmed within 5 working days; audit scheduling within 30 working days.</span>
-                                </div>
-                                <div class="commitment-item">
-                                    <strong>Testing turnaround</strong>
-                                    <span>Standard test reports delivered within the timeframe agreed at sample acceptance.</span>
-                                </div>
-                                <div class="commitment-item">
-                                    <strong>Complaints</strong>
-                                    <span>Acknowledged within 3 working days, resolved within 30 working days where possible.</span>
-                                </div>
+                                <?php endfor; ?>
                             </div>
                         </div>
 
                         <div class="charter-block">
-                            <h3>Our Core Values</h3>
+                            <h3><?= pc_h($pc['charter_values_title']) ?></h3>
                             <ul>
-                                <li><strong>Transparency</strong> &mdash; clear, accessible information about our processes, fees and decisions.</li>
-                                <li><strong>Responsiveness</strong> &mdash; we listen, we act, and we communicate progress.</li>
-                                <li><strong>People-Centricity</strong> &mdash; every customer receives respectful, professional attention.</li>
-                                <li><strong>Innovation</strong> &mdash; we continuously improve our services and adopt better practice.</li>
-                                <li><strong>Professionalism</strong> &mdash; competence, impartiality and integrity in everything we do.</li>
+                                <?= pc_list_items($pc['charter_values_items'], true) ?>
                             </ul>
                         </div>
 
                         <div class="charter-block">
-                            <h3>What We Ask Of You</h3>
-                            <p>To help us deliver these commitments, we ask that you:</p>
+                            <h3><?= pc_h($pc['charter_ask_title']) ?></h3>
+                            <p><?= pc_h($pc['charter_ask_intro']) ?></p>
                             <ul>
-                                <li>Provide accurate and complete information when making requests.</li>
-                                <li>Respect our staff and treat them with courtesy.</li>
-                                <li>Honour scheduled appointments, audits and sample submission dates.</li>
-                                <li>Pay applicable fees on time.</li>
-                                <li>Notify us promptly of any change in your details or scope.</li>
+                                <?= pc_list_items($pc['charter_ask_items']) ?>
                             </ul>
                         </div>
 
                         <div class="charter-block">
-                            <h3>If We Fall Short</h3>
-                            <p>If our service does not meet the standards set out in this charter, we want to know. You can:</p>
+                            <h3><?= pc_h($pc['charter_short_title']) ?></h3>
+                            <p><?= pc_h($pc['charter_short_intro']) ?></p>
                             <ul>
-                                <li>Submit feedback or a complaint through our online <a href="customer-feedback.php">Customer Feedback form</a>.</li>
-                                <li>Write to us at <a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a>.</li>
-                                <li>Call us on <strong>(+268) 2518 4633 / 4610</strong>.</li>
-                                <li>Visit our offices in Matsapha during working hours.</li>
+                                <?php for ($i = 1; $i <= 6; $i++):
+                                    $t = trim((string)$pc["charter_short_{$i}_text"]);
+                                    if ($t === '') continue;
+                                    $u = trim((string)$pc["charter_short_{$i}_url"]); ?>
+                                    <li><?php if ($u !== ''): ?><a href="<?= pc_h($u) ?>"><?= pc_h($t) ?></a><?php else: ?><?= pc_h($t) ?><?php endif; ?></li>
+                                <?php endfor; ?>
                             </ul>
-                            <p>For matters relating to certification decisions, our <a href="CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf" target="_blank" rel="noopener">Appeals Handling Procedure</a> sets out a formal route.</p>
+                            <?php if (trim((string)$pc['charter_short_outro']) !== ''): ?>
+                                <p><?= pc_h($pc['charter_short_outro']) ?></p>
+                            <?php endif; ?>
                         </div>
 
                         <div class="contact-cta">

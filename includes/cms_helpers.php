@@ -96,6 +96,41 @@ if (!function_exists('pc_paragraphs_html')) {
     }
 }
 
+if (!function_exists('pc_list_items')) {
+    /**
+     * Render a newline-separated block of plain text as <li> elements.
+     *
+     * One line per bullet — the same convention train_about_list_items() already
+     * uses on the training page, lifted here so more than one page can share it.
+     * Nothing structural is stored in the database; every value is escaped on
+     * output.
+     *
+     * With $bold_lead, a line of the form "Label — description" renders as
+     * "<strong>Label</strong> — description". That reproduces layouts which
+     * previously hardcoded the <strong>, without putting markup in the content.
+     * The separator may be an em dash or a hyphen, surrounded by spaces.
+     *
+     * See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B4).
+     */
+    function pc_list_items(?string $text, bool $bold_lead = false): string
+    {
+        $out = '';
+        foreach (preg_split("/\n+/", trim((string)$text)) as $line) {
+            $line = trim($line);
+            if ($line === '') continue;
+
+            if ($bold_lead && preg_match('/^(.{1,60}?)\s+(—|–|-)\s+(.*)$/u', $line, $m)) {
+                $out .= '<li><strong>' . htmlspecialchars($m[1], ENT_QUOTES, 'UTF-8') . '</strong> '
+                      . htmlspecialchars($m[2], ENT_QUOTES, 'UTF-8') . ' '
+                      . htmlspecialchars($m[3], ENT_QUOTES, 'UTF-8') . '</li>';
+            } else {
+                $out .= '<li>' . htmlspecialchars($line, ENT_QUOTES, 'UTF-8') . '</li>';
+            }
+        }
+        return $out;
+    }
+}
+
 if (!function_exists('pc_h')) {
     function pc_h(?string $text): string
     {
