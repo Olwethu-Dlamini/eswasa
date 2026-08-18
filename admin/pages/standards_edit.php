@@ -221,6 +221,23 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 </style>
 
 <nav class="std-toc" aria-label="Standards editor sections">
+<?php
+/*
+ * The Standards page declares std_affiliations_* and std_aff_1..6_* in its key
+ * list, ships populated defaults (ISO, IEC, ...) and carries the finished CSS
+ * for the grid (.affiliation-grid / .affiliation-tile) — but no markup on
+ * Standards.php renders any of it. The section's HTML appears to have been
+ * lost rather than deliberately removed.
+ *
+ * Until it is restored, this editor card is hidden: an editor filling in these
+ * fields would see no change on the live page, which is worse than the fields
+ * not being offered at all. The keys, defaults and CSS are all left intact, so
+ * restoring the section is a markup change plus flipping this flag to true.
+ *
+ * See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B3).
+ */
+$std_affiliations_live = false;
+?>
     <a href="#sec-meta">Breadcrumb</a>
     <a href="#sec-about">About Standards</a>
     <a href="#sec-what">What is a Standard</a>
@@ -229,7 +246,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     <a href="#sec-proposal">Submit Proposal</a>
     <a href="#sec-tc">Technical Committees</a>
     <a href="#sec-purchase">Purchase Standards</a>
-    <a href="#sec-affiliations">Affiliations</a>
+    <?php if ($std_affiliations_live): ?><a href="#sec-affiliations">Affiliations</a><?php endif; ?>
     <a href="#sec-info">Info Centre</a>
     <a href="#sec-cta">CTA</a>
     <button type="submit" form="standardsEditForm" name="save_std" class="btn btn-sm btn-primary save-pill">
@@ -564,7 +581,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
         </div>
     </div>
 
-    <!-- ───────── Affiliations ───────── -->
+    <!-- ───────── Affiliations (hidden: not rendered on the page) ───────── -->
+    <?php if ($std_affiliations_live): ?>
     <div class="card mb-3 std-edit-section" id="sec-affiliations">
         <div class="card-body">
             <h5 class="mb-3">Our Affiliations</h5>
@@ -609,6 +627,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- ───────── Information Centre ───────── -->
     <div class="card mb-3 std-edit-section" id="sec-info">
