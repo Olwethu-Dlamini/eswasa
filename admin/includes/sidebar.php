@@ -53,11 +53,15 @@ function submenu_open($pages, $current) {
                 <?= nav_link('breadcrumbs_edit.php', $current_page, 'fa-image', 'Breadcrumb Images') ?>
             </li>
 
-            <li class="nav-item">
-                <?= nav_link('services_edit.php', $current_page, 'fa-handshake', 'Our Services') ?>
-            </li>
-
             <!-- About Us -->
+            <!-- Sidebar order follows the public nav: Home, About Us, Our
+                 Services, Training, Certification, Calibration, Standards,
+                 Updates, Customer Care, Contact Us. Our Services used to sit
+                 above About Us here, which is the one place the two diverged.
+                 Breadcrumb Images stays pinned under Home: it is a
+                 cross-cutting tool rather than a page, so it has no
+                 counterpart in the public nav.
+                 See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B1). -->
             <?php $about_pages = ['about_edit.php','about_team.php']; ?>
             <li class="nav-item">
                 <a class="nav-link <?= is_active_group($about_pages, $current_page) ?> d-flex justify-content-between"
@@ -69,6 +73,10 @@ function submenu_open($pages, $current) {
                     <li class="nav-item"><a class="nav-link <?= $current_page==='about_edit.php'?'active':'' ?>" href="index.php?page=about_edit.php">Who Are We</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='about_team.php'?'active':'' ?>" href="index.php?page=about_team.php">Meet Our Team</a></li>
                 </ul>
+            </li>
+
+            <li class="nav-item">
+                <?= nav_link('services_edit.php', $current_page, 'fa-handshake', 'Our Services') ?>
             </li>
 
             <!-- Training -->
