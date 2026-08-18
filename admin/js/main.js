@@ -176,9 +176,18 @@ document.addEventListener('DOMContentLoaded', function () {
        page it is noise. Tabbed editors are skipped — they already chunk their
        content, and a rail pointing into hidden panes would scroll to nothing. */
     var isTabbed = !!main.querySelector('[data-bs-toggle="tab"]');
+    // Editors mark section titles two ways: an <h5> inside the card body (29
+    // pages) or a .card-header (14, including Meet Our Team). Both are section
+    // titles, so both feed the rail — otherwise half the CMS gets navigation
+    // and half doesn't, which is the inconsistency this is meant to remove.
     var headings = Array.prototype.filter.call(
-        main.querySelectorAll('.card .card-body > h5'),
-        function (h) { return h.textContent.trim() !== ''; }
+        main.querySelectorAll('.card .card-body > h5, .card > .card-header'),
+        function (h) {
+            if (h.textContent.trim() === '') return false;
+            // A header that only wraps a button (an "Add ..." row) is a toolbar,
+            // not a section title.
+            return h.textContent.replace(/\s+/g, ' ').trim().length > 2;
+        }
     );
 
     if (!isTabbed && headings.length >= 3) {

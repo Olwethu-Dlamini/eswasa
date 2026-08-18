@@ -2,9 +2,32 @@
    ESWASA Admin — style.css
    ============================================= */
 
+/* Match the public site's typography so the CMS and the site read as one
+   product. The front end sets --tg-body-font-family: 'Arial', sans-serif and
+   --tg-body-font-size: 15px (assets/css/main.css); the admin previously
+   declared no family at all and fell back to Bootstrap's system stack at 16px,
+   which is why the two looked different.
+
+   Bootstrap's own variables are set rather than just `body`, so every
+   component the admin uses — cards, buttons, tables, form controls, modals —
+   inherits the same face instead of only the page background. */
+:root {
+    --bs-font-sans-serif: 'Arial', Helvetica, sans-serif;
+    --bs-body-font-family: 'Arial', Helvetica, sans-serif;
+    --bs-body-font-size: 15px;
+}
+
 body {
-    font-size: 1rem;
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
     transition: background-color 0.3s ease;
+}
+
+/* Headings follow the same face as the front end (--tg-heading-font-family is
+   also Arial there), so nothing in the admin falls back to a different stack. */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--bs-body-font-family);
 }
 
 /* ══════════════════════════════════════════════
@@ -442,6 +465,14 @@ body {
     color: #fff;
 }
 
+/* Card headers are the other way editors title a section, so they get the same
+   scroll offset as an <h5> when the rail jumps to them. */
+#mainContent .card > .card-header {
+    scroll-margin-top: 150px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+}
+
 /* ── Section headings inside cards ───────────── */
 #mainContent .card .card-body > h5 {
     scroll-margin-top: 150px;
@@ -490,4 +521,17 @@ body {
 @media (max-width: 575.98px) {
     .editor-savebar { margin-left: -0.75rem; margin-right: -0.75rem; }
     .editor-savebar__hint { display: none; }
+}
+
+/* An unset image slot shows a labelled placeholder rather than a broken-image
+   icon. Batch B added fourteen logo slots to the About Us editor, most of them
+   empty, which is where this became obvious. */
+.img-preview-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--bs-border-color);
+    background: var(--bs-tertiary-bg);
+    color: var(--bs-secondary-color);
+    font-size: 0.75rem;
 }

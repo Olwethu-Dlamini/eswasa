@@ -57,18 +57,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
         }
     }
 
-    $text_fields = [
-        'about_intro'               => pc_strip_text($_POST['about_intro']               ?? ''),
-        'about_vision'              => pc_strip_text($_POST['about_vision']              ?? ''),
-        'about_mission'             => pc_strip_text($_POST['about_mission']             ?? ''),
-        'about_history'             => pc_strip_text($_POST['about_history']             ?? ''),
-        'about_val_transparency'    => pc_strip_text($_POST['about_val_transparency']    ?? ''),
-        'about_val_people'          => pc_strip_text($_POST['about_val_people']          ?? ''),
-        'about_val_responsiveness'  => pc_strip_text($_POST['about_val_responsiveness']  ?? ''),
-        'about_val_innovation'      => pc_strip_text($_POST['about_val_innovation']      ?? ''),
-        'about_val_professionalism' => pc_strip_text($_POST['about_val_professionalism'] ?? ''),
-        'about_breadcrumb_title'    => pc_strip_text($_POST['about_breadcrumb_title']    ?? ''),
-    ];
+    // These are page_content keys, so they take the same absent-means-unchanged
+    // guard as every other editor. Written as an explicit list rather than a
+    // loop, they were missed when that guard was rolled out — a partial post
+    // blanked the About Us body text. See spec item C6.
+    $text_fields = [];
+    foreach ([
+        'about_intro',
+        'about_vision',
+        'about_mission',
+        'about_history',
+        'about_val_transparency',
+        'about_val_people',
+        'about_val_responsiveness',
+        'about_val_innovation',
+        'about_val_professionalism',
+        'about_breadcrumb_title',
+    ] as $k) {
+        $text_fields[$k] = pc_post_value($k);
+    }
 
     // Section headings + logo strip labels, all hardcoded before Batch B.
     $extra_text_keys = [
@@ -92,6 +99,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
     }
 
     $all = array_merge($text_fields, $image_updates);
+
+    // This page writes through its own upsert rather than pc_save_many(), so it
+    // has to apply the same rule: a null from pc_post_value() means the field
+    // was not submitted and must be left alone. Without this the null binds as
+    // SQL NULL and wipes the stored value — worse than the empty string the
+    // guard was introduced to prevent. See spec item C6.
+    $all = array_filter($all, static function ($v) { return $v !== null; });
 
     $upsert = $conn->prepare("INSERT INTO page_content (page_key, content) VALUES (?, ?) ON DUPLICATE KEY UPDATE content = VALUES(content)");
 
@@ -152,19 +166,11 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
 <form method="post" id="aboutForm">
     <input type="hidden" name="save_about" value="1">
 
-    <ul class="nav nav-tabs mb-4" role="tablist">
-        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-breadcrumb" type="button">Breadcrumb</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-intro" type="button">Who We Are</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-vision" type="button">Vision</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-mission" type="button">Mission</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-values" type="button">Core Values</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-history" type="button">History</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-images" type="button">Images</button></li>
-        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-affiliations" type="button">Affiliations</button></li>
-    </ul>
 
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="tab-breadcrumb">
+            <div class="card mb-3">
+      <div class="card-body">
+        <h5>Breadcrumb</h5>
+
             <div class="row g-4">
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Breadcrumb Title</label>
@@ -184,11 +190,31 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="tab-intro"><div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_main" value="<?= e($pc['about_heading_main']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_intro" rows="5"><?= e($pc['about_intro']??'') ?></textarea></div>
-        <div class="tab-pane fade" id="tab-vision"><div class="mb-3"><label class="form-label fw-bold">Section heading (covers Vision &amp; Mission)</label><input type="text" class="form-control" name="about_heading_visionmission" value="<?= e($pc['about_heading_visionmission']??'') ?>"></div><div class="mb-3"><label class="form-label fw-bold">"Vision" sub-heading</label><input type="text" class="form-control" name="about_heading_vision" value="<?= e($pc['about_heading_vision']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_vision" rows="4"><?= e($pc['about_vision']??'') ?></textarea></div>
-        <div class="tab-pane fade" id="tab-mission"><div class="mb-3"><label class="form-label fw-bold">"Mission" sub-heading</label><input type="text" class="form-control" name="about_heading_mission" value="<?= e($pc['about_heading_mission']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_mission" rows="4"><?= e($pc['about_mission']??'') ?></textarea></div>
-        <div class="tab-pane fade" id="tab-values">
+        
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Who We Are</h5>
+<div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_main" value="<?= e($pc['about_heading_main']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_intro" rows="5"><?= e($pc['about_intro']??'') ?></textarea>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Vision</h5>
+<div class="mb-3"><label class="form-label fw-bold">Section heading (covers Vision &amp; Mission)</label><input type="text" class="form-control" name="about_heading_visionmission" value="<?= e($pc['about_heading_visionmission']??'') ?>"></div><div class="mb-3"><label class="form-label fw-bold">"Vision" sub-heading</label><input type="text" class="form-control" name="about_heading_vision" value="<?= e($pc['about_heading_vision']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_vision" rows="4"><?= e($pc['about_vision']??'') ?></textarea>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Mission</h5>
+<div class="mb-3"><label class="form-label fw-bold">"Mission" sub-heading</label><input type="text" class="form-control" name="about_heading_mission" value="<?= e($pc['about_heading_mission']??'') ?>"></div><label class="form-label fw-bold">Body</label><textarea class="form-control" name="about_mission" rows="4"><?= e($pc['about_mission']??'') ?></textarea>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Core Values</h5>
+
             <div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_values" value="<?= e($pc['about_heading_values']??'') ?>"></div>
             <div class="row g-3">
                 <?php foreach(['about_val_transparency'=>'Transparency','about_val_people'=>'People','about_val_responsiveness'=>'Responsiveness','about_val_innovation'=>'Innovation','about_val_professionalism'=>'Professionalism'] as $k=>$l): ?>
@@ -202,9 +228,19 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                 </div>
                 <?php endforeach; ?>
             </div>
-        </div>
-        <div class="tab-pane fade" id="tab-history"><div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_history" value="<?= e($pc['about_heading_history']??'') ?>"></div><label class="form-label fw-bold">Body (separate paragraphs with a blank line)</label><textarea class="form-control" name="about_history" rows="10"><?= e($pc['about_history']??'') ?></textarea></div>
-        <div class="tab-pane fade" id="tab-images">
+        
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Brief History</h5>
+<div class="mb-3"><label class="form-label fw-bold">Section heading</label><input type="text" class="form-control" name="about_heading_history" value="<?= e($pc['about_heading_history']??'') ?>"></div><label class="form-label fw-bold">Body (separate paragraphs with a blank line)</label><textarea class="form-control" name="about_history" rows="10"><?= e($pc['about_history']??'') ?></textarea>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Images</h5>
+
             <div class="row g-4">
                 <?php foreach(['about_img_banner'=>'Intro Banner','about_img_team'=>'Team Banner','about_img_vision'=>'Vision','about_img_mission'=>'Mission'] as $k=>$l):
                     $isBanner = (strpos($k, 'banner') !== false || $k === 'about_img_team');
@@ -220,13 +256,13 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                 </div>
                 <?php endforeach; ?>
             </div>
-        </div>
+        
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Affiliations &amp; Accreditation</h5>
 
-        <?php /* Affiliations + accreditation logo strips. These were a hardcoded PHP
-                 array inside about-us.php until Batch B, so adding or removing a body
-                 the Authority belongs to needed a developer.
-                 See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2). */ ?>
-        <div class="tab-pane fade" id="tab-affiliations">
             <div class="mb-3">
                 <label class="form-label fw-bold">Affiliations heading</label>
                 <input type="text" class="form-control" name="about_affiliations_title" value="<?= e($pc['about_affiliations_title']??'') ?>">
@@ -283,8 +319,10 @@ function img_preview_src($path) { return '../' . ltrim($path, '/'); }
                 </div>
                 <?php endfor; ?>
             </div>
-        </div>
+        
+      </div>
     </div>
+
 
     <div class="mt-4 pt-3 border-top text-end">
         <button type="submit" class="btn btn-primary px-5 shadow-sm"><i class="fas fa-save me-2"></i>Save All Changes</button>
