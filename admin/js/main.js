@@ -93,15 +93,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const submenus = document.querySelectorAll('#sidebar ul[id^="submenu-"]');
 
-    // 1. Restore persisted open state (in addition to the active-page one from PHP)
-    const remembered = getOpenMenus();
-    submenus.forEach(menu => {
-        if (remembered.indexOf(menu.id) !== -1) {
-            menu.classList.add('show');
-            const toggle = document.querySelector('#sidebar [href="#' + menu.id + '"]');
+    // 1. Restore persisted open state.
+    //
+    // PHP already marks the current page's group open. Restoring remembered
+    // menus on top of that could leave two open at once, which contradicts the
+    // accordion below — it allows exactly one. The active group wins: if PHP
+    // opened one, nothing is restored, so the sidebar always loads in a state
+    // the accordion could itself produce.
+    // See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C5).
+    const activeMenu = Array.prototype.find.call(submenus, m => m.classList.contains('show'));
+    if (!activeMenu) {
+        const remembered = getOpenMenus();
+        const first = Array.prototype.find.call(submenus, m => remembered.indexOf(m.id) !== -1);
+        if (first) {
+            first.classList.add('show');
+            const toggle = document.querySelector('#sidebar [href="#' + first.id + '"]');
             if (toggle) toggle.setAttribute('aria-expanded', 'true');
         }
-    });
+    }
 
     // 2. Accordion — opening one submenu closes the others
     submenus.forEach(menu => {
@@ -125,11 +134,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 4. Scroll the active link into view (handy when the sidebar is tall)
+    // 4. Scroll the active link into view (handy when the sidebar is tall).
+    //
+    // scrollIntoView() scrolls every scrollable ancestor, including the page —
+    // so on a long editor, opening it could jump the main content down before
+    // the user had touched anything. Scroll the sidebar's own scroll container
+    // instead, leaving the window where it is. See spec item C5.
     const active = document.querySelector('#sidebar .nav-link.active');
-    if (active) {
-        const r = active.getBoundingClientRect();
-        const visible = r.top >= 0 && r.bottom <= window.innerHeight;
-        if (!visible) active.scrollIntoView({ block: 'center' });
+    if (active && sidebar) {
+        const linkBox = active.getBoundingClientRect();
+        const navBox  = sidebar.getBoundingClientRect();
+        const above   = linkBox.top < navBox.top;
+        const below   = linkBox.bottom > navBox.bottom;
+        if (above || below) {
+            // Centre it within the sidebar, clamped to the scrollable range.
+            const target = sidebar.scrollTop + (linkBox.top - navBox.top)
+                         - (sidebar.clientHeight / 2) + (linkBox.height / 2);
+            sidebar.scrollTop = Math.max(0, Math.min(target, sidebar.scrollHeight - sidebar.clientHeight));
+        }
     }
 });

@@ -159,6 +159,24 @@ body {
 }
 
 /* Sidebar hidden — desktop */
+/* Collapsing the sidebar animates its width to zero. Without nowrap the link
+   text rewraps as the panel narrows, so the whole nav visibly reflows on its
+   way out instead of sliding away — the "not fluid" feel reported in UAT.
+   Fading the contents means the panel dissolves rather than squashes.
+   See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C5). */
+#sidebar .nav-link,
+#sidebar .nav-link span {
+    white-space: nowrap;
+}
+#sidebar .sidebar-inner {
+    opacity: 1;
+    transition: opacity 0.18s ease;
+}
+#sidebar.sidebar-hidden .sidebar-inner {
+    opacity: 0;
+    transition: opacity 0.12s ease;
+}
+
 #sidebar.sidebar-hidden {
     width: 0;
     min-width: 0;
@@ -332,4 +350,21 @@ body {
     background-position: center;
     border: 1px solid var(--bs-border-color);
     margin-top: 0.5rem;
+}
+
+/* ══════════════════════════════════════════════
+   REDUCED MOTION
+   Everything above animates. Respect the OS setting for people who ask for
+   less movement — the sidebar, submenus and overlay still work, they just
+   arrive instantly. See spec item C5.
+══════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
