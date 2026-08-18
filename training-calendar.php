@@ -59,7 +59,11 @@ $train_cal_defaults = [
 
     // Action buttons (Prospectus / Application / E-Learning)
     'train_cal_prospectus_label'       => 'Prospectus',
-    'train_cal_prospectus_url'         => 'admin/downloads/ESWASA TRAINING PROSPECTUS 2025-26.pdf',
+    // Was admin/downloads/, a directory that has never existed — the
+    // Prospectus button 404'd. The file lives in admin/uploads/, which is
+    // also where the admin's new PDF upload field writes.
+    // See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md (A6).
+    'train_cal_prospectus_url'         => 'admin/uploads/ESWASA TRAINING PROSPECTUS 2025-26.pdf',
     'train_cal_application_label'      => 'Application Form',
     'train_cal_application_url'        => 'qoute_training.php',
     'train_cal_elearning_label'        => 'E-Learning Platform',
@@ -641,7 +645,7 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
 
                 <!-- Calendar Action Tabs (Prospectus / Application / E-Learning) -->
                 <div class="calendar-actions text-center mb-4">
-                    <a href="<?= pc_h($pc['train_cal_prospectus_url']) ?>" class="prospectus-link" target="_blank">
+                    <a href="<?= pc_h($pc['train_cal_prospectus_url']) ?>" class="prospectus-link" target="_blank" rel="noopener" download>
                         <i class="fas fa-file-pdf"></i> <?= pc_h($pc['train_cal_prospectus_label']) ?>
                     </a>
                     <a href="<?= pc_h($pc['train_cal_application_url']) ?>" class="prospectus-link">

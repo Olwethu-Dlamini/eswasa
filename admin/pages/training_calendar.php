@@ -39,12 +39,87 @@ $page_text_keys = [
 ];
 
 // ── POST: save page content ──────────────────────────────────────────────────
+/**
+ * Store an uploaded PDF under admin/uploads/ and return its web path.
+ *
+ * Editors were previously expected to type a file path into a text box, which
+ * is how the Prospectus link came to point at admin/downloads/ — a directory
+ * that has never existed — leaving the button 404ing with nothing in the UI to
+ * suggest anything was wrong. A file picker removes the opportunity for that.
+ *
+ * Returns the stored path on success, null when no file was submitted, or a
+ * string starting with "ERR:" describing why it was rejected.
+ * See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md (A6).
+ */
+function train_cal_upload_pdf(string $field, int $max_bytes = 26214400): ?string
+{
+    if (empty($_FILES[$field]['name']) || ($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+    if (($_FILES[$field]['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+        return 'ERR:Upload failed (error ' . (int)$_FILES[$field]['error'] . ').';
+    }
+    if ((int)$_FILES[$field]['size'] > $max_bytes) {
+        return 'ERR:PDF is larger than the 25 MB limit.';
+    }
+
+    $tmp = $_FILES[$field]['tmp_name'];
+    if (!is_uploaded_file($tmp)) {
+        return 'ERR:Upload could not be verified.';
+    }
+
+    // Trust the file's contents, not its extension.
+    if (function_exists('finfo_open')) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_file($finfo, $tmp);
+        finfo_close($finfo);
+        if ($mime && !in_array(strtolower($mime), ['application/pdf', 'application/x-pdf'], true)) {
+            return 'ERR:That file is not a PDF.';
+        }
+    }
+
+    $stem = strtolower(pathinfo((string)$_FILES[$field]['name'], PATHINFO_FILENAME));
+    $stem = trim(preg_replace('/[^a-z0-9]+/', '-', $stem), '-');
+    if ($stem === '') $stem = 'prospectus';
+    $stem = substr($stem, 0, 60);
+
+    $dir = ADMIN_ROOT . '/uploads/';
+    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        return 'ERR:Could not create the uploads directory.';
+    }
+    if (!is_writable($dir)) {
+        return 'ERR:The uploads directory is not writable.';
+    }
+
+    $name = $stem . '_' . date('Ymd_His') . '_' . bin2hex(random_bytes(3)) . '.pdf';
+    if (!move_uploaded_file($tmp, $dir . $name)) {
+        return 'ERR:Failed to save the uploaded file.';
+    }
+    return 'admin/uploads/' . $name;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_train_cal_content'])) {
     $kv = [];
     foreach ($page_text_keys as $k) {
         $kv[$k] = pc_strip_text($_POST[$k] ?? '');
     }
+
+    // A newly uploaded PDF wins over whatever is in the URL box; otherwise the
+    // typed value is kept, so existing external links keep working.
+    $upload_error = null;
+    $uploaded = train_cal_upload_pdf('train_cal_prospectus_file');
+    if (is_string($uploaded) && strpos($uploaded, 'ERR:') === 0) {
+        $upload_error = substr($uploaded, 4);
+    } elseif (is_string($uploaded)) {
+        $kv['train_cal_prospectus_url'] = $uploaded;
+    }
+
     $errs = pc_save_many($conn, $kv);
+    if ($upload_error !== null) {
+        set_flash('danger', 'Page content saved, but the prospectus was not replaced: ' . $upload_error);
+        header('Location: index.php?page=training_calendar.php&tab=content');
+        exit;
+    }
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Page content saved.');
     header('Location: index.php?page=training_calendar.php&tab=content');
     exit;
@@ -443,7 +518,9 @@ if ($edit_session || $is_new) $active_tab = 'sessions';
 
     <!-- ============ TAB: Page content ============ -->
     <div class="tab-pane fade <?= $active_tab === 'content' ? 'show active' : '' ?>" id="tab-content" role="tabpanel">
-        <form method="POST">
+        <!-- enctype is required for the prospectus PDF picker below; without it
+             the file is silently dropped from the POST. -->
+        <form method="POST" enctype="multipart/form-data">
 
             <!-- Header / Hero -->
             <div class="card mb-3">
@@ -497,8 +574,38 @@ if ($edit_session || $is_new) $active_tab = 'sessions';
                             <input type="text" name="train_cal_prospectus_label" class="form-control" value="<?= pc_h($pc['train_cal_prospectus_label']) ?>">
                         </div>
                         <div class="col-md-8">
-                            <label class="form-label">Prospectus URL</label>
-                            <input type="text" name="train_cal_prospectus_url" class="form-control" value="<?= pc_h($pc['train_cal_prospectus_url']) ?>">
+                            <label class="form-label">Prospectus PDF</label>
+                            <?php
+                                // Show whether the current link actually resolves. The stored
+                                // path silently pointed at a non-existent directory for months
+                                // with nothing in the UI to indicate the button was dead.
+                                $prospectus_path = trim($pc['train_cal_prospectus_url']);
+                                $is_local = $prospectus_path !== '' && !preg_match('#^(https?:)?//#i', $prospectus_path);
+                                $exists   = $is_local && is_file(dirname(ADMIN_ROOT) . '/' . ltrim($prospectus_path, '/'));
+                            ?>
+                            <?php if ($prospectus_path !== ''): ?>
+                                <div class="mb-2 small">
+                                    <?php if (!$is_local): ?>
+                                        <span class="badge bg-info">external link</span>
+                                    <?php elseif ($exists): ?>
+                                        <span class="badge bg-success">file found</span>
+                                        <a href="../<?= pc_h($prospectus_path) ?>" target="_blank" rel="noopener" class="ms-1">view current PDF</a>
+                                    <?php else: ?>
+                                        <span class="badge bg-danger">file missing</span>
+                                        <span class="text-muted ms-1">the download link is broken &mdash; upload a replacement below</span>
+                                    <?php endif; ?>
+                                    <div class="text-muted mt-1"><code><?= pc_h($prospectus_path) ?></code></div>
+                                </div>
+                            <?php endif; ?>
+                            <input type="file" name="train_cal_prospectus_file" class="form-control" accept="application/pdf,.pdf">
+                            <div class="form-text">
+                                Upload a PDF to replace the current prospectus (max 25 MB).
+                                Leave empty to keep the existing file.
+                            </div>
+                            <label class="form-label mt-2 small text-muted">Or link to an external URL instead</label>
+                            <input type="text" name="train_cal_prospectus_url" class="form-control form-control-sm"
+                                   value="<?= pc_h($pc['train_cal_prospectus_url']) ?>">
+                            <div class="form-text">Only used when no file is uploaded above.</div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Application label</label>
