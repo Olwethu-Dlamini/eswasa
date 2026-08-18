@@ -418,7 +418,7 @@ try {
                     <div class="team-leader">
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="<?= pc_h(pc_image_src($council_chair['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($council_chair['name']) ?>" class="team-img">
+                                <img src="<?= pc_h(pc_image_src($council_chair['photo'], 'assets/img/team-placeholder.svg')) ?>" alt="<?= pc_h($council_chair['name']) ?>" class="team-img" onerror="this.onerror=null;this.src='assets/img/team-placeholder.svg';">
                             </div>
                             <h4 class="team-name"><?= pc_h($council_chair['name']) ?></h4>
                             <p class="team-role"><?= pc_h($council_chair['role']) ?></p>
@@ -434,7 +434,7 @@ try {
                         <?php foreach ($council_members as $c): ?>
                             <div class="team-card">
                                 <div class="team-img-container">
-                                    <img src="<?= pc_h(pc_image_src($c['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($c['name']) ?>" class="team-img">
+                                    <img src="<?= pc_h(pc_image_src($c['photo'], 'assets/img/team-placeholder.svg')) ?>" alt="<?= pc_h($c['name']) ?>" class="team-img" onerror="this.onerror=null;this.src='assets/img/team-placeholder.svg';">
                                 </div>
                                 <h4 class="team-name"><?= pc_h($c['name']) ?></h4>
                                 <p class="team-role"><?= pc_h($c['role']) ?></p>
@@ -465,7 +465,7 @@ try {
                     <div class="team-leader">
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="<?= pc_h(pc_image_src($mgmt_leader['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($mgmt_leader['name']) ?>" class="team-img">
+                                <img src="<?= pc_h(pc_image_src($mgmt_leader['photo'], 'assets/img/team-placeholder.svg')) ?>" alt="<?= pc_h($mgmt_leader['name']) ?>" class="team-img" onerror="this.onerror=null;this.src='assets/img/team-placeholder.svg';">
                             </div>
                             <h4 class="team-name"><?= pc_h($mgmt_leader['name']) ?></h4>
                             <p class="team-role"><?= pc_h($mgmt_leader['role']) ?></p>
@@ -484,7 +484,7 @@ try {
                         <?php foreach ($mgmt_members as $m): ?>
                             <div class="team-card">
                                 <div class="team-img-container">
-                                    <img src="<?= pc_h(pc_image_src($m['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($m['name']) ?>" class="team-img">
+                                    <img src="<?= pc_h(pc_image_src($m['photo'], 'assets/img/team-placeholder.svg')) ?>" alt="<?= pc_h($m['name']) ?>" class="team-img" onerror="this.onerror=null;this.src='assets/img/team-placeholder.svg';">
                                 </div>
                                 <h4 class="team-name"><?= pc_h($m['name']) ?></h4>
                                 <p class="team-role"><?= pc_h($m['role']) ?></p>
@@ -520,7 +520,7 @@ try {
                         <?php foreach ($staff as $s): ?>
                             <div class="team-card">
                                 <div class="team-img-container">
-                                    <img src="<?= pc_h(pc_image_src($s['photo'], 'assets/img/instructor/instructor01.png')) ?>" alt="<?= pc_h($s['name']) ?>" class="team-img">
+                                    <img src="<?= pc_h(pc_image_src($s['photo'], 'assets/img/team-placeholder.svg')) ?>" alt="<?= pc_h($s['name']) ?>" class="team-img" onerror="this.onerror=null;this.src='assets/img/team-placeholder.svg';">
                                 </div>
                                 <h4 class="team-name"><?= pc_h($s['name']) ?></h4>
                                 <p class="team-role"><?= pc_h($s['role']) ?></p>
