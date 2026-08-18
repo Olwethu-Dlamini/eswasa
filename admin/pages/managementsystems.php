@@ -335,15 +335,16 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
     <h1 class="h2">Management Systems Certification</h1>
     <div class="d-flex gap-2">
         <a href="../managementsystems.php" target="_blank" class="btn btn-sm btn-outline-secondary">View Page</a>
-        <?php if ($active_tab === 'orgs' && !$edit_org && !$is_new_org): ?>
-            <a href="index.php?page=managementsystems.php&new_org=1" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus me-1"></i> Add organisation
-            </a>
-        <?php elseif ($active_tab === 'docs' && !$edit_doc && !$is_new_doc): ?>
-            <a href="index.php?page=managementsystems.php&new_doc=1" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus me-1"></i> Add document
-            </a>
-        <?php endif; ?>
+        <?php // The Add buttons used to live here, gated on $active_tab. That
+              // is server-side state set from ?tab=, but the tabs below are
+              // Bootstrap client-side tabs that swap panes without reloading
+              // or changing the URL. So switching to Certification Documents
+              // left this header still showing "Add organisation", and there
+              // was no way to reach the add-document form except by typing
+              // ?new_doc=1 by hand. Each Add button now sits inside its own
+              // tab pane, governed by the same client-side state as the
+              // content it belongs to.
+              // See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md (A8). ?>
     </div>
 </div>
 
@@ -372,6 +373,14 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
 
 <!-- ============ TAB: Certified Organisations ============ -->
 <div class="tab-pane fade <?= $active_tab === 'orgs' ? 'show active' : '' ?>" id="tab-orgs" role="tabpanel">
+
+    <?php if (!$edit_org && !$is_new_org): ?>
+        <div class="d-flex justify-content-end mb-3">
+            <a href="index.php?page=managementsystems.php&new_org=1" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i> Add organisation
+            </a>
+        </div>
+    <?php endif; ?>
 
     <?php if ($edit_org || $is_new_org):
         $o = $edit_org ?: [
@@ -508,6 +517,14 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
 
 <!-- ============ TAB: Certification Documents ============ -->
 <div class="tab-pane fade <?= $active_tab === 'docs' ? 'show active' : '' ?>" id="tab-docs" role="tabpanel">
+
+    <?php if (!$edit_doc && !$is_new_doc): ?>
+        <div class="d-flex justify-content-end mb-3">
+            <a href="index.php?page=managementsystems.php&new_doc=1" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i> Add document
+            </a>
+        </div>
+    <?php endif; ?>
 
     <?php if ($edit_doc || $is_new_doc):
         $d = $edit_doc ?: [
