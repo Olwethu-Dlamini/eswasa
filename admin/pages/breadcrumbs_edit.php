@@ -14,7 +14,8 @@ $pages = [
     'calibration'         => ['Calibration',            'Calibration.php',          'assets/img/bg/calibrationbg.png'],
     'certification'       => ['Certification',          'Certification.php',        'assets/img/bg/breadcrumb_bg.jpg'],
     'contact'             => ['Contact Us',             'contact.php',              'assets/img/bg/breadcrumb_bg.jpg'],
-    'contactcalibration'  => ['Contact Calibration',    'contactcalibration.php',   'assets/img/bg/breadcrumb_bg.jpg'],
+    // 'contactcalibration' removed — the page is retired and now 301s to
+    // qoute_calibration.php, which replaces it in the list below. See spec A1.
     'disclaimer'          => ['Disclaimer',             'disclaimer.php',           'assets/img/bg.png'],
     'events'              => ['Events',                 'events.php',               'assets/img/bg/breadcrumb_bg.jpg'],
     'faq'                 => ['FAQ',                    'faq.php',                  'assets/img/bg/breadcrumb_bg.jpg'],
@@ -26,6 +27,7 @@ $pages = [
     'publications'        => ['Publications',           'publications.php',         'assets/img/bg/breadcrumb_bg.jpg'],
     'purchase'            => ['Purchase Standards',      'purchase.php',            'assets/img/bg/breadcrumb_bg.jpg'],
     'qoute'               => ['Request Quote',          'qoute.php',               'assets/img/bg/breadcrumb_bg.jpg'],
+    'qoute_calibration'   => ['Calibration Quote',      'qoute_calibration.php',   'assets/img/bg/breadcrumb_bg.jpg'],
     'qoute_certification' => ['Certification Quote',    'qoute_certification.php', 'assets/img/bg/breadcrumb_bg.jpg'],
     'qoute_training'      => ['Training Quote',         'qoute_training.php',      'assets/img/bg/breadcrumb_bg.jpg'],
     'standards'           => ['Standards',              'Standards.php',            'assets/img/bg/breadcrumb_bg.jpg'],

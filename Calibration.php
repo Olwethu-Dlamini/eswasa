@@ -137,7 +137,11 @@ $cal_defaults = [
     'cal_cta_btn1_label'  => 'Request Calibration Quote',
     'cal_cta_btn1_url'    => 'qoute_calibration.php',
     'cal_cta_btn2_label'  => 'Contact Metrology Unit',
-    'cal_cta_btn2_url'    => 'contactcalibration.php',
+    // contactcalibration.php is retired (its form posted to a third-party
+    // endpoint and never reached ESWASA). btn1 above already covers quote
+    // requests, so this "Contact ..." CTA goes to the general contact form
+    // rather than duplicating btn1's destination. See spec A1.
+    'cal_cta_btn2_url'    => 'contact.php',
 ];
 
 $pc = pc_get_many($conn, $cal_keys, $cal_defaults);

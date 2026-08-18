@@ -92,7 +92,10 @@
                                          <li class="menu-item-has-children"><a href="Calibration.php">Calibration</a>
                                             <ul class="sub-menu">
                                                 <li><a href="Calibration.php">Scales and Metrology services</a></li>
-                                                <li><a href="contactcalibration.php">Request for Quotation</a></li>
+                                                <!-- Was contactcalibration.php, whose form posted to a third-party
+                                                     endpoint and never reached ESWASA. Retired in favour of the
+                                                     working RFQ form. See spec item A1. -->
+                                                <li><a href="qoute_calibration.php">Request for Quotation</a></li>
                                             </ul>
                                         </li>
 
