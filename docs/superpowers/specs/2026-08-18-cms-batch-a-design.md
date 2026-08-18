@@ -1,7 +1,27 @@
 # ESWASA CMS — Batch A ("Broken things") design
 
 **Date:** 2026-08-18
-**Status:** approved, ready for implementation planning
+**Status:** **implemented and pushed to `main`** (2026-08-18)
+
+| Item | Commit | Verified |
+|------|--------|----------|
+| A1 calibration third-party form | `b44e55f` | 301 in place, no `bazardeal` reference remains |
+| A2 contact form | `07749d6` | 8-digit number saves; invalid input shows a visible error and keeps input |
+| A3 quote source + requester name | `9d23935` | Name captured with no referrer; existing row backfilled to "Welile Mndzebele" |
+| A4 quote attachments | `9d23935` | Renamed non-PDF rejected by name; valid PDF kept |
+| A5 Enroll Now | `20ade4c` | Links to purchase.php (200) |
+| A6 prospectus | `4c10a68` | Link returns 200 / 625 KB PDF; upload and rejection both work |
+| A7 user delete + super user | `0c5dff6` | One redirect, one audit row (was 16); id 1 undeletable via UI and URL |
+| A8 add certification document | `830465f` | Add → renders publicly → delete, full round trip |
+| A9 team photos | `18ceec8` | All images resolve or fall back to the placeholder |
+| X1 invisible alerts | `2f2fc48` | 25 call sites moved to `danger`; `set_flash()` guards the rest |
+| X2 `display_errors` | — | Already correct in the repo; the local copy was stale (see §5) |
+| — standards proposal form | `4e5fdd1` | Found in regression sweep; link returns 200 / 345 KB PDF |
+
+Regression sweep after implementation: every public page returns 200
+(bar two intentional non-200s — `event-details.php` redirects without an
+id, `process_quote.php` rejects GET with 405) and every admin page
+returns 200, with no PHP notices, warnings or fatals on any of them.
 **Source:** UAT punch list of 17 items raised against the CMS. This spec covers
 Batch A only. Batches B and C are scoped at the end.
 
@@ -361,11 +381,21 @@ one is a validation or database-error message.
 
 ### X2 — `display_errors` on in production
 
-**Root cause.** `includes/env.php:65` sets `display_errors` to `'1'` in the
-production branch. Only `admin/index.php` overrides it, so public pages leak
-file paths and SQL errors to visitors.
+**Root cause as reported.** `includes/env.php` sets `display_errors` to `'1'`
+in the production branch, so public pages leak file paths and SQL errors.
 
-**Fix.** `'0'` in the production branch, keeping `log_errors` on.
+**Correction found during implementation.** This is already fixed in the
+repository — `main` has `display_errors', '0'`. The **local working copy was
+the stale one**. So the local folder is *behind* the repo here, not ahead,
+which contradicts the assumption in §1 that local work was simply newer.
+
+**Action taken.** The local copy was synced to the repo version (keeping its
+local-only database credentials, which are deliberately never committed). No
+code change was pushed, because none was needed.
+
+**Still worth checking:** if the live site is deployed from this folder rather
+than from `main`, production may still have `display_errors` on. Confirm what
+the deployed `includes/env.php` actually contains.
 
 ---
 
