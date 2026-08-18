@@ -73,7 +73,16 @@
                 '#cropperMain { flex-direction: column; }' +
                 '#cropperSidebar { width: 100%; }' +
                 '#cropperPreview { width: 200px; }' +
-            '}';
+            '}' +
+            /* Pending-upload strip shown under a `multiple` file input */
+            '.cropper-pending-strip { margin-top: 10px; padding: 10px; border: 1px dashed #adb5bd; border-radius: 6px; background: rgba(13,110,253,0.04); }' +
+            '.cropper-pending-caption { font-size: 12px; color: #6c757d; margin-bottom: 8px; }' +
+            '.cropper-pending-row { display: flex; flex-wrap: wrap; gap: 8px; }' +
+            '.cropper-pending-item { position: relative; width: 110px; height: 80px; }' +
+            '.cropper-pending-item img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #ced4da; border-radius: 4px; background: #fff; }' +
+            '.cropper-pending-remove { position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; line-height: 1; padding: 0;' +
+                ' border: none; border-radius: 50%; background: rgba(220,53,69,0.92); color: #fff; font-size: 15px; cursor: pointer; }' +
+            '.cropper-pending-remove:hover { background: #b02a37; }';
         document.head.appendChild(styles);
 
         return overlay;
@@ -177,6 +186,53 @@
         reader.readAsDataURL(file);
     }
 
+    /**
+     * Show a thumbnail for each crop applied from a `multiple` input, with a
+     * remove button that discards both the thumbnail and its hidden field — so
+     * a mis-picked photo can be dropped before saving rather than after.
+     * The strip is created lazily, directly after the file input.
+     */
+    function addPendingThumb(input, hiddenField, dataUrl) {
+        var stripId = 'pending-' + (input.name || 'files').replace(/[^a-z0-9]/gi, '-');
+        var strip = document.getElementById(stripId);
+        if (!strip) {
+            strip = document.createElement('div');
+            strip.id = stripId;
+            strip.className = 'cropper-pending-strip';
+            var caption = document.createElement('div');
+            caption.className = 'cropper-pending-caption';
+            caption.textContent = 'Ready to upload — these are saved when you submit the form:';
+            strip.appendChild(caption);
+            var row = document.createElement('div');
+            row.className = 'cropper-pending-row';
+            strip.appendChild(row);
+            input.parentNode.insertBefore(strip, input.nextSibling);
+        }
+        var row = strip.querySelector('.cropper-pending-row');
+
+        var item = document.createElement('div');
+        item.className = 'cropper-pending-item';
+
+        var img = document.createElement('img');
+        img.src = dataUrl;
+        img.alt = '';
+
+        var del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'cropper-pending-remove';
+        del.title = 'Remove this image';
+        del.innerHTML = '&times;';
+        del.addEventListener('click', function () {
+            if (hiddenField.parentNode) hiddenField.parentNode.removeChild(hiddenField);
+            item.parentNode.removeChild(item);
+            if (!row.querySelector('.cropper-pending-item')) strip.remove();
+        });
+
+        item.appendChild(img);
+        item.appendChild(del);
+        row.appendChild(item);
+    }
+
     function applyAndClose() {
         if (!cropper) return closeOverlay();
         // Preserve transparency: PNG/WebP/GIF sources export as PNG; photos
@@ -204,6 +260,12 @@
                 hidden.name  = baseName + '_cropped[]';
                 hidden.value = dataUrl;
                 input.parentNode.insertBefore(hidden, input);
+                // ...and show it. A `multiple` input previously produced no
+                // visible feedback at all: an editor cropping four event photos
+                // saw nothing until after saving, with no way to tell how many
+                // had been accepted or to drop one they'd picked by mistake.
+                // See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C3).
+                addPendingThumb(input, hidden, dataUrl);
             }
         } else if (currentTarget) {
             currentTarget.value = dataUrl;
