@@ -43,13 +43,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_purchase'])) {
     foreach ($text_keys as $k) {
         $kv[$k] = pc_post_value($k);
     }
+
+    // Document uploads win over whatever is in the matching URL box, so an
+    // existing external link keeps working when nothing new is uploaded.
+    // Rejections are surfaced rather than dropped. See spec item C2.
+    $doc_errors = [];
+    foreach (['purchase_catalogue_link_url'] as $dk) {
+        $up = pc_upload_document($dk . '_file', ADMIN_ROOT . '/uploads/', 'doc');
+        if (is_string($up) && strpos($up, 'ERR:') === 0) {
+            $doc_errors[] = substr($up, 4);
+        } elseif (is_string($up)) {
+            $kv[$dk] = $up;
+        }
+    }
     foreach ($image_keys as $k) {
         $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'purchase');
         if ($path !== null) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
     if (function_exists('set_flash')) {
-        set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
+        if ($doc_errors) {
+            set_flash('danger', 'Saved, but a document was not replaced: ' . implode(' ', $doc_errors));
+        } else {
+            set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
+        }
     }
     redirect_self();
 }
@@ -124,7 +141,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Link URL (e.g. admin/uploads/catalogue.pdf)</label>
-                    <input type="text" name="purchase_catalogue_link_url" class="form-control" value="<?= pc_h($pc['purchase_catalogue_link_url']) ?>">
+                    <?php $doc_key = 'purchase_catalogue_link_url'; $doc_label = 'Standards catalogue';
+                          include __DIR__ . '/../includes/document_field.php'; ?>
                 </div>
             </div>
         </div>

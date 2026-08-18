@@ -46,7 +46,11 @@ $tcp_defaults = [
     'tcp_apply_body'          => "Becoming a member of an ESWASA Technical Committee is a great way to contribute to the development of standards that impact your industry and society. Members gain valuable insights, network with experts, and help shape the future of their technical field.",
     'tcp_apply_eligibility'   => 'Eligibility: Membership is open to individuals with relevant expertise and a commitment to the standards development process.',
     'tcp_apply_button_text'   => 'Download TC Membership Application (PDF)',
-    'tcp_apply_button_url'    => 'admin/uploads/tc_membership_application.pdf',
+    // Was admin/uploads/tc_membership_application.pdf, which has never existed —
+    // the Apply button 404'd on the live page. Points at the registration form
+    // that is actually in the repository; staff can upload a replacement through
+    // the CMS. See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C2).
+    'tcp_apply_button_url'    => 'assets/forms/TEC_SDU_FO_004_Technical_Committee_Registration_Form.doc',
     'tcp_apply_contact_label' => 'Please submit the completed form to',
     'tcp_apply_contact_email' => 'info@eswasa.co.sz',
     'tcp_cta_btn_1_text'      => 'Learn About Standards Development',

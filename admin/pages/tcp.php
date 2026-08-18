@@ -38,12 +38,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_tcp'])) {
     foreach ($text_keys as $k) {
         $kv[$k] = pc_post_value($k);
     }
+
+    // Document uploads win over whatever is in the matching URL box, so an
+    // existing external link keeps working when nothing new is uploaded.
+    // Rejections are surfaced rather than dropped. See spec item C2.
+    $doc_errors = [];
+    foreach (['tcp_apply_button_url'] as $dk) {
+        $up = pc_upload_document($dk . '_file', ADMIN_ROOT . '/uploads/', 'doc');
+        if (is_string($up) && strpos($up, 'ERR:') === 0) {
+            $doc_errors[] = substr($up, 4);
+        } elseif (is_string($up)) {
+            $kv[$dk] = $up;
+        }
+    }
     foreach ($image_keys as $k) {
         $path = pc_upload_image($k . '_file', ADMIN_ROOT . '/uploads/', 'tcp');
         if ($path !== null) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
-    set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
+    if ($doc_errors) {
+        set_flash('danger', 'Saved, but a document was not replaced: ' . implode(' ', $doc_errors));
+    } else {
+        set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
+    }
     redirect_self();
 }
 
@@ -135,7 +152,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Download Button URL</label>
-                    <input type="text" name="tcp_apply_button_url" class="form-control" value="<?= pc_h($pc['tcp_apply_button_url']) ?>">
+                    <?php $doc_key = 'tcp_apply_button_url'; $doc_label = 'Committee application form (Apply button target)';
+                          include __DIR__ . '/../includes/document_field.php'; ?>
                     <div class="form-text">Path to PDF or external URL. Example: <code>admin/uploads/tc_membership_application.pdf</code></div>
                 </div>
             </div>

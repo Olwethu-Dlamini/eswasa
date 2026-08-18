@@ -254,6 +254,118 @@ if (!function_exists('pc_save_base64_image')) {
     }
 }
 
+if (!function_exists('pc_upload_document')) {
+    /**
+     * Store an uploaded PDF or Word document under admin/uploads/ and return
+     * its web-relative path.
+     *
+     * Document links across the CMS were plain text boxes holding server paths,
+     * which an editor had to type correctly and had no way to check. That is
+     * how two live buttons came to 404: the training prospectus pointed at
+     * admin/downloads/, a directory that has never existed, and the Technical
+     * Committee application pointed at a file nobody ever uploaded. A file
+     * picker removes the opportunity for both.
+     *
+     * Word is accepted as well as PDF because the Technical Committee
+     * registration form is a .doc already in use.
+     *
+     * Returns:
+     *   - the stored path ("admin/uploads/foo.pdf") on success
+     *   - null when no file was submitted (leave the existing value alone)
+     *   - a string beginning "ERR:" describing why it was rejected
+     *
+     * Callers must surface ERR: to the editor — a silently dropped upload is
+     * how attachments went missing on the quote forms before Batch A.
+     *
+     * See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C2).
+     */
+    function pc_upload_document(string $field, string $upload_dir, string $prefix = 'doc', int $max_bytes = 26214400): ?string
+    {
+        if (empty($_FILES[$field]['name']) || ($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            return null;
+        }
+        if (($_FILES[$field]['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+            return 'ERR:Upload failed (error ' . (int)$_FILES[$field]['error'] . ').';
+        }
+        if ((int)$_FILES[$field]['size'] > $max_bytes) {
+            return 'ERR:That document is larger than the ' . round($max_bytes / 1048576) . ' MB limit.';
+        }
+
+        $tmp = $_FILES[$field]['tmp_name'];
+        if (!is_uploaded_file($tmp)) {
+            return 'ERR:Upload could not be verified.';
+        }
+
+        // Judge the file by its contents, not its name.
+        $allowed = [
+            'application/pdf'    => 'pdf',
+            'application/x-pdf'  => 'pdf',
+            'application/msword' => 'doc',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+            // Some servers report legacy Office files only as a generic OLE blob;
+            // fall back to the extension in that one case, checked below.
+            'application/vnd.ms-office' => null,
+            'application/octet-stream'  => null,
+        ];
+        $ext_from_name = strtolower(pathinfo((string)$_FILES[$field]['name'], PATHINFO_EXTENSION));
+
+        $ext = null;
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime  = strtolower((string)finfo_file($finfo, $tmp));
+            finfo_close($finfo);
+            if (!array_key_exists($mime, $allowed)) {
+                return 'ERR:Only PDF and Word documents can be uploaded.';
+            }
+            $ext = $allowed[$mime];
+        }
+        if ($ext === null) {
+            if (!in_array($ext_from_name, ['pdf', 'doc', 'docx'], true)) {
+                return 'ERR:Only PDF and Word documents can be uploaded.';
+            }
+            $ext = $ext_from_name;
+        }
+
+        $stem = strtolower(pathinfo((string)$_FILES[$field]['name'], PATHINFO_FILENAME));
+        $stem = trim(preg_replace('/[^a-z0-9]+/', '-', $stem), '-');
+        if ($stem === '') $stem = $prefix;
+        $stem = substr($stem, 0, 60);
+
+        if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true) && !is_dir($upload_dir)) {
+            return 'ERR:Could not create the uploads directory.';
+        }
+        if (!is_writable($upload_dir)) {
+            return 'ERR:The uploads directory is not writable.';
+        }
+
+        $name = $stem . '_' . date('Ymd_His') . '_' . bin2hex(random_bytes(3)) . '.' . $ext;
+        if (!move_uploaded_file($tmp, rtrim($upload_dir, '/\\') . DIRECTORY_SEPARATOR . $name)) {
+            return 'ERR:Failed to save the uploaded file.';
+        }
+        return 'admin/uploads/' . $name;
+    }
+}
+
+if (!function_exists('pc_document_status')) {
+    /**
+     * Describe whether a stored document link actually resolves, for display
+     * beside the field in the admin. Returns [state, label] where state is one
+     * of 'external', 'found', 'missing' or 'empty'.
+     *
+     * Exists because a broken document link was previously invisible in the
+     * CMS — the only way to discover it was to click the button on the live
+     * site. See spec item C2.
+     */
+    function pc_document_status(?string $stored): array
+    {
+        $s = trim((string)$stored);
+        if ($s === '')                                return ['empty', 'no document set'];
+        if (preg_match('#^(https?:)?//#i', $s))       return ['external', 'external link'];
+        $fs = dirname(__DIR__) . '/' . ltrim($s, '/');
+        return is_file($fs) ? ['found', 'file found'] : ['missing', 'file missing'];
+    }
+}
+
 if (!function_exists('pc_image_src')) {
     /**
      * Resolve a stored image path for use in <img src="">.

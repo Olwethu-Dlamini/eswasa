@@ -134,6 +134,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_std'])) {
     foreach ($text_keys as $k) {
         $kv[$k] = pc_post_value($k);
     }
+
+    // Document uploads win over whatever is in the matching URL box, so an
+    // existing external link keeps working when nothing new is uploaded.
+    // Rejections are surfaced rather than dropped. See spec item C2.
+    $doc_errors = [];
+    foreach (['std_proposal_form_url'] as $dk) {
+        $up = pc_upload_document($dk . '_file', ADMIN_ROOT . '/uploads/', 'doc');
+        if (is_string($up) && strpos($up, 'ERR:') === 0) {
+            $doc_errors[] = substr($up, 4);
+        } elseif (is_string($up)) {
+            $kv[$dk] = $up;
+        }
+    }
     foreach ($image_keys as $k) {
         // Prefer the cropper's base64 payload; fall back to a raw file
         // upload (e.g. SVG logos the cropper passes through untouched).
@@ -144,7 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_std'])) {
         if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
-    set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Standards page saved.');
+    if ($doc_errors) {
+        set_flash('danger', 'Saved, but a document was not replaced: ' . implode(' ', $doc_errors));
+    } else {
+        set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Standards page saved.');
+    }
     redirect_self();
 }
 
@@ -420,7 +437,8 @@ $std_affiliations_live = false;
             <div class="row g-2 mt-1">
                 <div class="col-md-8">
                     <label class="form-label">Proposal Form PDF URL</label>
-                    <input type="text" name="std_proposal_form_url" class="form-control" value="<?= pc_h($pc['std_proposal_form_url']) ?>">
+                    <?php $doc_key = 'std_proposal_form_url'; $doc_label = 'Standards proposal form';
+                          include __DIR__ . '/../includes/document_field.php'; ?>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Form Button Label</label>

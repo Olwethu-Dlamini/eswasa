@@ -62,8 +62,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cert_status'])) 
     foreach ($text_keys as $k) {
         $kv[$k] = pc_post_value($k);
     }
+
+    // Document uploads win over whatever is in the matching URL box, so an
+    // existing external link keeps working when nothing new is uploaded.
+    // Rejections are surfaced rather than dropped. See spec item C2.
+    $doc_errors = [];
+    foreach (['cert_status_footer_appeals_link_url', 'cert_status_footer_complaints_link_url', 'cert_status_footer_info_link_url'] as $dk) {
+        $up = pc_upload_document($dk . '_file', ADMIN_ROOT . '/uploads/', 'doc');
+        if (is_string($up) && strpos($up, 'ERR:') === 0) {
+            $doc_errors[] = substr($up, 4);
+        } elseif (is_string($up)) {
+            $kv[$dk] = $up;
+        }
+    }
     $errs = pc_save_many($conn, $kv);
-    set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
+    if ($doc_errors) {
+        set_flash('danger', 'Saved, but a document was not replaced: ' . implode(' ', $doc_errors));
+    } else {
+        set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
+    }
     redirect_self();
 }
 
@@ -251,7 +268,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 </div>
                 <div class="col-md-6 mb-2">
                     <label class="form-label">Link URL</label>
-                    <input type="text" name="cert_status_footer_appeals_link_url" class="form-control" value="<?= pc_h($pc['cert_status_footer_appeals_link_url']) ?>">
+                    <?php $doc_key = 'cert_status_footer_appeals_link_url'; $doc_label = 'Appeals procedure document';
+                          include __DIR__ . '/../includes/document_field.php'; ?>
                 </div>
             </div>
         </div>
@@ -276,7 +294,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 </div>
                 <div class="col-md-6 mb-2">
                     <label class="form-label">Link URL</label>
-                    <input type="text" name="cert_status_footer_complaints_link_url" class="form-control" value="<?= pc_h($pc['cert_status_footer_complaints_link_url']) ?>">
+                    <?php $doc_key = 'cert_status_footer_complaints_link_url'; $doc_label = 'Complaints procedure document';
+                          include __DIR__ . '/../includes/document_field.php'; ?>
                 </div>
             </div>
         </div>
@@ -309,7 +328,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 </div>
                 <div class="col-md-6 mb-2">
                     <label class="form-label">Link URL</label>
-                    <input type="text" name="cert_status_footer_info_link_url" class="form-control" value="<?= pc_h($pc['cert_status_footer_info_link_url']) ?>">
+                    <?php $doc_key = 'cert_status_footer_info_link_url'; $doc_label = 'Requests-for-information procedure document';
+                          include __DIR__ . '/../includes/document_field.php'; ?>
                 </div>
             </div>
         </div>

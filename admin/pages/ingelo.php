@@ -59,6 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_ingelo'])) {
     foreach ($text_keys as $k) {
         $kv[$k] = pc_post_value($k);
     }
+
+    // Document uploads win over whatever is in the matching URL box, so an
+    // existing external link keeps working when nothing new is uploaded.
+    // Rejections are surfaced rather than dropped. See spec item C2.
+    $doc_errors = [];
+    foreach (['ingelo_apply_button_url'] as $dk) {
+        $up = pc_upload_document($dk . '_file', ADMIN_ROOT . '/uploads/', 'doc');
+        if (is_string($up) && strpos($up, 'ERR:') === 0) {
+            $doc_errors[] = substr($up, 4);
+        } elseif (is_string($up)) {
+            $kv[$dk] = $up;
+        }
+    }
     foreach ($image_keys as $k) {
         // Prefer the cropper's base64 payload; fall back to a raw file
         // upload (e.g. SVG logos the cropper passes through untouched).
@@ -69,7 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_ingelo'])) {
         if (is_string($path)) $kv[$k] = $path;
     }
     $errs = pc_save_many($conn, $kv);
-    set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Ingelo page saved.');
+    if ($doc_errors) {
+        set_flash('danger', 'Saved, but a document was not replaced: ' . implode(' ', $doc_errors));
+    } else {
+        set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Ingelo page saved.');
+    }
     redirect_self();
 }
 
@@ -245,7 +262,8 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Download Button URL</label>
-                    <input type="url" name="ingelo_apply_button_url" class="form-control" value="<?= pc_h($pc['ingelo_apply_button_url']) ?>">
+                    <?php $doc_key = 'ingelo_apply_button_url'; $doc_label = 'Application form (Apply button target)';
+                          include __DIR__ . '/../includes/document_field.php'; ?>
                 </div>
             </div>
             <div class="mb-3">

@@ -39,64 +39,9 @@ $page_text_keys = [
 ];
 
 // ── POST: save page content ──────────────────────────────────────────────────
-/**
- * Store an uploaded PDF under admin/uploads/ and return its web path.
- *
- * Editors were previously expected to type a file path into a text box, which
- * is how the Prospectus link came to point at admin/downloads/ — a directory
- * that has never existed — leaving the button 404ing with nothing in the UI to
- * suggest anything was wrong. A file picker removes the opportunity for that.
- *
- * Returns the stored path on success, null when no file was submitted, or a
- * string starting with "ERR:" describing why it was rejected.
- * See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md (A6).
- */
-function train_cal_upload_pdf(string $field, int $max_bytes = 26214400): ?string
-{
-    if (empty($_FILES[$field]['name']) || ($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
-        return null;
-    }
-    if (($_FILES[$field]['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
-        return 'ERR:Upload failed (error ' . (int)$_FILES[$field]['error'] . ').';
-    }
-    if ((int)$_FILES[$field]['size'] > $max_bytes) {
-        return 'ERR:PDF is larger than the 25 MB limit.';
-    }
-
-    $tmp = $_FILES[$field]['tmp_name'];
-    if (!is_uploaded_file($tmp)) {
-        return 'ERR:Upload could not be verified.';
-    }
-
-    // Trust the file's contents, not its extension.
-    if (function_exists('finfo_open')) {
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime  = finfo_file($finfo, $tmp);
-        finfo_close($finfo);
-        if ($mime && !in_array(strtolower($mime), ['application/pdf', 'application/x-pdf'], true)) {
-            return 'ERR:That file is not a PDF.';
-        }
-    }
-
-    $stem = strtolower(pathinfo((string)$_FILES[$field]['name'], PATHINFO_FILENAME));
-    $stem = trim(preg_replace('/[^a-z0-9]+/', '-', $stem), '-');
-    if ($stem === '') $stem = 'prospectus';
-    $stem = substr($stem, 0, 60);
-
-    $dir = ADMIN_ROOT . '/uploads/';
-    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
-        return 'ERR:Could not create the uploads directory.';
-    }
-    if (!is_writable($dir)) {
-        return 'ERR:The uploads directory is not writable.';
-    }
-
-    $name = $stem . '_' . date('Ymd_His') . '_' . bin2hex(random_bytes(3)) . '.pdf';
-    if (!move_uploaded_file($tmp, $dir . $name)) {
-        return 'ERR:Failed to save the uploaded file.';
-    }
-    return 'admin/uploads/' . $name;
-}
+// The prospectus uploader that lived here has been promoted to the shared
+// pc_upload_document() in includes/cms_helpers.php, so all seven document
+// fields across the CMS use one implementation. See spec item C2.
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_train_cal_content'])) {
     $kv = [];
@@ -107,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_train_cal_conten
     // A newly uploaded PDF wins over whatever is in the URL box; otherwise the
     // typed value is kept, so existing external links keep working.
     $upload_error = null;
-    $uploaded = train_cal_upload_pdf('train_cal_prospectus_file');
+    $uploaded = pc_upload_document('train_cal_prospectus_file', ADMIN_ROOT . '/uploads/', 'prospectus');
     if (is_string($uploaded) && strpos($uploaded, 'ERR:') === 0) {
         $upload_error = substr($uploaded, 4);
     } elseif (is_string($uploaded)) {
