@@ -82,10 +82,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_session'])) {
     $sort_order = (int)($_POST['sort_order'] ?? 0);
     $is_active  = !empty($_POST['is_active']) ? 1 : 0;
 
+    // Per-training colour. Empty means "follow the family palette", which is
+    // stored as NULL so the family default keeps applying if the palette
+    // changes later.
+    $colour = strtolower(trim($_POST['colour'] ?? ''));
+    if (!empty($_POST['colour_use_family'])) $colour = '';
+
     $errors = [];
     if ($code === '')                                     $errors[] = 'Code is required.';
     if ($title === '')                                    $errors[] = 'Title is required.';
     if (!isset($TRAINING_FAMILIES[$family]))              $errors[] = 'Family must be one of the predefined options.';
+    if ($colour !== '' && !preg_match('/^#[0-9a-f]{6}$/', $colour)) {
+        $errors[] = 'Colour must be a six-digit hex value such as #99CC00.';
+    }
+    $colour = $colour === '' ? null : $colour;
 
     // Collect intakes from parallel arrays
     $intake_starts = $_POST['intake_start']  ?? [];
@@ -122,8 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_session'])) {
     $conn->begin_transaction();
     try {
         if ($id) {
-            $stmt = $conn->prepare('UPDATE training_sessions SET code = ?, family = ?, title = ?, location = ?, duration = ?, price = ?, sort_order = ?, is_active = ? WHERE id = ?');
-            $stmt->bind_param('ssssssiii', $code, $family, $title, $location, $duration, $price, $sort_order, $is_active, $id);
+            $stmt = $conn->prepare('UPDATE training_sessions SET code = ?, family = ?, title = ?, location = ?, duration = ?, price = ?, colour = ?, sort_order = ?, is_active = ? WHERE id = ?');
+            $stmt->bind_param('sssssssiii', $code, $family, $title, $location, $duration, $price, $colour, $sort_order, $is_active, $id);
             $stmt->execute();
             $stmt->close();
             // Replace intakes wholesale — simpler than diffing on a small set
@@ -134,8 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_session'])) {
             $session_id = $id;
             $msg = 'Training session updated.';
         } else {
-            $stmt = $conn->prepare('INSERT INTO training_sessions (code, family, title, location, duration, price, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->bind_param('ssssssii', $code, $family, $title, $location, $duration, $price, $sort_order, $is_active);
+            $stmt = $conn->prepare('INSERT INTO training_sessions (code, family, title, location, duration, price, colour, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt->bind_param('sssssssii', $code, $family, $title, $location, $duration, $price, $colour, $sort_order, $is_active);
             $stmt->execute();
             $session_id = $conn->insert_id;
             $stmt->close();
@@ -279,7 +289,7 @@ if ($edit_session || $is_new) $active_tab = 'sessions';
         <?php if ($edit_session || $is_new):
             $s = $edit_session ?: [
                 'id' => 0, 'code' => '', 'family' => '', 'title' => '',
-                'location' => 'Mbabane', 'duration' => '5 days', 'price' => '',
+                'location' => 'Mbabane', 'duration' => '5 days', 'price' => '', 'colour' => null,
                 'sort_order' => ($sessions ? (max(array_column($sessions, 'sort_order')) + 1) : 1),
                 'is_active' => 1,
             ];
@@ -303,15 +313,35 @@ if ($edit_session || $is_new) $active_tab = 'sessions';
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-bold">Family *</label>
-                                <select name="family" class="form-select" required>
+                                <select name="family" class="form-select" id="familySelect" required>
                                     <option value="">— choose —</option>
-                                    <?php foreach ($TRAINING_FAMILIES as $fam => $colour): ?>
-                                        <option value="<?= pc_h($fam) ?>" <?= $s['family'] === $fam ? 'selected' : '' ?>>
+                                    <?php foreach ($TRAINING_FAMILIES as $fam => $fam_colour): ?>
+                                        <option value="<?= pc_h($fam) ?>" data-colour="<?= pc_h($fam_colour) ?>" <?= $s['family'] === $fam ? 'selected' : '' ?>>
                                             <?= pc_h($fam) ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
-                                <div class="form-text">Drives the colour swatch and legend grouping.</div>
+                                <div class="form-text">Groups the training on the calendar legend.</div>
+                            </div>
+                            <?php
+                            $family_colour = $TRAINING_FAMILIES[$s['family']] ?? '#888888';
+                            $own_colour    = trim((string)($s['colour'] ?? ''));
+                            ?>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Calendar colour</label>
+                                <div class="input-group">
+                                    <input type="color" name="colour" id="colourPicker" class="form-control form-control-color"
+                                           value="<?= pc_h($own_colour !== '' ? $own_colour : $family_colour) ?>"
+                                           <?= $own_colour === '' ? 'disabled' : '' ?>>
+                                    <span class="input-group-text flex-grow-1">
+                                        <span class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" name="colour_use_family" value="1"
+                                                   id="colourUseFamily" <?= $own_colour === '' ? 'checked' : '' ?>>
+                                            <label class="form-check-label" for="colourUseFamily">Use family colour</label>
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="form-text">Colours this training's cards, calendar pills and legend swatch.</div>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label fw-bold">Sort order</label>
@@ -418,7 +448,7 @@ if ($edit_session || $is_new) $active_tab = 'sessions';
                                 </thead>
                                 <tbody>
                                     <?php foreach ($sessions as $row):
-                                        $colour = $TRAINING_FAMILIES[$row['family']] ?? '#888';
+                                        $colour = trim((string)($row['colour'] ?? '')) ?: ($TRAINING_FAMILIES[$row['family']] ?? '#888');
                                         $count = $intake_counts[(int)$row['id']] ?? 0;
                                     ?>
                                         <tr>
@@ -718,6 +748,25 @@ if ($edit_session || $is_new) $active_tab = 'sessions';
         wireRow(clone);
         clone.querySelector('.intake-start').focus();
     });
+
+    // ── Calendar colour ──────────────────────────────────────────────
+    // "Use family colour" disables the picker, so nothing is posted and the
+    // stored colour goes back to NULL. While it's ticked the swatch tracks
+    // the family dropdown, so the editor sees what they'd get.
+    var useFamily = document.getElementById('colourUseFamily');
+    var picker    = document.getElementById('colourPicker');
+    var famSelect = document.getElementById('familySelect');
+
+    function familyColour() {
+        var opt = famSelect.options[famSelect.selectedIndex];
+        return (opt && opt.dataset.colour) || '#888888';
+    }
+    function syncColour() {
+        picker.disabled = useFamily.checked;
+        if (useFamily.checked) picker.value = familyColour();
+    }
+    useFamily.addEventListener('change', syncColour);
+    famSelect.addEventListener('change', syncColour);
 })();
 </script>
 <?php endif; ?>

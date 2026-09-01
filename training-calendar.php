@@ -8,7 +8,7 @@ require __DIR__ . '/includes/training_families.php';
 // Schema: training_sessions + training_intakes (see migration_2026_05_27.sql).
 $train_cal_sessions = [];
 $res = $conn->query('
-    SELECT id, code, family, title, location, duration, price, sort_order
+    SELECT id, code, family, title, location, duration, price, colour, sort_order
     FROM training_sessions
     WHERE is_active = 1
     ORDER BY sort_order ASC, id ASC
@@ -750,7 +750,7 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone" class="form-label"><?= pc_h($pc['train_cal_modal_label_phone']) ?></label>
-                                        <input type="tel" class="form-control" id="phone">
+                                        <input type="tel" class="form-control" id="phone" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="company" class="form-label"><?= pc_h($pc['train_cal_modal_label_company']) ?></label>
@@ -813,15 +813,15 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
 <?php foreach ($train_cal_sessions as $row):
     if (empty($row['intakes'])) continue; // a session with no intakes can't render meaningfully
 ?>
-            { code: <?= json_encode($row['code'], JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($row['family'], JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($row['title'], JSON_UNESCAPED_UNICODE) ?>, sessions: [
+            { code: <?= json_encode($row['code'], JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($row['family'], JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($row['title'], JSON_UNESCAPED_UNICODE) ?>, colour: <?= json_encode(trim((string)($row['colour'] ?? '')) ?: null) ?>, sessions: [
 <?php foreach ($row['intakes'] as $s): ?>
                 { start: <?= json_encode($s['start']) ?>, end: <?= json_encode($s['end']) ?>, label: <?= json_encode($s['label'], JSON_UNESCAPED_UNICODE) ?> },
 <?php endforeach; ?>
             ]},
 <?php endforeach; ?>
         ];
-        // Resolve colour per training from the family map
-        trainings.forEach(t => { t.color = FAMILY_COLOURS[t.family]; });
+        // A training's own colour wins; otherwise it inherits the family palette.
+        trainings.forEach(t => { t.color = t.colour || FAMILY_COLOURS[t.family] || '#888888'; });
 
         // Decide white vs near-black text on top of a swatch via relative luminance
         function textOn(hex) {
@@ -1118,11 +1118,15 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             // Show only families that actually appear in this year's schedule
             const seen = new Set();
             trainings.forEach(t => {
-                if (seen.has(t.family)) return;
-                seen.add(t.family);
+                const key = t.family + '|' + t.color;
+                if (seen.has(key)) return;
+                seen.add(key);
+                // If this family renders in more than one colour, label the
+                // swatch with the training code instead of the family name.
+                const split = trainings.some(x => x.family === t.family && x.color !== t.color);
                 const item = document.createElement('span');
                 item.className = 'legend-item';
-                item.innerHTML = `<span class="swatch" style="background:${t.color};"></span>${t.family}`;
+                item.innerHTML = `<span class="swatch" style="background:${t.color};"></span>${split ? t.code : t.family}`;
                 wrap.appendChild(item);
             });
         }

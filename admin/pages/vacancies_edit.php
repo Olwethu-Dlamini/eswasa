@@ -33,13 +33,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // The advert PDF. A new upload replaces whatever is stored; sending
+    // nothing keeps the current file, so editing the title doesn't drop it.
+    // "Remove" clears it explicitly.
+    $pdf_path = null;
     if ($id) {
-        $stmt = $conn->prepare("UPDATE eswasa_vacancies SET title = ?, location = ?, closing_date = ?, description = ?, responsibilities = ? WHERE id = ?");
-        $stmt->bind_param('sssssi', $title, $location, $closing_date, $description, $responsibilities, $id);
+        $cur = $conn->prepare('SELECT pdf_path FROM eswasa_vacancies WHERE id = ?');
+        $cur->bind_param('i', $id);
+        $cur->execute();
+        $pdf_path = ($cur->get_result()->fetch_assoc()['pdf_path'] ?? null);
+        $cur->close();
+    }
+    $up = pc_upload_document('pdf_file', ADMIN_ROOT . '/uploads/vacancies/', 'vacancy');
+    if (is_string($up) && strpos($up, 'ERR:') === 0) {
+        set_flash('danger', substr($up, 4));
+        header("Location: index.php?page=vacancies_edit.php&tab=positions" . ($id ? "&edit=$id" : ""));
+        exit;
+    } elseif (is_string($up)) {
+        $pdf_path = $up;
+    } elseif (!empty($_POST['remove_pdf'])) {
+        $pdf_path = null;
+    }
+
+    if ($id) {
+        $stmt = $conn->prepare("UPDATE eswasa_vacancies SET title = ?, location = ?, closing_date = ?, description = ?, responsibilities = ?, pdf_path = ? WHERE id = ?");
+        $stmt->bind_param('ssssssi', $title, $location, $closing_date, $description, $responsibilities, $pdf_path, $id);
         $msg = 'Vacancy updated successfully.';
     } else {
-        $stmt = $conn->prepare("INSERT INTO eswasa_vacancies (title, location, closing_date, description, responsibilities) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param('sssss', $title, $location, $closing_date, $description, $responsibilities);
+        $stmt = $conn->prepare("INSERT INTO eswasa_vacancies (title, location, closing_date, description, responsibilities, pdf_path) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('ssssss', $title, $location, $closing_date, $description, $responsibilities, $pdf_path);
         $msg = 'Vacancy added successfully.';
     }
 
@@ -56,6 +78,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ── GET: DELETE ───────────────────────────────────────────────
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
+
+    // Take the advert PDF with it, so deleted vacancies don't leave files
+    // behind in uploads/vacancies/. Filenames are random, so nothing else
+    // can be pointing at it.
+    $sel = $conn->prepare('SELECT pdf_path FROM eswasa_vacancies WHERE id = ?');
+    $sel->bind_param('i', $id);
+    $sel->execute();
+    $old_pdf = trim((string)($sel->get_result()->fetch_assoc()['pdf_path'] ?? ''));
+    $sel->close();
+    if ($old_pdf !== '' && strpos($old_pdf, 'admin/uploads/') === 0) {
+        $fs = dirname(ADMIN_ROOT) . '/' . $old_pdf;
+        if (is_file($fs)) @unlink($fs);
+    }
+
     $stmt = $conn->prepare("DELETE FROM eswasa_vacancies WHERE id = ?");
     $stmt->bind_param("i", $id);
     if ($stmt->execute()) {
@@ -129,7 +165,7 @@ if ($edit_vacancy) $active_tab = 'positions';
             <div class="card mb-4">
                 <div class="card-header">Edit Vacancy</div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="<?= $edit_vacancy['id'] ?>">
 
                         <div class="mb-3">
@@ -162,6 +198,28 @@ if ($edit_vacancy) $active_tab = 'positions';
                             <div class="form-text">Optional.</div>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Advert PDF</label>
+                            <?php
+                            $cur_pdf = trim((string)($edit_vacancy['pdf_path'] ?? ''));
+                            if ($cur_pdf !== ''):
+                                [$pdf_state, $pdf_label] = pc_document_status($cur_pdf);
+                            ?>
+                                <div class="mb-2">
+                                    <a href="../<?= htmlspecialchars($cur_pdf) ?>" target="_blank" rel="noopener">
+                                        <?= htmlspecialchars(basename($cur_pdf)) ?>
+                                    </a>
+                                    <span class="badge bg-<?= $pdf_state === 'found' ? 'success' : 'warning' ?> ms-1"><?= htmlspecialchars($pdf_label) ?></span>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="remove_pdf" value="1" id="remove_pdf">
+                                    <label class="form-check-label" for="remove_pdf">Remove the current PDF</label>
+                                </div>
+                            <?php endif; ?>
+                            <input type="file" name="pdf_file" class="form-control" accept="application/pdf">
+                            <div class="form-text">Optional. Leave empty to keep the current PDF. Shown as a "Download Advert (PDF)" link on the vacancies page.</div>
+                        </div>
+
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">Update Vacancy</button>
                             <a href="index.php?page=vacancies_edit.php&tab=positions" class="btn btn-secondary">Cancel</a>
@@ -184,6 +242,7 @@ if ($edit_vacancy) $active_tab = 'positions';
                                     <th>Position</th>
                                     <th>Location</th>
                                     <th>Closing Date</th>
+                                    <th>PDF</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -193,6 +252,13 @@ if ($edit_vacancy) $active_tab = 'positions';
                                         <td><?= htmlspecialchars($v['title']) ?></td>
                                         <td><?= htmlspecialchars($v['location']) ?></td>
                                         <td><?= date('Y-m-d', strtotime($v['closing_date'])) ?></td>
+                                        <td>
+                                            <?php if (!empty($v['pdf_path'])): ?>
+                                                <a href="../<?= htmlspecialchars($v['pdf_path']) ?>" target="_blank" rel="noopener">View</a>
+                                            <?php else: ?>
+                                                <span class="text-muted">&mdash;</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <a href="index.php?page=vacancies_edit.php&tab=positions&edit=<?= $v['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
                                             <a href="index.php?page=vacancies_edit.php&delete=<?= $v['id'] ?>"
@@ -313,7 +379,7 @@ if ($edit_vacancy) $active_tab = 'positions';
                 <h5 class="modal-title" id="addVacancyModalLabel">Add New Vacancy</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Position Title *</label>
@@ -340,6 +406,12 @@ if ($edit_vacancy) $active_tab = 'positions';
                         <label class="form-label fw-bold">Key Responsibilities</label>
                         <textarea name="responsibilities" class="form-control" rows="4" placeholder="List responsibilities, one per line..."></textarea>
                         <div class="form-text">Optional. Will be displayed as a bullet list on the public page.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Advert PDF</label>
+                        <input type="file" name="pdf_file" class="form-control" accept="application/pdf">
+                        <div class="form-text">Optional. Shown as a "Download Advert (PDF)" link on the vacancies page.</div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -136,6 +136,16 @@ $apply_body_html = str_replace('[email]', $apply_email_html, pc_paragraphs_html(
             border-color: rgba(43, 51, 136, 0.85);
             color: #fff;
         }
+        .vacancy-application-link a.vacancy-pdf-link {
+            background-color: #fff;
+            color: #2B3388;
+            margin-left: 10px;
+        }
+        .vacancy-application-link a.vacancy-pdf-link:hover {
+            background-color: rgba(43, 51, 136, 0.06);
+            border-color: #2B3388;
+            color: #2B3388;
+        }
 
         /* General Application Info Box */
         .info-box {
@@ -382,6 +392,11 @@ $apply_body_html = str_replace('[email]', $apply_email_html, pc_paragraphs_html(
                                             `<?= addslashes($v['description']) ?>`,
                                             `<?= addslashes($v['responsibilities']) ?>`
                                         ); return false;">View Details & Apply</a>
+                                        <?php if (!empty($v['pdf_path'])): ?>
+                                            <a href="<?= htmlspecialchars($v['pdf_path']) ?>" class="vacancy-pdf-link" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                                                <i class="fas fa-file-pdf"></i> Download Advert (PDF)
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endwhile; ?>
