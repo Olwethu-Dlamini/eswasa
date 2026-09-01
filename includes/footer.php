@@ -45,9 +45,9 @@ if (!preg_match('/^(G|UA|GTM)-[A-Z0-9-]+$/i', $ga4_id)) {
                 <span class="text-white opacity-75">|</span>
                 <a href="privacy.php" class="text-white text-decoration-none">Privacy Policy</a>
                 <span class="text-white opacity-75">|</span>
-                <a href="certification.php" class="text-white text-decoration-none">Certification</a>
+                <a href="Certification.php" class="text-white text-decoration-none">Certification</a>
                 <span class="text-white opacity-75">|</span>
-                <a href="standards.php" class="text-white text-decoration-none">Standards</a>
+                <a href="Standards.php" class="text-white text-decoration-none">Standards</a>
                 <span class="text-white opacity-75">|</span>
                 <a href="faq.php" class="text-white text-decoration-none">FAQs</a>
             </div>
@@ -55,7 +55,7 @@ if (!preg_match('/^(G|UA|GTM)-[A-Z0-9-]+$/i', $ga4_id)) {
             <!-- Social icons on the right -->
             <div class="d-flex gap-3">
                 <a href="https://www.facebook.com/eswasaupdates" target="_blank" rel="noopener" aria-label="Facebook" class="text-white" style="font-size: 20px;"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="LinkedIn" class="text-white" style="font-size: 20px;"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.linkedin.com/company/eswatini-standards-authority/" target="_blank" rel="noopener" aria-label="LinkedIn" class="text-white" style="font-size: 20px;"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://wa.me/26878780415" target="_blank" rel="noopener" aria-label="WhatsApp" class="text-white" style="font-size: 20px;"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>

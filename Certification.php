@@ -493,7 +493,7 @@ $cert_split_list = function ($text) {
                         <p class="mark-desc"><?= pc_h($pc['cert_mark_1_desc']) ?></p>
                         <div class="mark-actions">
                             <a href="<?= pc_h($pc['cert_mark_1_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                            <a href="certification-status-management-systems.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <div class="mark-item">
@@ -504,7 +504,7 @@ $cert_split_list = function ($text) {
                         <p class="mark-desc"><?= pc_h($pc['cert_mark_2_desc']) ?></p>
                         <div class="mark-actions">
                             <a href="<?= pc_h($pc['cert_mark_2_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                            <a href="certification-status-product.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <div class="mark-item">
@@ -515,7 +515,7 @@ $cert_split_list = function ($text) {
                         <p class="mark-desc"><?= pc_h($pc['cert_mark_4_desc']) ?></p>
                         <div class="mark-actions">
                             <a href="<?= pc_h($pc['cert_mark_4_explore_url']) ?>">Explore <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                            <a href="certification-status.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
+                            <a href="certification-status-ingelo.php">Verify <i class="fa fa-check-circle" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>

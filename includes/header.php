@@ -34,7 +34,7 @@
                     <div class="col-md-6">
                         <ul class="tg-header__top-social list-wrap">
                             <li><a href="https://www.facebook.com/eswasaupdates" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://www.linkedin.com/company/eswatini-standards-authority/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
                             <li><a href="https://wa.me/26878780415" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a></li>
                         </ul>
                     </div>
