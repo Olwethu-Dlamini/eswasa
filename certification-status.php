@@ -5,117 +5,40 @@ include_once 'includes/breadcrumb_helper.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
 
 /*
- * Public Certification Status Register
- * Published in accordance with CER_PR_026 §6.1.3 and §6.2.2, which require
- * suspension and withdrawal information to be made publicly accessible
- * through the ESWASA website.
+ * Certification Status hub.
  *
- * Until a CMS table is wired, edit the arrays below to publish status changes.
+ * Each of the three certification marks now has its own public register, so
+ * this page — the URL the site and sitemap.xml have always pointed at — lists
+ * them rather than 404ing or silently showing only one scheme's entries.
  */
-
-$suspended = [
-    // Example row — remove or replace when there is real data:
-    // ['client' => 'Example Co.', 'cert_no' => 'MS-2024-001', 'scope' => 'SZNS ISO 9001:2015 — Manufacture of plastic containers', 'effective' => '2026-02-14', 'reason' => 'Missed surveillance audit'],
+$cert_registers = [
+    ['url' => 'certification-status-management-systems.php', 'title' => 'Management Systems Certification', 'body' => 'Certifications issued under the ESWASA Management Systems Certification Scheme — quality, environmental, food safety and occupational health.'],
+    ['url' => 'certification-status-product.php',            'title' => 'Product Certification',            'body' => 'Permits issued under the ESWASA Product Certification Scheme for products manufactured to declared national and international standards.'],
+    ['url' => 'certification-status-ingelo.php',             'title' => 'Ingelo Certification',             'body' => 'Certifications issued under the Ingelo MSME Product Certification Scheme for micro, small and medium enterprises and local producers.'],
 ];
 
-$withdrawn = [
-    // ['client' => '...', 'cert_no' => '...', 'scope' => '...', 'effective' => '...'],
-];
+// Live counts, so a visitor can see at a glance which registers hold entries.
+$cert_register_counts = ['ms' => 0, 'product' => 0, 'ingelo' => 0];
+$cnt_res = $conn->query('SELECT scheme, COUNT(*) AS n FROM certification_register WHERE is_active = 1 GROUP BY scheme');
+if ($cnt_res) {
+    while ($cnt_row = $cnt_res->fetch_assoc()) {
+        // Ignore any scheme value that isn't one of the three registers, so a
+        // stray row can't add a fourth card.
+        if (isset($cert_register_counts[$cnt_row['scheme']])) {
+            $cert_register_counts[$cnt_row['scheme']] = (int)$cnt_row['n'];
+        }
+    }
+}
+$cert_register_schemes = ['ms', 'product', 'ingelo'];
 
-$reduced = [
-    // ['client' => '...', 'cert_no' => '...', 'scope' => '...', 'effective' => '...', 'note' => 'Scope reduced — see notes'],
-];
-
-// ── CMS content ─────────────────────────────────────────────
-$cert_status_keys = [
-    // Hero / breadcrumb
-    'cert_status_breadcrumb_title',
-    // Section title block
-    'cert_status_section_title',
-    'cert_status_section_subtitle',
-    // Intro card (multi-paragraph allowed)
-    'cert_status_intro',
-    // Suspended block
-    'cert_status_suspended_title',
-    'cert_status_suspended_empty',
-    'cert_status_suspended_col_client',
-    'cert_status_suspended_col_cert_no',
-    'cert_status_suspended_col_scope',
-    'cert_status_suspended_col_date',
-    'cert_status_suspended_col_reason',
-    // Withdrawn block
-    'cert_status_withdrawn_title',
-    'cert_status_withdrawn_empty',
-    'cert_status_withdrawn_col_client',
-    'cert_status_withdrawn_col_cert_no',
-    'cert_status_withdrawn_col_scope',
-    'cert_status_withdrawn_col_date',
-    // Reduced block
-    'cert_status_reduced_title',
-    'cert_status_reduced_empty',
-    'cert_status_reduced_col_client',
-    'cert_status_reduced_col_cert_no',
-    'cert_status_reduced_col_scope',
-    'cert_status_reduced_col_date',
-    'cert_status_reduced_col_note',
-    // Footer note — Appeals
-    'cert_status_footer_appeals_label',
-    'cert_status_footer_appeals_body',
-    'cert_status_footer_appeals_link_label',
-    'cert_status_footer_appeals_link_url',
-    // Footer note — Complaints
-    'cert_status_footer_complaints_label',
-    'cert_status_footer_complaints_body',
-    'cert_status_footer_complaints_link_label',
-    'cert_status_footer_complaints_link_url',
-    // Footer note — Information requests
-    'cert_status_footer_info_label',
-    'cert_status_footer_info_body',
-    'cert_status_footer_info_phone_1',
-    'cert_status_footer_info_phone_2',
-    'cert_status_footer_info_link_label',
-    'cert_status_footer_info_link_url',
-];
-
-$pc = pc_get_many($conn, $cert_status_keys, [
-    'cert_status_breadcrumb_title' => 'Certification Status Register',
-    'cert_status_section_title' => 'Certification Status Register',
-    'cert_status_section_subtitle' => 'Public record of suspended, withdrawn and reduced-scope certifications',
-    'cert_status_intro' => "In accordance with the Suspension / Withdrawal / Reduced Scope of Certification Procedure (CER_PR_026), ESWASA publishes information on the certified status of clients whose certification has been suspended, withdrawn or reduced in scope. This register is updated as decisions are taken by the Certification Approvals Committee. The current status of an active certificate may be confirmed by contacting the ESWASA Certification Unit.",
-    'cert_status_suspended_title' => 'Currently Suspended Certifications',
-    'cert_status_suspended_empty' => 'No certifications are currently under suspension.',
-    'cert_status_suspended_col_client' => 'Client',
-    'cert_status_suspended_col_cert_no' => 'Certificate No.',
-    'cert_status_suspended_col_scope' => 'Standard / Scope',
-    'cert_status_suspended_col_date' => 'Suspended On',
-    'cert_status_suspended_col_reason' => 'Reason',
-    'cert_status_withdrawn_title' => 'Withdrawn / Cancelled Certifications',
-    'cert_status_withdrawn_empty' => 'No certifications have been withdrawn or cancelled.',
-    'cert_status_withdrawn_col_client' => 'Client',
-    'cert_status_withdrawn_col_cert_no' => 'Certificate No.',
-    'cert_status_withdrawn_col_scope' => 'Standard / Scope',
-    'cert_status_withdrawn_col_date' => 'Withdrawn On',
-    'cert_status_reduced_title' => 'Reduced-Scope Certifications',
-    'cert_status_reduced_empty' => 'No certifications are currently operating under a reduced scope.',
-    'cert_status_reduced_col_client' => 'Client',
-    'cert_status_reduced_col_cert_no' => 'Certificate No.',
-    'cert_status_reduced_col_scope' => 'Standard / Original Scope',
-    'cert_status_reduced_col_date' => 'Effective',
-    'cert_status_reduced_col_note' => 'Notes',
-    'cert_status_footer_appeals_label' => 'Disputing a decision.',
-    'cert_status_footer_appeals_body' => 'A client whose certification has been suspended, withdrawn or reduced in scope may submit a written appeal to ESWASA within 90 days of the decision, accompanied by the prescribed fee',
-    'cert_status_footer_appeals_link_label' => 'CER_PR_002 — Appeals Handling Procedure',
-    'cert_status_footer_appeals_link_url' => 'CER_PR_002 PROCEDURE FOR APPEALS HANDLING.pdf',
-    'cert_status_footer_complaints_label' => 'Lodging a complaint.',
-    'cert_status_footer_complaints_body' => 'Complaints regarding a certified client or any aspect of the ESWASA Management Systems Certification Scheme may be sent in writing to the Marketing & Sales Officer',
-    'cert_status_footer_complaints_link_label' => 'CER_PR_006 — Complaints Handling Procedure',
-    'cert_status_footer_complaints_link_url' => 'CER_PR_006 PROCEDURE FOR COMPLAINTS HANDLING.pdf',
-    'cert_status_footer_info_label' => 'Requesting information.',
-    'cert_status_footer_info_body' => 'For verification of certified status or any other public information, contact the Marketing & Sales Officer on',
-    'cert_status_footer_info_phone_1' => '(+268) 2518 4633',
-    'cert_status_footer_info_phone_2' => '(+268) 7806 8944',
-    'cert_status_footer_info_link_label' => 'CER_PR_015 — Handling Requests for Information',
-    'cert_status_footer_info_link_url' => 'CER_PR_015 HANDLING REQUESTS FOR INFORMATION.pdf',
+$pc = pc_get_many($conn, [
+    'cert_status_hub_title',
+    'cert_status_hub_subtitle',
+    'cert_status_hub_intro',
+], [
+    'cert_status_hub_title'    => 'Certification Status Register',
+    'cert_status_hub_subtitle' => 'Public record of suspended, withdrawn and reduced-scope certifications',
+    'cert_status_hub_intro'    => "In accordance with the Suspension / Withdrawal / Reduced Scope of Certification Procedure (CER_PR_026), ESWASA publishes information on the certified status of clients whose certification has been suspended, withdrawn or reduced in scope. A separate register is published for each certification mark. Choose the register for the mark you are verifying.",
 ]);
 ?>
 <!doctype html>
@@ -124,8 +47,8 @@ $pc = pc_get_many($conn, $cert_status_keys, [
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Certification Status Register - ESWASA</title>
-    <meta name="description" content="Public register of suspended, withdrawn and reduced-scope certifications issued under the ESWASA Management Systems Certification Scheme.">
+    <title><?= pc_h($pc['cert_status_hub_title']) ?> - ESWASA</title>
+    <meta name="description" content="Public registers of suspended, withdrawn and reduced-scope ESWASA certifications, by certification mark.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo/ESWASA_LOGO.jpg">
@@ -234,6 +157,20 @@ $pc = pc_get_many($conn, $cert_status_keys, [
         .status-table tr:nth-child(even) td {
             background-color: rgba(43, 51, 136, 0.03);
         }
+        .status-table .client-with-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-table .client-logo {
+            max-width: 64px;
+            max-height: 40px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            flex: 0 0 auto;
+        }
+        .status-table .client-name { font-weight: 600; }
         .status-table .cert-no { font-weight: 600; white-space: nowrap; }
         .status-table .date    { white-space: nowrap; color: #2B3388; }
 
@@ -273,6 +210,58 @@ $pc = pc_get_many($conn, $cert_status_keys, [
             .status-table th, .status-table td { font-size: 0.88rem; padding: 10px; }
             .footer-note { padding: 16px 18px; font-size: 0.9rem; }
         }
+
+        .register-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        .register-card {
+            display: block;
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-left: 3px solid #2B3388;
+            border-radius: 4px;
+            padding: 24px 26px;
+            text-decoration: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .register-card:hover {
+            border-color: #2B3388;
+            box-shadow: 0 6px 18px rgba(43, 51, 136, 0.10);
+        }
+        .register-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 10px;
+            color: #2B3388;
+        }
+        .register-card h3 .count {
+            background: #2B3388;
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 2px 10px;
+            flex: 0 0 auto;
+        }
+        .register-card p {
+            margin: 0 0 14px;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #2B3388;
+        }
+        .register-cta {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: #2B3388;
+        }
+        .register-cta i { margin-left: 4px; }
     </style>
 </head>
 
@@ -315,7 +304,7 @@ $pc = pc_get_many($conn, $cert_status_keys, [
                                 <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                 <span property="itemListElement" typeof="ListItem">Certification Status</span>
                             </nav>
-                            <h1 class="title"><?= pc_h($pc['cert_status_breadcrumb_title']) ?></h1>
+                            <h1 class="title"><?= pc_h($pc['cert_status_hub_title']) ?></h1>
                         </div>
                     </div>
                 </div>
@@ -325,134 +314,32 @@ $pc = pc_get_many($conn, $cert_status_keys, [
 
         <section class="py-5">
             <div class="container">
-                <!-- Section title -->
                 <div class="main_title centered upper mb-4 text-center">
-                    <h2 class="display-6 fw-bold"><?= pc_h($pc['cert_status_section_title']) ?></h2>
-                    <p class="text-muted mt-2 mb-0"><?= pc_h($pc['cert_status_section_subtitle']) ?></p>
+                    <h2 class="display-6 fw-bold"><?= pc_h($pc['cert_status_hub_title']) ?></h2>
+                    <p class="text-muted mt-2 mb-0"><?= pc_h($pc['cert_status_hub_subtitle']) ?></p>
                     <div class="section-divider"></div>
                 </div>
 
-                <!-- Intro / legal basis -->
                 <div class="intro-card">
-                    <?= pc_paragraphs_html($pc['cert_status_intro']) ?>
+                    <?= pc_paragraphs_html($pc['cert_status_hub_intro']) ?>
                 </div>
 
-                <!-- ===== Suspended ===== -->
-                <div class="status-block">
-                    <h3 class="status-title">
-                        <span><?= pc_h($pc['cert_status_suspended_title']) ?></span>
-                        <span class="count"><?= count($suspended) ?></span>
-                    </h3>
-                    <?php if (empty($suspended)): ?>
-                        <div class="empty-state"><?= pc_h($pc['cert_status_suspended_empty']) ?></div>
-                    <?php else: ?>
-                        <table class="status-table">
-                            <thead>
-                                <tr>
-                                    <th><?= pc_h($pc['cert_status_suspended_col_client']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_suspended_col_cert_no']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_suspended_col_scope']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_suspended_col_date']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_suspended_col_reason']) ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($suspended as $row): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($row['client']) ?></td>
-                                        <td class="cert-no"><?= htmlspecialchars($row['cert_no']) ?></td>
-                                        <td><?= htmlspecialchars($row['scope']) ?></td>
-                                        <td class="date"><?= htmlspecialchars($row['effective']) ?></td>
-                                        <td><?= htmlspecialchars($row['reason']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-
-                <!-- ===== Withdrawn ===== -->
-                <div class="status-block">
-                    <h3 class="status-title">
-                        <span><?= pc_h($pc['cert_status_withdrawn_title']) ?></span>
-                        <span class="count"><?= count($withdrawn) ?></span>
-                    </h3>
-                    <?php if (empty($withdrawn)): ?>
-                        <div class="empty-state"><?= pc_h($pc['cert_status_withdrawn_empty']) ?></div>
-                    <?php else: ?>
-                        <table class="status-table">
-                            <thead>
-                                <tr>
-                                    <th><?= pc_h($pc['cert_status_withdrawn_col_client']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_withdrawn_col_cert_no']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_withdrawn_col_scope']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_withdrawn_col_date']) ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($withdrawn as $row): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($row['client']) ?></td>
-                                        <td class="cert-no"><?= htmlspecialchars($row['cert_no']) ?></td>
-                                        <td><?= htmlspecialchars($row['scope']) ?></td>
-                                        <td class="date"><?= htmlspecialchars($row['effective']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-
-                <!-- ===== Reduced Scope ===== -->
-                <div class="status-block">
-                    <h3 class="status-title">
-                        <span><?= pc_h($pc['cert_status_reduced_title']) ?></span>
-                        <span class="count"><?= count($reduced) ?></span>
-                    </h3>
-                    <?php if (empty($reduced)): ?>
-                        <div class="empty-state"><?= pc_h($pc['cert_status_reduced_empty']) ?></div>
-                    <?php else: ?>
-                        <table class="status-table">
-                            <thead>
-                                <tr>
-                                    <th><?= pc_h($pc['cert_status_reduced_col_client']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_reduced_col_cert_no']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_reduced_col_scope']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_reduced_col_date']) ?></th>
-                                    <th><?= pc_h($pc['cert_status_reduced_col_note']) ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($reduced as $row): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($row['client']) ?></td>
-                                        <td class="cert-no"><?= htmlspecialchars($row['cert_no']) ?></td>
-                                        <td><?= htmlspecialchars($row['scope']) ?></td>
-                                        <td class="date"><?= htmlspecialchars($row['effective']) ?></td>
-                                        <td><?= htmlspecialchars($row['note']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Footer note: appeals + info requests -->
-                <div class="footer-note">
-                    <p class="mb-2">
-                        <strong><?= pc_h($pc['cert_status_footer_appeals_label']) ?></strong> <?= pc_h($pc['cert_status_footer_appeals_body']) ?>
-                        (<a href="<?= pc_h($pc['cert_status_footer_appeals_link_url']) ?>" target="_blank"><?= pc_h($pc['cert_status_footer_appeals_link_label']) ?></a>).
-                    </p>
-                    <p class="mb-2">
-                        <strong><?= pc_h($pc['cert_status_footer_complaints_label']) ?></strong> <?= pc_h($pc['cert_status_footer_complaints_body']) ?>
-                        (<a href="<?= pc_h($pc['cert_status_footer_complaints_link_url']) ?>" target="_blank"><?= pc_h($pc['cert_status_footer_complaints_link_label']) ?></a>).
-                    </p>
-                    <p class="mb-0">
-                        <strong><?= pc_h($pc['cert_status_footer_info_label']) ?></strong> <?= pc_h($pc['cert_status_footer_info_body']) ?>
-                        <a href="tel:<?= pc_h(preg_replace('/[^0-9+]/', '', $pc['cert_status_footer_info_phone_1'])) ?>"><?= pc_h($pc['cert_status_footer_info_phone_1']) ?></a> or
-                        <a href="tel:<?= pc_h(preg_replace('/[^0-9+]/', '', $pc['cert_status_footer_info_phone_2'])) ?>"><?= pc_h($pc['cert_status_footer_info_phone_2']) ?></a>
-                        (<a href="<?= pc_h($pc['cert_status_footer_info_link_url']) ?>" target="_blank"><?= pc_h($pc['cert_status_footer_info_link_label']) ?></a>).
-                    </p>
+                <div class="register-grid">
+                    <?php foreach ($cert_registers as $i => $reg):
+                        $n = $cert_register_counts[$cert_register_schemes[$i]];
+                    ?>
+                    <a href="<?= pc_h($reg['url']) ?>" class="register-card">
+                        <h3>
+                            <span><?= pc_h($reg['title']) ?></span>
+                            <span class="count"><?= $n ?></span>
+                        </h3>
+                        <p><?= pc_h($reg['body']) ?></p>
+                        <span class="register-cta">
+                            <?= $n === 0 ? 'View register — no current entries' : 'View register' ?>
+                            <i class="fas fa-angle-right"></i>
+                        </span>
+                    </a>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>

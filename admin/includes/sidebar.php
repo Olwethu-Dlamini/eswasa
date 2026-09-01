@@ -106,7 +106,7 @@ function submenu_open($pages, $current) {
                     <li class="nav-item"><a class="nav-link <?= $current_page==='managementsystems.php'?'active':'' ?>" href="index.php?page=managementsystems.php">Management Systems</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='product.php'?'active':'' ?>" href="index.php?page=product.php">Product Certification</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='ingelo.php'?'active':'' ?>" href="index.php?page=ingelo.php">Ingelo Certification</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='cert_status_edit.php'?'active':'' ?>" href="index.php?page=cert_status_edit.php">Certification Status Page</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='cert_status_edit.php'?'active':'' ?>" href="index.php?page=cert_status_edit.php">Certification Status Registers</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='qoute_certification.php'?'active':'' ?>" href="index.php?page=qoute_certification.php">Request Quotation</a></li>
                 </ul>
             </li>

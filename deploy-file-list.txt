@@ -1,74 +1,50 @@
 ESWASA CMS — files to upload to production
-Baseline: 896a88b   Target: ed5f41e   Generated: 2026-08-18
+Baseline: cc0793e   Target: 3bef261   Generated: 2026-09-01
 
 DO NOT UPLOAD:
   includes/env.php   <- holds YOUR live database password. The copy in the
                         repository has placeholders and would overwrite it.
 
-Run after uploading:
-  mysql -u eswasa1 -p admin_eswasa < admin/sql/upgrade_2026_08_18.sql
+Take a dump first:
+  mysqldump -u eswasa1 -p admin_eswasa > eswasa_pre_upgrade_$(date +%F).sql
 
-mod     admin/config.php
-mod     admin/css/style.css
-NEW     admin/includes/document_field.php
+Run after uploading:
+  mysql -u eswasa1 -p admin_eswasa < admin/sql/upgrade_2026_09_01.sql
+
+The migration is additive and idempotent: it adds two tables and four columns,
+seeds them from the values the pages used to hardcode, and drops nothing.
+Running it twice is harmless.
+
+Three new public URLs (already added to sitemap.xml):
+  certification-status-management-systems.php
+  certification-status-product.php
+  certification-status-ingelo.php
+certification-status.php still works — it is now a hub listing the three.
+
 mod     admin/includes/sidebar.php
 mod     admin/index.php
-mod     admin/js/cropper-modal.js
-mod     admin/js/main.js
-mod     admin/pages/about_edit.php
-mod     admin/pages/about_team.php
-mod     admin/pages/announcements_edit.php
-mod     admin/pages/breadcrumbs_edit.php
-mod     admin/pages/calibration_edit.php
+NEW     admin/pages/_cert_register_crud.php
+NEW     admin/pages/_cert_register_ui.php
+NEW     admin/pages/_certified_orgs_crud.php
+NEW     admin/pages/_certified_orgs_ui.php
 mod     admin/pages/cert_status_edit.php
-mod     admin/pages/certification_edit.php
-mod     admin/pages/contact_edit.php
-mod     admin/pages/customer_feedback.php
-mod     admin/pages/events_edit.php
-mod     admin/pages/faq_edit.php
 mod     admin/pages/index_edit.php
 mod     admin/pages/ingelo.php
 mod     admin/pages/managementsystems.php
-mod     admin/pages/policies_edit.php
 mod     admin/pages/product.php
-mod     admin/pages/publications_edit.php
-mod     admin/pages/purchase.php
-NEW     admin/pages/qoute_other.php
-mod     admin/pages/service_charter.php
-mod     admin/pages/services_edit.php
-mod     admin/pages/site_settings.php
-mod     admin/pages/standards_edit.php
-mod     admin/pages/tcp.php
-mod     admin/pages/tenders_edit.php
-mod     admin/pages/training_about.php
 mod     admin/pages/training_calendar.php
-mod     admin/pages/users.php
 mod     admin/pages/vacancies_edit.php
-mod     admin/pages/work.php
-NEW     admin/sql/batch_a_data_fixes.sql
-NEW     admin/sql/batch_b_data_fixes.sql
-NEW     admin/sql/drop_dead_tables.sql
-NEW     admin/uploads/about-core.jpg
-mod     .gitignore
-mod     Calibration.php
-mod     Meetourteam.php
-mod     Standards.php
-NEW     TEC_SDU_FO_002- Standards Proposal Form.doc
-NEW     TEC_SDU_FO_002- Standards Proposal Form.pdf
-mod     about-us.php
-NEW     assets/img/team-placeholder.svg
-mod     contact.php
-mod     contactcalibration.php
-mod     includes/cms_helpers.php
-NEW     includes/cms_keys_about.php
-mod     includes/cms_keys_service_charter.php
+NEW     admin/sql/upgrade_2026_09_01.sql
+NEW     certification-status-ingelo.php
+NEW     certification-status-management-systems.php
+NEW     certification-status-product.php
+mod     certification-status.php
+NEW     includes/cert_register_page.php
 mod     includes/header.php
-NEW     includes/quote_result_banner.php
-mod     process_quote.php
-mod     qoute_calibration.php
-mod     qoute_certification.php
-mod     qoute_training.php
-mod     service-charter.php
-mod     tcp.php
-mod     training-about.php
+mod     index.php
+mod     ingelo.php
+mod     managementsystems.php
+mod     product.php
+mod     sitemap.xml
 mod     training-calendar.php
+mod     vacancies.php

@@ -14,8 +14,11 @@
   <url><loc>https://www.eswasa.co.sz/managementsystems.php</loc><priority>0.7</priority></url>
   <url><loc>https://www.eswasa.co.sz/product.php</loc><priority>0.7</priority></url>
   <url><loc>https://www.eswasa.co.sz/ingelo.php</loc><priority>0.7</priority></url>
-  <url><loc>https://www.eswasa.co.sz/Calibration.php</loc><priority>0.7</priority></url>
   <url><loc>https://www.eswasa.co.sz/certification-status.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/certification-status-management-systems.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/certification-status-product.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/certification-status-ingelo.php</loc><priority>0.6</priority></url>
+  <url><loc>https://www.eswasa.co.sz/Calibration.php</loc><priority>0.7</priority></url>
   <url><loc>https://www.eswasa.co.sz/tcp.php</loc><priority>0.6</priority></url>
   <url><loc>https://www.eswasa.co.sz/work.php</loc><priority>0.6</priority></url>
   <url><loc>https://www.eswasa.co.sz/purchase.php</loc><priority>0.6</priority></url>

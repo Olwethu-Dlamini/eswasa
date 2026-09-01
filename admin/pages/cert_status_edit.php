@@ -4,14 +4,26 @@ if (!defined('ESWASA_ADMIN')) exit('Direct access not permitted.');
 require_once __DIR__ . '/../../includes/cms_helpers.php';
 
 // ── Key inventory ─────────────────────────────────────────────
-$text_keys = [
-    // Hero / breadcrumb
-    'cert_status_breadcrumb_title',
-    // Section title block
-    'cert_status_section_title',
-    'cert_status_section_subtitle',
-    // Intro card
-    'cert_status_intro',
+// Each certification mark has its own register page, so the hero, subtitle and
+// intro exist once per scheme. Column headers, empty states and the footer
+// notes are identical on all three and stay shared.
+$REG_COPY_SCHEMES = [
+    'ms'      => 'Management Systems',
+    'product' => 'Product',
+    'ingelo'  => 'Ingelo',
+];
+$scheme_copy_keys = [];
+foreach (array_keys($REG_COPY_SCHEMES) as $sk) {
+    foreach (['breadcrumb_title', 'section_title', 'section_subtitle', 'intro'] as $suffix) {
+        $scheme_copy_keys[] = "cert_status_{$sk}_{$suffix}";
+    }
+}
+
+$text_keys = array_merge($scheme_copy_keys, [
+    // Hub page (certification-status.php) — the index of the three registers
+    'cert_status_hub_title',
+    'cert_status_hub_subtitle',
+    'cert_status_hub_intro',
     // Suspended block
     'cert_status_suspended_title',
     'cert_status_suspended_empty',
@@ -52,9 +64,12 @@ $text_keys = [
     'cert_status_footer_info_phone_2',
     'cert_status_footer_info_link_label',
     'cert_status_footer_info_link_url',
-];
+]);
 
 $image_keys = [];
+
+// ── Register entries ──────────────────────────────────────────
+require __DIR__ . '/_cert_register_crud.php';
 
 // ── Save handler ─────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cert_status'])) {
@@ -85,55 +100,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cert_status'])) 
 }
 
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
+
+$active_tab = ($_GET['tab'] ?? '') === 'content' ? 'content' : 'entries';
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Edit Certification Status Page</h1>
+    <h1 class="h2">Certification Status Registers</h1>
     <a href="../certification-status.php" target="_blank" class="btn btn-sm btn-outline-secondary">
-        <i class="fas fa-external-link-alt me-1"></i> View page
+        <i class="fas fa-external-link-alt me-1"></i> View hub page
     </a>
 </div>
 
+<ul class="nav nav-tabs mb-3" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'entries' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-entries" type="button" role="tab">
+            Register Entries
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'content' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-content" type="button" role="tab">
+            Page Content
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+
+<!-- ============ TAB: Register Entries ============ -->
+<div class="tab-pane fade <?= $active_tab === 'entries' ? 'show active' : '' ?>" id="tab-entries" role="tabpanel">
+    <?php require __DIR__ . '/_cert_register_ui.php'; ?>
+</div>
+
+<!-- ============ TAB: Page Content ============ -->
+<div class="tab-pane fade <?= $active_tab === 'content' ? 'show active' : '' ?>" id="tab-content" role="tabpanel">
 <form method="POST" enctype="multipart/form-data">
     <input type="hidden" name="save_cert_status" value="1">
 
-    <!-- Hero / Breadcrumb -->
+    <!-- Hub page -->
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">Hero / Breadcrumb</h5>
+            <h5 class="card-title">Hub Page (certification-status.php)</h5>
+            <p class="text-muted small">The page that lists the three registers. The cards on it are generated from the registers themselves.</p>
             <div class="mb-3">
-                <label class="form-label">Page Title (H1)</label>
-                <input type="text" name="cert_status_breadcrumb_title" class="form-control" value="<?= pc_h($pc['cert_status_breadcrumb_title']) ?>">
-            </div>
-        </div>
-    </div>
-
-    <!-- Section Title -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Section Title</h5>
-            <div class="mb-3">
-                <label class="form-label">Title (H2)</label>
-                <input type="text" name="cert_status_section_title" class="form-control" value="<?= pc_h($pc['cert_status_section_title']) ?>">
+                <label class="form-label">Page Title (H1 and H2)</label>
+                <input type="text" name="cert_status_hub_title" class="form-control" value="<?= pc_h($pc['cert_status_hub_title']) ?>">
             </div>
             <div class="mb-3">
                 <label class="form-label">Subtitle</label>
-                <input type="text" name="cert_status_section_subtitle" class="form-control" value="<?= pc_h($pc['cert_status_section_subtitle']) ?>">
+                <input type="text" name="cert_status_hub_subtitle" class="form-control" value="<?= pc_h($pc['cert_status_hub_subtitle']) ?>">
             </div>
-        </div>
-    </div>
-
-    <!-- Intro / legal basis -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Intro Card (Legal Basis)</h5>
             <div class="mb-3">
                 <label class="form-label">Intro Paragraph(s)
                     <small class="text-muted">— separate paragraphs with a blank line</small>
                 </label>
-                <textarea name="cert_status_intro" class="form-control" rows="6"><?= pc_h($pc['cert_status_intro']) ?></textarea>
+                <textarea name="cert_status_hub_intro" class="form-control" rows="5"><?= pc_h($pc['cert_status_hub_intro']) ?></textarea>
             </div>
         </div>
+    </div>
+
+    <!-- Per-register hero and intro -->
+    <?php foreach ($REG_COPY_SCHEMES as $sk => $sl): ?>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title"><?= pc_h($sl) ?> Register &mdash; Hero and Intro</h5>
+            <div class="mb-3">
+                <label class="form-label">Page Title (H1)</label>
+                <input type="text" name="cert_status_<?= pc_h($sk) ?>_breadcrumb_title" class="form-control" value="<?= pc_h($pc["cert_status_{$sk}_breadcrumb_title"]) ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Section Title (H2)</label>
+                <input type="text" name="cert_status_<?= pc_h($sk) ?>_section_title" class="form-control" value="<?= pc_h($pc["cert_status_{$sk}_section_title"]) ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Subtitle</label>
+                <input type="text" name="cert_status_<?= pc_h($sk) ?>_section_subtitle" class="form-control" value="<?= pc_h($pc["cert_status_{$sk}_section_subtitle"]) ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Intro Card / Legal Basis
+                    <small class="text-muted">— separate paragraphs with a blank line</small>
+                </label>
+                <textarea name="cert_status_<?= pc_h($sk) ?>_intro" class="form-control" rows="6"><?= pc_h($pc["cert_status_{$sk}_intro"]) ?></textarea>
+                <?php if ($sk !== 'ms'): ?>
+                    <div class="form-text">
+                        Seeded with the Management Systems wording, which cites CER_PR_026.
+                        Replace it with this scheme's own procedure reference.
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <?php endforeach; ?>
+
+    <div class="alert alert-secondary">
+        Everything below is shared by all three registers &mdash; the column headers,
+        the message each table shows when it is empty, and the footer notes.
     </div>
 
     <!-- Suspended block -->
@@ -341,3 +403,7 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
         </button>
     </div>
 </form>
+</div>
+
+</div>
+
