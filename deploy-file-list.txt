@@ -1,5 +1,5 @@
 ESWASA CMS — files to upload to production
-Baseline: cc0793e   Target: 4a8af26   Generated: 2026-09-01
+Baseline: cc0793e   Target: b545637   Generated: 2026-09-01
 
 DO NOT UPLOAD:
   includes/env.php   <- holds YOUR live database password. The copy in the
@@ -31,23 +31,43 @@ NEW     certification-status-management-systems.php
 NEW     certification-status-product.php
 NEW     includes/cert_register_page.php
 mod     Certification.php
+NEW     admin/pages/_cert_register_crud.php
+NEW     admin/pages/_cert_register_ui.php
+NEW     admin/pages/_certified_orgs_crud.php
+NEW     admin/pages/_certified_orgs_ui.php
+NEW     admin/pages/_logo_list_crud.php
+NEW     admin/pages/_logo_list_ui.php
+NEW     admin/sql/upgrade_2026_09_01.sql
+NEW     certification-status-ingelo.php
+NEW     certification-status-management-systems.php
+NEW     certification-status-product.php
+NEW     includes/cert_register_page.php
+NEW     includes/logo_lists.php
+mod     Calibration.php
+mod     Certification.php
+mod     about-us.php
 mod     admin/includes/sidebar.php
 mod     admin/index.php
+mod     admin/pages/about_edit.php
+mod     admin/pages/calibration_edit.php
 mod     admin/pages/cert_status_edit.php
 mod     admin/pages/index_edit.php
 mod     admin/pages/ingelo.php
 mod     admin/pages/managementsystems.php
 mod     admin/pages/product.php
+mod     admin/pages/services_edit.php
 mod     admin/pages/training_calendar.php
 mod     admin/pages/vacancies_edit.php
 mod     certification-status.php
 mod     includes/cms_helpers.php
+mod     includes/cms_keys_about.php
 mod     includes/footer.php
 mod     includes/header.php
 mod     index.php
 mod     ingelo.php
 mod     managementsystems.php
 mod     product.php
+mod     services.php
 mod     sitemap.xml
 mod     training-calendar.php
 mod     vacancies.php
