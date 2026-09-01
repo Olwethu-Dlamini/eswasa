@@ -7,21 +7,13 @@ require __DIR__ . '/includes/cms_keys_faq.php';
 
 $pc = pc_get_many($conn, $faq_keys, $faq_defaults);
 
-// Group FAQs by category enum
-$faqs = ['training' => [], 'standards' => [], 'general' => []];
+// One list, not three category sections. sort_order was renumbered across the
+// whole table by the batch-D migration — it used to restart at 1 within each
+// category, so ordering by it alone would have interleaved the three.
+$faqs = [];
 if ($res = $conn->query('SELECT * FROM eswasa_faq ORDER BY sort_order ASC, id ASC')) {
-    while ($row = $res->fetch_assoc()) {
-        if (isset($faqs[$row['category']])) {
-            $faqs[$row['category']][] = $row;
-        }
-    }
+    while ($row = $res->fetch_assoc()) $faqs[] = $row;
 }
-
-$categories = [
-    ['key' => 'training',  'slug' => 'training',  'title' => $pc['faq_category_training_title'],  'accordion_id' => 'faqTraining',  'item_prefix' => 'collapseTraining'],
-    ['key' => 'standards', 'slug' => 'standards', 'title' => $pc['faq_category_standards_title'], 'accordion_id' => 'faqStandards', 'item_prefix' => 'collapseStandards'],
-    ['key' => 'general',   'slug' => 'general',   'title' => $pc['faq_category_general_title'],   'accordion_id' => 'faqGeneral',   'item_prefix' => 'collapseGeneral'],
-];
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -70,23 +62,8 @@ $categories = [
         .info-box.is-intro p { text-align: left; margin-bottom: 12px; }
         .info-box.is-intro p:last-child { margin-bottom: 0; }
 
-        /* Category sections */
+        /* FAQ list */
         .faq-section { padding: 50px 0; }
-        .faq-section + .faq-section { padding-top: 10px; }
-        .faq-category-title {
-            color: #2B3388;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin: 0;
-        }
-        .faq-category-divider {
-            width: 60px;
-            height: 2px;
-            background: #2B3388;
-            margin: 14px auto 30px;
-            border-radius: 0;
-        }
 
         /* Accordion — restrained, theme-aligned */
         .accordion-item {
@@ -157,7 +134,6 @@ $categories = [
 
         @media (max-width: 767.98px) {
             .faq-section { padding: 30px 0; }
-            .faq-category-title { font-size: 1.25rem; }
             .accordion-button { font-size: 0.95rem; padding: 12px 14px; }
             .accordion-body { padding: 14px; font-size: 0.95rem; }
             .faq-contact { padding: 22px; }
@@ -203,44 +179,38 @@ $categories = [
                             <?= pc_paragraphs_html($pc['faq_intro_body']) ?>
                         </div>
 
-                        <?php foreach ($categories as $cat): ?>
-                            <section class="faq-section">
-                                <h2 class="faq-category-title"><?= pc_h($cat['title']) ?></h2>
-                                <div class="faq-category-divider"></div>
-
-                                <?php if (!empty($faqs[$cat['key']])): ?>
-                                    <div class="accordion" id="<?= htmlspecialchars($cat['accordion_id']) ?>">
-                                        <?php foreach ($faqs[$cat['key']] as $idx => $faq): ?>
-                                            <?php
-                                            $itemId = $cat['item_prefix'] . (int)$faq['id'];
-                                            $isOpen = $idx === 0;
-                                            ?>
-                                            <div class="accordion-item">
-                                                <h3 class="accordion-header">
-                                                    <button class="accordion-button <?= $isOpen ? '' : 'collapsed' ?>"
-                                                            type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#<?= $itemId ?>"
-                                                            aria-expanded="<?= $isOpen ? 'true' : 'false' ?>"
-                                                            aria-controls="<?= $itemId ?>">
-                                                        <?= htmlspecialchars($faq['question']) ?>
-                                                    </button>
-                                                </h3>
-                                                <div id="<?= $itemId ?>"
-                                                     class="accordion-collapse collapse <?= $isOpen ? 'show' : '' ?>"
-                                                     data-bs-parent="#<?= htmlspecialchars($cat['accordion_id']) ?>">
-                                                    <div class="accordion-body">
-                                                        <?= nl2br(htmlspecialchars($faq['answer'])) ?>
-                                                    </div>
+                        <section class="faq-section">
+                            <?php if ($faqs): ?>
+                                <div class="accordion" id="faqAll">
+                                    <?php foreach ($faqs as $idx => $faq):
+                                        $itemId = 'collapseFaq' . (int)$faq['id'];
+                                        $isOpen = $idx === 0;
+                                    ?>
+                                        <div class="accordion-item">
+                                            <h3 class="accordion-header">
+                                                <button class="accordion-button <?= $isOpen ? '' : 'collapsed' ?>"
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#<?= $itemId ?>"
+                                                        aria-expanded="<?= $isOpen ? 'true' : 'false' ?>"
+                                                        aria-controls="<?= $itemId ?>">
+                                                    <?= htmlspecialchars($faq['question']) ?>
+                                                </button>
+                                            </h3>
+                                            <div id="<?= $itemId ?>"
+                                                 class="accordion-collapse collapse <?= $isOpen ? 'show' : '' ?>"
+                                                 data-bs-parent="#faqAll">
+                                                <div class="accordion-body">
+                                                    <?= nl2br(htmlspecialchars($faq['answer'])) ?>
                                                 </div>
                                             </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="faq-empty"><?= pc_h($pc['faq_category_empty_state']) ?></div>
-                                <?php endif; ?>
-                            </section>
-                        <?php endforeach; ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <div class="faq-empty"><?= pc_h($pc['faq_empty_state']) ?></div>
+                            <?php endif; ?>
+                        </section>
 
                         <div class="faq-contact">
                             <h4><?= pc_h($pc['faq_contact_title']) ?></h4>

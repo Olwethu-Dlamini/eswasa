@@ -18,12 +18,8 @@ $faq_keys = [
     // Intro info-box
     'faq_intro_title',
     'faq_intro_body',
-    // Category section titles
-    'faq_category_training_title',
-    'faq_category_standards_title',
-    'faq_category_general_title',
-    // Per-category empty state
-    'faq_category_empty_state',
+    // Empty state for the whole list
+    'faq_empty_state',
     // Contact box at the bottom
     'faq_contact_title',
     'faq_contact_body',
@@ -37,13 +33,9 @@ $faq_defaults = [
     'faq_breadcrumb_title'         => 'Frequently Asked Questions',
 
     'faq_intro_title' => 'How can we help?',
-    'faq_intro_body'  => "Answers to the questions ESWASA receives most often, grouped by topic. If you can't find what you need below, the contact details at the bottom of the page will get you in touch with the right team.",
+    'faq_intro_body'  => "Answers to the questions ESWASA receives most often. If you can't find what you need below, the contact details at the bottom of the page will get you in touch with the right team.",
 
-    'faq_category_training_title'  => 'Training & Certification',
-    'faq_category_standards_title' => 'Standards & Certification',
-    'faq_category_general_title'   => 'General Information',
-
-    'faq_category_empty_state' => 'No questions in this category yet.',
+    'faq_empty_state' => 'No questions have been published yet.',
 
     'faq_contact_title' => 'Still have questions?',
     'faq_contact_body'  => "If you couldn't find the answer you needed, our team is ready to assist with any enquiry about ESWASA services, training, or certification.",

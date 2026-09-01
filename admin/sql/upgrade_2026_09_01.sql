@@ -349,3 +349,34 @@ UPDATE certified_organisations
    SET logo_path = CONCAT('admin/uploads/orgs/', SUBSTRING(logo_path, 15))
  WHERE logo_path LIKE 'admin/uploads/org\_%'
    AND logo_path NOT LIKE 'admin/uploads/orgs/%';
+
+-- ── 10 ────────────────────────────────────────────────────────────────
+-- FAQ becomes one list instead of three category sections
+--
+-- sort_order used to restart at 1 inside each category — three rows share
+-- sort_order 1, three share 2, and so on — so ordering the flattened page by
+-- sort_order alone would interleave Training, Standards and General into a
+-- jumble. Renumber in tens across the whole table, preserving the order the
+-- page reads in today: Training, then Standards, then General.
+--
+-- Guarded on sort_order still containing duplicates, so a second run leaves
+-- any subsequent hand-ordering alone. The `category` column is kept (nothing
+-- reads it any more) so the old grouping stays recoverable.
+-- ----------------------------------------------------------------------
+SET @faq_needs_renumber := (
+    SELECT COUNT(*) FROM (
+        SELECT sort_order FROM eswasa_faq GROUP BY sort_order HAVING COUNT(*) > 1
+    ) AS dupes
+);
+SET @faq_rn := 0;
+SET @sql := IF(@faq_needs_renumber > 0,
+    'UPDATE eswasa_faq SET sort_order = (@faq_rn := @faq_rn + 10)
+      ORDER BY FIELD(category, ''training'', ''standards'', ''general''), sort_order, id',
+    'SELECT ''faq sort_order already flattened'''
+);
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+-- The three category headings and the per-category empty state are replaced
+-- by a single empty-state message.
+INSERT IGNORE INTO page_content (page_key, content)
+SELECT 'faq_empty_state', 'No questions have been published yet.';

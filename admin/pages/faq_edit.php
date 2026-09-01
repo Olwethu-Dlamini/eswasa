@@ -21,12 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_faq_content'])) 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $question = pc_strip_text($_POST['question'] ?? '');
     $answer = pc_strip_text($_POST['answer'] ?? '');
-    $category = $_POST['category'] ?? 'general';
     $sort_order = (int)($_POST['sort_order'] ?? 0);
     $id = !empty($_POST['id']) ? (int)$_POST['id'] : null;
-
-    $allowed_categories = ['training', 'standards', 'general'];
-    if (!in_array($category, $allowed_categories, true)) $category = 'general';
 
     if (!$question || !$answer) {
         set_flash('danger', 'Question and Answer are required.');
@@ -35,12 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($id) {
-        $stmt = $conn->prepare('UPDATE eswasa_faq SET question = ?, answer = ?, category = ?, sort_order = ? WHERE id = ?');
-        $stmt->bind_param('sssii', $question, $answer, $category, $sort_order, $id);
+        $stmt = $conn->prepare('UPDATE eswasa_faq SET question = ?, answer = ?, sort_order = ? WHERE id = ?');
+        $stmt->bind_param('ssii', $question, $answer, $sort_order, $id);
         $msg = 'FAQ updated.';
     } else {
-        $stmt = $conn->prepare('INSERT INTO eswasa_faq (question, answer, category, sort_order) VALUES (?, ?, ?, ?)');
-        $stmt->bind_param('sssi', $question, $answer, $category, $sort_order);
+        // The category column is retained but unused: the page is one list now.
+        $stmt = $conn->prepare('INSERT INTO eswasa_faq (question, answer, sort_order) VALUES (?, ?, ?)');
+        $stmt->bind_param('ssi', $question, $answer, $sort_order);
         $msg = 'FAQ added.';
     }
 
@@ -67,13 +64,9 @@ if (isset($_GET['delete'])) {
 }
 
 // ── Load data ─────────────────────────────────────────────────────
-$faqs = ['training' => [], 'standards' => [], 'general' => []];
-$res = $conn->query('SELECT * FROM eswasa_faq ORDER BY category, sort_order ASC, id ASC');
-while ($row = $res->fetch_assoc()) {
-    if (isset($faqs[$row['category']])) {
-        $faqs[$row['category']][] = $row;
-    }
-}
+$faqs = [];
+$res = $conn->query('SELECT * FROM eswasa_faq ORDER BY sort_order ASC, id ASC');
+while ($row = $res->fetch_assoc()) $faqs[] = $row;
 
 $edit_faq = null;
 if (isset($_GET['edit'])) {
@@ -90,13 +83,6 @@ $pc = pc_get_many($conn, $faq_keys, $faq_defaults);
 $active_tab = ($_GET['tab'] ?? '') === 'content' ? 'content' : 'list';
 if ($edit_faq) $active_tab = 'list';
 
-function faq_category_label_admin(string $c): string {
-    return [
-        'training'  => 'Training & Certification',
-        'standards' => 'Standards & Certification',
-        'general'   => 'General Information',
-    ][$c] ?? ucfirst($c);
-}
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -156,22 +142,10 @@ function faq_category_label_admin(string $c): string {
                             <div class="form-text">Plain text. Line breaks are preserved on the public page.</div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Category *</label>
-                                <select name="category" class="form-select" required>
-                                    <?php foreach (['training','standards','general'] as $opt): ?>
-                                        <option value="<?= $opt ?>" <?= $edit_faq['category'] === $opt ? 'selected' : '' ?>>
-                                            <?= faq_category_label_admin($opt) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Sort Order</label>
-                                <input type="number" name="sort_order" class="form-control" value="<?= (int)$edit_faq['sort_order'] ?>">
-                                <div class="form-text">Lower numbers appear first within a category.</div>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Sort Order</label>
+                            <input type="number" name="sort_order" class="form-control" value="<?= (int)$edit_faq['sort_order'] ?>">
+                            <div class="form-text">Lower numbers appear first. The list is numbered in tens, so use a value between two existing ones to slot a question in.</div>
                         </div>
 
                         <div class="d-flex gap-2">
@@ -183,50 +157,48 @@ function faq_category_label_admin(string $c): string {
             </div>
         <?php endif; ?>
 
-        <?php foreach (['training','standards','general'] as $cat_key): ?>
-            <div class="card mb-3">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span><?= faq_category_label_admin($cat_key) ?> (<?= count($faqs[$cat_key]) ?>)</span>
-                </div>
-                <div class="card-body">
-                    <?php if (empty($faqs[$cat_key])): ?>
-                        <p class="text-muted mb-0">No questions in this category yet.</p>
-                    <?php else: ?>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 60px;">Order</th>
-                                        <th>Question</th>
-                                        <th style="width: 160px;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($faqs[$cat_key] as $item): ?>
-                                        <tr>
-                                            <td><?= (int)$item['sort_order'] ?></td>
-                                            <td><?= htmlspecialchars($item['question']) ?></td>
-                                            <td>
-                                                <a href="index.php?page=faq_edit.php&tab=list&edit=<?= (int)$item['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                                                <a href="index.php?page=faq_edit.php&delete=<?= (int)$item['id'] ?>"
-                                                   class="btn btn-sm btn-outline-danger"
-                                                   onclick="return confirm('Delete this FAQ?')">Delete</a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php endif; ?>
-                </div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>All questions (<?= count($faqs) ?>)</span>
             </div>
-        <?php endforeach; ?>
+            <div class="card-body">
+                <?php if (!$faqs): ?>
+                    <p class="text-muted mb-0">No questions yet.</p>
+                <?php else: ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">Order</th>
+                                    <th>Question</th>
+                                    <th style="width: 160px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($faqs as $item): ?>
+                                    <tr>
+                                        <td><?= (int)$item['sort_order'] ?></td>
+                                        <td><?= htmlspecialchars($item['question']) ?></td>
+                                        <td>
+                                            <a href="index.php?page=faq_edit.php&tab=list&edit=<?= (int)$item['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                                            <a href="index.php?page=faq_edit.php&delete=<?= (int)$item['id'] ?>"
+                                               class="btn btn-sm btn-outline-danger"
+                                               onclick="return confirm('Delete this FAQ?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <!-- ========== TAB: Page Content ========== -->
     <div class="tab-pane fade <?= $active_tab === 'content' ? 'show active' : '' ?>" id="tab-content" role="tabpanel">
         <p class="text-muted small mb-3">
-            Edit the static text on the FAQ page (breadcrumb, intro card, category headings, contact box, empty-state message). The questions themselves are managed on the other tab.
+            Edit the static text on the FAQ page (breadcrumb, intro card, contact box, empty-state message). The questions themselves are managed on the other tab.
         </p>
 
         <form method="POST">
@@ -265,32 +237,13 @@ function faq_category_label_admin(string $c): string {
                 </div>
             </div>
 
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="mb-3">Category Headings</h5>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Training & Certification</label>
-                            <input type="text" name="faq_category_training_title" class="form-control" value="<?= pc_h($pc['faq_category_training_title']) ?>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Standards & Certification</label>
-                            <input type="text" name="faq_category_standards_title" class="form-control" value="<?= pc_h($pc['faq_category_standards_title']) ?>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">General Information</label>
-                            <input type="text" name="faq_category_general_title" class="form-control" value="<?= pc_h($pc['faq_category_general_title']) ?>">
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="mb-3">Empty State</h5>
                     <div class="mb-0">
-                        <label class="form-label">Message shown for any category that has no questions yet</label>
-                        <input type="text" name="faq_category_empty_state" class="form-control" value="<?= pc_h($pc['faq_category_empty_state']) ?>">
+                        <label class="form-label">Message shown when there are no questions yet</label>
+                        <input type="text" name="faq_empty_state" class="form-control" value="<?= pc_h($pc['faq_empty_state']) ?>">
                     </div>
                 </div>
             </div>
@@ -348,20 +301,10 @@ function faq_category_label_admin(string $c): string {
                         <textarea name="answer" class="form-control" rows="5" required></textarea>
                         <div class="form-text">Plain text. Line breaks are preserved on the public page.</div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Category *</label>
-                            <select name="category" class="form-select" required>
-                                <?php foreach (['training','standards','general'] as $opt): ?>
-                                    <option value="<?= $opt ?>"><?= faq_category_label_admin($opt) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Sort Order</label>
-                            <input type="number" name="sort_order" class="form-control" value="0">
-                            <div class="form-text">Lower numbers appear first within a category.</div>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Sort Order</label>
+                        <input type="number" name="sort_order" class="form-control" value="0">
+                        <div class="form-text">Lower numbers appear first. The list is numbered in tens, so use a value between two existing ones to slot a question in.</div>
                     </div>
                 </div>
                 <div class="modal-footer">
