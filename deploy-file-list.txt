@@ -1,5 +1,5 @@
 ESWASA CMS — files to upload to production
-Baseline: cc0793e   Target: bdbd119   Generated: 2026-09-01
+Baseline: cc0793e   Target: 9fb51f7   Generated: 2026-09-01
 
 DO NOT UPLOAD:
   includes/env.php   <- holds YOUR live database password. The copy in the
@@ -28,7 +28,7 @@ Three new public URLs (already in sitemap.xml):
   certification-status-ingelo.php
 certification-status.php still works — it is now a hub listing the three.
 
-40 files:
+43 files:
 
 NEW     admin/pages/_cert_register_crud.php
 NEW     admin/pages/_cert_register_ui.php
@@ -48,6 +48,7 @@ mod     admin/index.php
 mod     admin/pages/about_edit.php
 mod     admin/pages/calibration_edit.php
 mod     admin/pages/cert_status_edit.php
+mod     admin/pages/faq_edit.php
 mod     admin/pages/index_edit.php
 mod     admin/pages/ingelo.php
 mod     admin/pages/managementsystems.php
@@ -58,8 +59,10 @@ mod     admin/pages/vacancies_edit.php
 mod     Calibration.php
 mod     certification-status.php
 mod     Certification.php
+mod     faq.php
 mod     includes/cms_helpers.php
 mod     includes/cms_keys_about.php
+mod     includes/cms_keys_faq.php
 mod     includes/footer.php
 mod     includes/header.php
 mod     index.php
