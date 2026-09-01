@@ -241,3 +241,20 @@ UPDATE page_content SET content = 'certification-status-product.php'
  WHERE page_key = 'index_mark_2_verify_url' AND content = 'certification-status.php';
 UPDATE page_content SET content = 'certification-status-ingelo.php'
  WHERE page_key = 'index_mark_3_verify_url' AND content = 'certification-status.php';
+
+-- ── 9 ─────────────────────────────────────────────────────────────────
+-- Repair logo paths broken by the upload helper
+--
+-- pc_upload_image() / pc_save_base64_image() / pc_upload_document() returned
+-- a hardcoded 'admin/uploads/' . $name whatever directory they were handed,
+-- so admin/pages/managementsystems.php — which has always uploaded certified
+-- organisation logos into uploads/orgs/ — wrote the file to the subdirectory
+-- but stored a path one level up. The image 404s with no error anywhere.
+-- The helper now derives the path from the directory; this fixes rows already
+-- stored. The 'org_' filename prefix is what that uploader produces, so it
+-- identifies exactly the affected rows and nothing else.
+-- ----------------------------------------------------------------------
+UPDATE certified_organisations
+   SET logo_path = CONCAT('admin/uploads/orgs/', SUBSTRING(logo_path, 15))
+ WHERE logo_path LIKE 'admin/uploads/org\_%'
+   AND logo_path NOT LIKE 'admin/uploads/orgs/%';

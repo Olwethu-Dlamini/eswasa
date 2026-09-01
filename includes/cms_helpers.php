@@ -174,6 +174,33 @@ if (!function_exists('pc_h')) {
     }
 }
 
+if (!function_exists('pc_stored_upload_path')) {
+    /**
+     * Turn an absolute upload directory plus a filename into the site-relative
+     * path to store in the database.
+     *
+     * The three upload helpers below used to return a hardcoded
+     * 'admin/uploads/' . $name regardless of the directory they were handed,
+     * so any caller passing a subdirectory (uploads/orgs/, uploads/register/,
+     * uploads/affiliations/, uploads/vacancies/) wrote the file to the
+     * subdirectory but stored a path one level up — a broken image on the
+     * public page, with no error anywhere.
+     */
+    function pc_stored_upload_path(string $upload_dir, string $name): string
+    {
+        $dir = rtrim(str_replace('\\', '/', $upload_dir), '/');
+        if (defined('ADMIN_ROOT')) {
+            $root = rtrim(str_replace('\\', '/', dirname(ADMIN_ROOT)), '/');
+            if ($root !== '' && strpos($dir . '/', $root . '/') === 0) {
+                return trim(substr($dir, strlen($root)), '/') . '/' . $name;
+            }
+        }
+        // Directory outside the site root, or no ADMIN_ROOT (front-end
+        // context): fall back to where these files have always lived.
+        return 'admin/uploads/' . $name;
+    }
+}
+
 if (!function_exists('pc_upload_image')) {
     /**
      * Handles a single file upload from $_FILES.
@@ -216,7 +243,7 @@ if (!function_exists('pc_upload_image')) {
         $dest = rtrim($upload_dir, '/\\') . DIRECTORY_SEPARATOR . $name;
         if (!move_uploaded_file($tmp, $dest)) return null;
 
-        return 'admin/uploads/' . $name;
+        return pc_stored_upload_path($upload_dir, $name);
     }
 }
 
@@ -250,7 +277,7 @@ if (!function_exists('pc_save_base64_image')) {
         $dest = rtrim($upload_dir, '/\\') . DIRECTORY_SEPARATOR . $name;
         if (file_put_contents($dest, $decoded) === false) return false;
 
-        return 'admin/uploads/' . $name;
+        return pc_stored_upload_path($upload_dir, $name);
     }
 }
 
@@ -342,7 +369,7 @@ if (!function_exists('pc_upload_document')) {
         if (!move_uploaded_file($tmp, rtrim($upload_dir, '/\\') . DIRECTORY_SEPARATOR . $name)) {
             return 'ERR:Failed to save the uploaded file.';
         }
-        return 'admin/uploads/' . $name;
+        return pc_stored_upload_path($upload_dir, $name);
     }
 }
 
