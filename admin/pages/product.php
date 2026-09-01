@@ -39,7 +39,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_prod'])) {
     redirect_self();
 }
 
+// ── Certified producers ───────────────────────────────────────
+// Same table and same CRUD as the Management Systems page, scoped to this
+// scheme. See docs/superpowers/specs/2026-09-01-cms-batch-d-design.md.
+$CO_SCHEME = 'product';
+$CO_PAGE   = 'product.php';
+$CO_NOUN   = 'producer';
+require __DIR__ . '/_certified_orgs_crud.php';
+
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
+
+$active_tab = ($_GET['tab'] ?? '') === 'producers' ? 'producers' : 'content';
+if ($co_edit || $co_is_new) $active_tab = 'producers';
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -47,6 +58,25 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     <a href="../product.php" target="_blank" class="btn btn-outline-secondary btn-sm">View page</a>
 </div>
 
+<ul class="nav nav-tabs mb-3" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'content' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-content" type="button" role="tab">
+            Page Content
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'producers' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-producers" type="button" role="tab">
+            Certified Producers <span class="badge bg-secondary ms-1"><?= count($co_rows) ?></span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+
+<!-- ============ TAB: Page Content ============ -->
+<div class="tab-pane fade <?= $active_tab === 'content' ? 'show active' : '' ?>" id="tab-content" role="tabpanel">
 <form method="POST" enctype="multipart/form-data">
 
     <!-- Hero / Breadcrumb -->
@@ -202,3 +232,12 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
         <a href="../product.php" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary">View page</a>
     </div>
 </form>
+</div>
+
+<!-- ============ TAB: Certified Producers ============ -->
+<div class="tab-pane fade <?= $active_tab === 'producers' ? 'show active' : '' ?>" id="tab-producers" role="tabpanel">
+    <p class="text-muted">The logo tiles under &ldquo;<?= pc_h($pc['prod_producers_title']) ?>&rdquo; on the public page.</p>
+    <?php require __DIR__ . '/_certified_orgs_ui.php'; ?>
+</div>
+
+</div>

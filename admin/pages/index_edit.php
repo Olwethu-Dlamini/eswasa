@@ -183,18 +183,92 @@ for ($i = 1; $i <= 3; $i++) {
     $mark_image_keys[] = "index_mark_{$i}_image";
 }
 
-$aff_text_keys  = [];
-$aff_url_keys   = [];
-$aff_image_keys = [];
-for ($i = 1; $i <= 10; $i++) {
-    $aff_text_keys[]  = "index_affiliation_{$i}_alt";
-    $aff_url_keys[]   = "index_affiliation_{$i}_url";
-    $aff_image_keys[] = "index_affiliation_{$i}_logo";
+// Affiliation logos live in the index_affiliations table, not page_content, so
+// the slider isn't capped at a fixed slot count. Only its heading is CMS copy.
+$text_keys  = array_merge($heading_keys, $discover_text_keys, $mark_text_keys);
+$url_keys   = array_merge($discover_url_keys, $mark_url_keys);
+$image_keys = $mark_image_keys;
+
+// ── Affiliations: create / update ─────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_aff'])) {
+    $aff_id     = !empty($_POST['aff_id']) ? (int)$_POST['aff_id'] : null;
+    $aff_alt    = pc_strip_text($_POST['aff_alt'] ?? '');
+    $aff_url    = strip_tags(trim((string)($_POST['aff_url'] ?? '')));
+    $aff_sort   = (int)($_POST['aff_sort_order'] ?? 0);
+    $aff_active = !empty($_POST['aff_is_active']) ? 1 : 0;
+    $aff_logo   = pc_strip_text($_POST['aff_existing_logo'] ?? '');
+
+    $errors = [];
+    if ($aff_alt === '') $errors[] = 'Alt text is required — screen readers announce it in place of the logo.';
+
+    // Prefer the cropper's base64 payload; fall back to a raw file upload
+    // (e.g. SVG logos the cropper passes through untouched).
+    $up = pc_save_base64_image($_POST['aff_logo_cropped'] ?? '', ADMIN_ROOT . '/uploads/affiliations/', 'aff');
+    if (!is_string($up)) {
+        $up = pc_upload_image('aff_logo_file', ADMIN_ROOT . '/uploads/affiliations/', 'aff');
+    }
+    if ($up === false) {
+        $errors[] = 'Logo upload failed (check file type — JPG/PNG/WebP/SVG/GIF — and size under 5 MB).';
+    } elseif ($up) {
+        $aff_logo = $up;
+    }
+    if ($aff_logo === '') $errors[] = 'A logo image is required.';
+
+    if ($errors) {
+        set_flash('danger', implode(' ', $errors));
+        header('Location: index.php?page=index_edit.php' . ($aff_id ? '&edit_aff=' . $aff_id : '&new_aff=1'));
+        exit;
+    }
+
+    if ($aff_id) {
+        $stmt = $conn->prepare('UPDATE index_affiliations SET logo_path = ?, url = ?, alt = ?, sort_order = ?, is_active = ? WHERE id = ?');
+        $stmt->bind_param('sssiii', $aff_logo, $aff_url, $aff_alt, $aff_sort, $aff_active, $aff_id);
+        $stmt->execute();
+        $stmt->close();
+        set_flash('success', 'Affiliation updated.');
+    } else {
+        $stmt = $conn->prepare('INSERT INTO index_affiliations (logo_path, url, alt, sort_order, is_active) VALUES (?, ?, ?, ?, ?)');
+        $stmt->bind_param('sssii', $aff_logo, $aff_url, $aff_alt, $aff_sort, $aff_active);
+        $stmt->execute();
+        $stmt->close();
+        set_flash('success', 'Affiliation added.');
+    }
+    header('Location: index.php?page=index_edit.php');
+    exit;
 }
 
-$text_keys  = array_merge($heading_keys, $discover_text_keys, $mark_text_keys, $aff_text_keys);
-$url_keys   = array_merge($discover_url_keys, $mark_url_keys, $aff_url_keys);
-$image_keys = array_merge($mark_image_keys, $aff_image_keys);
+// ── Affiliations: toggle / delete ─────────────────────────────
+if (isset($_GET['toggle_aff'])) {
+    $aff_id = (int)$_GET['toggle_aff'];
+    $stmt = $conn->prepare('UPDATE index_affiliations SET is_active = 1 - is_active WHERE id = ?');
+    $stmt->bind_param('i', $aff_id);
+    $stmt->execute();
+    $stmt->close();
+    set_flash('success', 'Active state toggled.');
+    header('Location: index.php?page=index_edit.php');
+    exit;
+}
+if (isset($_GET['delete_aff'])) {
+    $aff_id = (int)$_GET['delete_aff'];
+    // Only uploads this page created are removed; seeded logos under
+    // assets/img/ are shared with other pages and must stay.
+    $sel = $conn->prepare('SELECT logo_path FROM index_affiliations WHERE id = ?');
+    $sel->bind_param('i', $aff_id);
+    $sel->execute();
+    $aff_row = $sel->get_result()->fetch_assoc();
+    $sel->close();
+    if ($aff_row && !empty($aff_row['logo_path']) && strpos($aff_row['logo_path'], 'admin/uploads/affiliations/') === 0) {
+        $fs = dirname(ADMIN_ROOT) . '/' . $aff_row['logo_path'];
+        if (is_file($fs)) @unlink($fs);
+    }
+    $stmt = $conn->prepare('DELETE FROM index_affiliations WHERE id = ?');
+    $stmt->bind_param('i', $aff_id);
+    $stmt->execute();
+    $stmt->close();
+    set_flash('success', 'Affiliation deleted.');
+    header('Location: index.php?page=index_edit.php');
+    exit;
+}
 
 // ── Home Sections: Save ──────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_index'])) {
@@ -224,7 +298,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_index'])) {
 $pc = pc_get_many($conn, array_merge($text_keys, $url_keys, $image_keys));
 $banners_rs = $conn->query("SELECT * FROM banners ORDER BY date_updated DESC, id DESC");
 
-$aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADCSTAN','ASTM'];
+$aff_res  = $conn->query('SELECT * FROM index_affiliations ORDER BY sort_order ASC, id ASC');
+$aff_rows = $aff_res ? $aff_res->fetch_all(MYSQLI_ASSOC) : [];
+
+$aff_edit   = null;
+$aff_is_new = isset($_GET['new_aff']);
+if (isset($_GET['edit_aff'])) {
+    $stmt = $conn->prepare('SELECT * FROM index_affiliations WHERE id = ?');
+    $aff_eid = (int)$_GET['edit_aff'];
+    $stmt->bind_param('i', $aff_eid);
+    $stmt->execute();
+    $aff_edit = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+}
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -432,53 +518,144 @@ $aff_default_alts = ['ISO','IEC','ITU','IAF','ILAC','ARSO','SADCAS','SADC','SADC
         </div>
     </div>
 
-    <!-- Affiliations -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="mb-3">Affiliations Section (10 logos)</h5>
-            <p class="text-muted small">Logos appear in the seamless scrolling band. The same set is duplicated automatically for the loop.</p>
-            <div class="row g-3">
-                <?php for ($i = 1; $i <= 10; $i++):
-                    $logo_key = "index_affiliation_{$i}_logo";
-                    $current_logo = $pc[$logo_key] ?? '';
-                    $default_alt = $aff_default_alts[$i - 1] ?? ('Affiliation ' . $i);
-                ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="border rounded p-3 h-100">
-                            <h6 class="mb-2">Affiliation <?= $i ?> <span class="text-muted small">(<?= htmlspecialchars($default_alt) ?>)</span></h6>
-                            <div class="mb-2 text-center" style="background:#fff;border:1px solid #eee;padding:8px;<?= empty($current_logo) ? 'display:none;' : '' ?>">
-                                <img data-crop-preview="index_affiliation_<?= $i ?>_logo_preview"
-                                     src="<?= !empty($current_logo) ? '../' . pc_h(pc_image_src($current_logo)) : '' ?>"
-                                     style="max-height:70px;max-width:100%;"
-                                     onload="this.parentNode.style.display='block'" alt="">
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label small fw-bold">Logo image</label>
-                                <input type="file" name="index_affiliation_<?= $i ?>_logo_file" accept="image/*" class="form-control form-control-sm crop-input"
-                                       data-crop-label="Affiliation <?= $i ?> Logo">
-                                <input type="hidden" name="index_affiliation_<?= $i ?>_logo_cropped">
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label small fw-bold">Link URL</label>
-                                <input type="url" name="index_affiliation_<?= $i ?>_url" class="form-control form-control-sm" value="<?= pc_h($pc["index_affiliation_{$i}_url"]) ?>" placeholder="https://...">
-                            </div>
-                            <div class="mb-0">
-                                <label class="form-label small fw-bold">Alt text</label>
-                                <input type="text" name="index_affiliation_<?= $i ?>_alt" class="form-control form-control-sm" value="<?= pc_h($pc["index_affiliation_{$i}_alt"]) ?>">
-                            </div>
-                        </div>
-                    </div>
-                <?php endfor; ?>
-            </div>
-        </div>
-    </div>
-
     <div class="text-end mb-4">
         <button type="submit" name="save_index" class="btn btn-primary px-5">
             <i class="fas fa-save me-2"></i>Save Home Sections
         </button>
     </div>
 </form>
+
+<!-- ============ Affiliations ============ -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Affiliations (<?= count($aff_rows) ?>)</strong>
+        <?php if (!$aff_edit && !$aff_is_new): ?>
+            <a href="index.php?page=index_edit.php&new_aff=1" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i> Add affiliation
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="card-body">
+        <p class="text-muted small">
+            Logos in the seamless scrolling band at the foot of the home page. The set is
+            duplicated automatically for the loop, so add each logo once. Its heading is
+            edited under Home Sections above.
+        </p>
+
+        <?php if ($aff_edit || $aff_is_new):
+            $a = $aff_edit ?: [
+                'id' => 0, 'logo_path' => '', 'url' => '', 'alt' => '',
+                'sort_order' => ($aff_rows ? (max(array_column($aff_rows, 'sort_order')) + 1) : 1),
+                'is_active' => 1,
+            ];
+        ?>
+            <form method="POST" enctype="multipart/form-data" class="border rounded p-3 mb-3">
+                <?php if ($aff_edit): ?>
+                    <input type="hidden" name="aff_id" value="<?= (int)$a['id'] ?>">
+                <?php endif; ?>
+                <input type="hidden" name="aff_existing_logo" value="<?= pc_h($a['logo_path']) ?>">
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Alt text *</label>
+                        <input type="text" name="aff_alt" class="form-control" required maxlength="200"
+                               value="<?= pc_h($a['alt']) ?>" placeholder="e.g. ISO">
+                        <div class="form-text">Announced by screen readers in place of the logo.</div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold">Link URL</label>
+                        <input type="url" name="aff_url" class="form-control"
+                               value="<?= pc_h($a['url']) ?>" placeholder="https://...">
+                        <div class="form-text">Optional. Leave empty and the logo isn't a link.</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Sort order</label>
+                        <input type="number" name="aff_sort_order" class="form-control" value="<?= (int)$a['sort_order'] ?>">
+                        <div class="form-text">Lower = earlier.</div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">Logo *</label>
+                        <div class="mb-2">
+                            <img data-crop-preview="aff_logo_preview"
+                                 src="<?= !empty($a['logo_path']) ? '../' . pc_h(pc_image_src($a['logo_path'])) : '' ?>"
+                                 style="max-height:70px;border:1px solid #ddd;padding:4px;background:#fff;<?= empty($a['logo_path']) ? 'display:none;' : '' ?>"
+                                 onload="this.style.display='inline-block'" alt="">
+                            <?php if (!empty($a['logo_path'])): ?>
+                                <code class="ms-2 small text-muted"><?= pc_h($a['logo_path']) ?></code>
+                            <?php endif; ?>
+                        </div>
+                        <input type="file" name="aff_logo_file" class="form-control crop-input"
+                               accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
+                               data-crop-label="Affiliation Logo">
+                        <input type="hidden" name="aff_logo_cropped">
+                        <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input type="checkbox" name="aff_is_active" id="aff_is_active" value="1" class="form-check-input"
+                                   <?= (int)$a['is_active'] === 1 ? 'checked' : '' ?>>
+                            <label for="aff_is_active" class="form-check-label">Show in the slider</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                    <a href="index.php?page=index_edit.php" class="btn btn-link text-decoration-none">Cancel</a>
+                    <button type="submit" name="save_aff" value="1" class="btn btn-primary px-4">
+                        <i class="fas fa-save me-1"></i> <?= $aff_edit ? 'Save changes' : 'Add affiliation' ?>
+                    </button>
+                </div>
+            </form>
+        <?php endif; ?>
+
+        <?php if ($aff_rows): ?>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">Order</th>
+                            <th style="width: 120px;">Logo</th>
+                            <th>Alt text</th>
+                            <th>Link</th>
+                            <th style="width: 90px;" class="text-center">Active</th>
+                            <th style="width: 160px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($aff_rows as $row): ?>
+                            <tr>
+                                <td><?= (int)$row['sort_order'] ?></td>
+                                <td><img src="../<?= pc_h(pc_image_src($row['logo_path'])) ?>" style="max-height:36px;max-width:100px;object-fit:contain" alt=""></td>
+                                <td><?= pc_h($row['alt']) ?></td>
+                                <td class="small text-muted text-break"><?= pc_h($row['url']) ?: '&mdash;' ?></td>
+                                <td class="text-center">
+                                    <a href="index.php?page=index_edit.php&toggle_aff=<?= (int)$row['id'] ?>" class="btn btn-sm btn-link p-0">
+                                        <?php if ((int)$row['is_active'] === 1): ?>
+                                            <span class="badge bg-success">On</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary">Off</span>
+                                        <?php endif; ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="index.php?page=index_edit.php&edit_aff=<?= (int)$row['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="index.php?page=index_edit.php&delete_aff=<?= (int)$row['id'] ?>"
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Delete this affiliation? This cannot be undone.')">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <p class="text-muted mb-0">
+                No affiliations yet. <a href="index.php?page=index_edit.php&new_aff=1">Add the first one</a>.
+            </p>
+        <?php endif; ?>
+    </div>
+</div>
 
 <!-- Banner Modal (uses its own form, separate from the sections form above) -->
 <div class="modal fade" id="bannerModal" tabindex="-1" aria-hidden="true">

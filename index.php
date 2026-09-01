@@ -19,17 +19,7 @@ $pc_keys = [
     'index_mark_1_title','index_mark_1_desc','index_mark_1_image','index_mark_1_explore_url','index_mark_1_verify_url',
     'index_mark_2_title','index_mark_2_desc','index_mark_2_image','index_mark_2_explore_url','index_mark_2_verify_url',
     'index_mark_3_title','index_mark_3_desc','index_mark_3_image','index_mark_3_explore_url','index_mark_3_verify_url',
-    // Affiliations (1..10)
-    'index_affiliation_1_logo','index_affiliation_1_url','index_affiliation_1_alt',
-    'index_affiliation_2_logo','index_affiliation_2_url','index_affiliation_2_alt',
-    'index_affiliation_3_logo','index_affiliation_3_url','index_affiliation_3_alt',
-    'index_affiliation_4_logo','index_affiliation_4_url','index_affiliation_4_alt',
-    'index_affiliation_5_logo','index_affiliation_5_url','index_affiliation_5_alt',
-    'index_affiliation_6_logo','index_affiliation_6_url','index_affiliation_6_alt',
-    'index_affiliation_7_logo','index_affiliation_7_url','index_affiliation_7_alt',
-    'index_affiliation_8_logo','index_affiliation_8_url','index_affiliation_8_alt',
-    'index_affiliation_9_logo','index_affiliation_9_url','index_affiliation_9_alt',
-    'index_affiliation_10_logo','index_affiliation_10_url','index_affiliation_10_alt',
+    // Affiliation logos now live in the index_affiliations table, not page_content.
 ];
 $pc_defaults = [
     'index_discover_heading'     => 'Discover',
@@ -56,49 +46,27 @@ $pc_defaults = [
     'index_mark_1_desc'        => 'Awarded to organisations whose quality, environmental, food safety or occupational health management systems have been independently audited and proven to meet recognised international standards. Provides for continuous, systematic verification of effectiveness.',
     'index_mark_1_image'       => 'assets/img/quality/management-mark-black.png',
     'index_mark_1_explore_url' => 'managementsystems.php',
-    'index_mark_1_verify_url'  => 'certification-status.php',
+    'index_mark_1_verify_url'  => 'certification-status-management-systems.php',
     'index_mark_2_title'       => 'Product Certification Mark',
     'index_mark_2_desc'        => 'A voluntary product certification scheme operated by the Eswatini Standards Authority. Awarded to products manufactured to declared national and international standards and proven through rigorous, independent testing — giving buyers confidence in quality and safety.',
     'index_mark_2_image'       => 'assets/img/quality/product-certification-black.png',
     'index_mark_2_explore_url' => 'Certification.php',
-    'index_mark_2_verify_url'  => 'certification-status.php',
+    'index_mark_2_verify_url'  => 'certification-status-product.php',
     'index_mark_3_title'       => 'Ingelo MSME Product Certification Mark',
     'index_mark_3_desc'        => 'A simplified, affordable certification scheme designed for micro, small and medium enterprises (MSMEs) and local producers — helping them prove product quality, access new markets and grow with credibility.',
     'index_mark_3_image'       => 'assets/img/quality/ingelo-certification-black.png',
     'index_mark_3_explore_url' => 'ingelo.php',
-    'index_mark_3_verify_url'  => 'certification-status.php',
+    'index_mark_3_verify_url'  => 'certification-status-ingelo.php',
 
-    'index_affiliation_1_logo'  => 'admin/uploads/iso.png',
-    'index_affiliation_1_url'   => 'https://www.iso.org/',
-    'index_affiliation_1_alt'   => 'ISO',
-    'index_affiliation_2_logo'  => 'admin/uploads/iec.png',
-    'index_affiliation_2_url'   => 'https://www.iec.ch/',
-    'index_affiliation_2_alt'   => 'IEC',
-    'index_affiliation_3_logo'  => 'admin/uploads/itu.png',
-    'index_affiliation_3_url'   => 'https://www.itu.int/',
-    'index_affiliation_3_alt'   => 'ITU',
-    'index_affiliation_4_logo'  => 'assets/img/iaf.webp',
-    'index_affiliation_4_url'   => 'https://iaf.nu/',
-    'index_affiliation_4_alt'   => 'IAF',
-    'index_affiliation_5_logo'  => 'assets/img/ILAC.jpg',
-    'index_affiliation_5_url'   => 'https://ilac.org/',
-    'index_affiliation_5_alt'   => 'ILAC',
-    'index_affiliation_6_logo'  => 'admin/uploads/arso-2024.png',
-    'index_affiliation_6_url'   => 'https://www.arso-org.org/',
-    'index_affiliation_6_alt'   => 'ARSO',
-    'index_affiliation_7_logo'  => 'assets/img/SADCAS.png',
-    'index_affiliation_7_url'   => 'https://www.sadcas.org/',
-    'index_affiliation_7_alt'   => 'SADCAS',
-    'index_affiliation_8_logo'  => 'assets/img/sadc.webp',
-    'index_affiliation_8_url'   => 'https://www.sadc.int/',
-    'index_affiliation_8_alt'   => 'SADC',
-    'index_affiliation_9_logo'  => 'assets/img/sadcstan.jpg',
-    'index_affiliation_9_url'   => 'https://www.sadcstan.org/',
-    'index_affiliation_9_alt'   => 'SADCSTAN',
-    'index_affiliation_10_logo' => 'admin/uploads/astm.png',
-    'index_affiliation_10_url'  => 'https://www.astm.org/',
-    'index_affiliation_10_alt'  => 'ASTM',
 ];
+// ── Affiliation logos (DB-driven; edited via admin → Home Page) ──────────────
+// Moved out of page_content so the slider isn't capped at a fixed slot count.
+$index_affiliations = [];
+$aff_res = $conn->query('SELECT logo_path, url, alt FROM index_affiliations WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
+if ($aff_res) {
+    while ($aff_row = $aff_res->fetch_assoc()) $index_affiliations[] = $aff_row;
+}
+
 $pc = pc_get_many($conn, $pc_keys, $pc_defaults);
 
 // Fetch banners for slider
@@ -1051,21 +1019,24 @@ if ($am_result) {
         <div class="affiliations-slider">
             <div class="slider-track d-flex flex-nowrap">
                 <?php
-                $affiliation_count = 10;
                 // Render twice: original set + duplicate for seamless infinite scroll
                 for ($pass = 0; $pass < 2; $pass++):
-                    for ($i = 1; $i <= $affiliation_count; $i++):
-                        $logo = $pc['index_affiliation_' . $i . '_logo'];
-                        $url  = $pc['index_affiliation_' . $i . '_url'];
-                        $alt  = $pc['index_affiliation_' . $i . '_alt'];
+                    foreach ($index_affiliations as $aff):
+                        $logo = $aff['logo_path'];
+                        $url  = trim((string)$aff['url']);
+                        $alt  = $aff['alt'];
                 ?>
                 <div class="slider-item px-3">
+                    <?php if ($url !== ''): ?>
                     <a href="<?= pc_h($url) ?>" target="_blank" rel="noopener noreferrer"<?= $pass === 1 ? ' aria-hidden="true" tabindex="-1"' : '' ?>>
                         <img src="<?= pc_h(pc_image_src($logo, 'assets/img/logo/ESWASA_LOGO.jpg')) ?>" alt="<?= pc_h($alt) ?>" class="affiliation-logo">
                     </a>
+                    <?php else: ?>
+                        <img src="<?= pc_h(pc_image_src($logo, 'assets/img/logo/ESWASA_LOGO.jpg')) ?>" alt="<?= pc_h($alt) ?>" class="affiliation-logo"<?= $pass === 1 ? ' aria-hidden="true"' : '' ?>>
+                    <?php endif; ?>
                 </div>
                 <?php
-                    endfor;
+                    endforeach;
                 endfor;
                 ?>
             </div>

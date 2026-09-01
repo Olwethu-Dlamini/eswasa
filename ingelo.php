@@ -35,8 +35,7 @@ $ingelo_keys = [
     'ingelo_who_item_2',
     'ingelo_who_item_3',
     // Section 4 - Standards
-    'ingelo_standards_title',
-    'ingelo_standards_list',
+    'ingelo_certified_title',
     // Section 5 - Application
     'ingelo_apply_title',
     'ingelo_apply_lead',
@@ -85,8 +84,7 @@ $ingelo_defaults = [
     'ingelo_who_item_1'                 => 'Emaswati (Swazi citizens) — local entrepreneurs and business owners.',
     'ingelo_who_item_2'                 => 'Local MSMEs involved in the production of any products or offering services.',
     'ingelo_who_item_3'                 => 'Producers willing to scale up — those who are willing to increase production to meet export quota requirements by local and regional markets, through compliance with certification requirements.',
-    'ingelo_standards_title'            => 'Available Standards',
-    'ingelo_standards_list'             => "SZNS 025: Poultry processing — Hygiene requirements\nSZNS 058: Sweet potato — Grading requirements\nSZNS 049: Maize grains — Specification\nSZNS BOS 43: Onion — Grading requirements\nSZNS 037: Organic fertiliser — Specification\nSZNS 060: Banana — Grading requirements\nSZNS KS 052: Fresh courgettes/baby marrow — Specification and grading\nSZNS 031: Cattle feeds — Specification\nSZNS 035: Peanut butter — Specification\nSZNS SANS 1199: Production of Mageu\nSZNS SANS 1679: Pasteurised Milk\nSZNS CODEX STAN 296: Jam\nSZNS CODEX STAN 306: Chilli Sauce",
+    'ingelo_certified_title'            => 'Ingelo Certified Producers',
     'ingelo_apply_title'                => 'How to Apply',
     'ingelo_apply_lead'                 => 'To begin the Ingelo Certification process, please:',
     'ingelo_apply_step_1'               => 'Download and complete the official application form.',
@@ -101,6 +99,16 @@ $ingelo_defaults = [
     'ingelo_cta_btn_2_text'             => 'Speak to an Ingelo Officer',
     'ingelo_cta_btn_2_url'              => 'contact.php',
 ];
+
+// ── Ingelo certified producers (DB-driven; edited via admin → Ingelo) ────────
+// Replaces the former "Available Standards" list. Shares the
+// certified_organisations table with the Management Systems and Product
+// grids, scoped by scheme.
+$ingelo_producers = [];
+$ipres = $conn->query("SELECT name, product, standard, logo_path FROM certified_organisations WHERE scheme = 'ingelo' AND is_active = 1 ORDER BY sort_order ASC, id ASC");
+if ($ipres) {
+    while ($iprow = $ipres->fetch_assoc()) $ingelo_producers[] = $iprow;
+}
 
 $pc = pc_get_many($conn, $ingelo_keys, $ingelo_defaults);
 ?>
@@ -205,14 +213,51 @@ $pc = pc_get_many($conn, $ingelo_keys, $ingelo_defaults);
             font-size: 1.1rem;
         }
 
-        .standards-list {
-            columns: 2;
-            column-gap: 30px;
-            margin: 20px 0;
+        .producer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin: 20px 0 0;
         }
-
-        .standards-list li {
-            margin-bottom: 8px;
+        .producer-tile {
+            background: #fff;
+            border: 1px solid rgba(43, 51, 136, 0.15);
+            border-radius: 4px;
+            min-height: 130px;
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 8px;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .producer-tile:hover {
+            border-color: #2B3388;
+            box-shadow: 0 4px 14px rgba(43, 51, 136, 0.08);
+        }
+        .producer-tile img {
+            max-width: 100%;
+            max-height: 66px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+        .producer-tile .producer-wordmark {
+            color: #2B3388;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.4px;
+            line-height: 1.3;
+        }
+        .producer-tile .producer-product {
+            color: #2B3388;
+            font-size: 0.86rem;
+        }
+        .producer-tile .producer-standard {
+            color: #6c757d;
+            font-size: 0.76rem;
         }
 
         /* Make image closer to text */
@@ -247,8 +292,8 @@ $pc = pc_get_many($conn, $ingelo_keys, $ingelo_defaults);
             .highlighted-section, .ingelo-application-form {
                 padding: 20px 15px;
             }
-            .standards-list {
-                columns: 1;
+            .producer-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             }
             .intro-section h2 {
                 font-size: 1.3rem;
@@ -387,20 +432,31 @@ $pc = pc_get_many($conn, $ingelo_keys, $ingelo_defaults);
                     </ul>
                 </div>
 
-                <!-- 5. Available Standards -->
+                <!-- 5. Ingelo Certified Producers -->
+                <?php if ($ingelo_producers): ?>
                 <div class="highlighted-section">
-                    <h3><?= pc_h($pc['ingelo_standards_title']) ?></h3>
-                    <ul class="standards-list">
-<?php
-$ingelo_standards_lines = preg_split("/\r\n|\r|\n/", (string)$pc['ingelo_standards_list']);
-foreach ($ingelo_standards_lines as $ingelo_std_line):
-    $ingelo_std_line = trim($ingelo_std_line);
-    if ($ingelo_std_line === '') continue;
-?>
-                        <li><?= pc_h($ingelo_std_line) ?></li>
-<?php endforeach; ?>
-                    </ul>
+                    <h3><?= pc_h($pc['ingelo_certified_title']) ?></h3>
+                    <div class="producer-grid">
+                        <?php foreach ($ingelo_producers as $ip):
+                            $ip_logo = trim((string)($ip['logo_path'] ?? ''));
+                        ?>
+                        <div class="producer-tile">
+                            <?php if ($ip_logo !== ''): ?>
+                                <img src="<?= pc_h($ip_logo) ?>" alt="<?= pc_h($ip['name']) ?> logo">
+                            <?php else: ?>
+                                <div class="producer-wordmark"><?= pc_h($ip['name']) ?></div>
+                            <?php endif; ?>
+                            <?php if (trim((string)($ip['product'] ?? '')) !== ''): ?>
+                                <div class="producer-product"><?= pc_h($ip['product']) ?></div>
+                            <?php endif; ?>
+                            <?php if (trim((string)($ip['standard'] ?? '')) !== ''): ?>
+                                <div class="producer-standard"><?= pc_h($ip['standard']) ?></div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
+                <?php endif; ?>
 
                 <!-- 6. Application Form -->
                 <div class="ingelo-application-form">

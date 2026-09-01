@@ -33,8 +33,7 @@ $text_keys = [
     'ingelo_who_item_2',
     'ingelo_who_item_3',
     // Standards
-    'ingelo_standards_title',
-    'ingelo_standards_list',
+    'ingelo_certified_title',
     // Application
     'ingelo_apply_title',
     'ingelo_apply_lead',
@@ -90,7 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_ingelo'])) {
     redirect_self();
 }
 
+// ── Ingelo certified producers ────────────────────────────────
+// The logo grid that replaced the old "Available Standards" list. Same table
+// and CRUD as the Management Systems and Product pages, scoped to this scheme.
+$CO_SCHEME = 'ingelo';
+$CO_PAGE   = 'ingelo.php';
+$CO_NOUN   = 'producer';
+require __DIR__ . '/_certified_orgs_crud.php';
+
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
+
+$active_tab = ($_GET['tab'] ?? '') === 'producers' ? 'producers' : 'content';
+if ($co_edit || $co_is_new) $active_tab = 'producers';
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -98,6 +108,25 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
     <a href="../ingelo.php" target="_blank" class="btn btn-sm btn-outline-secondary">View page</a>
 </div>
 
+<ul class="nav nav-tabs mb-3" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'content' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-content" type="button" role="tab">
+            Page Content
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link <?= $active_tab === 'producers' ? 'active' : '' ?>"
+                data-bs-toggle="tab" data-bs-target="#tab-producers" type="button" role="tab">
+            Certified Producers <span class="badge bg-secondary ms-1"><?= count($co_rows) ?></span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content">
+
+<!-- ============ TAB: Page Content ============ -->
+<div class="tab-pane fade <?= $active_tab === 'content' ? 'show active' : '' ?>" id="tab-content" role="tabpanel">
 <form method="POST" enctype="multipart/form-data">
 
     <!-- Hero / Breadcrumb -->
@@ -219,18 +248,18 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
         </div>
     </div>
 
-    <!-- Standards -->
+    <!-- Certified Producers heading -->
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">Available Standards</h5>
+            <h5 class="card-title">Certified Producers</h5>
             <div class="mb-3">
                 <label class="form-label">Section Title</label>
-                <input type="text" name="ingelo_standards_title" class="form-control" value="<?= pc_h($pc['ingelo_standards_title']) ?>">
+                <input type="text" name="ingelo_certified_title" class="form-control" value="<?= pc_h($pc['ingelo_certified_title']) ?>">
             </div>
-            <div class="mb-3">
-                <label class="form-label">Standards List (one item per line)</label>
-                <textarea name="ingelo_standards_list" class="form-control" rows="14"><?= pc_h($pc['ingelo_standards_list']) ?></textarea>
-                <div class="form-text">Each line becomes a list item on the public page.</div>
+            <div class="form-text">
+                The producers themselves are managed on the
+                <strong>Certified Producers</strong> tab. The section is hidden on the
+                public page while no producers are active.
             </div>
         </div>
     </div>
@@ -310,3 +339,12 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
         <button type="submit" name="save_ingelo" class="btn btn-primary">Save Changes</button>
     </div>
 </form>
+</div>
+
+<!-- ============ TAB: Certified Producers ============ -->
+<div class="tab-pane fade <?= $active_tab === 'producers' ? 'show active' : '' ?>" id="tab-producers" role="tabpanel">
+    <p class="text-muted">The logo tiles under &ldquo;<?= pc_h($pc['ingelo_certified_title']) ?>&rdquo; on the public page.</p>
+    <?php require __DIR__ . '/_certified_orgs_ui.php'; ?>
+</div>
+
+</div>

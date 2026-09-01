@@ -94,90 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_ms'])) {
     exit;
 }
 
-// ── Save handler: certified organisation (create / update) ────
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_org'])) {
-    $id          = !empty($_POST['org_id']) ? (int)$_POST['org_id'] : null;
-    $name        = pc_strip_text($_POST['org_name'] ?? '');
-    $standard    = pc_strip_text($_POST['org_standard'] ?? '');
-    $sort_order  = (int)($_POST['org_sort_order'] ?? 0);
-    $is_active   = !empty($_POST['org_is_active']) ? 1 : 0;
-    $existing    = pc_strip_text($_POST['org_existing_logo'] ?? '');
-
-    $errors = [];
-    if ($name === '')     $errors[] = 'Organisation name is required.';
-    if ($standard === '') $errors[] = 'Standard is required.';
-
-    $logo_path = $existing;  // default: keep current
-    // Prefer the cropper's base64 payload; fall back to a raw file upload
-    // (e.g. SVG logos the cropper passes through untouched).
-    $up = pc_save_base64_image($_POST['org_logo_cropped'] ?? '', ADMIN_ROOT . '/uploads/orgs/', 'org');
-    if (!is_string($up)) {
-        $up = pc_upload_image('org_logo_file', ADMIN_ROOT . '/uploads/orgs/', 'org');
-    }
-    if ($up === false) {
-        $errors[] = 'Logo upload failed (check file type — JPG/PNG/WebP/SVG/GIF — and size under 5 MB).';
-    } elseif ($up) {
-        $logo_path = $up;
-    }
-
-    if ($errors) {
-        set_flash('danger', implode(' ', $errors));
-        header('Location: index.php?page=managementsystems.php' . ($id ? '&edit_org=' . $id : '&new_org=1'));
-        exit;
-    }
-
-    if ($id) {
-        $stmt = $conn->prepare('UPDATE certified_organisations SET name = ?, standard = ?, logo_path = ?, sort_order = ?, is_active = ? WHERE id = ?');
-        $logo_for_db = $logo_path !== '' ? $logo_path : null;
-        $stmt->bind_param('sssiii', $name, $standard, $logo_for_db, $sort_order, $is_active, $id);
-        $stmt->execute();
-        $stmt->close();
-        set_flash('success', 'Organisation updated.');
-    } else {
-        $stmt = $conn->prepare('INSERT INTO certified_organisations (name, standard, logo_path, sort_order, is_active) VALUES (?, ?, ?, ?, ?)');
-        $logo_for_db = $logo_path !== '' ? $logo_path : null;
-        $stmt->bind_param('sssii', $name, $standard, $logo_for_db, $sort_order, $is_active);
-        $stmt->execute();
-        $stmt->close();
-        set_flash('success', 'Organisation added.');
-    }
-    header('Location: index.php?page=managementsystems.php');
-    exit;
-}
-
-// ── GET: quick toggle is_active on an org ─────────────────────
-if (isset($_GET['toggle_org'])) {
-    $id = (int)$_GET['toggle_org'];
-    $stmt = $conn->prepare('UPDATE certified_organisations SET is_active = 1 - is_active WHERE id = ?');
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-    $stmt->close();
-    set_flash('success', 'Active state toggled.');
-    header('Location: index.php?page=managementsystems.php');
-    exit;
-}
-
-// ── GET: delete an org ────────────────────────────────────────
-if (isset($_GET['delete_org'])) {
-    $id = (int)$_GET['delete_org'];
-    // Remove the uploaded logo file if it lives under admin/uploads/orgs/
-    $sel = $conn->prepare('SELECT logo_path FROM certified_organisations WHERE id = ?');
-    $sel->bind_param('i', $id);
-    $sel->execute();
-    $row = $sel->get_result()->fetch_assoc();
-    $sel->close();
-    if ($row && !empty($row['logo_path']) && strpos($row['logo_path'], 'admin/uploads/orgs/') === 0) {
-        $fs = __DIR__ . '/../../' . $row['logo_path'];
-        if (is_file($fs)) @unlink($fs);
-    }
-    $stmt = $conn->prepare('DELETE FROM certified_organisations WHERE id = ?');
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-    $stmt->close();
-    set_flash('success', 'Organisation deleted.');
-    header('Location: index.php?page=managementsystems.php');
-    exit;
-}
+// ── Certified organisations ───────────────────────────────────
+// Handlers, validation and loading live in the shared partial, which the
+// Product and Ingelo admin pages include with their own scheme.
+$CO_SCHEME = 'ms';
+$CO_PAGE   = 'managementsystems.php';
+$CO_NOUN   = 'organisation';
+require __DIR__ . '/_certified_orgs_crud.php';
 
 // ── PDF upload helper for certification_documents ─────────────
 function ms_upload_doc_pdf(string $field, string $upload_dir, int $max_bytes = 26214400): array {
@@ -297,22 +220,13 @@ if (isset($_GET['delete_doc'])) {
 // ── Load data ─────────────────────────────────────────────────
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 
-$orgs_res = $conn->query('SELECT * FROM certified_organisations ORDER BY sort_order ASC, id ASC');
-$orgs = $orgs_res ? $orgs_res->fetch_all(MYSQLI_ASSOC) : [];
+$orgs = $co_rows;  // loaded by _certified_orgs_crud.php
 
 $docs_res = $conn->query('SELECT * FROM certification_documents ORDER BY sort_order ASC, id ASC');
 $docs = $docs_res ? $docs_res->fetch_all(MYSQLI_ASSOC) : [];
 
-$edit_org = null;
-$is_new_org = isset($_GET['new_org']);
-if (isset($_GET['edit_org'])) {
-    $stmt = $conn->prepare('SELECT * FROM certified_organisations WHERE id = ?');
-    $eid = (int)$_GET['edit_org'];
-    $stmt->bind_param('i', $eid);
-    $stmt->execute();
-    $edit_org = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-}
+$edit_org = $co_edit;
+$is_new_org = $co_is_new;
 
 $edit_doc = null;
 $is_new_doc = isset($_GET['new_doc']);
@@ -373,146 +287,7 @@ if ($edit_doc || $is_new_doc) $active_tab = 'docs';
 
 <!-- ============ TAB: Certified Organisations ============ -->
 <div class="tab-pane fade <?= $active_tab === 'orgs' ? 'show active' : '' ?>" id="tab-orgs" role="tabpanel">
-
-    <?php if (!$edit_org && !$is_new_org): ?>
-        <div class="d-flex justify-content-end mb-3">
-            <a href="index.php?page=managementsystems.php&new_org=1" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus me-1"></i> Add organisation
-            </a>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($edit_org || $is_new_org):
-        $o = $edit_org ?: [
-            'id' => 0, 'name' => '', 'standard' => '', 'logo_path' => null,
-            'sort_order' => ($orgs ? (max(array_column($orgs, 'sort_order')) + 1) : 1),
-            'is_active' => 1,
-        ];
-    ?>
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><?= $edit_org ? 'Edit organisation' : 'Add organisation' ?></strong>
-                <a href="index.php?page=managementsystems.php" class="btn btn-sm btn-link text-decoration-none">&larr; Back to list</a>
-            </div>
-            <div class="card-body">
-                <form method="POST" enctype="multipart/form-data">
-                    <?php if ($edit_org): ?>
-                        <input type="hidden" name="org_id" value="<?= (int)$o['id'] ?>">
-                    <?php endif; ?>
-                    <input type="hidden" name="org_existing_logo" value="<?= pc_h($o['logo_path']) ?>">
-
-                    <div class="row g-3">
-                        <div class="col-md-5">
-                            <label class="form-label fw-bold">Name *</label>
-                            <input type="text" name="org_name" class="form-control" required maxlength="200"
-                                   value="<?= pc_h($o['name']) ?>" placeholder="e.g. GALP Eswatini">
-                        </div>
-                        <div class="col-md-5">
-                            <label class="form-label fw-bold">Standard *</label>
-                            <input type="text" name="org_standard" class="form-control" required maxlength="200"
-                                   value="<?= pc_h($o['standard']) ?>" placeholder="e.g. SZNS ISO 9001:2015">
-                            <div class="form-text">Free text — exactly as it should appear under the logo tile.</div>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label fw-bold">Sort order</label>
-                            <input type="number" name="org_sort_order" class="form-control" value="<?= (int)$o['sort_order'] ?>">
-                            <div class="form-text">Lower = earlier.</div>
-                        </div>
-
-                        <div class="col-md-8">
-                            <label class="form-label fw-bold">Logo</label>
-                            <div class="mb-2">
-                                <img data-crop-preview="org_logo_preview"
-                                     src="<?= !empty($o['logo_path']) ? '../' . pc_h($o['logo_path']) : '' ?>"
-                                     style="max-height:80px;border:1px solid #ddd;padding:4px;background:#fff;<?= empty($o['logo_path']) ? 'display:none;' : '' ?>"
-                                     onload="this.style.display='inline-block'" alt="">
-                                <?php if (!empty($o['logo_path'])): ?>
-                                    <code class="ms-2 small text-muted"><?= pc_h($o['logo_path']) ?></code>
-                                <?php endif; ?>
-                            </div>
-                            <input type="file" name="org_logo_file" class="form-control crop-input" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
-                                   data-crop-label="Organisation Logo">
-                            <input type="hidden" name="org_logo_cropped">
-                            <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). PNG / JPG / WebP / SVG / GIF up to 5 MB. Leave empty to keep current. Tiles without a logo render the name as a wordmark.</div>
-                        </div>
-                        <div class="col-md-4 d-flex align-items-end">
-                            <div class="form-check">
-                                <input type="checkbox" name="org_is_active" id="org_is_active" value="1" class="form-check-input"
-                                       <?= (int)$o['is_active'] === 1 ? 'checked' : '' ?>>
-                                <label for="org_is_active" class="form-check-label">Show on public page</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                        <a href="index.php?page=managementsystems.php" class="btn btn-link text-decoration-none">Cancel</a>
-                        <button type="submit" name="save_org" value="1" class="btn btn-primary px-4">
-                            <i class="fas fa-save me-1"></i> <?= $edit_org ? 'Save changes' : 'Add organisation' ?>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <?php if (!$edit_org && !$is_new_org): ?>
-        <div class="card">
-            <div class="card-header">All certified organisations (<?= count($orgs) ?>)</div>
-            <div class="card-body p-0">
-                <?php if ($orgs): ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th style="width: 70px;">Order</th>
-                                    <th style="width: 110px;">Logo</th>
-                                    <th>Name</th>
-                                    <th>Standard</th>
-                                    <th style="width: 90px;" class="text-center">Active</th>
-                                    <th style="width: 160px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($orgs as $row): ?>
-                                    <tr>
-                                        <td><?= (int)$row['sort_order'] ?></td>
-                                        <td>
-                                            <?php if (!empty($row['logo_path'])): ?>
-                                                <img src="../<?= pc_h($row['logo_path']) ?>" style="max-height:38px;max-width:100px;object-fit:contain">
-                                            <?php else: ?>
-                                                <span class="text-muted small fst-italic">wordmark</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><?= pc_h($row['name']) ?></td>
-                                        <td><?= pc_h($row['standard']) ?></td>
-                                        <td class="text-center">
-                                            <a href="index.php?page=managementsystems.php&toggle_org=<?= (int)$row['id'] ?>" class="btn btn-sm btn-link p-0">
-                                                <?php if ((int)$row['is_active'] === 1): ?>
-                                                    <span class="badge bg-success">On</span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-secondary">Off</span>
-                                                <?php endif; ?>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="index.php?page=managementsystems.php&edit_org=<?= (int)$row['id'] ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                                            <a href="index.php?page=managementsystems.php&delete_org=<?= (int)$row['id'] ?>"
-                                               class="btn btn-sm btn-outline-danger"
-                                               onclick="return confirm('Delete this organisation?')">Delete</a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <div class="p-4 text-center text-muted">
-                        No organisations yet. <a href="index.php?page=managementsystems.php&new_org=1">Add the first one</a>.
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    <?php endif; ?>
+    <?php require __DIR__ . '/_certified_orgs_ui.php'; ?>
 </div>
 
 <!-- ============ TAB: Certification Documents ============ -->

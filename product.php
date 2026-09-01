@@ -623,29 +623,30 @@ $pc = pc_get_many($conn, $prod_keys, $prod_defaults);
                         <div class="cw-divider"></div>
                     </div>
                     <?php
-                    // Source: ESWASA Certified Clients List (May 2026) — product certification entries.
-                    $producers = [
-                        ['slug'=>'swazi-tiles',         'name'=>'Swazi Tiles Investments',                'product'=>'Concrete Roof Tiles',  'standard'=>'SZNS SANS 542:2020'],
-                        ['slug'=>'lubombo-asiphile',    'name'=>'Lubombo Eco Products — Asiphile Bomake', 'product'=>'Chilli Sauce',         'standard'=>'SZNS CODEXSTAN 306:2015'],
-                        ['slug'=>'lubombo-spice-girls', 'name'=>'Lubombo Eco Products — Spice Girls',     'product'=>'Chilli Sauce',         'standard'=>'SZNS CODEXSTAN 306:2015'],
-                    ];
+                    // Loaded from the certified_organisations table (scheme = 'product');
+                    // managed via admin → Product Certification → Certified Producers.
+                    $producers = [];
+                    $pres = $conn->query("SELECT name, product, standard, logo_path FROM certified_organisations WHERE scheme = 'product' AND is_active = 1 ORDER BY sort_order ASC, id ASC");
+                    if ($pres) {
+                        while ($prow = $pres->fetch_assoc()) $producers[] = $prow;
+                    }
                     ?>
                     <div class="producer-grid">
                         <?php foreach ($producers as $p):
-                            $logo = null;
-                            foreach (['png','jpg','jpeg','webp','svg'] as $ext) {
-                                $candidate = 'assets/img/clients/'.$p['slug'].'.'.$ext;
-                                if (file_exists(__DIR__.'/'.$candidate)) { $logo = $candidate; break; }
-                            }
+                            $logo = trim((string)($p['logo_path'] ?? ''));
                         ?>
                         <div class="producer-tile">
-                            <?php if ($logo): ?>
+                            <?php if ($logo !== ''): ?>
                                 <img src="<?= htmlspecialchars($logo) ?>" alt="<?= htmlspecialchars($p['name']) ?> logo">
                             <?php else: ?>
                                 <div class="producer-wordmark"><?= htmlspecialchars($p['name']) ?></div>
                             <?php endif; ?>
-                            <div class="producer-product"><?= htmlspecialchars($p['product']) ?></div>
-                            <div class="producer-standard"><?= htmlspecialchars($p['standard']) ?></div>
+                            <?php if (trim((string)($p['product'] ?? '')) !== ''): ?>
+                                <div class="producer-product"><?= htmlspecialchars($p['product']) ?></div>
+                            <?php endif; ?>
+                            <?php if (trim((string)($p['standard'] ?? '')) !== ''): ?>
+                                <div class="producer-standard"><?= htmlspecialchars($p['standard']) ?></div>
+                            <?php endif; ?>
                         </div>
                         <?php endforeach; ?>
                     </div>

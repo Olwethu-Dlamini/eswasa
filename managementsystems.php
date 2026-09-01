@@ -679,7 +679,7 @@ $pc = pc_get_many($conn, array_keys($ms_keys_defaults), $ms_keys_defaults);
                     // Loaded from the certified_organisations table; managed via
                     // admin → Management Systems → Certified Organisations tab.
                     $clients = [];
-                    $cres = $conn->query('SELECT name, standard, logo_path FROM certified_organisations WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
+                    $cres = $conn->query("SELECT name, standard, logo_path FROM certified_organisations WHERE scheme = 'ms' AND is_active = 1 ORDER BY sort_order ASC, id ASC");
                     if ($cres) {
                         while ($crow = $cres->fetch_assoc()) $clients[] = $crow;
                     }
@@ -700,7 +700,7 @@ $pc = pc_get_many($conn, array_keys($ms_keys_defaults), $ms_keys_defaults);
                     </div>
                     <p class="text-center mt-4 mb-0" style="font-size: 0.95rem;">
                         <?= pc_h($pc['ms_certified_footer']) ?>
-                        <a href="certification-status.php" style="color:#2B3388; font-weight:600; text-decoration:underline;">Certification Status Register</a>.
+                        <a href="certification-status-management-systems.php" style="color:#2B3388; font-weight:600; text-decoration:underline;">Management Systems Certification Status Register</a>.
                     </p>
                 </div>
             </div>
