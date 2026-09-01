@@ -48,12 +48,15 @@ CREATE TABLE IF NOT EXISTS `logo_lists` (
 -- code defaults for any key never saved through the CMS. Each strip is
 -- guarded on being empty, so a second run adds nothing and an editor's later
 -- changes are never overwritten.
--- Which strips already hold rows, snapshotted before any insert so a second
--- run adds nothing. A correlated NOT EXISTS can't be used here: the subquery
--- would have to reference the table being inserted into.
-DROP TEMPORARY TABLE IF EXISTS `logo_existing`;
-CREATE TEMPORARY TABLE `logo_existing` (list_key varchar(32) PRIMARY KEY);
-INSERT INTO `logo_existing` SELECT DISTINCT list_key FROM `logo_lists`;
+-- Which strips already hold rows, captured before any insert so a second run
+-- adds nothing. These are session variables rather than a temporary table:
+-- MySQL refuses to reference a TEMPORARY table twice in one statement
+-- (error 1137), and a guard subquery would be the second reference.
+SET @have_affiliations := (SELECT COUNT(*) FROM logo_lists WHERE list_key = 'affiliations');
+SET @have_accreditation := (SELECT COUNT(*) FROM logo_lists WHERE list_key = 'about_accreditation');
+SET @have_brands := (SELECT COUNT(*) FROM logo_lists WHERE list_key = 'cal_brands');
+SET @have_legacy_aff := (SELECT COUNT(*) FROM logo_lists
+                          WHERE list_key IN ('index_affiliations','services_affiliations','about_affiliations'));
 
 -- ── Affiliations ──────────────────────────────────────────────────────
 -- One list, shown on the home page, Our Services and About Us. Those were
@@ -75,7 +78,8 @@ SELECT MIN(logo_path), MIN(url), MIN(alt), MIN(sort_order)
  GROUP BY UPPER(alt);
 
 -- Otherwise seed from the keys the strips used to live in, falling back to the
--- code defaults for any key never saved through the CMS.
+-- code defaults for any key never saved through the CMS. Guarded on the
+-- variable above, not on aff_seed, which this statement already writes to.
 INSERT INTO `aff_seed` (logo_path, url, alt, sort_order)
 SELECT COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = d.k_logo), ''), d.d_logo),
        COALESCE((SELECT content FROM page_content WHERE page_key = d.k_url), d.d_url),
@@ -98,13 +102,13 @@ FROM (
     UNION ALL SELECT 'about_affiliation_6_logo','about_affiliation_6_url','about_affiliation_6_alt',11,'assets/img/WTO.png','https://www.wto.org','WTO'
     UNION ALL SELECT 'about_affiliation_7_logo','about_affiliation_7_url','about_affiliation_7_alt',12,'assets/img/AP.png','','AP'
 ) AS d
-WHERE NOT EXISTS (SELECT 1 FROM (SELECT 1 FROM `aff_seed` LIMIT 1) AS probe);
+WHERE @have_legacy_aff = 0;
 
 INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
 SELECT 'affiliations', logo_path, url, alt, sort_order, 1
   FROM `aff_seed`
  WHERE logo_path <> ''
-   AND 'affiliations' NOT IN (SELECT list_key FROM `logo_existing`);
+   AND @have_affiliations = 0;
 
 -- The per-page lists are no longer read by anything; their rows were carried
 -- into `affiliations` above.
@@ -133,7 +137,7 @@ SELECT * FROM (
     FROM `logo_seed` s
 ) AS seed
 WHERE seed.logo_path <> ''
-  AND seed.list_key NOT IN (SELECT list_key FROM `logo_existing`);
+  AND @have_accreditation = 0;
 
 -- Calibration brands: logo only, no link.
 INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
@@ -149,10 +153,9 @@ SELECT * FROM (
           UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20) AS n
 ) AS seed
 WHERE seed.logo_path <> ''
-  AND 'cal_brands' NOT IN (SELECT list_key FROM `logo_existing`);
+  AND @have_brands = 0;
 
 DROP TEMPORARY TABLE IF EXISTS `logo_seed`;
-DROP TEMPORARY TABLE IF EXISTS `logo_existing`;
 
 -- ── 2 ─────────────────────────────────────────────────────────────────
 -- certified_organisations serves three logo grids, not one
@@ -180,6 +183,11 @@ SET @sql := IF(
 );
 PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
+-- Captured before the insert below. A subquery on certified_organisations
+-- inside an INSERT targeting it is refused by MySQL (error 1093), and the
+-- derived-table workaround is not portable enough to rely on.
+SET @have_product_orgs := (SELECT COUNT(*) FROM certified_organisations WHERE scheme = 'product');
+
 -- The three producers that were hardcoded in product.php. Their logos were
 -- resolved by filename from assets/img/clients/; the same paths are stored
 -- here, and any that don't exist on disk simply render as a wordmark.
@@ -192,7 +200,7 @@ SELECT * FROM (
     UNION ALL SELECT 'product', 'Lubombo Eco Products — Spice Girls', 'SZNS CODEXSTAN 306:2015',
            'Chilli Sauce', 'assets/img/clients/lubombo-spice-girls.png', 30, 1
 ) AS seed
-WHERE NOT EXISTS (SELECT 1 FROM (SELECT id FROM `certified_organisations` WHERE scheme = 'product' LIMIT 1) AS probe);
+WHERE @have_product_orgs = 0;
 
 -- ── 3 ─────────────────────────────────────────────────────────────────
 -- Per-training calendar colour
