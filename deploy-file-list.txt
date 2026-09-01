@@ -1,5 +1,5 @@
 ESWASA CMS — files to upload to production
-Baseline: cc0793e   Target: 7ecb852   Generated: 2026-09-01
+Baseline: cc0793e   Target: bdbd119   Generated: 2026-09-01
 
 DO NOT UPLOAD:
   includes/env.php   <- holds YOUR live database password. The copy in the
@@ -11,26 +11,25 @@ Take a dump first:
 Run after uploading:
   mysql -u eswasa1 -p admin_eswasa < admin/sql/upgrade_2026_09_01.sql
 
-The migration is additive and idempotent: it adds two tables and four columns,
-seeds them from the values the pages used to hardcode, and drops nothing.
-Running it twice is harmless.
+The migration is additive and idempotent: it adds three tables and four
+columns, seeds them from the values the pages used to hardcode, and drops
+nothing. Running it twice is harmless.
 
-Three new public URLs (already added to sitemap.xml):
+These upload directories must exist and be writable by the web server
+(the code creates them, but only if the parent is writable):
+  admin/uploads/logos/      affiliation, accreditation and brand logos
+  admin/uploads/orgs/       certified organisation and producer logos
+  admin/uploads/register/   certification register client logos
+  admin/uploads/vacancies/  vacancy advert PDFs
+
+Three new public URLs (already in sitemap.xml):
   certification-status-management-systems.php
   certification-status-product.php
   certification-status-ingelo.php
 certification-status.php still works — it is now a hub listing the three.
 
-NEW     admin/pages/_cert_register_crud.php
-NEW     admin/pages/_cert_register_ui.php
-NEW     admin/pages/_certified_orgs_crud.php
-NEW     admin/pages/_certified_orgs_ui.php
-NEW     admin/sql/upgrade_2026_09_01.sql
-NEW     certification-status-ingelo.php
-NEW     certification-status-management-systems.php
-NEW     certification-status-product.php
-NEW     includes/cert_register_page.php
-mod     Certification.php
+40 files:
+
 NEW     admin/pages/_cert_register_crud.php
 NEW     admin/pages/_cert_register_ui.php
 NEW     admin/pages/_certified_orgs_crud.php
@@ -43,23 +42,6 @@ NEW     certification-status-management-systems.php
 NEW     certification-status-product.php
 NEW     includes/cert_register_page.php
 NEW     includes/logo_lists.php
-mod     Calibration.php
-mod     Certification.php
-mod     about-us.php
-NEW     admin/pages/_cert_register_crud.php
-NEW     admin/pages/_cert_register_ui.php
-NEW     admin/pages/_certified_orgs_crud.php
-NEW     admin/pages/_certified_orgs_ui.php
-NEW     admin/pages/_logo_list_crud.php
-NEW     admin/pages/_logo_list_ui.php
-NEW     admin/sql/upgrade_2026_09_01.sql
-NEW     certification-status-ingelo.php
-NEW     certification-status-management-systems.php
-NEW     certification-status-product.php
-NEW     includes/cert_register_page.php
-NEW     includes/logo_lists.php
-mod     Calibration.php
-mod     Certification.php
 mod     about-us.php
 mod     admin/includes/sidebar.php
 mod     admin/index.php
@@ -73,7 +55,9 @@ mod     admin/pages/product.php
 mod     admin/pages/services_edit.php
 mod     admin/pages/training_calendar.php
 mod     admin/pages/vacancies_edit.php
+mod     Calibration.php
 mod     certification-status.php
+mod     Certification.php
 mod     includes/cms_helpers.php
 mod     includes/cms_keys_about.php
 mod     includes/footer.php
