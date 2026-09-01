@@ -1,5 +1,5 @@
 ESWASA CMS — files to upload to production
-Baseline: cc0793e   Target: b545637   Generated: 2026-09-01
+Baseline: cc0793e   Target: 7ecb852   Generated: 2026-09-01
 
 DO NOT UPLOAD:
   includes/env.php   <- holds YOUR live database password. The copy in the
@@ -31,6 +31,21 @@ NEW     certification-status-management-systems.php
 NEW     certification-status-product.php
 NEW     includes/cert_register_page.php
 mod     Certification.php
+NEW     admin/pages/_cert_register_crud.php
+NEW     admin/pages/_cert_register_ui.php
+NEW     admin/pages/_certified_orgs_crud.php
+NEW     admin/pages/_certified_orgs_ui.php
+NEW     admin/pages/_logo_list_crud.php
+NEW     admin/pages/_logo_list_ui.php
+NEW     admin/sql/upgrade_2026_09_01.sql
+NEW     certification-status-ingelo.php
+NEW     certification-status-management-systems.php
+NEW     certification-status-product.php
+NEW     includes/cert_register_page.php
+NEW     includes/logo_lists.php
+mod     Calibration.php
+mod     Certification.php
+mod     about-us.php
 NEW     admin/pages/_cert_register_crud.php
 NEW     admin/pages/_cert_register_ui.php
 NEW     admin/pages/_certified_orgs_crud.php
