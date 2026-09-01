@@ -55,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_services'])) {
 
 // ── Affiliations ──────────────────────────────────────────────
 // Managed by the shared logo-strip partial rather than five fixed slots.
-$LL_KEY = 'services_affiliations';
+$LL_KEY  = 'affiliations';
+$LL_PAGE = 'services_edit.php';
 require __DIR__ . '/_logo_list_crud.php';
 
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));

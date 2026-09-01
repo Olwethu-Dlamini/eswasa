@@ -192,7 +192,8 @@ $image_keys = $mark_image_keys;
 // ── Affiliations ──────────────────────────────────────────────
 // Handled by the shared logo-strip partial, the same one the Services,
 // About Us and Scales & Metrology pages use.
-$LL_KEY = 'index_affiliations';
+$LL_KEY  = 'affiliations';
+$LL_PAGE = 'index_edit.php';
 require __DIR__ . '/_logo_list_crud.php';
 
 $pc = pc_get_many($conn, array_merge($text_keys, $url_keys, $image_keys));

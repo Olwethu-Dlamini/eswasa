@@ -22,6 +22,9 @@ $ll_p    = 'll_' . $LL_KEY . '_';
         <?php endif; ?>
     </div>
     <div class="card-body">
+        <?php if (!empty($LL_CFG['note'])): ?>
+            <p class="text-muted small mb-3"><i class="fas fa-info-circle me-1"></i><?= pc_h($LL_CFG['note']) ?></p>
+        <?php endif; ?>
 
         <?php if ($ll_edit || $ll_is_new):
             $r = $ll_edit ?: [

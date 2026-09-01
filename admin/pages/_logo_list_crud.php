@@ -18,6 +18,9 @@ if (!isset($LOGO_LISTS[$LL_KEY ?? ''])) {
     exit('_logo_list_crud.php included without a valid $LL_KEY.');
 }
 $LL_CFG  = $LOGO_LISTS[$LL_KEY];
+// A shared list is managed from more than one admin page, so each sets
+// $LL_PAGE to itself and every redirect comes back to where the editor was.
+if (!empty($LL_PAGE)) $LL_CFG['page'] = $LL_PAGE;
 $LL_NOUN = $LL_CFG['noun'];
 $ll_self = 'index.php?page=' . $LL_CFG['page'];
 $ll_p    = 'll_' . $LL_KEY . '_';   // per-list parameter prefix

@@ -618,7 +618,7 @@ function render_paragraphs($text) {
                     // About Us editor), so the strip is an add/remove list rather than
                     // ten fixed slots. See spec B2 for the previous arrangement.
                     $affs = [];
-                    foreach (logo_list_rows($conn, 'about_affiliations') as $row) {
+                    foreach (logo_list_rows($conn, 'affiliations') as $row) {
                         $affs[] = ['src' => $row['logo_path'], 'alt' => $row['alt'], 'href' => $row['url']];
                     }
                     foreach (array_merge($affs, $affs) as $a): ?>

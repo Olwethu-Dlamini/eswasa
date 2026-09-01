@@ -55,36 +55,73 @@ DROP TEMPORARY TABLE IF EXISTS `logo_existing`;
 CREATE TEMPORARY TABLE `logo_existing` (list_key varchar(32) PRIMARY KEY);
 INSERT INTO `logo_existing` SELECT DISTINCT list_key FROM `logo_lists`;
 
+-- ── Affiliations ──────────────────────────────────────────────────────
+-- One list, shown on the home page, Our Services and About Us. Those were
+-- three hand-maintained lists of the same standards bodies that had drifted
+-- to 10, 5 and 8 entries; the union is 12, deduplicated on the name (About
+-- spelled SADCSTAN in lower case).
+DROP TEMPORARY TABLE IF EXISTS `aff_seed`;
+CREATE TEMPORARY TABLE `aff_seed` (
+  logo_path varchar(500), url varchar(500), alt varchar(200), sort_order int
+);
+
+-- If an earlier, unreleased revision of this file created the three per-page
+-- lists, carry those rows over rather than the defaults below, so anything
+-- edited since is kept. Deduplicated on the name, case-insensitively.
+INSERT INTO `aff_seed` (logo_path, url, alt, sort_order)
+SELECT MIN(logo_path), MIN(url), MIN(alt), MIN(sort_order)
+  FROM `logo_lists`
+ WHERE list_key IN ('index_affiliations','services_affiliations','about_affiliations')
+ GROUP BY UPPER(alt);
+
+-- Otherwise seed from the keys the strips used to live in, falling back to the
+-- code defaults for any key never saved through the CMS.
+INSERT INTO `aff_seed` (logo_path, url, alt, sort_order)
+SELECT COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = d.k_logo), ''), d.d_logo),
+       COALESCE((SELECT content FROM page_content WHERE page_key = d.k_url), d.d_url),
+       COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = d.k_alt), ''), d.d_alt),
+       d.n * 10
+FROM (
+    SELECT 'index_affiliation_1_logo'  AS k_logo,'index_affiliation_1_url'  AS k_url,'index_affiliation_1_alt'  AS k_alt, 1 AS n,'admin/uploads/iso.png'       AS d_logo,'https://www.iso.org/'      AS d_url,'ISO'      AS d_alt
+    UNION ALL SELECT 'index_affiliation_2_logo','index_affiliation_2_url','index_affiliation_2_alt', 2,'admin/uploads/iec.png','https://www.iec.ch/','IEC'
+    UNION ALL SELECT 'index_affiliation_3_logo','index_affiliation_3_url','index_affiliation_3_alt', 3,'admin/uploads/itu.png','https://www.itu.int/','ITU'
+    UNION ALL SELECT 'index_affiliation_4_logo','index_affiliation_4_url','index_affiliation_4_alt', 4,'assets/img/iaf.webp','https://iaf.nu/','IAF'
+    UNION ALL SELECT 'index_affiliation_5_logo','index_affiliation_5_url','index_affiliation_5_alt', 5,'assets/img/ILAC.jpg','https://ilac.org/','ILAC'
+    UNION ALL SELECT 'index_affiliation_6_logo','index_affiliation_6_url','index_affiliation_6_alt', 6,'admin/uploads/arso-2024.png','https://www.arso-org.org/','ARSO'
+    UNION ALL SELECT 'index_affiliation_7_logo','index_affiliation_7_url','index_affiliation_7_alt', 7,'assets/img/SADCAS.png','https://www.sadcas.org/','SADCAS'
+    UNION ALL SELECT 'index_affiliation_8_logo','index_affiliation_8_url','index_affiliation_8_alt', 8,'assets/img/sadc.webp','https://www.sadc.int/','SADC'
+    UNION ALL SELECT 'index_affiliation_9_logo','index_affiliation_9_url','index_affiliation_9_alt', 9,'assets/img/sadcstan.jpg','https://www.sadcstan.org/','SADCSTAN'
+    UNION ALL SELECT 'index_affiliation_10_logo','index_affiliation_10_url','index_affiliation_10_alt',10,'admin/uploads/astm.png','https://www.astm.org/','ASTM'
+    -- Only on About Us before the merge. Its logos were never saved to
+    -- page_content — they existed solely as code defaults — so these two
+    -- carry the values recovered from the page.
+    UNION ALL SELECT 'about_affiliation_6_logo','about_affiliation_6_url','about_affiliation_6_alt',11,'assets/img/WTO.png','https://www.wto.org','WTO'
+    UNION ALL SELECT 'about_affiliation_7_logo','about_affiliation_7_url','about_affiliation_7_alt',12,'assets/img/AP.png','','AP'
+) AS d
+WHERE NOT EXISTS (SELECT 1 FROM (SELECT 1 FROM `aff_seed` LIMIT 1) AS probe);
+
+INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
+SELECT 'affiliations', logo_path, url, alt, sort_order, 1
+  FROM `aff_seed`
+ WHERE logo_path <> ''
+   AND 'affiliations' NOT IN (SELECT list_key FROM `logo_existing`);
+
+-- The per-page lists are no longer read by anything; their rows were carried
+-- into `affiliations` above.
+DELETE FROM `logo_lists`
+ WHERE list_key IN ('index_affiliations','services_affiliations','about_affiliations');
+
+DROP TEMPORARY TABLE IF EXISTS `aff_seed`;
+
+-- ── Accreditation (About Us) and supplier brands (Scales & Metrology) ──
 DROP TEMPORARY TABLE IF EXISTS `logo_seed`;
 CREATE TEMPORARY TABLE `logo_seed` (
   list_key varchar(32), old_prefix varchar(40), n int,
   d_logo varchar(500), d_url varchar(500), d_alt varchar(200)
 );
 INSERT INTO `logo_seed` VALUES
- ('index_affiliations','index_affiliation_', 1,'admin/uploads/iso.png','https://www.iso.org/','ISO'),
- ('index_affiliations','index_affiliation_', 2,'admin/uploads/iec.png','https://www.iec.ch/','IEC'),
- ('index_affiliations','index_affiliation_', 3,'admin/uploads/itu.png','https://www.itu.int/','ITU'),
- ('index_affiliations','index_affiliation_', 4,'assets/img/iaf.webp','https://iaf.nu/','IAF'),
- ('index_affiliations','index_affiliation_', 5,'assets/img/ILAC.jpg','https://ilac.org/','ILAC'),
- ('index_affiliations','index_affiliation_', 6,'admin/uploads/arso-2024.png','https://www.arso-org.org/','ARSO'),
- ('index_affiliations','index_affiliation_', 7,'assets/img/SADCAS.png','https://www.sadcas.org/','SADCAS'),
- ('index_affiliations','index_affiliation_', 8,'assets/img/sadc.webp','https://www.sadc.int/','SADC'),
- ('index_affiliations','index_affiliation_', 9,'assets/img/sadcstan.jpg','https://www.sadcstan.org/','SADCSTAN'),
- ('index_affiliations','index_affiliation_',10,'admin/uploads/astm.png','https://www.astm.org/','ASTM');
-
--- services_affil_N uses _img rather than _logo; handled by its own pass below.
-INSERT INTO `logo_seed` VALUES
- ('about_affiliations','about_affiliation_', 1,'admin/uploads/itu.png','https://www.itu.int/','ITU'),
- ('about_affiliations','about_affiliation_', 2,'admin/uploads/iso.png','https://www.iso.org/','ISO'),
- ('about_affiliations','about_affiliation_', 3,'admin/uploads/iec.png','https://www.iec.ch/','IEC'),
- ('about_affiliations','about_affiliation_', 4,'admin/uploads/arso-2024.png','https://www.arso-org.org/','ARSO'),
- ('about_affiliations','about_affiliation_', 5,'admin/uploads/astm.png','https://www.astm.org/','ASTM'),
- ('about_affiliations','about_affiliation_', 6,'assets/img/WTO.png','https://www.wto.org','WTO'),
- ('about_affiliations','about_affiliation_', 7,'assets/img/AP.png','','AP'),
- ('about_affiliations','about_affiliation_', 8,'assets/img/sadcstan.jpg','','sadcstan'),
  ('about_accreditation','about_accreditation_',1,'assets/img/SADCAS.png','https://www.sadcas.org','SADCAS');
 
--- Strips whose logo key ends in _logo.
 INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
 SELECT * FROM (
     SELECT s.list_key,
@@ -97,19 +134,6 @@ SELECT * FROM (
 ) AS seed
 WHERE seed.logo_path <> ''
   AND seed.list_key NOT IN (SELECT list_key FROM `logo_existing`);
-
--- Services uses _img for the logo key.
-INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
-SELECT * FROM (
-    SELECT 'services_affiliations' AS list_key,
-           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT('services_affil_', n.n, '_img')), ''), '') AS logo_path,
-           COALESCE((SELECT content FROM page_content WHERE page_key = CONCAT('services_affil_', n.n, '_url')), '') AS url,
-           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT('services_affil_', n.n, '_alt')), ''), '') AS alt,
-           n.n * 10 AS sort_order, 1 AS is_active
-    FROM (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) AS n
-) AS seed
-WHERE seed.logo_path <> ''
-  AND 'services_affiliations' NOT IN (SELECT list_key FROM `logo_existing`);
 
 -- Calibration brands: logo only, no link.
 INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)

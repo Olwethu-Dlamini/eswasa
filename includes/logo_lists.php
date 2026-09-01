@@ -18,11 +18,18 @@
 //   page    the admin page that manages the list
 //   label   heading shown above the manager
 $LOGO_LISTS = [
-    'index_affiliations'    => ['noun' => 'affiliation', 'url' => true,  'page' => 'index_edit.php',       'label' => 'Affiliations'],
-    'services_affiliations' => ['noun' => 'affiliation', 'url' => true,  'page' => 'services_edit.php',    'label' => 'Affiliations'],
-    'about_affiliations'    => ['noun' => 'affiliation', 'url' => true,  'page' => 'about_edit.php',       'label' => 'Affiliations'],
-    'about_accreditation'   => ['noun' => 'accrediting body', 'url' => true, 'page' => 'about_edit.php',   'label' => 'Accreditation'],
-    'cal_brands'            => ['noun' => 'brand',       'url' => false, 'page' => 'calibration_edit.php', 'label' => 'Brands We Supply and Service'],
+    // One affiliations list, shown on the home page, Our Services and About Us.
+    // These were three separate lists of the same standards bodies, maintained
+    // by hand, and they had drifted apart — 10, 5 and 8 entries. Editable from
+    // any of the three admin pages; `page` is overridden per page via $LL_PAGE
+    // so each redirects back to itself.
+    'affiliations'        => ['noun' => 'affiliation', 'url' => true,  'page' => 'index_edit.php',
+                              'label' => 'Affiliations',
+                              'note'  => 'Shared by the home page, Our Services and About Us — a change here shows on all three.'],
+    'about_accreditation' => ['noun' => 'accrediting body', 'url' => true, 'page' => 'about_edit.php',
+                              'label' => 'Accreditation'],
+    'cal_brands'          => ['noun' => 'brand', 'url' => false, 'page' => 'calibration_edit.php',
+                              'label' => 'Brands We Supply and Service'],
 ];
 
 if (!function_exists('logo_list_rows')) {

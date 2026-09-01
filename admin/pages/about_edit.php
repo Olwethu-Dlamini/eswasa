@@ -130,11 +130,13 @@ $keys = $about_keys;
 // Managed by the shared logo-strip partial rather than ten and four
 // fixed slots. Two lists on one page, so each namespaces its own
 // query-string parameters.
-$LL_KEY = 'about_affiliations';
+$LL_KEY  = 'affiliations';
+$LL_PAGE = 'about_edit.php';
 require __DIR__ . '/_logo_list_crud.php';
 $about_aff = ['cfg' => $LL_CFG, 'rows' => $ll_rows, 'edit' => $ll_edit, 'new' => $ll_is_new, 'key' => $LL_KEY];
 
-$LL_KEY = 'about_accreditation';
+$LL_KEY  = 'about_accreditation';
+$LL_PAGE = 'about_edit.php';
 require __DIR__ . '/_logo_list_crud.php';
 $about_acc = ['cfg' => $LL_CFG, 'rows' => $ll_rows, 'edit' => $ll_edit, 'new' => $ll_is_new, 'key' => $LL_KEY];
 

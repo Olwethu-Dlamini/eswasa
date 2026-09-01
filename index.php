@@ -62,7 +62,7 @@ $pc_defaults = [
 // ── Affiliation logos (DB-driven; edited via admin → Home Page) ──────────────
 // Moved out of page_content so the slider isn't capped at a fixed slot count.
 require_once __DIR__ . '/includes/logo_lists.php';
-$index_affiliations = logo_list_rows($conn, 'index_affiliations');
+$index_affiliations = logo_list_rows($conn, 'affiliations');
 
 $pc = pc_get_many($conn, $pc_keys, $pc_defaults);
 

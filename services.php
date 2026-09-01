@@ -5,7 +5,7 @@ require_once __DIR__ . '/includes/cms_helpers.php';
 
 // ── Affiliation logos (DB-driven; edited via admin → Our Services) ──────────
 require_once __DIR__ . '/includes/logo_lists.php';
-$services_affiliations = logo_list_rows($conn, 'services_affiliations');
+$services_affiliations = logo_list_rows($conn, 'affiliations');
 
 $pc = pc_get_many($conn, [
     // Breadcrumb / hero

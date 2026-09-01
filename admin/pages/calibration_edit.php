@@ -82,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cal'])) {
 // ── Brands ────────────────────────────────────────────────────
 // Managed by the shared logo-strip partial. Was twenty fixed slots, of
 // which eight were always empty. Brands are logos only, no link.
-$LL_KEY = 'cal_brands';
+$LL_KEY  = 'cal_brands';
+$LL_PAGE = 'calibration_edit.php';
 require __DIR__ . '/_logo_list_crud.php';
 
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
