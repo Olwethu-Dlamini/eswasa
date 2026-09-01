@@ -3,6 +3,10 @@ include_once 'includes/db_connect.php';
 include_once 'includes/breadcrumb_helper.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
 
+// ── Affiliation logos (DB-driven; edited via admin → Our Services) ──────────
+require_once __DIR__ . '/includes/logo_lists.php';
+$services_affiliations = logo_list_rows($conn, 'services_affiliations');
+
 $pc = pc_get_many($conn, [
     // Breadcrumb / hero
     'services_breadcrumb_title',
@@ -27,12 +31,7 @@ $pc = pc_get_many($conn, [
     'services_affil_title',
     'services_affil_subtitle',
 
-    // Affiliations (5)
-    'services_affil_1_img', 'services_affil_1_alt', 'services_affil_1_url',
-    'services_affil_2_img', 'services_affil_2_alt', 'services_affil_2_url',
-    'services_affil_3_img', 'services_affil_3_alt', 'services_affil_3_url',
-    'services_affil_4_img', 'services_affil_4_alt', 'services_affil_4_url',
-    'services_affil_5_img', 'services_affil_5_alt', 'services_affil_5_url',
+    // Affiliation logos live in the logo_lists table, not page_content.
 ], [
     'services_breadcrumb_title' => 'Our Services',
 
@@ -72,25 +71,10 @@ $pc = pc_get_many($conn, [
     'services_affil_title'    => 'Our Affiliations',
     'services_affil_subtitle' => 'Partnering for Excellence',
 
-    'services_affil_1_img' => 'admin/uploads/itu.png',
-    'services_affil_1_alt' => 'ITU',
-    'services_affil_1_url' => 'https://www.itu.int/',
 
-    'services_affil_2_img' => 'admin/uploads/iso.png',
-    'services_affil_2_alt' => 'ISO',
-    'services_affil_2_url' => 'https://www.iso.org/',
 
-    'services_affil_3_img' => 'admin/uploads/iec.png',
-    'services_affil_3_alt' => 'IEC',
-    'services_affil_3_url' => 'https://www.iec.ch/',
 
-    'services_affil_4_img' => 'admin/uploads/arso-2024.png',
-    'services_affil_4_alt' => 'ARSO',
-    'services_affil_4_url' => 'https://www.arso-org.org/',
 
-    'services_affil_5_img' => 'admin/uploads/astm.png',
-    'services_affil_5_alt' => 'ASTM',
-    'services_affil_5_url' => 'https://www.astm.org/',
 ]);
 ?>
 <!doctype html>
@@ -500,15 +484,21 @@ $pc = pc_get_many($conn, [
                 <!-- Horizontal Slider -->
                 <div class="affiliations-slider position-relative overflow-hidden">
                     <div class="slider-track d-flex flex-nowrap">
-                        <?php for ($pass = 0; $pass < 2; $pass++): ?>
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <?php // Render twice for the seamless infinite scroll.
+                        for ($pass = 0; $pass < 2; $pass++):
+                            foreach ($services_affiliations as $aff):
+                                $aff_url = trim((string)$aff['url']); ?>
                                 <div class="slider-item px-3">
-                                    <a href="<?= pc_h($pc['services_affil_' . $i . '_url']) ?>" target="_blank" rel="noopener noreferrer">
-                                        <img src="<?= pc_h(pc_image_src($pc['services_affil_' . $i . '_img'], 'assets/img/logo/ESWASA_LOGO.jpg')) ?>" alt="<?= pc_h($pc['services_affil_' . $i . '_alt']) ?>" class="img-fluid affiliation-logo">
+                                    <?php if ($aff_url !== ''): ?>
+                                    <a href="<?= pc_h($aff_url) ?>" target="_blank" rel="noopener noreferrer"<?= $pass === 1 ? ' aria-hidden="true" tabindex="-1"' : '' ?>>
+                                        <img src="<?= pc_h(pc_image_src($aff['logo_path'], 'assets/img/logo/ESWASA_LOGO.jpg')) ?>" alt="<?= pc_h($aff['alt']) ?>" class="img-fluid affiliation-logo">
                                     </a>
+                                    <?php else: ?>
+                                        <img src="<?= pc_h(pc_image_src($aff['logo_path'], 'assets/img/logo/ESWASA_LOGO.jpg')) ?>" alt="<?= pc_h($aff['alt']) ?>" class="img-fluid affiliation-logo"<?= $pass === 1 ? ' aria-hidden="true"' : '' ?>>
+                                    <?php endif; ?>
                                 </div>
-                            <?php endfor; ?>
-                        <?php endfor; ?>
+                            <?php endforeach;
+                        endfor; ?>
                     </div>
                 </div>
             </div>

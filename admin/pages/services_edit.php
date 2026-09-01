@@ -28,20 +28,9 @@ $text_keys = [
     'services_affil_title',
     'services_affil_subtitle',
 
-    // Affiliations (5) — alt / url (image is separate)
-    'services_affil_1_alt', 'services_affil_1_url',
-    'services_affil_2_alt', 'services_affil_2_url',
-    'services_affil_3_alt', 'services_affil_3_url',
-    'services_affil_4_alt', 'services_affil_4_url',
-    'services_affil_5_alt', 'services_affil_5_url',
-];
+    ];
 
 $image_keys = [
-    'services_affil_1_img',
-    'services_affil_2_img',
-    'services_affil_3_img',
-    'services_affil_4_img',
-    'services_affil_5_img',
 ];
 
 // ── Save handler ─────────────────────────────────────────────
@@ -63,6 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_services'])) {
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Saved.');
     redirect_self();
 }
+
+// ── Affiliations ──────────────────────────────────────────────
+// Managed by the shared logo-strip partial rather than five fixed slots.
+$LL_KEY = 'services_affiliations';
+require __DIR__ . '/_logo_list_crud.php';
 
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 
@@ -167,43 +161,11 @@ $card_labels = [
         </div>
     </div>
 
-    <!-- Affiliation Logos (5) -->
-    <?php for ($i = 1; $i <= 5; $i++): ?>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Affiliation <?= $i ?></h5>
-            <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label">Logo Image</label>
-                    <div class="mb-2">
-                        <img data-crop-preview="services_affil_<?= $i ?>_img_preview"
-                             src="<?= !empty($pc['services_affil_' . $i . '_img']) ? '../' . pc_h(pc_image_src($pc['services_affil_' . $i . '_img'])) : '' ?>"
-                             style="max-height:100px;border:1px solid #ddd;background:#fff;padding:8px;<?= empty($pc['services_affil_' . $i . '_img']) ? 'display:none;' : '' ?>"
-                             onload="this.style.display='inline-block'" alt="">
-                    </div>
-                    <input type="file" name="services_affil_<?= $i ?>_img_file" accept="image/*" class="form-control crop-input"
-                           data-crop-label="Affiliation <?= $i ?> Logo">
-                    <input type="hidden" name="services_affil_<?= $i ?>_img_cropped">
-                    <div class="form-text">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
-                </div>
-                <div class="col-md-8">
-                    <div class="mb-3">
-                        <label class="form-label">Alt Text / Name</label>
-                        <input type="text" name="services_affil_<?= $i ?>_alt" class="form-control" value="<?= pc_h($pc['services_affil_' . $i . '_alt']) ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">External URL</label>
-                        <input type="url" name="services_affil_<?= $i ?>_url" class="form-control" value="<?= pc_h($pc['services_affil_' . $i . '_url']) ?>">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php endfor; ?>
-
     <div class="mt-4 pt-3 border-top text-end">
         <button type="submit" name="save_services" value="1" class="btn btn-primary px-5 shadow-sm">
             <i class="fas fa-save me-2"></i>Save Changes
         </button>
     </div>
 </form>
+
+<?php require __DIR__ . '/_logo_list_ui.php'; ?>

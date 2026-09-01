@@ -12,6 +12,7 @@ require_once('includes/cms_helpers.php');
 // See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2).
 require_once('includes/breadcrumb_helper.php');
 
+require_once('includes/logo_lists.php');
 require_once('includes/cms_keys_about.php');
 $keys = $about_keys;
 
@@ -613,19 +614,12 @@ function render_paragraphs($text) {
             <div class="affiliations-slider overflow-hidden">
                 <div class="slider-track d-flex flex-nowrap">
                     <?php
-                    // Logos come from page_content (Affiliations section of the About Us
-                    // editor) rather than a hardcoded array. Ten slots; blank ones are
-                    // skipped, so the strip length changes without a code edit.
-                    // See docs/superpowers/specs/2026-08-18-cms-batch-b-design.md (B2).
+                    // Logos come from the logo_lists table (Affiliations manager on the
+                    // About Us editor), so the strip is an add/remove list rather than
+                    // ten fixed slots. See spec B2 for the previous arrangement.
                     $affs = [];
-                    for ($i = 1; $i <= 10; $i++) {
-                        $src = trim((string)($pc["about_affiliation_{$i}_logo"] ?? ''));
-                        if ($src === '') continue;
-                        $affs[] = [
-                            'src'  => $src,
-                            'alt'  => (string)($pc["about_affiliation_{$i}_alt"] ?? ''),
-                            'href' => (string)($pc["about_affiliation_{$i}_url"] ?? ''),
-                        ];
+                    foreach (logo_list_rows($conn, 'about_affiliations') as $row) {
+                        $affs[] = ['src' => $row['logo_path'], 'alt' => $row['alt'], 'href' => $row['url']];
                     }
                     foreach (array_merge($affs, $affs) as $a): ?>
                     <div class="slider-item">
@@ -650,16 +644,10 @@ function render_paragraphs($text) {
             <div class="affiliations-slider overflow-hidden">
                 <div class="slider-track slider-track--static d-flex flex-nowrap justify-content-center">
                     <?php
-                    // Accreditation logos — same pattern, four slots. See spec B2.
+                    // Accreditation logos — same manager, its own list key.
                     $accs = [];
-                    for ($i = 1; $i <= 4; $i++) {
-                        $src = trim((string)($pc["about_accreditation_{$i}_logo"] ?? ''));
-                        if ($src === '') continue;
-                        $accs[] = [
-                            'src'  => $src,
-                            'alt'  => (string)($pc["about_accreditation_{$i}_alt"] ?? ''),
-                            'href' => (string)($pc["about_accreditation_{$i}_url"] ?? ''),
-                        ];
+                    foreach (logo_list_rows($conn, 'about_accreditation') as $row) {
+                        $accs[] = ['src' => $row['logo_path'], 'alt' => $row['alt'], 'href' => $row['url']];
                     }
                     foreach ($accs as $a): ?>
                     <div class="slider-item">

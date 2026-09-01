@@ -32,18 +32,6 @@ $cal_keys = [
 
     // Section 5 — Brands
     'cal_brands_title',
-    'cal_brand_1_image',  'cal_brand_1_alt',
-    'cal_brand_2_image',  'cal_brand_2_alt',
-    'cal_brand_3_image',  'cal_brand_3_alt',
-    'cal_brand_4_image',  'cal_brand_4_alt',
-    'cal_brand_5_image',  'cal_brand_5_alt',
-    'cal_brand_6_image',  'cal_brand_6_alt',
-    'cal_brand_7_image',  'cal_brand_7_alt',
-    'cal_brand_8_image',  'cal_brand_8_alt',
-    'cal_brand_9_image',  'cal_brand_9_alt',
-    'cal_brand_10_image', 'cal_brand_10_alt',
-    'cal_brand_11_image', 'cal_brand_11_alt',
-    'cal_brand_12_image', 'cal_brand_12_alt',
     // Slots 13-20 are spare capacity so brands can be added from the CMS
     // without a code change. Empty slots render nothing. See spec C1.
 
@@ -59,11 +47,6 @@ $cal_keys = [
     'cal_cta_btn1_label', 'cal_cta_btn1_url',
     'cal_cta_btn2_label', 'cal_cta_btn2_url',
 ];
-for ($i = 13; $i <= 20; $i++) {
-    $cal_keys[] = "cal_brand_{$i}_image";
-    $cal_keys[] = "cal_brand_{$i}_alt";
-}
-
 $cal_defaults = [
     'cal_breadcrumb_title' => 'Scales & Metrology Services',
 
@@ -129,6 +112,8 @@ $cal_defaults = [
     // rather than duplicating btn1's destination. See spec A1.
     'cal_cta_btn2_url'    => 'contact.php',
 ];
+
+require_once __DIR__ . '/includes/logo_lists.php';
 
 $pc = pc_get_many($conn, $cal_keys, $cal_defaults);
 ?>
@@ -429,19 +414,16 @@ $pc = pc_get_many($conn, $cal_keys, $cal_defaults);
     <div class="section-divider mb-4"></div>
       <div class="row g-4 justify-content-center">
           <?php
-          // One tile per non-empty brand slot. Twenty slots are available; the
-          // editor can clear any of them, and a cleared slot renders nothing —
-          // previously each slot was hardcoded with its own fallback image, so a
-          // brand could never actually be removed from the page.
-          // See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C1).
-          for ($i = 1; $i <= 20; $i++):
-              $bimg = trim((string)($pc["cal_brand_{$i}_image"] ?? ''));
-              if ($bimg === '') continue;
-          ?>
+          // One tile per brand, from the logo_lists table. Was twenty fixed
+          // page_content slots, so a twenty-first brand needed a code change and
+          // the editor faced eight empty slots.
+          // See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C1) for
+          // the previous arrangement.
+          foreach (logo_list_rows($conn, 'cal_brands') as $brand): ?>
           <div class="col-6 col-md-3 d-flex justify-content-center align-items-center">
-              <img src="<?= pc_h(pc_image_src($bimg)) ?>" alt="<?= pc_h($pc["cal_brand_{$i}_alt"] ?? '') ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
+              <img src="<?= pc_h(pc_image_src($brand['logo_path'])) ?>" alt="<?= pc_h($brand['alt']) ?>" class="img-fluid" style="max-height: 80px; object-fit: contain;">
           </div>
-          <?php endfor; ?>
+          <?php endforeach; ?>
       </div>
 </div>
 

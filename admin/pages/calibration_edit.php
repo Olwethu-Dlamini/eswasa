@@ -29,12 +29,8 @@ $text_keys = [
     'cal_purpose_1', 'cal_purpose_2', 'cal_purpose_3',
     'cal_purpose_4', 'cal_purpose_5', 'cal_purpose_6',
 
-    // Section 5 — Brands (alt text only; image keys handled below)
+    // Section 5 — Brands section heading (the logos live in logo_lists)
     'cal_brands_title',
-    'cal_brand_1_alt', 'cal_brand_2_alt', 'cal_brand_3_alt',
-    'cal_brand_4_alt', 'cal_brand_5_alt', 'cal_brand_6_alt',
-    'cal_brand_7_alt', 'cal_brand_8_alt', 'cal_brand_9_alt',
-    'cal_brand_10_alt', 'cal_brand_11_alt', 'cal_brand_12_alt',
     // 13-20 appended below the array.
 
     // Section 6 — FAQ
@@ -51,17 +47,7 @@ $text_keys = [
 ];
 
 $image_keys = [
-    'cal_brand_1_image',  'cal_brand_2_image',  'cal_brand_3_image',
-    'cal_brand_4_image',  'cal_brand_5_image',  'cal_brand_6_image',
-    'cal_brand_7_image',  'cal_brand_8_image',  'cal_brand_9_image',
-    'cal_brand_10_image', 'cal_brand_11_image', 'cal_brand_12_image',
-];
-// Spare brand capacity, so brands can be added without a code change.
-// See docs/superpowers/specs/2026-08-18-cms-batch-c-design.md (C1).
-for ($i = 13; $i <= 20; $i++) {
-    $text_keys[]  = "cal_brand_{$i}_alt";
-    $image_keys[] = "cal_brand_{$i}_image";
-}
+    ];
 
 // ── Save handler ──────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cal'])) {
@@ -92,6 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cal'])) {
     set_flash($errs ? 'danger' : 'success', $errs ? 'Save errors: ' . implode(', ', $errs) : 'Calibration page saved.');
     redirect_self();
 }
+
+// ── Brands ────────────────────────────────────────────────────
+// Managed by the shared logo-strip partial. Was twenty fixed slots, of
+// which eight were always empty. Brands are logos only, no link.
+$LL_KEY = 'cal_brands';
+require __DIR__ . '/_logo_list_crud.php';
 
 $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
 ?>
@@ -197,46 +189,9 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
                 <label class="form-label">Section title</label>
                 <input type="text" name="cal_brands_title" class="form-control" value="<?= pc_h($pc['cal_brands_title']) ?>">
             </div>
-            <div class="row g-3">
-                <?php for ($i = 1; $i <= 20; $i++):
-                    $img_key = 'cal_brand_' . $i . '_image';
-                    $alt_key = 'cal_brand_' . $i . '_alt';
-                    $current = $pc[$img_key] ?? '';
-                ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="border rounded p-3 h-100">
-                            <div class="fw-bold mb-2">Brand <?= $i ?></div>
-                            <div class="mb-2">
-                                <img data-crop-preview="<?= $img_key ?>_preview"
-                                     src="<?= !empty($current) ? '../' . pc_h(pc_image_src($current)) : '' ?>"
-                                     style="max-height:80px;max-width:100%;border:1px solid #ddd;background:#fff;padding:4px;<?= empty($current) ? 'display:none;' : '' ?>"
-                                     onload="this.style.display='inline-block'" alt="">
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label small mb-1">Alt text</label>
-                                <input type="text" name="<?= $alt_key ?>" class="form-control form-control-sm" value="<?= pc_h($pc[$alt_key]) ?>">
-                            </div>
-                            <div>
-                                <label class="form-label small mb-1">Replace image</label>
-                                <input type="file" name="<?= $img_key ?>_file" accept="image/*" class="form-control form-control-sm crop-input"
-                                       data-crop-label="Brand <?= $i ?> Logo">
-                                <input type="hidden" name="<?= $img_key ?>_cropped">
-                                <div class="form-text small">Pick an image &mdash; the cropper opens so you can trim it (free aspect). Leave empty to keep current.</div>
-                            </div>
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" value="1"
-                                       name="<?= $img_key ?>_remove" id="<?= $img_key ?>_remove"
-                                       <?= empty($current) ? 'disabled' : '' ?>>
-                                <label class="form-check-label small text-danger" for="<?= $img_key ?>_remove">
-                                    Remove this brand
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                <?php endfor; ?>
-            </div>
         </div>
     </div>
+
 
     <!-- Section 6 — FAQ -->
     <div class="card mb-3">
@@ -316,3 +271,5 @@ $pc = pc_get_many($conn, array_merge($text_keys, $image_keys));
         <button type="submit" name="save_cal" value="1" class="btn btn-primary px-5"><i class="fas fa-save me-2"></i>Save Changes</button>
     </div>
 </form>
+
+<?php require __DIR__ . '/_logo_list_ui.php'; ?>

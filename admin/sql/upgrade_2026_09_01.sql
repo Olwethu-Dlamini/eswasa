@@ -17,14 +17,21 @@
 -- =====================================================================
 
 -- ── 1 ─────────────────────────────────────────────────────────────────
--- Affiliation logos move out of page_content
+-- Logo strips move out of page_content
 --
--- The home-page slider was ten fixed key triplets
--- (index_affiliation_1..10_logo/url/alt), so adding an eleventh logo meant a
--- code change. They become rows, and the ten current ones are copied across.
+-- Five strips around the site were each a fixed run of page_content keys —
+-- index_affiliation_1..10, services_affil_1..5, about_affiliation_1..10,
+-- about_accreditation_1..4, cal_brand_1..20. Adding one more logo meant
+-- editing PHP, and the editor faced a wall of mostly-empty slots. They become
+-- rows in one table, keyed by which strip they belong to, all managed by the
+-- same admin partial.
+--
+-- The old keys are left in page_content, unread, so the values stay
+-- recoverable.
 -- ----------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `index_affiliations` (
+CREATE TABLE IF NOT EXISTS `logo_lists` (
   `id`         int(11) NOT NULL AUTO_INCREMENT,
+  `list_key`   varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `logo_path`  varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
   `url`        varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `alt`        varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -33,35 +40,95 @@ CREATE TABLE IF NOT EXISTS `index_affiliations` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `idx_sort` (`sort_order`,`id`),
+  KEY `idx_list` (`list_key`,`sort_order`,`id`),
   KEY `idx_active` (`is_active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Seed from page_content where it exists, falling back to the code defaults
--- for any key that was never saved through the CMS. Guarded on the table
--- being empty so a second run doesn't duplicate the set.
-INSERT INTO `index_affiliations` (`logo_path`, `url`, `alt`, `sort_order`, `is_active`)
+-- Seed every strip from the keys it used to live in, falling back to the
+-- code defaults for any key never saved through the CMS. Each strip is
+-- guarded on being empty, so a second run adds nothing and an editor's later
+-- changes are never overwritten.
+-- Which strips already hold rows, snapshotted before any insert so a second
+-- run adds nothing. A correlated NOT EXISTS can't be used here: the subquery
+-- would have to reference the table being inserted into.
+DROP TEMPORARY TABLE IF EXISTS `logo_existing`;
+CREATE TEMPORARY TABLE `logo_existing` (list_key varchar(32) PRIMARY KEY);
+INSERT INTO `logo_existing` SELECT DISTINCT list_key FROM `logo_lists`;
+
+DROP TEMPORARY TABLE IF EXISTS `logo_seed`;
+CREATE TEMPORARY TABLE `logo_seed` (
+  list_key varchar(32), old_prefix varchar(40), n int,
+  d_logo varchar(500), d_url varchar(500), d_alt varchar(200)
+);
+INSERT INTO `logo_seed` VALUES
+ ('index_affiliations','index_affiliation_', 1,'admin/uploads/iso.png','https://www.iso.org/','ISO'),
+ ('index_affiliations','index_affiliation_', 2,'admin/uploads/iec.png','https://www.iec.ch/','IEC'),
+ ('index_affiliations','index_affiliation_', 3,'admin/uploads/itu.png','https://www.itu.int/','ITU'),
+ ('index_affiliations','index_affiliation_', 4,'assets/img/iaf.webp','https://iaf.nu/','IAF'),
+ ('index_affiliations','index_affiliation_', 5,'assets/img/ILAC.jpg','https://ilac.org/','ILAC'),
+ ('index_affiliations','index_affiliation_', 6,'admin/uploads/arso-2024.png','https://www.arso-org.org/','ARSO'),
+ ('index_affiliations','index_affiliation_', 7,'assets/img/SADCAS.png','https://www.sadcas.org/','SADCAS'),
+ ('index_affiliations','index_affiliation_', 8,'assets/img/sadc.webp','https://www.sadc.int/','SADC'),
+ ('index_affiliations','index_affiliation_', 9,'assets/img/sadcstan.jpg','https://www.sadcstan.org/','SADCSTAN'),
+ ('index_affiliations','index_affiliation_',10,'admin/uploads/astm.png','https://www.astm.org/','ASTM');
+
+-- services_affil_N uses _img rather than _logo; handled by its own pass below.
+INSERT INTO `logo_seed` VALUES
+ ('about_affiliations','about_affiliation_', 1,'admin/uploads/itu.png','https://www.itu.int/','ITU'),
+ ('about_affiliations','about_affiliation_', 2,'admin/uploads/iso.png','https://www.iso.org/','ISO'),
+ ('about_affiliations','about_affiliation_', 3,'admin/uploads/iec.png','https://www.iec.ch/','IEC'),
+ ('about_affiliations','about_affiliation_', 4,'admin/uploads/arso-2024.png','https://www.arso-org.org/','ARSO'),
+ ('about_affiliations','about_affiliation_', 5,'admin/uploads/astm.png','https://www.astm.org/','ASTM'),
+ ('about_affiliations','about_affiliation_', 6,'assets/img/WTO.png','https://www.wto.org','WTO'),
+ ('about_affiliations','about_affiliation_', 7,'assets/img/AP.png','','AP'),
+ ('about_affiliations','about_affiliation_', 8,'assets/img/sadcstan.jpg','','sadcstan'),
+ ('about_accreditation','about_accreditation_',1,'assets/img/SADCAS.png','https://www.sadcas.org','SADCAS');
+
+-- Strips whose logo key ends in _logo.
+INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
 SELECT * FROM (
-    SELECT
-        COALESCE((SELECT content FROM page_content WHERE page_key = CONCAT('index_affiliation_', n, '_logo')), d.logo) AS logo_path,
-        COALESCE((SELECT content FROM page_content WHERE page_key = CONCAT('index_affiliation_', n, '_url')),  d.url)  AS url,
-        COALESCE((SELECT content FROM page_content WHERE page_key = CONCAT('index_affiliation_', n, '_alt')),  d.alt)  AS alt,
-        n * 10 AS sort_order,
-        1      AS is_active
-    FROM (
-        SELECT  1 AS n, 'admin/uploads/iso.png'      AS logo, 'https://www.iso.org/'         AS url, 'ISO'      AS alt
-        UNION ALL SELECT  2, 'admin/uploads/iec.png',       'https://www.iec.ch/',          'IEC'
-        UNION ALL SELECT  3, 'admin/uploads/itu.png',       'https://www.itu.int/',         'ITU'
-        UNION ALL SELECT  4, 'assets/img/iaf.webp',         'https://iaf.nu/',              'IAF'
-        UNION ALL SELECT  5, 'assets/img/ILAC.jpg',         'https://ilac.org/',            'ILAC'
-        UNION ALL SELECT  6, 'admin/uploads/arso-2024.png', 'https://www.arso-org.org/',    'ARSO'
-        UNION ALL SELECT  7, 'assets/img/SADCAS.png',       'https://www.sadcas.org/',      'SADCAS'
-        UNION ALL SELECT  8, 'assets/img/sadc.webp',        'https://www.sadc.int/',        'SADC'
-        UNION ALL SELECT  9, 'assets/img/sadcstan.jpg',     'https://www.sadcstan.org/',    'SADCSTAN'
-        UNION ALL SELECT 10, 'admin/uploads/astm.png',      'https://www.astm.org/',        'ASTM'
-    ) AS d
+    SELECT s.list_key,
+           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT(s.old_prefix, s.n, '_logo')), ''), s.d_logo) AS logo_path,
+           COALESCE((SELECT content FROM page_content WHERE page_key = CONCAT(s.old_prefix, s.n, '_url')), s.d_url) AS url,
+           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT(s.old_prefix, s.n, '_alt')), ''), s.d_alt) AS alt,
+           s.n * 10 AS sort_order,
+           1 AS is_active
+    FROM `logo_seed` s
 ) AS seed
-WHERE NOT EXISTS (SELECT 1 FROM (SELECT id FROM `index_affiliations` LIMIT 1) AS probe);
+WHERE seed.logo_path <> ''
+  AND seed.list_key NOT IN (SELECT list_key FROM `logo_existing`);
+
+-- Services uses _img for the logo key.
+INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
+SELECT * FROM (
+    SELECT 'services_affiliations' AS list_key,
+           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT('services_affil_', n.n, '_img')), ''), '') AS logo_path,
+           COALESCE((SELECT content FROM page_content WHERE page_key = CONCAT('services_affil_', n.n, '_url')), '') AS url,
+           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT('services_affil_', n.n, '_alt')), ''), '') AS alt,
+           n.n * 10 AS sort_order, 1 AS is_active
+    FROM (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) AS n
+) AS seed
+WHERE seed.logo_path <> ''
+  AND 'services_affiliations' NOT IN (SELECT list_key FROM `logo_existing`);
+
+-- Calibration brands: logo only, no link.
+INSERT INTO `logo_lists` (list_key, logo_path, url, alt, sort_order, is_active)
+SELECT * FROM (
+    SELECT 'cal_brands' AS list_key,
+           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT('cal_brand_', n.n, '_image')), ''), '') AS logo_path,
+           '' AS url,
+           COALESCE(NULLIF((SELECT content FROM page_content WHERE page_key = CONCAT('cal_brand_', n.n, '_alt')), ''), '') AS alt,
+           n.n * 10 AS sort_order, 1 AS is_active
+    FROM (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+          UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10
+          UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15
+          UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20) AS n
+) AS seed
+WHERE seed.logo_path <> ''
+  AND 'cal_brands' NOT IN (SELECT list_key FROM `logo_existing`);
+
+DROP TEMPORARY TABLE IF EXISTS `logo_seed`;
+DROP TEMPORARY TABLE IF EXISTS `logo_existing`;
 
 -- ── 2 ─────────────────────────────────────────────────────────────────
 -- certified_organisations serves three logo grids, not one

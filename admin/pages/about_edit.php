@@ -19,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
     $image_keys = ['about_values_image'];
     // Affiliation and accreditation logo strips were a hardcoded PHP array on
     // about-us.php until Batch B. See spec item B2.
-    for ($i = 1; $i <= 10; $i++) { $image_keys[] = "about_affiliation_{$i}_logo"; }
-    for ($i = 1; $i <= 4;  $i++) { $image_keys[] = "about_accreditation_{$i}_logo"; }
 
     // Check uploads dir is writable before attempting image saves
     $uploads_writable = is_dir($upload_dir) && is_writable($upload_dir);
@@ -86,14 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
         'about_val_professionalism_title',
         'about_affiliations_title', 'about_accreditation_title', 'about_accreditation_body',
     ];
-    for ($i = 1; $i <= 10; $i++) {
-        $extra_text_keys[] = "about_affiliation_{$i}_alt";
-        $extra_text_keys[] = "about_affiliation_{$i}_url";
-    }
-    for ($i = 1; $i <= 4; $i++) {
-        $extra_text_keys[] = "about_accreditation_{$i}_alt";
-        $extra_text_keys[] = "about_accreditation_{$i}_url";
-    }
     foreach ($extra_text_keys as $k) {
         $text_fields[$k] = pc_post_value($k);
     }
@@ -135,6 +125,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_about'])) {
 // for content the page is visibly rendering. See spec item B2.
 require_once __DIR__ . '/../../includes/cms_keys_about.php';
 $keys = $about_keys;
+
+// ── Affiliation and accreditation logo strips ─────────────────
+// Managed by the shared logo-strip partial rather than ten and four
+// fixed slots. Two lists on one page, so each namespaces its own
+// query-string parameters.
+$LL_KEY = 'about_affiliations';
+require __DIR__ . '/_logo_list_crud.php';
+$about_aff = ['cfg' => $LL_CFG, 'rows' => $ll_rows, 'edit' => $ll_edit, 'new' => $ll_is_new, 'key' => $LL_KEY];
+
+$LL_KEY = 'about_accreditation';
+require __DIR__ . '/_logo_list_crud.php';
+$about_acc = ['cfg' => $LL_CFG, 'rows' => $ll_rows, 'edit' => $ll_edit, 'new' => $ll_is_new, 'key' => $LL_KEY];
 
 $pc = pc_get_many($conn, $keys, $about_defaults);
 
@@ -295,28 +297,6 @@ function img_preview_tag($id, $path) {
                 <label class="form-label fw-bold">Affiliations heading</label>
                 <input type="text" class="form-control" name="about_affiliations_title" value="<?= e($pc['about_affiliations_title']??'') ?>">
             </div>
-            <p class="text-muted small">Ten slots. Leave a logo empty to hide that slot &mdash; the strip shortens automatically.</p>
-            <div class="row g-3">
-                <?php for ($i = 1; $i <= 10; $i++):
-                    $kl = "about_affiliation_{$i}_logo";
-                    $ka = "about_affiliation_{$i}_alt";
-                    $ku = "about_affiliation_{$i}_url";
-                ?>
-                <div class="col-md-6 col-lg-4">
-                    <div class="card p-3 border shadow-sm h-100">
-                        <label class="mb-2 fw-bold small">Affiliation <?= $i ?></label>
-                        <?= img_preview_tag($kl, $pc[$kl] ?? '') ?>
-                        <input type="file" class="form-control form-control-sm mb-2" accept="image/*" onchange="initCropper(this, '<?= $kl ?>', 400, 240)">
-                        <input type="hidden" name="<?= $kl ?>_cropped" id="<?= $kl ?>_cropped">
-                        <label class="form-label small mb-1">Name (also the image's alt text)</label>
-                        <input type="text" class="form-control form-control-sm mb-2" name="<?= $ka ?>" value="<?= e($pc[$ka]??'') ?>" placeholder="e.g. ISO">
-                        <label class="form-label small mb-1">Website</label>
-                        <input type="text" class="form-control form-control-sm" name="<?= $ku ?>" value="<?= e($pc[$ku]??'') ?>" placeholder="https://...">
-                    </div>
-                </div>
-                <?php endfor; ?>
-            </div>
-
             <hr class="my-4">
 
             <div class="mb-3">
@@ -327,35 +307,22 @@ function img_preview_tag($id, $path) {
                 <label class="form-label fw-bold">Accreditation caption</label>
                 <input type="text" class="form-control" name="about_accreditation_body" value="<?= e($pc['about_accreditation_body']??'') ?>">
             </div>
-            <div class="row g-3">
-                <?php for ($i = 1; $i <= 4; $i++):
-                    $kl = "about_accreditation_{$i}_logo";
-                    $ka = "about_accreditation_{$i}_alt";
-                    $ku = "about_accreditation_{$i}_url";
-                ?>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card p-3 border shadow-sm h-100">
-                        <label class="mb-2 fw-bold small">Accrediting body <?= $i ?></label>
-                        <?= img_preview_tag($kl, $pc[$kl] ?? '') ?>
-                        <input type="file" class="form-control form-control-sm mb-2" accept="image/*" onchange="initCropper(this, '<?= $kl ?>', 400, 240)">
-                        <input type="hidden" name="<?= $kl ?>_cropped" id="<?= $kl ?>_cropped">
-                        <label class="form-label small mb-1">Name</label>
-                        <input type="text" class="form-control form-control-sm mb-2" name="<?= $ka ?>" value="<?= e($pc[$ka]??'') ?>" placeholder="e.g. SADCAS">
-                        <label class="form-label small mb-1">Website</label>
-                        <input type="text" class="form-control form-control-sm" name="<?= $ku ?>" value="<?= e($pc[$ku]??'') ?>" placeholder="https://...">
-                    </div>
-                </div>
-                <?php endfor; ?>
-            </div>
-        
-      </div>
+        </div>
     </div>
-
 
     <div class="mt-4 pt-3 border-top text-end">
         <button type="submit" class="btn btn-primary px-5 shadow-sm"><i class="fas fa-save me-2"></i>Save All Changes</button>
     </div>
 </form>
+
+<?php
+// Each manager renders its own form, so they sit outside the one above.
+foreach ([$about_aff, $about_acc] as $ll) {
+    $LL_KEY = $ll['key']; $LL_CFG = $ll['cfg']; $LL_NOUN = $LL_CFG['noun'];
+    $ll_rows = $ll['rows']; $ll_edit = $ll['edit']; $ll_is_new = $ll['new'];
+    require __DIR__ . '/_logo_list_ui.php';
+}
+?>
 
 <!-- Editor overlay is appended to <body> via JS to avoid layout containment issues -->
 

@@ -61,11 +61,8 @@ $pc_defaults = [
 ];
 // ── Affiliation logos (DB-driven; edited via admin → Home Page) ──────────────
 // Moved out of page_content so the slider isn't capped at a fixed slot count.
-$index_affiliations = [];
-$aff_res = $conn->query('SELECT logo_path, url, alt FROM index_affiliations WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
-if ($aff_res) {
-    while ($aff_row = $aff_res->fetch_assoc()) $index_affiliations[] = $aff_row;
-}
+require_once __DIR__ . '/includes/logo_lists.php';
+$index_affiliations = logo_list_rows($conn, 'index_affiliations');
 
 $pc = pc_get_many($conn, $pc_keys, $pc_defaults);
 

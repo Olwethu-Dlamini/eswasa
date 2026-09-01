@@ -77,16 +77,6 @@ $about_defaults = [
     'about_accreditation_title' => 'ESWASA Accreditation',
     'about_accreditation_body'  => 'Eswatini Standards Authority is accredited by SADCAS.',
 
-    'about_affiliation_1_logo' => 'admin/uploads/itu.png',       'about_affiliation_1_alt' => 'ITU',      'about_affiliation_1_url' => 'https://www.itu.int/',
-    'about_affiliation_2_logo' => 'admin/uploads/iso.png',       'about_affiliation_2_alt' => 'ISO',      'about_affiliation_2_url' => 'https://www.iso.org/',
-    'about_affiliation_3_logo' => 'admin/uploads/iec.png',       'about_affiliation_3_alt' => 'IEC',      'about_affiliation_3_url' => 'https://www.iec.ch/',
-    'about_affiliation_4_logo' => 'admin/uploads/arso-2024.png', 'about_affiliation_4_alt' => 'ARSO',     'about_affiliation_4_url' => 'https://www.arso-org.org/',
-    'about_affiliation_5_logo' => 'admin/uploads/astm.png',      'about_affiliation_5_alt' => 'ASTM',     'about_affiliation_5_url' => 'https://www.astm.org/',
-    'about_affiliation_6_logo' => 'assets/img/WTO.png',          'about_affiliation_6_alt' => 'WTO',      'about_affiliation_6_url' => 'https://www.wto.org',
-    'about_affiliation_7_logo' => 'assets/img/AP.png',           'about_affiliation_7_alt' => 'AP',       'about_affiliation_7_url' => '',
-    'about_affiliation_8_logo' => 'assets/img/sadcstan.jpg',     'about_affiliation_8_alt' => 'sadcstan', 'about_affiliation_8_url' => '',
-
     'about_values_image' => 'admin/uploads/about-core.jpg',
 
-    'about_accreditation_1_logo' => 'assets/img/SADCAS.png', 'about_accreditation_1_alt' => 'SADCAS', 'about_accreditation_1_url' => 'https://www.sadcas.org',
-];
+    ];
