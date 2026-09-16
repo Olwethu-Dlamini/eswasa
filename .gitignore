@@ -9,6 +9,11 @@ Thumbs.db
 .audit-screenshots/
 .verify/out/
 
+# ── Local tool + editor config ───────────────────────────────────────
+# Per-machine settings, not shared project config. settings.local.json in
+# particular records one developer's approved tool permissions.
+.claude/settings.local.json
+
 # ── Database dumps ───────────────────────────────────────────────────
 # Production dumps contain password hashes and personal data (names,
 # email addresses, phone numbers from contact and quote submissions).
