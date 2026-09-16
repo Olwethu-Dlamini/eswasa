@@ -10,11 +10,17 @@ function announcements_upload(string $field, string $upload_dir, int $max_bytes 
     if (empty($_FILES[$field]['name'])) {
         return ['ok' => true, 'path' => null, 'error' => ''];
     }
-    if (($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-        return ['ok' => false, 'path' => null, 'error' => 'Upload failed.'];
+    $err = $_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE;
+    if ($err !== UPLOAD_ERR_OK) {
+        return ['ok' => false, 'path' => null, 'error' => pc_upload_error_message((int)$err, $max_bytes)];
     }
-    if ($_FILES[$field]['size'] > $max_bytes) {
-        return ['ok' => false, 'path' => null, 'error' => 'File exceeds size limit (25 MB).'];
+    // The form's own ceiling is only half the story: PHP's upload_max_filesize
+    // is often lower on shared hosting, so quote whichever actually applies.
+    $limit = pc_upload_limit_bytes($max_bytes);
+    if ($limit > 0 && $_FILES[$field]['size'] > $limit) {
+        return ['ok' => false, 'path' => null, 'error' =>
+            'File is ' . pc_format_bytes((int)$_FILES[$field]['size']) . '. The maximum this server accepts is '
+            . pc_format_bytes($limit) . '. Resize or compress it and try again.'];
     }
 
     $tmp = $_FILES[$field]['tmp_name'];
@@ -63,6 +69,18 @@ function announcements_upload(string $field, string $upload_dir, int $max_bytes 
     }
 
     return ['ok' => true, 'path' => 'announcements/' . $unique, 'error' => ''];
+}
+
+// ── POST: request body discarded by PHP (file bigger than post_max_size) ──
+// Without this the page falls through to the required-fields check and tells
+// the editor their filled-in form was empty.
+if (pc_post_was_discarded()) {
+    set_flash('danger',
+        'Nothing was received — the attached file is larger than this server accepts in one request ('
+        . pc_format_bytes(pc_ini_bytes(ini_get('post_max_size')))
+        . ' total). Resize or compress the picture, then re-enter the announcement.');
+    header('Location: index.php?page=announcements_edit.php&tab=list');
+    exit;
 }
 
 // ── POST: save Page Content ───────────────────────────────────────
@@ -287,7 +305,7 @@ function ann_type_label_admin(string $t): string {
                                     </a>
                                 </div>
                             <?php endif; ?>
-                            <div class="form-text">PDF / JPG / PNG / WEBP, up to 25 MB. Leave blank to keep current file.</div>
+                            <div class="form-text">PDF / JPG / PNG / WEBP, up to <?= pc_format_bytes(pc_upload_limit_bytes(26214400)) ?>. Leave blank to keep current file.</div>
                         </div>
 
                         <div class="d-flex gap-2">
@@ -459,7 +477,7 @@ function ann_type_label_admin(string $t): string {
                     <div class="mb-3">
                         <label class="form-label fw-bold">File (Optional)</label>
                         <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.webp">
-                        <div class="form-text">PDF / JPG / PNG / WEBP, up to 25 MB. Filenames are sanitized automatically.</div>
+                        <div class="form-text">PDF / JPG / PNG / WEBP, up to <?= pc_format_bytes(pc_upload_limit_bytes(26214400)) ?>. Filenames are sanitized automatically.</div>
                     </div>
                 </div>
                 <div class="modal-footer">

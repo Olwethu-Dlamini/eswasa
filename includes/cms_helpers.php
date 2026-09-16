@@ -409,3 +409,109 @@ if (!function_exists('pc_image_src')) {
         return 'admin/uploads/' . basename($s);
     }
 }
+
+/* ────────────────────────────────────────────────────────────────────
+ * Upload limits.
+ *
+ * Every admin form advertises a generous size ("up to 25 MB"), but PHP
+ * enforces its own upload_max_filesize / post_max_size, and shared hosts
+ * often ship 2M or 8M defaults. When a picture is bigger than those, the
+ * failure is silent and misleading:
+ *
+ *   - over upload_max_filesize  → $_FILES carries UPLOAD_ERR_INI_SIZE and
+ *     the page says only "Upload failed."
+ *   - over post_max_size        → PHP discards the ENTIRE request body, so
+ *     $_POST is empty and the page says "Title, Description and Published
+ *     Date are required" for a form the editor had filled in completely.
+ *
+ * These helpers let a page state the real limit up front and name the real
+ * cause when a file is rejected.
+ * ──────────────────────────────────────────────────────────────────── */
+
+if (!function_exists('pc_ini_bytes')) {
+    /** Parse a PHP ini shorthand size ("8M", "512K", "1G") into bytes. */
+    function pc_ini_bytes($value): int
+    {
+        $s = trim((string)$value);
+        if ($s === '') return 0;
+        $unit = strtolower(substr($s, -1));
+        $num = (int)$s;
+        switch ($unit) {
+            case 'g': return $num * 1024 * 1024 * 1024;
+            case 'm': return $num * 1024 * 1024;
+            case 'k': return $num * 1024;
+            default:  return $num;
+        }
+    }
+}
+
+if (!function_exists('pc_upload_limit_bytes')) {
+    /**
+     * The largest single file this PHP install will actually accept — the
+     * smaller of upload_max_filesize and post_max_size, further capped by
+     * whatever the calling form allows. A post_max_size of 0 means unlimited.
+     */
+    function pc_upload_limit_bytes(int $form_max = 0): int
+    {
+        $limits = [];
+        $upload = pc_ini_bytes(ini_get('upload_max_filesize'));
+        if ($upload > 0) $limits[] = $upload;
+        $post = pc_ini_bytes(ini_get('post_max_size'));
+        if ($post > 0) $limits[] = $post;
+        if ($form_max > 0) $limits[] = $form_max;
+        return $limits ? min($limits) : 0;
+    }
+}
+
+if (!function_exists('pc_format_bytes')) {
+    /** Human-readable size for a form hint or an error message. */
+    function pc_format_bytes(int $bytes): string
+    {
+        if ($bytes <= 0) return 'unlimited';
+        if ($bytes >= 1024 * 1024) return round($bytes / (1024 * 1024), 1) . ' MB';
+        if ($bytes >= 1024) return round($bytes / 1024) . ' KB';
+        return $bytes . ' bytes';
+    }
+}
+
+if (!function_exists('pc_upload_error_message')) {
+    /** Turn a $_FILES error code into something an editor can act on. */
+    function pc_upload_error_message(int $code, int $form_max = 0): string
+    {
+        switch ($code) {
+            case UPLOAD_ERR_INI_SIZE:
+                return 'The file is larger than this server accepts ('
+                     . pc_format_bytes(pc_upload_limit_bytes($form_max))
+                     . ' maximum). Resize or compress the image and try again.';
+            case UPLOAD_ERR_FORM_SIZE:
+                return 'The file is larger than this form accepts.';
+            case UPLOAD_ERR_PARTIAL:
+                return 'The upload was interrupted and only part of the file arrived. Please try again.';
+            case UPLOAD_ERR_NO_FILE:
+                return 'No file was received.';
+            case UPLOAD_ERR_NO_TMP_DIR:
+                return 'Server error: PHP has no temporary folder for uploads. Contact your host.';
+            case UPLOAD_ERR_CANT_WRITE:
+                return 'Server error: the file could not be written to disk. Contact your host.';
+            case UPLOAD_ERR_EXTENSION:
+                return 'A PHP extension blocked this upload.';
+            default:
+                return 'Upload failed (error code ' . $code . ').';
+        }
+    }
+}
+
+if (!function_exists('pc_post_was_discarded')) {
+    /**
+     * True when the browser sent a body that PHP threw away for exceeding
+     * post_max_size. The tell-tale is a POST with a non-zero Content-Length
+     * but nothing in $_POST or $_FILES. Without this check the page blames
+     * the editor for leaving required fields blank.
+     */
+    function pc_post_was_discarded(): bool
+    {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') return false;
+        if (!empty($_POST) || !empty($_FILES))              return false;
+        return (int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 0;
+    }
+}

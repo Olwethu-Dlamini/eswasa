@@ -54,5 +54,31 @@
     Require all denied
 </FilesMatch>
 
-# ── 4. Default document ─────────────────────────────────────────────
+# ── 4. Upload limits ────────────────────────────────────────────────
+# Mirrors the 16 MB limit set in Plesk PHP Settings and in .user.ini.
+#
+# These lines only apply when PHP runs as an Apache module. Plesk normally
+# serves PHP via FPM, where .user.ini is what counts and mod_php isn't loaded —
+# the <IfModule> guards then skip this block instead of 500-ing on directives
+# Apache doesn't recognise. If Plesk is set to "PHP served by Apache module",
+# this block is what takes effect and .user.ini is ignored.
+#
+# Change these together with .user.ini and the Plesk panel: the LOWEST of the
+# three wins, silently.
+<IfModule mod_php.c>
+    php_value upload_max_filesize 16M
+    php_value post_max_size 20M
+    php_value memory_limit 256M
+    php_value max_execution_time 120
+    php_value max_input_time 120
+</IfModule>
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 16M
+    php_value post_max_size 20M
+    php_value memory_limit 256M
+    php_value max_execution_time 120
+    php_value max_input_time 120
+</IfModule>
+
+# ── 5. Default document ─────────────────────────────────────────────
 DirectoryIndex index.php index.html
