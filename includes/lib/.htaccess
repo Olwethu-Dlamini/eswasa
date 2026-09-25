@@ -1,0 +1,9 @@
+# Third-party PHP libraries. They are loaded by the site's own scripts through
+# the filesystem and are never meant to be requested over HTTP.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

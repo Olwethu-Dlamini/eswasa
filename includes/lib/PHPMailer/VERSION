@@ -1,0 +1,4 @@
+PHPMailer 7.1.1 — https://github.com/PHPMailer/PHPMailer/tree/v7.1.1
+Only src/PHPMailer.php, src/SMTP.php and src/Exception.php are vendored, plus
+the licence. The site has no Composer, so upgrade by replacing these three
+files from the next release tag.
