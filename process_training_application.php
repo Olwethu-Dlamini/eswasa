@@ -103,16 +103,22 @@ if ($intake_start !== null) {
 }
 
 // ── Insert ────────────────────────────────────────────────────
-$stmt = $conn->prepare(
-    'INSERT INTO eswasa_training_applications
-        (session_id, training_code, training_title, intake_start, intake_label,
-         full_name, email, phone, company, position, comments)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-);
-$ok = false;
-if ($stmt) {
-    $code  = (string)$training['code'];
-    $title = (string)$training['title'];
+// Wrapped because mysqli throws from PHP 8.1: a database that refuses the
+// insert (the migration not run yet, say) must still send the applicant back
+// with a message, not a server error page that loses what they typed.
+$code   = (string)$training['code'];
+$title  = (string)$training['title'];
+$new_id = 0;
+try {
+    $stmt = $conn->prepare(
+        'INSERT INTO eswasa_training_applications
+            (session_id, training_code, training_title, intake_start, intake_label,
+             full_name, email, phone, company, position, comments)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    );
+    if (!$stmt) {
+        throw new RuntimeException((string)$conn->error);
+    }
     $company_db  = $company !== '' ? $company : null;
     $position_db = $position !== '' ? $position : null;
     $comments_db = $comments !== '' ? $comments : null;
@@ -121,13 +127,13 @@ if ($stmt) {
         $session_id, $code, $title, $intake_start, $intake_label,
         $full_name, $email, $phone, $company_db, $position_db, $comments_db
     );
-    $ok = $stmt->execute();
-    $new_id = $ok ? (int)$conn->insert_id : 0;
+    if (!$stmt->execute()) {
+        throw new RuntimeException((string)$stmt->error);
+    }
+    $new_id = (int)$conn->insert_id;
     $stmt->close();
-}
-
-if (!$ok) {
-    error_log('Training application could not be saved: ' . $conn->error);
+} catch (Throwable $e) {
+    error_log('Training application could not be saved: ' . $e->getMessage());
     $back(false, 'Sorry — we could not save your application. Please try again, or email us at info@eswasa.co.sz.');
     exit;
 }
