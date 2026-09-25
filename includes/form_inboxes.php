@@ -390,7 +390,7 @@ function eswasa_notification_html(string $title, array $rows, string $admin_url,
         : '';
 
     $reply = !empty($opts['reply_to']) && filter_var($opts['reply_to'], FILTER_VALIDATE_EMAIL)
-        ? 'Reply to this email to answer ' . $e($opts['reply_to_name'] ?: $opts['reply_to']) . ' directly. '
+        ? 'Reply to this email to answer ' . $e(($opts['reply_to_name'] ?? '') ?: $opts['reply_to']) . ' directly. '
         : '';
 
     return '<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.45;color:#1f2340;max-width:640px;">'
