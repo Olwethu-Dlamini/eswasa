@@ -28,6 +28,9 @@ $info = $changed ? eswasa_viewed_info($conn, $key, $id) : null;
 api_reply(200, [
     'ok'        => true,
     'changed'   => $changed,
+    // When nothing changed: false = someone had already opened it or moved
+    // it on; true = it is still unread (the update failed); null = gone.
+    'unread'    => $changed ? false : eswasa_is_unread($conn, $key, $id),
     'viewed_by' => $info ? (string)$info['read_by'] : $api_user,
     'viewed_at' => $info ? date('j M Y, H:i', strtotime($info['read_at'])) : '',
     'counts'    => eswasa_inbox_counts($conn),

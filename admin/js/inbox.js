@@ -20,7 +20,7 @@
  *   [data-inbox-status-select="key:id"]  selects set to the viewed status
  *   [data-inbox-unread-only="key:id"]    hidden once viewed
  *   [data-inbox-read-only="key:id"]      shown once viewed
- *   [data-inbox-viewed-by="key:id"]      filled with "Opened by … on …"
+ *   [data-inbox-viewed-by="key:id"]      filled with "First opened by … on …"
  *   [data-inbox-count="key"]             any unread counter for that inbox
  *                                        (sidebar badges, tab badges)
  *   [data-inbox-count-sum="k1,k2"]       the total of several (menu groups)
@@ -57,7 +57,7 @@
         each(q('data-inbox-read-only'), function (el) { el.classList.remove('d-none'); });
         if (reply && reply.changed) {
             each(q('data-inbox-viewed-by'), function (el) {
-                el.textContent = 'Opened by ' + reply.viewed_by + ' on ' + reply.viewed_at + '.';
+                el.textContent = 'First opened by ' + reply.viewed_by + ' on ' + reply.viewed_at + '.';
                 el.classList.remove('d-none');
             });
         }
@@ -98,7 +98,17 @@
         })
             .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
             .then(function (reply) {
-                applyViewed(row, reply);
+                if (reply.changed) {
+                    applyViewed(row, reply);
+                } else if (reply.unread === false) {
+                    // Someone else opened it or moved it on meanwhile, so this
+                    // page is out of date. Drop the unread highlight, but don't
+                    // claim a status the server didn't set.
+                    row.classList.remove('inbox-unread');
+                    row.dataset.unread = '0';
+                }
+                // Otherwise it is still unread on the server (the update did
+                // not happen): leave the row as it is, and the next open retries.
                 updateCounts(reply.counts);
                 // The notification bell drops it from its list.
                 document.dispatchEvent(new CustomEvent('eswasa:viewed', { detail: reply.counts }));

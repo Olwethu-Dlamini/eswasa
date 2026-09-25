@@ -195,10 +195,11 @@ function eswasa_inbox_latest(mysqli $conn, int $limit = 10): array
  * opened it and when. Returns true when this call changed it.
  *
  * Only an unread row is touched, so opening something already in progress
- * or closed never moves it back to "viewed". The status and read_at are set
- * in the same statement on purpose: see section 3 of
- * admin/sql/upgrade_2026_09_25.sql for why that ordering matters on the
- * production database.
+ * or closed never moves it back to "viewed". read_at/read_by keep the
+ * *first* opening: a submission set back to New and opened again still says
+ * who saw it first. The status and read_at are set in the same statement on
+ * purpose: see section 3 of admin/sql/upgrade_2026_09_25.sql for why that
+ * ordering matters on the production database.
  */
 function eswasa_mark_viewed(mysqli $conn, string $key, int $id, string $by): bool
 {
@@ -208,7 +209,7 @@ function eswasa_mark_viewed(mysqli $conn, string $key, int $id, string $by): boo
     }
     try {
         $stmt = $conn->prepare(
-            "UPDATE {$ib['table']} SET {$ib['viewed']}, read_at = NOW(), read_by = ?
+            "UPDATE {$ib['table']} SET {$ib['viewed']}, read_at = COALESCE(read_at, NOW()), read_by = COALESCE(read_by, ?)
               WHERE id = ? AND ({$ib['where']}) AND ({$ib['unread']})"
         );
         if (!$stmt) {
@@ -223,6 +224,30 @@ function eswasa_mark_viewed(mysqli $conn, string $key, int $id, string $by): boo
     } catch (Throwable $e) {
         error_log('mark viewed failed (' . $key . '#' . $id . '): ' . $e->getMessage());
         return false;
+    }
+}
+
+/**
+ * Whether one submission is still unread: true/false, or null when it does
+ * not exist or the database could not be asked.
+ */
+function eswasa_is_unread(mysqli $conn, string $key, int $id): ?bool
+{
+    $ib = eswasa_inbox($key);
+    if (!$ib) {
+        return null;
+    }
+    try {
+        $stmt = $conn->prepare(
+            "SELECT ({$ib['unread']}) AS u FROM {$ib['table']} WHERE id = ? AND ({$ib['where']})"
+        );
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $row ? (bool)$row['u'] : null;
+    } catch (Throwable $e) {
+        return null;
     }
 }
 
