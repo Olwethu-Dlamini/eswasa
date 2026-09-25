@@ -1,4 +1,11 @@
-<?php include_once 'includes/db_connect.php'; include_once 'includes/breadcrumb_helper.php'; ?>
+<?php
+// Start the session before any output: the quote result banner further down
+// reads the messages process_quote.php leaves in the session (rejected
+// attachments), and session_start() cannot run once output has begun.
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+include_once 'includes/db_connect.php';
+include_once 'includes/breadcrumb_helper.php';
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 
