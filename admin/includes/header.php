@@ -4,6 +4,11 @@ if (!defined('ESWASA_ADMIN')) {
     exit('Direct access not permitted.');
 }
 $current_user = getCurrentUser($conn);
+
+// Unread submissions, for the notification bell below and the sidebar.
+require_once __DIR__ . '/../../includes/form_inboxes.php';
+$inbox_counts = eswasa_inbox_counts($conn);
+$inbox_total  = array_sum($inbox_counts);
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
@@ -46,6 +51,28 @@ $current_user = getCurrentUser($conn);
 
             <!-- Right nav -->
             <div class="ms-auto d-flex align-items-center">
+                <!-- Notification bell: new form submissions, checked about once
+                     a minute by js/notifier.js. -->
+                <div class="dropdown me-2" id="notifier">
+                    <button class="btn nav-link position-relative px-2" type="button" id="notifierToggle"
+                            data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-display="static" aria-expanded="false"
+                            aria-label="New submissions: <?= (int)$inbox_total ?>">
+                        <i class="fas fa-bell fa-lg"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger<?= $inbox_total > 0 ? '' : ' d-none' ?>"
+                              data-notifier-total><?= (int)$inbox_total ?></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end p-0 notifier-menu" aria-labelledby="notifierToggle">
+                        <div class="px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
+                            <strong>New submissions</strong>
+                            <button type="button" class="btn btn-sm btn-link p-0 d-none" data-notifier-desktop>Desktop alerts: off</button>
+                        </div>
+                        <div class="notifier-list" data-notifier-list>
+                            <div class="px-3 py-4 text-center text-muted small">Loading&hellip;</div>
+                        </div>
+                        <div class="px-3 py-2 border-top small text-muted" data-notifier-status>Checked every minute.</div>
+                    </div>
+                </div>
+
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">

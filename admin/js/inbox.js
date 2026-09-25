@@ -99,8 +99,9 @@
             .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
             .then(function (reply) {
                 applyViewed(row, reply);
-                // Badges on this page and the notification bell listen for this.
-                document.dispatchEvent(new CustomEvent('eswasa:counts', { detail: reply.counts }));
+                updateCounts(reply.counts);
+                // The notification bell drops it from its list.
+                document.dispatchEvent(new CustomEvent('eswasa:viewed', { detail: reply.counts }));
             })
             .catch(function () {
                 // Left unread; the next open tries again.
@@ -121,8 +122,8 @@
         }
     });
 
-    // Fresh counts, from here or from the notifier's polling (notifier.js):
-    // keep every badge on the page in step.
+    // Fresh counts from the notification bell's polling (notifier.js): keep
+    // every badge on the page in step.
     document.addEventListener('eswasa:counts', function (e) { updateCounts(e.detail); });
 
     // Deep link from a notification email: …&view=12 opens #12.

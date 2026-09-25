@@ -145,6 +145,52 @@ function eswasa_inbox_counts(mysqli $conn): array
 }
 
 /**
+ * The newest unread submissions across every inbox, newest first — what the
+ * admin's notification bell lists. 'age' is seconds since it arrived,
+ * worked out by the database so it is right whatever time zone PHP or the
+ * browser is in. 'url' is relative to admin/.
+ */
+function eswasa_inbox_latest(mysqli $conn, int $limit = 10): array
+{
+    $limit = max(1, min(50, $limit));
+    $items = [];
+    foreach (eswasa_inboxes() as $key => $ib) {
+        try {
+            $res = @$conn->query(
+                "SELECT id, {$ib['who']} AS who, {$ib['what']} AS what, created_at,
+                        TIMESTAMPDIFF(SECOND, created_at, NOW()) AS age
+                   FROM {$ib['table']}
+                  WHERE ({$ib['where']}) AND ({$ib['unread']})
+               ORDER BY created_at DESC, id DESC
+                  LIMIT {$limit}"
+            );
+            if (!$res) {
+                continue;
+            }
+            while ($row = $res->fetch_assoc()) {
+                $items[] = [
+                    'key'   => $key . ':' . (int)$row['id'],
+                    'inbox' => $key,
+                    'id'    => (int)$row['id'],
+                    'label' => $ib['label'],
+                    'icon'  => $ib['icon'],
+                    'who'   => (string)$row['who'],
+                    'what'  => (string)$row['what'],
+                    'age'   => max(0, (int)$row['age']),
+                    'url'   => 'index.php?' . http_build_query(['page' => $ib['page'], 'view' => (int)$row['id']]),
+                ];
+            }
+        } catch (Throwable $e) {
+            // table missing — nothing to list from it
+        }
+    }
+    usort($items, function ($a, $b) {
+        return $a['age'] <=> $b['age'];
+    });
+    return array_slice($items, 0, $limit);
+}
+
+/**
  * Mark one submission as opened, if it has not been already, recording who
  * opened it and when. Returns true when this call changed it.
  *

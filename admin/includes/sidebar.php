@@ -17,7 +17,7 @@ function nav_link($page, $current, $icon, $label, $badge_html = '') {
 // a missing table counts as 0 and never breaks the nav. Email is unreliable
 // on shared hosting, so these badges are the dependable signal that something
 // new has arrived. See spec item A2.
-$inbox_counts = eswasa_inbox_counts($conn);
+$inbox_counts = $inbox_counts ?? eswasa_inbox_counts($conn); // header.php has usually fetched them
 
 // A red counter for one inbox, or the total of several (a menu group).
 // Rendered even at 0, hidden, so admin/js/inbox.js and the notification bell

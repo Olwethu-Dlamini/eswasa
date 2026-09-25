@@ -16,5 +16,7 @@ if (!defined('ESWASA_ADMIN')) {
     <script src="js/main.js"></script>
     <!-- Opening a submission marks it as viewed -->
     <script src="js/inbox.js"></script>
+    <!-- Notification bell: polls for new submissions -->
+    <script src="js/notifier.js"></script>
 </body>
 </html>
