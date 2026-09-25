@@ -3,6 +3,7 @@ include_once __DIR__ . '/includes/db_connect.php';
 $conn->set_charset('utf8mb4');
 include_once __DIR__ . '/includes/breadcrumb_helper.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
+require_once __DIR__ . '/includes/form_inboxes.php';
 require __DIR__ . '/includes/cms_keys_customer_feedback.php';
 
 $pc = pc_get_many($conn, $customer_feedback_keys, $customer_feedback_defaults);
@@ -59,26 +60,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if ($stmt && $stmt->execute()) {
-            $to = $pc['customer_feedback_fallback_email'] ?: 'info@eswasa.co.sz';
-            $email_subject = "Customer Feedback: " . $prefill['feedback_type'];
-            $body  = "<h3>New Customer Feedback</h3>";
-            $body .= "<p><strong>Service:</strong> " . htmlspecialchars($prefill['service']) . "</p>";
-            $body .= "<p><strong>Type:</strong> " . htmlspecialchars($prefill['feedback_type']) . "</p>";
-            $body .= "<p><strong>Issue resolved:</strong> " . htmlspecialchars($prefill['resolved']) . "</p>";
-            $body .= "<p><strong>Rating:</strong> " . $rating_i . " / 5</p>";
-            $body .= "<p><strong>Issue:</strong><br>" . nl2br(htmlspecialchars($prefill['issue'])) . "</p>";
-            if ($prefill['suggestion']) {
-                $body .= "<p><strong>Suggestions:</strong><br>" . nl2br(htmlspecialchars($prefill['suggestion'])) . "</p>";
-            }
-            if ($prefill['email']) {
-                $body .= "<p><strong>Email (for reply):</strong> " . htmlspecialchars($prefill['email']) . "</p>";
-            }
-            $body .= "<hr><p><em>" . date('F j, Y \a\t g:i A') . "</em></p>";
-            $headers  = "MIME-Version: 1.0\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8\r\n";
-            @mail($to, $email_subject, $body, $headers);
+            $feedback_id = (int)$conn->insert_id;
 
+            // Saved; now tell staff. This used to be a bare @mail() with no
+            // From header at all, so the message went out as whatever
+            // anonymous sender the web server defaulted to — the kind
+            // receiving servers discard first. It now goes through the shared
+            // mailer, after the visitor has been redirected. Recipients: Site
+            // Settings › Form Notifications, falling back to the address this
+            // page already shows.
             header("Location: customer-feedback.php?success=1");
+            eswasa_finish_response_early();
+            eswasa_notify_submission(
+                $conn,
+                'feedback',
+                $feedback_id,
+                trim($prefill['feedback_type'] . ' (' . $rating_i . '/5)'),
+                [
+                    'Service'           => $prefill['service'],
+                    'Type'              => $prefill['feedback_type'],
+                    'Issue resolved'    => $prefill['resolved'],
+                    'Rating'            => $rating_i . ' / 5',
+                    'Issue'             => $prefill['issue'],
+                    'Suggestions'       => $prefill['suggestion'],
+                    'Email (for reply)' => $prefill['email'] !== '' ? $prefill['email'] : 'Not given',
+                ],
+                ['reply_to' => $prefill['email']]
+            );
             exit;
         } else {
             $fallback = pc_h($pc['customer_feedback_fallback_email']);
