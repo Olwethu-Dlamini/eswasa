@@ -32,3 +32,39 @@ CREATE TABLE IF NOT EXISTS `mail_log` (
   PRIMARY KEY (`id`),
   KEY `idx_created` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 2 ─────────────────────────────────────────────────────────────────
+-- eswasa_training_applications — the training calendar's "Apply" form
+--
+-- The form had no action and its inputs had no names: a script showed
+-- "your application has been submitted" and threw the application away.
+-- Applications are now stored here and listed under Training › Applications.
+--
+-- training_code / training_title / intake_label are copied at the time of
+-- applying, so an application still reads correctly after the calendar is
+-- edited or the training is removed. session_id is kept for filtering only
+-- and deliberately has no foreign key: deleting a training must not delete
+-- the people who applied for it.
+-- ----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `eswasa_training_applications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `session_id` int(11) DEFAULT NULL,
+  `training_code` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `training_title` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `intake_start` date DEFAULT NULL,
+  `intake_label` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `full_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `position` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `comments` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('new','viewed','contacted','closed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'new',
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `read_at` datetime DEFAULT NULL,
+  `read_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`, `created_at`),
+  KEY `idx_session` (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

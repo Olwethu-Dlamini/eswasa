@@ -88,6 +88,21 @@ $train_cal_defaults = [
 ];
 
 $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
+
+// Outcome of an application, set by process_training_application.php. The
+// error text travels in the session rather than the URL.
+$apply_result = null;
+$apply_error  = '';
+if (isset($_GET['applied'])) {
+    $apply_result = $_GET['applied'] === '1';
+    if (!$apply_result) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $apply_error = (string)($_SESSION['training_apply_error'] ?? '');
+        unset($_SESSION['training_apply_error']);
+    }
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -671,6 +686,18 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
         <!-- Training Calendar Section -->
         <section id="training_calendar_section" class="content_section py-5">
             <div class="container">
+                <?php if ($apply_result !== null): ?>
+                    <div id="apply-result" class="alert <?= $apply_result ? 'alert-success' : 'alert-danger' ?> alert-dismissible fade show mb-4" role="alert">
+                        <?php if ($apply_result): ?>
+                            <strong>Thank you &mdash; your application has been received.</strong>
+                            Our training team will contact you to confirm your place.
+                        <?php else: ?>
+                            <strong>Your application was not sent.</strong>
+                            <?= pc_h($apply_error !== '' ? $apply_error : 'Please try again.') ?>
+                        <?php endif; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
                 <!-- Section Title -->
                 <div class="main_title centered upper mb-5 text-center">
                     <h2 class="display-6 fw-bold"><?= pc_h($pc['train_cal_section_title']) ?></h2>
@@ -739,33 +766,36 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
                             </div>
                             <div class="modal-body">
                                 <p class="text-muted mb-3"><?= pc_h($pc['train_cal_modal_intro']) ?></p>
-                                <form id="applyForm">
+                                <form id="applyForm" method="POST" action="process_training_application.php">
+                                    <input type="hidden" name="session_id" id="apply-session-id" value="">
+                                    <input type="hidden" name="intake_start" id="apply-intake-start" value="">
+                                    <input type="hidden" name="intake_label" id="apply-intake-label" value="">
                                     <div class="mb-3">
                                         <label for="name" class="form-label"><?= pc_h($pc['train_cal_modal_label_name']) ?></label>
-                                        <input type="text" class="form-control" id="name" required>
+                                        <input type="text" class="form-control" id="name" name="full_name" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label"><?= pc_h($pc['train_cal_modal_label_email']) ?></label>
-                                        <input type="email" class="form-control" id="email" required>
+                                        <input type="email" class="form-control" id="email" name="email" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone" class="form-label"><?= pc_h($pc['train_cal_modal_label_phone']) ?></label>
-                                        <input type="tel" class="form-control" id="phone" required>
+                                        <input type="tel" class="form-control" id="phone" name="phone" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="company" class="form-label"><?= pc_h($pc['train_cal_modal_label_company']) ?></label>
-                                        <input type="text" class="form-control" id="company">
+                                        <input type="text" class="form-control" id="company" name="company">
                                     </div>
                                     <div class="mb-3">
                                         <label for="position" class="form-label"><?= pc_h($pc['train_cal_modal_label_position']) ?></label>
-                                        <input type="text" class="form-control" id="position">
+                                        <input type="text" class="form-control" id="position" name="position">
                                     </div>
                                     <div class="mb-3">
                                         <label for="comments" class="form-label"><?= pc_h($pc['train_cal_modal_label_comments']) ?></label>
-                                        <textarea class="form-control" id="comments" rows="3"></textarea>
+                                        <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
                                     </div>
                                     <div class="mb-3 form-check">
-                                        <input type="checkbox" class="form-check-input" id="consentCheck" required>
+                                        <input type="checkbox" class="form-check-input" id="consentCheck" name="consent" value="1" required>
                                         <label class="form-check-label" for="consentCheck"><?= pc_h($pc['train_cal_modal_consent']) ?></label>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100"><i class="ico-check3 me-2"></i><?= pc_h($pc['train_cal_modal_submit_label']) ?></button>
@@ -813,7 +843,7 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
 <?php foreach ($train_cal_sessions as $row):
     if (empty($row['intakes'])) continue; // a session with no intakes can't render meaningfully
 ?>
-            { code: <?= json_encode($row['code'], JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($row['family'], JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($row['title'], JSON_UNESCAPED_UNICODE) ?>, colour: <?= json_encode(trim((string)($row['colour'] ?? '')) ?: null) ?>, sessions: [
+            { id: <?= (int)$row['id'] ?>, code: <?= json_encode($row['code'], JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($row['family'], JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($row['title'], JSON_UNESCAPED_UNICODE) ?>, colour: <?= json_encode(trim((string)($row['colour'] ?? '')) ?: null) ?>, sessions: [
 <?php foreach ($row['intakes'] as $s): ?>
                 { start: <?= json_encode($s['start']) ?>, end: <?= json_encode($s['end']) ?>, label: <?= json_encode($s['label'], JSON_UNESCAPED_UNICODE) ?> },
 <?php endforeach; ?>
@@ -1085,6 +1115,9 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
         function openApplyModal(training, session) {
             document.getElementById('modal-date').textContent = session.label;
             document.getElementById('modal-event').textContent = `${training.code} — ${training.title}`;
+            document.getElementById('apply-session-id').value = training.id;
+            document.getElementById('apply-intake-start').value = session.start;
+            document.getElementById('apply-intake-label').value = session.label;
             new bootstrap.Modal(document.getElementById('applyModal')).show();
         }
 
@@ -1104,12 +1137,16 @@ $pc = pc_get_many($conn, array_keys($train_cal_defaults), $train_cal_defaults);
             renderCalendar();
         });
 
+        // The form used to stop here: this handler showed a thank-you alert and
+        // discarded the application. It now posts to
+        // process_training_application.php; all that is left to do here is stop
+        // a double click from sending it twice.
         document.getElementById('applyForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            alert(`Thank you, ${name}! Your application for the training on ${document.getElementById('modal-date').textContent} has been submitted. We will contact you soon.`);
-            bootstrap.Modal.getInstance(document.getElementById('applyModal')).hide();
-            e.target.reset();
+            const btn = e.target.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Sending…';
+            }
         });
 
         function renderLegend() {

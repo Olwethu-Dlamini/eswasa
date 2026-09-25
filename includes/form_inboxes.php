@@ -93,6 +93,18 @@ function eswasa_inboxes(): array
         'quote_certification' => $quote('certification', 'Certification quote request', 'Certification Quote Requests'),
         'quote_calibration'   => $quote('calibration', 'Calibration quote request', 'Calibration Quote Requests'),
         'quote_other'         => $quote('other', 'General quote request', 'General Quote Requests'),
+        'training_application' => [
+            'label'      => 'Training application',
+            'inbox'      => 'Training Applications',
+            'page'       => 'training_applications.php',
+            'table'      => 'eswasa_training_applications',
+            'where'      => '1 = 1',
+            'unread'     => "status = 'new'",
+            'who'        => 'full_name',
+            'what'       => "CONCAT_WS(' — ', NULLIF(training_code, ''), NULLIF(intake_label, ''))",
+            'notify_key' => 'site_notify_training_app_email',
+            'icon'       => 'fa-user-graduate',
+        ],
     ];
     return $inboxes;
 }
