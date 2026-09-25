@@ -138,7 +138,12 @@ if (!empty($_FILES['documents']) && is_array($_FILES['documents']['name'])) {
         if (function_exists('finfo_open')) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime  = (string)finfo_file($finfo, $tmp);
-            finfo_close($finfo);
+            // finfo has been an object freed automatically since PHP 8.1, and
+            // finfo_close() is deprecated from 8.5. With errors displayed,
+            // that notice was printed before the redirect header and broke it.
+            if (PHP_VERSION_ID < 80100) {
+                finfo_close($finfo);
+            }
         }
         if ($mime !== '' && !in_array(strtolower($mime), ['application/pdf', 'application/x-pdf'], true)) {
             $attachment_errors[] = $label . ' is not a PDF — only PDF files can be attached.';
