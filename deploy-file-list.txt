@@ -1,75 +1,93 @@
 ESWASA CMS — files to upload to production
-Baseline: cc0793e   Target: 9fb51f7   Generated: 2026-09-01
+Baseline: 76a5ebe   Target: 31a783a   Generated: 2026-09-25
 
 DO NOT UPLOAD:
   includes/env.php   <- holds YOUR live database password. The copy in the
-                        repository has placeholders and would overwrite it.
+                        repository holds the local development fallbacks and
+                        would overwrite it. (This release does not change it.)
 
 Take a dump first:
   mysqldump -u eswasa1 -p admin_eswasa > eswasa_pre_upgrade_$(date +%F).sql
 
-Run after uploading:
-  mysql -u eswasa1 -p admin_eswasa < admin/sql/upgrade_2026_09_01.sql
+Run BEFORE uploading the files:
+  mysql -u eswasa1 -p admin_eswasa < admin/sql/upgrade_2026_09_25.sql
 
-The migration is additive and idempotent: it adds three tables and four
-columns, seeds them from the values the pages used to hardcode, and drops
-nothing. Running it twice is harmless.
+The migration is additive and idempotent: it adds two tables (mail_log,
+eswasa_training_applications), adds read_at/read_by to the contact, feedback
+and quote tables, and adds a 'viewed' quote status. It drops nothing, and
+running it twice is harmless. The site as it is now works unchanged on the
+upgraded database, so running it first means there is never a moment when
+the new code runs against the old tables (training applications would be
+refused, and marking as viewed would do nothing).
 
-These upload directories must exist and be writable by the web server
-(the code creates them, but only if the parent is writable):
-  admin/uploads/logos/      affiliation, accreditation and brand logos
-  admin/uploads/orgs/       certified organisation and producer logos
-  admin/uploads/register/   certification register client logos
-  admin/uploads/vacancies/  vacancy advert PDFs
+This directory must exist and be writable by the web server (it already
+does for the quote forms):
+  admin/uploads/quotes/     PDFs attached to quote requests, including the
+                            general Request a Quote form now
 
-Three new public URLs (already in sitemap.xml):
-  certification-status-management-systems.php
-  certification-status-product.php
-  certification-status-ingelo.php
-certification-status.php still works — it is now a hub listing the three.
+SMTP — when you have the mailbox details
+  Nothing changes until SMTP is set: emails keep going through the server's
+  built-in mail() exactly as before, and every attempt is now logged.
 
-43 files:
+  1. In Plesk > Mail, create (or pick) the mailbox the site sends from,
+     e.g. no-reply@eswasa.co.sz, and note its password.
+  2. In Plesk > Mail > Mail Settings, make sure DKIM signing is on for
+     eswasa.co.sz, and that the domain's SPF record includes this server.
+  3. Admin > Site Settings > Email Delivery (SMTP):
+       SMTP server   the host your provider gives, e.g. mail.eswasa.co.sz
+       Port          587 with STARTTLS (or 465 with SSL/TLS)
+       Username      the full mailbox address
+       Password      the mailbox password (never shown again once saved)
+       Send from     leave blank to send as the username
+     Save, then use "Send test" in the Email Status card.
+  4. Admin > Site Settings > Form Notifications: set who receives each
+     form. Blank uses the default, and a blank default uses
+     info@eswasa.co.sz.
+  If the test fails, the error from the mail server is shown in the flash
+  message and in Recent Email Activity.
 
-NEW     admin/pages/_cert_register_crud.php
-NEW     admin/pages/_cert_register_ui.php
-NEW     admin/pages/_certified_orgs_crud.php
-NEW     admin/pages/_certified_orgs_ui.php
-NEW     admin/pages/_logo_list_crud.php
-NEW     admin/pages/_logo_list_ui.php
-NEW     admin/sql/upgrade_2026_09_01.sql
-NEW     certification-status-ingelo.php
-NEW     certification-status-management-systems.php
-NEW     certification-status-product.php
-NEW     includes/cert_register_page.php
-NEW     includes/logo_lists.php
-mod     about-us.php
+  Alternative for the password: set ESWASA_SMTP_HOST, ESWASA_SMTP_PORT,
+  ESWASA_SMTP_SECURE (tls|ssl|none), ESWASA_SMTP_USER, ESWASA_SMTP_PASS,
+  ESWASA_MAIL_FROM, ESWASA_MAIL_FROM_NAME as environment variables on the
+  server. They take precedence, and the admin shows those fields read-only.
+  Never put the password in a file in this repository: it is public.
+
+37 files:
+
+NEW     admin/api/_bootstrap.php
+NEW     admin/api/mark_viewed.php
+NEW     admin/api/notifications.php
+NEW     admin/js/inbox.js
+NEW     admin/js/notifier.js
+NEW     admin/pages/training_applications.php
+NEW     admin/sql/upgrade_2026_09_25.sql
+NEW     includes/form_inboxes.php
+NEW     includes/lib/.htaccess
+NEW     includes/lib/PHPMailer/Exception.php
+NEW     includes/lib/PHPMailer/LICENSE
+NEW     includes/lib/PHPMailer/PHPMailer.php
+NEW     includes/lib/PHPMailer/SMTP.php
+NEW     includes/lib/PHPMailer/VERSION
+NEW     includes/mailer.php
+NEW     process_training_application.php
+mod     admin/config.php
+mod     admin/css/style.css
+mod     admin/includes/footer.php
+mod     admin/includes/header.php
 mod     admin/includes/sidebar.php
 mod     admin/index.php
-mod     admin/pages/about_edit.php
-mod     admin/pages/calibration_edit.php
-mod     admin/pages/cert_status_edit.php
-mod     admin/pages/faq_edit.php
-mod     admin/pages/index_edit.php
-mod     admin/pages/ingelo.php
-mod     admin/pages/managementsystems.php
-mod     admin/pages/product.php
-mod     admin/pages/services_edit.php
-mod     admin/pages/training_calendar.php
-mod     admin/pages/vacancies_edit.php
-mod     Calibration.php
-mod     certification-status.php
-mod     Certification.php
-mod     faq.php
-mod     includes/cms_helpers.php
-mod     includes/cms_keys_about.php
-mod     includes/cms_keys_faq.php
-mod     includes/footer.php
-mod     includes/header.php
-mod     index.php
-mod     ingelo.php
-mod     managementsystems.php
-mod     product.php
-mod     services.php
-mod     sitemap.xml
+mod     admin/login.php
+mod     admin/pages/_quote_inbox.php
+mod     admin/pages/contact_edit.php
+mod     admin/pages/customer_feedback.php
+mod     admin/pages/qoute_other.php
+mod     admin/pages/site_settings.php
+mod     contact.php
+mod     customer-feedback.php
+mod     includes/quote_result_banner.php
+mod     process_quote.php
+mod     qoute.php
+mod     qoute_calibration.php
+mod     qoute_certification.php
+mod     qoute_training.php
 mod     training-calendar.php
-mod     vacancies.php
