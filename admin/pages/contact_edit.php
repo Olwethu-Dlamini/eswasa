@@ -332,7 +332,7 @@ $messages = $conn->query("SELECT * FROM eswasa_contact_messages ORDER BY created
                                             data-date="<?= date('F j, Y \a\t g:i A', strtotime($msg['created_at'])) ?>">
                                         View
                                     </button>
-                                    <a href="?delete=<?= $msg['id'] ?>" 
+                                    <a href="index.php?page=contact_edit.php&amp;delete=<?= (int)$msg['id'] ?>" 
                                        class="btn btn-sm btn-outline-danger"
                                        onclick="return confirm('Delete this message?')">Delete</a>
                                 </td>
