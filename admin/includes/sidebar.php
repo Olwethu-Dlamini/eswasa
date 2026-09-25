@@ -81,14 +81,15 @@ function submenu_open($pages, $current) {
 
             <!-- Training -->
             <li class="nav-item">
-                <a class="nav-link <?= is_active_group(['training_about.php','training_calendar.php','qoute_training.php'], $current_page) ?> d-flex justify-content-between"
-                   href="#submenu-training" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, ['training_about.php','training_calendar.php','qoute_training.php']) ? 'true' : 'false' ?>">
+                <a class="nav-link <?= is_active_group(['training_about.php','training_calendar.php','training_applications.php','qoute_training.php'], $current_page) ?> d-flex justify-content-between"
+                   href="#submenu-training" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, ['training_about.php','training_calendar.php','training_applications.php','qoute_training.php']) ? 'true' : 'false' ?>">
                     <span><i class="fas fa-chalkboard-teacher fa-fw me-2"></i>Training</span>
                     <i class="fas fa-chevron-down small mt-1"></i>
                 </a>
-                <ul class="nav flex-column ms-3 collapse <?= submenu_open(['training_about.php','training_calendar.php','qoute_training.php'], $current_page) ?>" id="submenu-training">
+                <ul class="nav flex-column ms-3 collapse <?= submenu_open(['training_about.php','training_calendar.php','training_applications.php','qoute_training.php'], $current_page) ?>" id="submenu-training">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='training_about.php'?'active':'' ?>" href="index.php?page=training_about.php">About Trainings</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='training_calendar.php'?'active':'' ?>" href="index.php?page=training_calendar.php">Training Calendar</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $current_page==='training_applications.php'?'active':'' ?>" href="index.php?page=training_applications.php">Applications</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='qoute_training.php'?'active':'' ?>" href="index.php?page=qoute_training.php">Request Quotation</a></li>
                 </ul>
             </li>
