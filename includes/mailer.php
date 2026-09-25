@@ -117,27 +117,57 @@ function eswasa_mail_settings(mysqli $conn): array
  * Production always uses the canonical address rather than the request's Host
  * header: the Host header is supplied by the visitor, and trusting it would
  * let anyone submitting a form plant a link to their own site in an email
- * that staff trust. Local development follows the request so links work on
- * Laragon. ESWASA_SITE_URL overrides both (e.g. for a staging copy).
+ * that staff trust. ESWASA_SITE_URL overrides it (e.g. for a staging copy).
+ *
+ * On a developer's machine the links follow the request so they work on
+ * Laragon — but only when the host is one that cannot be registered on the
+ * internet: localhost, a .test/.localhost name, or a private IP address, or
+ * when APP_ENV=development is set explicitly on the server. APP_ENV's own
+ * auto-detection is not enough here: it also counts any host *beginning*
+ * with "10." or "192.168." as local, and "10.attacker.example" begins with
+ * "10.".
  */
 function eswasa_site_url(string $path = ''): string
 {
     $base = getenv('ESWASA_SITE_URL');
     if (!$base) {
-        $host = (string)($_SERVER['HTTP_HOST'] ?? '');
-        if (APP_ENV === 'development' && $host !== '') {
-            $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
-            $root  = realpath(__DIR__ . '/..');
-            $doc   = realpath((string)($_SERVER['DOCUMENT_ROOT'] ?? ''));
-            $sub   = ($root && $doc && strpos($root, $doc) === 0)
-                ? str_replace('\\', '/', substr($root, strlen($doc)))
-                : '';
-            $base = ($https ? 'https://' : 'http://') . $host . $sub;
-        } else {
-            $base = ESWASA_SITE_URL_DEFAULT;
-        }
+        $host = strtolower((string)($_SERVER['HTTP_HOST'] ?? ''));
+        $base = eswasa_is_dev_host($host)
+            ? eswasa_request_base_url($host)
+            : ESWASA_SITE_URL_DEFAULT;
     }
     return rtrim($base, '/') . '/' . ltrim($path, '/');
+}
+
+/** True only for hosts that can safely be echoed into a link (see above). */
+function eswasa_is_dev_host(string $host): bool
+{
+    if ($host === '' || !preg_match('/^(\[[0-9a-f:]+\]|[a-z0-9.-]+)(:\d{1,5})?$/', $host)) {
+        return false;
+    }
+    if (getenv('APP_ENV') === 'development') {
+        return true;
+    }
+    $bare = trim((string)preg_replace('/:\d{1,5}$/', '', $host), '[]');
+    if ($bare === 'localhost' || preg_match('/\.(test|localhost)$/', $bare)) {
+        return true;
+    }
+    // An IP literal in a private or loopback range; a real name such as
+    // 10.example.com is not an IP literal and fails the first check.
+    return filter_var($bare, FILTER_VALIDATE_IP) !== false
+        && filter_var($bare, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+}
+
+/** scheme://host/sub-folder of this request, for local development only. */
+function eswasa_request_base_url(string $host): string
+{
+    $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    $root  = realpath(__DIR__ . '/..');
+    $doc   = realpath((string)($_SERVER['DOCUMENT_ROOT'] ?? ''));
+    $sub   = ($root && $doc && strpos($root, $doc) === 0)
+        ? str_replace('\\', '/', substr($root, strlen($doc)))
+        : '';
+    return ($https ? 'https://' : 'http://') . $host . $sub;
 }
 
 /**
