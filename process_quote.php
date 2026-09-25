@@ -45,6 +45,32 @@ if ($from_general_form) {
     $source = $service_inboxes[strtolower(trim((string)($_POST['serviceType'] ?? '')))] ?? 'other';
 }
 
+// ── A request PHP threw away ───────────────────────────────────
+//
+// When the whole request is larger than post_max_size (20 MB here), PHP
+// discards it: $_POST and $_FILES arrive empty. This used to be stored as an
+// empty request, announced to staff as a blank email, and answered with the
+// success banner, so the visitor believed everything they had typed and
+// attached had been sent. Send them back with the reason instead. The page
+// they came from is all that can be known about them.
+if (pc_post_was_discarded()) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $limit = pc_format_bytes(pc_ini_bytes(ini_get('post_max_size')));
+    $_SESSION['quote_error'] = 'Your request was too large to receive: together, the attached files '
+        . 'came to more than ' . $limit . '. Nothing was sent. Please try again with fewer or smaller '
+        . 'files, or email the documents to info@eswasa.co.sz.';
+    $return_pages = [
+        'training'      => 'qoute_training.php',
+        'certification' => 'qoute_certification.php',
+        'calibration'   => 'qoute_calibration.php',
+        'other'         => 'qoute.php',
+    ];
+    header('Location: ' . ($return_pages[$source] ?? 'qoute.php') . '?quote_sent=0&ref=' . $source);
+    exit;
+}
+
 // ── Pull common contact fields (try a few aliases) ─────────────
 $pick = function (array $keys) {
     foreach ($keys as $k) {

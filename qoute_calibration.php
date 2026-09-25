@@ -389,7 +389,7 @@ include_once 'includes/breadcrumb_helper.php';
                             <div class="mb-3">
                                 <label for="attachments" class="form-label">Upload Documents (Optional)</label>
                                 <input type="file" class="form-control" id="attachments" name="documents[]" multiple accept="application/pdf,.pdf">
-                                <div class="form-text">e.g., User manual, previous certificate, calibration procedure <strong>PDF files only, up to 10&nbsp;MB each, maximum 5 files.</strong></div>
+                                <div class="form-text">e.g., User manual, previous certificate, calibration procedure <strong>PDF files only, up to 10&nbsp;MB each and 20&nbsp;MB in total, maximum 5 files.</strong></div>
                             </div>
                             <div class="mb-3">
                                 <label for="additionalInfo" class="form-label">Additional Information</label>

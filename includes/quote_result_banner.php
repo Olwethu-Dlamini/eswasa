@@ -52,6 +52,11 @@ $quote_ok = $_GET['quote_sent'] === '1';
 // because the messages embed user-supplied filenames.
 $quote_attach_errors = $_SESSION['quote_attachment_errors'] ?? [];
 unset($_SESSION['quote_attachment_errors']);
+
+// Why a request was refused outright, when process_quote.php knows (e.g. it
+// was larger than the server accepts).
+$quote_error = (string)($_SESSION['quote_error'] ?? '');
+unset($_SESSION['quote_error']);
 ?>
 <div class="container quote-result">
     <?php if ($quote_ok): ?>
@@ -72,8 +77,12 @@ unset($_SESSION['quote_attachment_errors']);
                 <i class="fas fa-exclamation-triangle me-2"></i>We could not save your request
             </h5>
             <p class="mb-0">
-                Something went wrong at our end. Please try again, or email us directly at
-                <a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a>.
+                <?php if ($quote_error !== ''): ?>
+                    <?= htmlspecialchars($quote_error, ENT_QUOTES, 'UTF-8') ?>
+                <?php else: ?>
+                    Something went wrong at our end. Please try again, or email us directly at
+                    <a href="mailto:info@eswasa.co.sz">info@eswasa.co.sz</a>.
+                <?php endif; ?>
             </p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
