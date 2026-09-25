@@ -23,6 +23,7 @@
  *   [data-inbox-viewed-by="key:id"]      filled with "Opened by … on …"
  *   [data-inbox-count="key"]             any unread counter for that inbox
  *                                        (sidebar badges, tab badges)
+ *   [data-inbox-count-sum="k1,k2"]       the total of several (menu groups)
  *
  * A link ending in &view=<id> (as in the notification emails) opens that
  * submission as soon as the page loads.
@@ -62,14 +63,25 @@
         }
     }
 
+    function showCount(el, n) {
+        el.textContent = n + (el.dataset.countSuffix || '');
+        el.classList.toggle('d-none', n === 0);
+    }
+
     function updateCounts(counts) {
-        Object.keys(counts || {}).forEach(function (key) {
+        if (!counts) {
+            return;
+        }
+        Object.keys(counts).forEach(function (key) {
             var n = parseInt(counts[key], 10) || 0;
-            each('[data-inbox-count="' + key + '"]', function (el) {
-                var suffix = el.dataset.countSuffix || '';
-                el.textContent = n + suffix;
-                el.classList.toggle('d-none', n === 0);
-            });
+            each('[data-inbox-count="' + key + '"]', function (el) { showCount(el, n); });
+        });
+        // Menu groups show the total of their inboxes.
+        each('[data-inbox-count-sum]', function (el) {
+            var n = el.dataset.inboxCountSum.split(',').reduce(function (sum, key) {
+                return sum + (parseInt(counts[key], 10) || 0);
+            }, 0);
+            showCount(el, n);
         });
     }
 

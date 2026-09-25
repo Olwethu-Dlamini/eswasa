@@ -5,33 +5,49 @@ if (!defined('ESWASA_ADMIN')) {
 }
 $current_page = basename($_GET['page'] ?? 'index_edit.php');
 
-function nav_link($page, $current, $icon, $label, $badge = 0) {
+require_once __DIR__ . '/../../includes/form_inboxes.php';
+
+function nav_link($page, $current, $icon, $label, $badge_html = '') {
     $active = ($current === $page) ? 'active' : '';
-    // Optional unread counter, e.g. new contact messages. Rendered only when
-    // there is something to see, so the nav stays quiet otherwise.
-    $badge_html = $badge > 0
-        ? '<span class="badge bg-danger rounded-pill ms-auto">'.(int)$badge.'</span>'
-        : '';
     return '<a class="nav-link d-flex align-items-center '.$active.'" href="index.php?page='.$page.'">
         <i class="fas '.$icon.' fa-fw me-2"></i><span>'.$label.'</span>'.$badge_html.'</a>';
 }
 
-// Unread contact messages, shown as a badge next to "Contact Us". Best-effort:
-// a missing table must never break the nav. Contact-form notification email is
-// unreliable on shared hosting, so this badge is the dependable signal that
-// something new has arrived. See spec item A2.
-$unread_messages = 0;
-if ($r = @$conn->query("SELECT COUNT(*) AS c FROM eswasa_contact_messages WHERE status = 'new'")) {
-    $unread_messages = (int)($r->fetch_assoc()['c'] ?? 0);
+// Unread counts for every form inbox (includes/form_inboxes.php). Best-effort:
+// a missing table counts as 0 and never breaks the nav. Email is unreliable
+// on shared hosting, so these badges are the dependable signal that something
+// new has arrived. See spec item A2.
+$inbox_counts = eswasa_inbox_counts($conn);
+
+// A red counter for one inbox, or the total of several (a menu group).
+// Rendered even at 0, hidden, so admin/js/inbox.js and the notification bell
+// can show it the moment something arrives or update it after one is opened.
+function inbox_badge(array $counts, array $keys, string $extra = 'ms-auto') {
+    $n = 0;
+    foreach ($keys as $k) {
+        $n += (int)($counts[$k] ?? 0);
+    }
+    $attr = count($keys) === 1
+        ? 'data-inbox-count="' . htmlspecialchars($keys[0]) . '"'
+        : 'data-inbox-count-sum="' . htmlspecialchars(implode(',', $keys)) . '"';
+    return '<span class="badge bg-danger rounded-pill ' . $extra . ($n > 0 ? '' : ' d-none') . '" ' . $attr
+        . ' title="New, not yet opened">' . $n . '</span>';
 }
 
-// New general quote requests (qoute.php, and anything process_quote.php could
-// not attribute to a service). The link is always shown now that the general
-// form feeds this inbox; see spec item A3.
-$general_quotes = 0;
-if ($r = @$conn->query("SELECT COUNT(*) AS c FROM eswasa_quote_requests WHERE source = 'other' AND status = 'new'")) {
-    $general_quotes = (int)($r->fetch_assoc()['c'] ?? 0);
+// A submenu link, with an optional unread counter.
+function sub_link($page, $current, $label, $badge_html = '') {
+    $active = $current === $page ? 'active' : '';
+    return '<a class="nav-link d-flex align-items-center ' . $active . '" href="index.php?page=' . $page . '">'
+        . '<span>' . $label . '</span>' . $badge_html . '</a>';
 }
+
+// The chevron end of a menu group's toggle, with the group's total.
+function group_end(array $counts, array $keys = []) {
+    return '<span class="d-flex align-items-center gap-2">'
+        . ($keys ? inbox_badge($counts, $keys, '') : '')
+        . '<i class="fas fa-chevron-down small"></i></span>';
+}
+
 function is_active_group($pages, $current) {
     return in_array($current, $pages) ? 'active' : '';
 }
@@ -82,13 +98,13 @@ function submenu_open($pages, $current) {
                 <a class="nav-link <?= is_active_group(['training_about.php','training_calendar.php','training_applications.php','qoute_training.php'], $current_page) ?> d-flex justify-content-between"
                    href="#submenu-training" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, ['training_about.php','training_calendar.php','training_applications.php','qoute_training.php']) ? 'true' : 'false' ?>">
                     <span><i class="fas fa-chalkboard-teacher fa-fw me-2"></i>Training</span>
-                    <i class="fas fa-chevron-down small mt-1"></i>
+                    <?= group_end($inbox_counts, ['training_application', 'quote_training']) ?>
                 </a>
                 <ul class="nav flex-column ms-3 collapse <?= submenu_open(['training_about.php','training_calendar.php','training_applications.php','qoute_training.php'], $current_page) ?>" id="submenu-training">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='training_about.php'?'active':'' ?>" href="index.php?page=training_about.php">About Trainings</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='training_calendar.php'?'active':'' ?>" href="index.php?page=training_calendar.php">Training Calendar</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='training_applications.php'?'active':'' ?>" href="index.php?page=training_applications.php">Applications</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='qoute_training.php'?'active':'' ?>" href="index.php?page=qoute_training.php">Request Quotation</a></li>
+                    <li class="nav-item"><?= sub_link('training_applications.php', $current_page, 'Applications', inbox_badge($inbox_counts, ['training_application'])) ?></li>
+                    <li class="nav-item"><?= sub_link('qoute_training.php', $current_page, 'Request Quotation', inbox_badge($inbox_counts, ['quote_training'])) ?></li>
                 </ul>
             </li>
 
@@ -98,7 +114,7 @@ function submenu_open($pages, $current) {
                 <a class="nav-link <?= is_active_group($cert_pages, $current_page) ?> d-flex justify-content-between"
                    href="#submenu-cert" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $cert_pages) ? 'true' : 'false' ?>">
                     <span><i class="fas fa-award fa-fw me-2"></i>Certification</span>
-                    <i class="fas fa-chevron-down small mt-1"></i>
+                    <?= group_end($inbox_counts, ['quote_certification']) ?>
                 </a>
                 <ul class="nav flex-column ms-3 collapse <?= submenu_open($cert_pages, $current_page) ?>" id="submenu-cert">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='certification_edit.php'?'active':'' ?>" href="index.php?page=certification_edit.php">ESWASA Certification</a></li>
@@ -106,7 +122,7 @@ function submenu_open($pages, $current) {
                     <li class="nav-item"><a class="nav-link <?= $current_page==='product.php'?'active':'' ?>" href="index.php?page=product.php">Product Certification</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='ingelo.php'?'active':'' ?>" href="index.php?page=ingelo.php">Ingelo Certification</a></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='cert_status_edit.php'?'active':'' ?>" href="index.php?page=cert_status_edit.php">Certification Status Registers</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='qoute_certification.php'?'active':'' ?>" href="index.php?page=qoute_certification.php">Request Quotation</a></li>
+                    <li class="nav-item"><?= sub_link('qoute_certification.php', $current_page, 'Request Quotation', inbox_badge($inbox_counts, ['quote_certification'])) ?></li>
                 </ul>
             </li>
 
@@ -115,11 +131,11 @@ function submenu_open($pages, $current) {
                 <a class="nav-link <?= is_active_group(['calibration_edit.php','qoute_calibration.php'], $current_page) ?> d-flex justify-content-between"
                    href="#submenu-cal" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, ['calibration_edit.php','qoute_calibration.php']) ? 'true' : 'false' ?>">
                     <span><i class="fas fa-tools fa-fw me-2"></i>Calibration</span>
-                    <i class="fas fa-chevron-down small mt-1"></i>
+                    <?= group_end($inbox_counts, ['quote_calibration']) ?>
                 </a>
                 <ul class="nav flex-column ms-3 collapse <?= submenu_open(['calibration_edit.php','qoute_calibration.php'], $current_page) ?>" id="submenu-cal">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='calibration_edit.php'?'active':'' ?>" href="index.php?page=calibration_edit.php">Scales &amp; Metrology</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='qoute_calibration.php'?'active':'' ?>" href="index.php?page=qoute_calibration.php">Request Quotation</a></li>
+                    <li class="nav-item"><?= sub_link('qoute_calibration.php', $current_page, 'Request Quotation', inbox_badge($inbox_counts, ['quote_calibration'])) ?></li>
                 </ul>
             </li>
 
@@ -163,21 +179,21 @@ function submenu_open($pages, $current) {
                 <a class="nav-link <?= is_active_group($cc_pages, $current_page) ?> d-flex justify-content-between"
                    href="#submenu-cc" data-bs-toggle="collapse" aria-expanded="<?= in_array($current_page, $cc_pages) ? 'true' : 'false' ?>">
                     <span><i class="fas fa-headset fa-fw me-2"></i>Customer Care</span>
-                    <i class="fas fa-chevron-down small mt-1"></i>
+                    <?= group_end($inbox_counts, ['feedback']) ?>
                 </a>
                 <ul class="nav flex-column ms-3 collapse <?= submenu_open($cc_pages, $current_page) ?>" id="submenu-cc">
                     <li class="nav-item"><a class="nav-link <?= $current_page==='service_charter.php'?'active':'' ?>" href="index.php?page=service_charter.php">Service Charter</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $current_page==='customer_feedback.php'?'active':'' ?>" href="index.php?page=customer_feedback.php">Customer Feedback</a></li>
+                    <li class="nav-item"><?= sub_link('customer_feedback.php', $current_page, 'Customer Feedback', inbox_badge($inbox_counts, ['feedback'])) ?></li>
                     <li class="nav-item"><a class="nav-link <?= $current_page==='policies_edit.php'?'active':'' ?>" href="index.php?page=policies_edit.php">Policies</a></li>
                 </ul>
             </li>
 
             <li class="nav-item">
-                <?= nav_link('contact_edit.php', $current_page, 'fa-envelope', 'Contact Us', $unread_messages) ?>
+                <?= nav_link('contact_edit.php', $current_page, 'fa-envelope', 'Contact Us', inbox_badge($inbox_counts, ['contact'])) ?>
             </li>
 
             <li class="nav-item">
-                <?= nav_link('qoute_other.php', $current_page, 'fa-inbox', 'General Quotes', $general_quotes) ?>
+                <?= nav_link('qoute_other.php', $current_page, 'fa-inbox', 'General Quotes', inbox_badge($inbox_counts, ['quote_other'])) ?>
             </li>
 
             <li class="nav-item">
