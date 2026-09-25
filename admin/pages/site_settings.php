@@ -9,8 +9,10 @@ require_once __DIR__ . '/../../includes/form_inboxes.php';
 
 // Recipient fields: the all-forms default first, then one per inbox.
 $notify_fields = [ESWASA_NOTIFY_DEFAULT_KEY => 'All forms (default)'];
-foreach (eswasa_inboxes() as $ib) {
+$notify_inbox_of = [];
+foreach (eswasa_inboxes() as $inbox_key => $ib) {
     $notify_fields[$ib['notify_key']] = $ib['inbox'];
+    $notify_inbox_of[$ib['notify_key']] = $inbox_key;
 }
 
 $smtp_keys = array_column(ESWASA_MAIL_SETTING_KEYS, 1, null);
@@ -218,6 +220,7 @@ $env_attr = function (string $f) use ($mail) {
                         Who is emailed when a form is submitted. Separate several addresses
                         with commas. A blank form uses the default; a blank default uses
                         <code><?= htmlspecialchars(ESWASA_NOTIFY_FALLBACK) ?></code>.
+                        Under each form is where its notifications go right now.
                         Every submission is also saved in the admin whether or not the email
                         arrives.
                     </p>
@@ -232,6 +235,16 @@ $env_attr = function (string $f) use ($mail) {
                                        name="<?= htmlspecialchars($key) ?>"
                                        value="<?= htmlspecialchars((string)$settings[$key]) ?>"
                                        placeholder="<?= $is_default ? htmlspecialchars(ESWASA_NOTIFY_FALLBACK) : 'same as the default' ?>">
+                                <?php if (!$is_default):
+                                    [$goes_to, $from_key] = eswasa_notify_recipients_with_source($conn, $notify_inbox_of[$key]);
+                                    $why = $from_key === $key ? ''
+                                        : ($from_key === ESWASA_NOTIFY_DEFAULT_KEY ? ' (the default)'
+                                        : ($from_key === '' ? ' (built in)'
+                                        : ' (the address shown on the ' . $notify_fields[$key] . ' page — set one here to override it)')); ?>
+                                    <small class="text-muted d-block mt-1">
+                                        Sends to <?= htmlspecialchars(implode(', ', $goes_to)) ?><?= htmlspecialchars($why) ?>
+                                    </small>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <?php if ($is_default): ?><hr class="my-2"><?php endif; ?>

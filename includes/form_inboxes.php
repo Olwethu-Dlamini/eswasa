@@ -281,6 +281,16 @@ function eswasa_viewed_info(mysqli $conn, string $key, int $id): ?array
  */
 function eswasa_notify_recipients(mysqli $conn, string $key): array
 {
+    return eswasa_notify_recipients_with_source($conn, $key)[0];
+}
+
+/**
+ * The same, plus where the list came from: the page_content key that
+ * supplied it, or '' for the built-in fallback. Site Settings uses this to
+ * show where each form's notifications actually go.
+ */
+function eswasa_notify_recipients_with_source(mysqli $conn, string $key): array
+{
     $ib = eswasa_inbox($key);
     $keys = array_merge($ib ? [$ib['notify_key']] : [], $ib['fallback'] ?? [], [ESWASA_NOTIFY_DEFAULT_KEY]);
     $stored = [];
@@ -292,10 +302,10 @@ function eswasa_notify_recipients(mysqli $conn, string $key): array
     foreach ($keys as $k) {
         $list = eswasa_parse_emails((string)($stored[$k] ?? ''));
         if ($list) {
-            return $list;
+            return [$list, $k];
         }
     }
-    return [ESWASA_NOTIFY_FALLBACK];
+    return [[ESWASA_NOTIFY_FALLBACK], ''];
 }
 
 /**
