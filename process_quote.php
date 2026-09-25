@@ -35,6 +35,16 @@ if (!empty($_POST['quote_source'])) {
     }
 }
 
+// The general request form (qoute.php) asks which service is wanted, so the
+// request is filed with that service's inbox and emailed to its team. Only
+// the services with their own inbox are mapped; the rest stay "other", which
+// is the General Quote Requests inbox.
+$from_general_form = ($_POST['quote_form'] ?? '') === 'general';
+if ($from_general_form) {
+    $service_inboxes = ['training' => 'training', 'certification' => 'certification', 'calibration' => 'calibration'];
+    $source = $service_inboxes[strtolower(trim((string)($_POST['serviceType'] ?? '')))] ?? 'other';
+}
+
 // ── Pull common contact fields (try a few aliases) ─────────────
 $pick = function (array $keys) {
     foreach ($keys as $k) {
@@ -45,16 +55,17 @@ $pick = function (array $keys) {
     return null;
 };
 
-// Field-name aliases across the five quote forms. Note "full_names" (plural):
+// Field-name aliases across the six quote forms. Note "full_names" (plural):
 // the individual training form uses it, and its absence here meant every
 // submission from that form stored contact_name = NULL, so the admin inbox
 // showed a dash instead of the requester's name. Verified against the actual
-// input names in all five forms.
+// input names in all five forms; contactPerson and companyName are the
+// general form's (qoute.php).
 // See docs/superpowers/specs/2026-08-18-cms-batch-a-design.md, item A3.
-$contact_name = $pick(['contact_person', 'contactName', 'contact_name', 'full_names', 'full_name', 'name']);
+$contact_name = $pick(['contact_person', 'contactPerson', 'contactName', 'contact_name', 'full_names', 'full_name', 'name']);
 $contact_email = $pick(['email', 'contact_email']);
 $contact_phone = $pick(['phone', 'contact_phone', 'tel']);
-$organization  = $pick(['organisation_name', 'organization_name', 'company_name', 'company', 'organisation']);
+$organization  = $pick(['organisation_name', 'organization_name', 'company_name', 'companyName', 'company', 'organisation']);
 
 if ($contact_name) $contact_name = pc_strip_text($contact_name);
 if ($contact_phone) $contact_phone = pc_strip_text($contact_phone);
@@ -196,7 +207,7 @@ $return_pages = [
     'calibration'   => 'qoute_calibration.php',
     'other'         => 'qoute.php',
 ];
-$back = $return_pages[$source] ?? 'qoute.php';
+$back = $from_general_form ? 'qoute.php' : ($return_pages[$source] ?? 'qoute.php');
 
 $query = ['quote_sent' => $ok ? '1' : '0', 'ref' => $source];
 

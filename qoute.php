@@ -170,6 +170,9 @@
         </section>
         <!-- breadcrumb-area-end -->
 
+        <?php /* Submission outcome, as on the three service quote pages. */ ?>
+        <?php include __DIR__ . '/includes/quote_result_banner.php'; ?>
+
         <div class="container py-5">
             <!-- Section Header -->
             <div class="main_title centered upper mb-5 text-center">
@@ -184,7 +187,12 @@
             <!-- Request for Quotation Form -->
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <form id="rfqForm" action="#" method="POST"> <!-- Replace # with actual form processing script -->
+                    <form id="rfqForm" action="process_quote.php" method="POST" enctype="multipart/form-data">
+                        <?php /* Until now this form posted to "#" and a script only showed a
+                               thank-you alert, so every request made here was lost. It now
+                               goes through the same handler as the service quote forms; the
+                               chosen service decides which inbox it lands in. */ ?>
+                        <input type="hidden" name="quote_form" value="general">
                         <!-- Contact Information Section -->
                         <div class="form-section">
                             <h3 class="form-section-title">Contact Information</h3>
@@ -260,8 +268,8 @@
                             <h3 class="form-section-title">Additional Information</h3>
                             <div class="mb-3">
                                 <label for="attachments" class="form-label">Upload Supporting Documents (Optional)</label>
-                                <input type="file" class="form-control" id="attachments" name="attachments" multiple>
-                                <div class="form-text">e.g., Technical specifications, drawings, previous certificates.</div>
+                                <input type="file" class="form-control" id="attachments" name="documents[]" multiple accept="application/pdf,.pdf">
+                                <div class="form-text">PDF only &mdash; up to 5 files of 10 MB each. e.g., Technical specifications, drawings, previous certificates.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="comments" class="form-label">Comments or Questions</label>
@@ -304,20 +312,14 @@
     <script src="assets/js/main.js"></script>
 
     <script>
-        // Example: Basic form submission handling (replace with actual logic)
-        document.getElementById('rfqForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission for now
-
-            // Example: Collect form data
-            const formData = new FormData(this);
-            const serviceType = formData.get('serviceType');
-            const contactPerson = formData.get('contactPerson');
-
-            // Example: Show a confirmation message
-            alert(`Thank you, ${contactPerson}! Your request for a quotation for "${serviceType}" has been received. We will contact you soon.`);
-
-            // Example: Reset the form after successful submission (if not handled by server)
-            // this.reset();
+        // The form posts to process_quote.php. All that is left to do here is
+        // stop a double click from sending the same request twice.
+        document.getElementById('rfqForm').addEventListener('submit', function () {
+            const btn = this.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Sending…';
+            }
         });
     </script>
 
