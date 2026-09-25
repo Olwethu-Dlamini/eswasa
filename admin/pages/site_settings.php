@@ -5,6 +5,13 @@ if (!defined('ESWASA_ADMIN')) {
 }
 require_once __DIR__ . '/../../includes/cms_helpers.php';
 require_once __DIR__ . '/../../includes/mailer.php';
+require_once __DIR__ . '/../../includes/form_inboxes.php';
+
+// Recipient fields: the all-forms default first, then one per inbox.
+$notify_fields = [ESWASA_NOTIFY_DEFAULT_KEY => 'All forms (default)'];
+foreach (eswasa_inboxes() as $ib) {
+    $notify_fields[$ib['notify_key']] = $ib['inbox'];
+}
 
 $smtp_keys = array_column(ESWASA_MAIL_SETTING_KEYS, 1, null);
 $smtp_key_of = array_combine(array_keys(ESWASA_MAIL_SETTING_KEYS), $smtp_keys);
@@ -44,13 +51,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
         redirect_self();
     }
 
-    // Where contact-form notifications are emailed. Blank falls back to the
-    // default at send time; anything non-blank must be a valid address, or a
-    // typo would silently send notifications nowhere. See spec item A2.
-    $notify = trim($_POST['site_contact_notify_email'] ?? '');
-    if ($notify !== '' && !filter_var($notify, FILTER_VALIDATE_EMAIL)) {
-        set_flash('danger', 'That notification email address is not valid. Nothing was saved.');
-        redirect_self();
+    // Where each form's notifications are emailed. Blank falls back to the
+    // all-forms default at send time; anything non-blank must be entirely
+    // valid addresses, or a typo would silently send notifications nowhere.
+    // See spec item A2.
+    $notify = [];
+    foreach ($notify_fields as $key => $label) {
+        $raw = trim((string)($_POST[$key] ?? ''));
+        $tokens = preg_split('/[\s,;]+/', $raw, -1, PREG_SPLIT_NO_EMPTY);
+        $bad = array_filter($tokens, function ($t) {
+            return !filter_var($t, FILTER_VALIDATE_EMAIL);
+        });
+        if ($bad) {
+            set_flash('danger', 'Not a valid email address for ' . $label . ': ' . implode(', ', $bad) . '. Nothing was saved.');
+            redirect_self();
+        }
+        $notify[$key] = implode(', ', eswasa_parse_emails($raw));
     }
 
     // ---- SMTP ----
@@ -85,7 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
     }
 
     pc_save($conn, 'site_ga4_id', $ga4);
-    pc_save($conn, 'site_contact_notify_email', $notify);
+    foreach ($notify as $key => $list) {
+        pc_save($conn, $key, $list);
+    }
     foreach ($smtp as $f => $v) {
         pc_save($conn, $smtp_key_of[$f], $v);
     }
@@ -111,12 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
 }
 
 // ---- Current values ----
-$settings = pc_get_many($conn, ['site_ga4_id', 'site_contact_notify_email'], [
-    'site_ga4_id'               => '',
-    'site_contact_notify_email' => '',
-]);
-$ga4_id       = $settings['site_ga4_id'];
-$notify_email = $settings['site_contact_notify_email'];
+$settings = pc_get_many($conn, array_merge(['site_ga4_id'], array_keys($notify_fields)));
+$ga4_id   = $settings['site_ga4_id'];
 
 $mail   = eswasa_mail_settings($conn);
 $stored = pc_get_many($conn, $smtp_keys);   // raw saved values, before defaults
@@ -176,19 +190,31 @@ $env_attr = function (string $f) use ($mail) {
                 </div>
             </div>
 
-            <div class="card mb-4">
-                <div class="card-header"><i class="fas fa-envelope me-2"></i>Contact Form Notifications</div>
+            <div class="card mb-4" id="notifications">
+                <div class="card-header"><i class="fas fa-bell me-2"></i>Form Notifications</div>
                 <div class="card-body">
-                    <label class="form-label">Send new contact messages to</label>
-                    <input type="email" class="form-control" name="site_contact_notify_email"
-                           value="<?= htmlspecialchars($notify_email) ?>"
-                           placeholder="info@eswasa.co.sz">
-                    <small class="form-text text-muted d-block mt-2">
-                        When someone submits the Contact Us form, a copy is emailed here.
-                        Leave blank to use <code>info@eswasa.co.sz</code>.
-                        <br>Every message is also saved in the admin regardless of email
-                        delivery &mdash; see <strong>Contact Us</strong> in the sidebar.
-                    </small>
+                    <p class="small text-muted">
+                        Who is emailed when a form is submitted. Separate several addresses
+                        with commas. A blank form uses the default; a blank default uses
+                        <code><?= htmlspecialchars(ESWASA_NOTIFY_FALLBACK) ?></code>.
+                        Every submission is also saved in the admin whether or not the email
+                        arrives.
+                    </p>
+                    <?php foreach ($notify_fields as $key => $label):
+                        $is_default = $key === ESWASA_NOTIFY_DEFAULT_KEY; ?>
+                        <div class="row g-2 align-items-center mb-2">
+                            <label class="col-sm-5 col-form-label col-form-label-sm<?= $is_default ? ' fw-semibold' : '' ?>" for="n_<?= htmlspecialchars($key) ?>">
+                                <?= htmlspecialchars($label) ?>
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="n_<?= htmlspecialchars($key) ?>"
+                                       name="<?= htmlspecialchars($key) ?>"
+                                       value="<?= htmlspecialchars((string)$settings[$key]) ?>"
+                                       placeholder="<?= $is_default ? htmlspecialchars(ESWASA_NOTIFY_FALLBACK) : 'same as the default' ?>">
+                            </div>
+                        </div>
+                        <?php if ($is_default): ?><hr class="my-2"><?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
