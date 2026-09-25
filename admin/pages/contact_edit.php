@@ -349,35 +349,46 @@ $messages = $conn->query("SELECT * FROM eswasa_contact_messages ORDER BY created
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle View button click
+    // Fill the message window from the row's data attributes.
+    //
+    // This used to assemble the window as an HTML string and assign it to
+    // innerHTML. getAttribute() returns the decoded text, so whatever a visitor
+    // typed into the public contact form was parsed as HTML inside the admin:
+    // a message containing <img src=x onerror=...> ran script with the admin's
+    // session. Every value is now set as text, never parsed.
+    function field(label, value) {
+        const p = document.createElement('p');
+        const strong = document.createElement('strong');
+        strong.textContent = label + ': ';
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(value || ''));
+        return p;
+    }
+
     document.querySelectorAll('.view-message-btn').forEach(button => {
         button.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-            const name = this.getAttribute('data-name');
-            const email = this.getAttribute('data-email');
-            const phone = this.getAttribute('data-phone');
-            const subject = this.getAttribute('data-subject');
-            const message = this.getAttribute('data-message');
-            const date = this.getAttribute('data-date');
+            const d = this.dataset;
+            const body = document.getElementById('messageModalBody');
+            body.replaceChildren(
+                field('Name', d.name),
+                field('Email', d.email),
+                field('Phone', d.phone),
+                field('Subject', d.subject),
+                document.createElement('hr')
+            );
 
-            // Build modal content
-            const html = `
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Phone:</strong> ${phone}</p>
-                <p><strong>Subject:</strong> ${subject}</p>
-                <hr>
-                <p><strong>Message:</strong></p>
-                <p>${message.replace(/\n/g, '<br>')}</p>
-                <hr>
-                <p><em>Sent on: ${date}</em></p>
-            `;
+            const label = document.createElement('p');
+            label.innerHTML = '<strong>Message:</strong>';
+            const message = document.createElement('p');
+            message.style.whiteSpace = 'pre-line';
+            message.textContent = d.message || '';
+            const sent = document.createElement('p');
+            const em = document.createElement('em');
+            em.textContent = 'Sent on: ' + (d.date || '');
+            sent.appendChild(em);
+            body.append(label, message, document.createElement('hr'), sent);
 
-            document.getElementById('messageModalBody').innerHTML = html;
-            
-            // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('viewMessageModal'));
-            modal.show();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('viewMessageModal')).show();
         });
     });
 });
