@@ -2,12 +2,13 @@
 // Public endpoint for the three quote-request forms
 // (qoute_training.php, qoute_certification.php, qoute_calibration.php).
 // Stores the submission in eswasa_quote_requests; redirects back to the
-// referring form with ?quote_sent=1 (or 0 on failure).
+// referring form with ?quote_sent=1 (or 0 on failure), then emails staff.
 
 declare(strict_types=1);
 
 require_once __DIR__ . '/includes/db_connect.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
+require_once __DIR__ . '/includes/form_inboxes.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -206,4 +207,45 @@ if ($attachment_errors) {
 }
 
 header('Location: ' . $back . '?' . http_build_query($query));
+
+// ── Notify staff ───────────────────────────────────────────────
+//
+// Quote requests were stored and never announced: staff only found them by
+// opening the inbox. The email goes out after the redirect above has been
+// sent, so the visitor never waits on the mail server. Attachments are not
+// forwarded (up to 50 MB); the email links to the request, where they are.
+if ($ok) {
+    eswasa_finish_response_early();
+
+    $rows = [];
+    foreach ($safe_post as $k => $v) {
+        if (in_array($k, ['quote_source', 'quote_form', 'MAX_FILE_SIZE'], true)) {
+            continue;
+        }
+        $rows[quote_field_label((string)$k)] = $v;
+    }
+    if ($attachments_paths) {
+        $rows['Attachments'] = count($attachments_paths) . ' PDF file(s) — open the request in the admin to download';
+    }
+    if ($attachment_errors) {
+        $rows['Rejected attachments'] = implode("\n", $attachment_errors);
+    }
+
+    eswasa_notify_submission(
+        $conn,
+        'quote_' . $source,
+        $new_id,
+        implode(' — ', array_filter([(string)$contact_name, (string)$organization])),
+        $rows,
+        ['reply_to' => $contact_email, 'reply_to_name' => (string)$contact_name]
+    );
+}
 exit;
+
+/** "organisation_name" / "contactPerson" → "Organisation name" / "Contact person". */
+function quote_field_label(string $key): string
+{
+    $label = preg_replace('/(?<=[a-z])(?=[A-Z])/', ' ', $key);
+    $label = strtolower(str_replace(['_', '-', '[]'], [' ', ' ', ''], (string)$label));
+    return ucfirst(trim((string)preg_replace('/\s+/', ' ', $label)));
+}
