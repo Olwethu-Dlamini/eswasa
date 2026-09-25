@@ -12,6 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
 include_once 'includes/db_connect.php';
 include_once 'includes/breadcrumb_helper.php';
 require_once __DIR__ . '/includes/cms_helpers.php';
+require_once __DIR__ . '/includes/form_inboxes.php';
 
 // CMS content for editable strings (does NOT touch form submission below).
 $pc_keys = [
@@ -106,59 +107,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('sssss', $name, $email, $phone, $subject, $message);
         
         if ($stmt->execute()) {
+            $message_id = (int)$conn->insert_id;
+            $stmt->close();
+
             // The message is now safely in eswasa_contact_messages and visible
-            // in the admin inbox. The email below is a best-effort extra
-            // notification — if the host can't send mail, the enquiry is still
-            // not lost. Never let a mail failure surface to the visitor.
+            // in the admin inbox. The email is an extra notification: it goes
+            // out after the visitor has been redirected, and a mail failure is
+            // recorded in the admin's email log rather than shown to them.
             //
-            // Recipient is configurable in the admin under Site Settings.
-            $notify = pc_get_many($conn, ['site_contact_notify_email'], [
-                'site_contact_notify_email' => 'info@eswasa.co.sz',
-            ]);
-            $to = filter_var($notify['site_contact_notify_email'], FILTER_VALIDATE_EMAIL)
-                ? $notify['site_contact_notify_email']
-                : 'info@eswasa.co.sz';
-            $email_subject = "New Contact Form Submission: $subject";
-            $email_body = "
-                <h3>New Message from ESWASA Website</h3>
-                <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
-                <p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>
-                <p><strong>Phone:</strong> " . htmlspecialchars($phone) . "</p>
-                <p><strong>Subject:</strong> " . htmlspecialchars($subject) . "</p>
-                <p><strong>Message:</strong></p>
-                <p>" . nl2br(htmlspecialchars($message)) . "</p>
-                <hr>
-                <p><em>Sent on: " . date('F j, Y \a\t g:i A') . "</em></p>
-            ";
-            // From: must be an address this domain is authorised to send as,
-            // otherwise SPF/DMARC fails and receiving servers silently drop
-            // the mail. It previously used the visitor's own address, which is
-            // exactly that failure — which is why nothing ever arrived while
-            // rows kept landing in the database. The visitor goes in Reply-To
-            // instead, so hitting reply still works. See spec item A2.
-            $from_domain = $_SERVER['HTTP_HOST'] ?? 'eswasa.co.sz';
-            $from_domain = preg_replace('/^www\.|:\d+$/', '', strtolower($from_domain));
-            $from_address = 'no-reply@' . $from_domain;
-
-            // Header-injection guard: a newline in either field would let a
-            // submitter append arbitrary headers.
-            $safe_reply_to = preg_replace('/[\r\n]+/', ' ', $email);
-            $safe_from_name = preg_replace('/[\r\n]+/', ' ', $name);
-
-            $headers = "MIME-Version: 1.0\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8\r\n";
-            $headers .= "From: ESWASA Website <" . $from_address . ">\r\n";
-            $headers .= "Reply-To: " . $safe_from_name . " <" . $safe_reply_to . ">\r\n";
-
-            @mail($to, $email_subject, $email_body, $headers);
-
-            // ✅ Redirect to prevent resubmission
+            // Recipients are set in the admin under Site Settings › Form
+            // Notifications. The visitor goes in Reply-To, never From: a From
+            // on their domain fails SPF/DMARC and receiving servers silently
+            // drop it — which is why nothing ever arrived while rows kept
+            // landing in the database. See spec item A2.
             header("Location: contact.php?success=1");
+            eswasa_finish_response_early();
+            eswasa_notify_submission($conn, 'contact', $message_id, $subject, [
+                'Name'    => $name,
+                'Email'   => $email,
+                'Phone'   => $phone,
+                'Subject' => $subject,
+                'Message' => $message,
+            ], ['reply_to' => $email, 'reply_to_name' => $name]);
             exit;
         } else {
             $error = 'Database error. Please try again later.';
+            $stmt->close();
         }
-        $stmt->close();
     }
     
     // On error: store in session and redirect. The session is already open
