@@ -9,6 +9,9 @@
  * Replies with the fresh unread counts so the page can update its badges.
  */
 
+// Someone clicked to open a submission: that is activity, unlike the bell's
+// background polling (see _bootstrap.php).
+define('API_IS_USER_ACTION', true);
 require __DIR__ . '/_bootstrap.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

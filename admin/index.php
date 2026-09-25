@@ -21,6 +21,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 requireLogin();
+// A real page load: the admin is active. The notification bell's polling
+// does not count (admin/api/_bootstrap.php), so an idle session still ends.
+$_SESSION['last_activity'] = time();
 
 // Constant for includes security check
 define('ESWASA_ADMIN', true);

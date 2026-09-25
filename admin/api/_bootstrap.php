@@ -38,6 +38,22 @@ if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'XMLHttpRequest') {
     api_reply(400, ['ok' => false, 'error' => 'bad_request']);
 }
 
+// The bell (notifier.js) asks every minute, and every request refreshes the
+// session, so on its own it would keep a forgotten admin tab signed in for
+// ever — on a shared computer, too. Only real use counts as activity: a page
+// load (admin/index.php records it) or an endpoint that declares itself a
+// user action. Past the idle limit the session is ended here, and the bell
+// says the admin has been signed out.
+$idle_limit = max(3600, (int)ini_get('session.gc_maxlifetime'));
+if (isset($_SESSION['last_activity']) && time() - (int)$_SESSION['last_activity'] > $idle_limit) {
+    $_SESSION = [];
+    session_destroy();
+    api_reply(401, ['ok' => false, 'error' => 'signed_out']);
+}
+if (defined('API_IS_USER_ACTION')) {
+    $_SESSION['last_activity'] = time();
+}
+
 $api_user = (string)($_SESSION['username'] ?? 'admin');
 
 // Nothing below writes to the session. Releasing it now means a slow reply
