@@ -1,0 +1,45 @@
+<?php
+/**
+ * admin/api/_bootstrap.php — shared set-up for the admin's small JSON
+ * endpoints, which are called by the admin's own scripts (admin/js/).
+ *
+ * Signed-in admins only. A signed-out caller gets 401 rather than the
+ * redirect to the login page the admin pages use, so a script can tell an
+ * expired session from a real answer.
+ */
+
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../includes/form_inboxes.php';
+
+// A PHP notice printed into the response would corrupt the JSON.
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+ini_set('error_log', __DIR__ . '/../error.log');
+
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
+
+function api_reply(int $status, array $body): void
+{
+    http_response_code($status);
+    echo json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+
+if (!isLoggedIn()) {
+    api_reply(401, ['ok' => false, 'error' => 'signed_out']);
+}
+
+// Only the admin's own scripts send this header. A page on another site
+// cannot add it to a request without a CORS permission these endpoints never
+// grant, so this stops a third-party page from driving them with the
+// administrator's cookies.
+if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'XMLHttpRequest') {
+    api_reply(400, ['ok' => false, 'error' => 'bad_request']);
+}
+
+$api_user = (string)($_SESSION['username'] ?? 'admin');
+
+// Nothing below writes to the session. Releasing it now means a slow reply
+// here never holds up the admin page the person is loading at the same time.
+session_write_close();

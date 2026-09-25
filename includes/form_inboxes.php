@@ -33,6 +33,8 @@ const ESWASA_NOTIFY_DEFAULT_KEY = 'site_notify_default_email';
  *   table       where they are stored
  *   where       which rows of that table belong to this inbox
  *   unread      what "not yet opened" means for this table
+ *   viewed      the SET clause that marks one as opened (read_at/read_by are
+ *               set alongside it)
  *   who, what   SQL expressions summarising a row for the notification list
  *   notify_key  page_content key holding this form's recipients
  *   fallback    older page_content keys tried before the default (optional)
@@ -54,6 +56,7 @@ function eswasa_inboxes(): array
             'table'      => 'eswasa_quote_requests',
             'where'      => "source = '" . $source . "'",
             'unread'     => "status = 'new'",
+            'viewed'     => "status = 'viewed'",
             'who'        => "COALESCE(NULLIF(contact_name, ''), NULLIF(organization, ''), NULLIF(contact_email, ''), 'Unknown')",
             'what'       => "COALESCE(NULLIF(organization, ''), '')",
             'notify_key' => 'site_notify_quote_' . $source . '_email',
@@ -69,6 +72,7 @@ function eswasa_inboxes(): array
             'table'      => 'eswasa_contact_messages',
             'where'      => '1 = 1',
             'unread'     => "status = 'new'",
+            'viewed'     => "status = 'read'",
             'who'        => 'name',
             'what'       => 'subject',
             'notify_key' => 'site_contact_notify_email',
@@ -81,6 +85,7 @@ function eswasa_inboxes(): array
             'table'      => 'eswasa_customer_feedback',
             'where'      => '1 = 1',
             'unread'     => 'is_read = 0',
+            'viewed'     => 'is_read = 1',
             'who'        => "COALESCE(NULLIF(email, ''), 'Anonymous')",
             'what'       => "CONCAT_WS(' — ', NULLIF(feedback_type, ''), NULLIF(service, ''))",
             'notify_key' => 'site_notify_feedback_email',
@@ -100,6 +105,7 @@ function eswasa_inboxes(): array
             'table'      => 'eswasa_training_applications',
             'where'      => '1 = 1',
             'unread'     => "status = 'new'",
+            'viewed'     => "status = 'viewed'",
             'who'        => 'full_name',
             'what'       => "CONCAT_WS(' — ', NULLIF(training_code, ''), NULLIF(intake_label, ''))",
             'notify_key' => 'site_notify_training_app_email',
@@ -112,6 +118,89 @@ function eswasa_inboxes(): array
 function eswasa_inbox(string $key): ?array
 {
     return eswasa_inboxes()[$key] ?? null;
+}
+
+/**
+ * Unread submissions per inbox, e.g. ['contact' => 2, 'feedback' => 0, ...].
+ * An inbox whose table is missing (migration not run) counts as 0 rather
+ * than breaking the page that asked.
+ */
+function eswasa_inbox_counts(mysqli $conn): array
+{
+    $counts = [];
+    foreach (eswasa_inboxes() as $key => $ib) {
+        $counts[$key] = 0;
+        try {
+            $res = @$conn->query(
+                "SELECT COUNT(*) AS c FROM {$ib['table']} WHERE ({$ib['where']}) AND ({$ib['unread']})"
+            );
+            if ($res) {
+                $counts[$key] = (int)($res->fetch_assoc()['c'] ?? 0);
+            }
+        } catch (Throwable $e) {
+            // leave it at 0
+        }
+    }
+    return $counts;
+}
+
+/**
+ * Mark one submission as opened, if it has not been already, recording who
+ * opened it and when. Returns true when this call changed it.
+ *
+ * Only an unread row is touched, so opening something already in progress
+ * or closed never moves it back to "viewed". The status and read_at are set
+ * in the same statement on purpose: see section 3 of
+ * admin/sql/upgrade_2026_09_25.sql for why that ordering matters on the
+ * production database.
+ */
+function eswasa_mark_viewed(mysqli $conn, string $key, int $id, string $by): bool
+{
+    $ib = eswasa_inbox($key);
+    if (!$ib || $id < 1) {
+        return false;
+    }
+    try {
+        $stmt = $conn->prepare(
+            "UPDATE {$ib['table']} SET {$ib['viewed']}, read_at = NOW(), read_by = ?
+              WHERE id = ? AND ({$ib['where']}) AND ({$ib['unread']})"
+        );
+        if (!$stmt) {
+            return false;
+        }
+        $by = mb_substr($by, 0, 50);
+        $stmt->bind_param('si', $by, $id);
+        $stmt->execute();
+        $changed = $stmt->affected_rows > 0;
+        $stmt->close();
+        return $changed;
+    } catch (Throwable $e) {
+        error_log('mark viewed failed (' . $key . '#' . $id . '): ' . $e->getMessage());
+        return false;
+    }
+}
+
+/**
+ * When, and by whom, a submission was first opened — null if never. Read
+ * back from the database rather than taken from PHP's clock, so it matches
+ * what the inbox pages show (PHP and MySQL may not share a time zone).
+ */
+function eswasa_viewed_info(mysqli $conn, string $key, int $id): ?array
+{
+    $ib = eswasa_inbox($key);
+    if (!$ib) {
+        return null;
+    }
+    try {
+        $stmt = $conn->prepare("SELECT read_at, read_by FROM {$ib['table']} WHERE id = ? AND ({$ib['where']})");
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return ($row && $row['read_at']) ? $row : null;
+    } catch (Throwable $e) {
+        return null;
+    }
 }
 
 /**

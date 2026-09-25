@@ -68,3 +68,75 @@ CREATE TABLE IF NOT EXISTS `eswasa_training_applications` (
   KEY `idx_status` (`status`, `created_at`),
   KEY `idx_session` (`session_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 3 ─────────────────────────────────────────────────────────────────
+-- Opening a submission in the admin marks it as viewed
+--
+-- read_at / read_by record when, and by whom, a submission was first opened.
+-- Quote requests gain a 'viewed' status between 'new' and 'in_progress'.
+--
+-- ORDER MATTERS. The enum change runs before read_at is added, and the
+-- admin only sets 'viewed' in the same UPDATE that sets read_at. Production
+-- runs MariaDB 10.1, which is not in strict mode by default, so an UPDATE to
+-- an enum value that does not exist yet would silently store '' instead of
+-- failing. With this order, read_at existing means 'viewed' exists too.
+-- ----------------------------------------------------------------------
+
+-- Customer feedback is created on first use by the public page, so on a
+-- fresh host it may not exist yet. Create it with its full shape first so the
+-- column changes below always have a table to work on.
+CREATE TABLE IF NOT EXISTS `eswasa_customer_feedback` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `service` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `feedback_type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `resolved` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `issue` text COLLATE utf8mb4_unicode_ci,
+  `rating` tinyint(4) DEFAULT NULL,
+  `suggestion` text COLLATE utf8mb4_unicode_ci,
+  `email` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT '0',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_created` (`created_at`),
+  KEY `idx_is_read` (`is_read`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+SET @sql := IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'eswasa_quote_requests'
+        AND COLUMN_NAME = 'status' AND COLUMN_TYPE LIKE '%''viewed''%') > 0,
+    'SELECT ''eswasa_quote_requests.status already has viewed''',
+    'ALTER TABLE `eswasa_quote_requests`
+        MODIFY COLUMN `status` enum(''new'',''viewed'',''in_progress'',''closed'') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''new'''
+);
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @sql := IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'eswasa_quote_requests' AND COLUMN_NAME = 'read_at') > 0,
+    'SELECT ''column eswasa_quote_requests.read_at already present''',
+    'ALTER TABLE `eswasa_quote_requests`
+        ADD COLUMN `read_at` datetime DEFAULT NULL AFTER `notes`,
+        ADD COLUMN `read_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `read_at`'
+);
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @sql := IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'eswasa_contact_messages' AND COLUMN_NAME = 'read_at') > 0,
+    'SELECT ''column eswasa_contact_messages.read_at already present''',
+    'ALTER TABLE `eswasa_contact_messages`
+        ADD COLUMN `read_at` datetime DEFAULT NULL AFTER `status`,
+        ADD COLUMN `read_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `read_at`'
+);
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @sql := IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'eswasa_customer_feedback' AND COLUMN_NAME = 'read_at') > 0,
+    'SELECT ''column eswasa_customer_feedback.read_at already present''',
+    'ALTER TABLE `eswasa_customer_feedback`
+        ADD COLUMN `read_at` datetime DEFAULT NULL AFTER `is_read`,
+        ADD COLUMN `read_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL AFTER `read_at`'
+);
+PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
