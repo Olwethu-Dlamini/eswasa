@@ -14,6 +14,8 @@ require __DIR__ . '/../../includes/cms_keys_customer_feedback.php';
     suggestion TEXT,
     email VARCHAR(150),
     is_read TINYINT(1) DEFAULT 0,
+    read_at DATETIME DEFAULT NULL,
+    read_by VARCHAR(50) DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_created (created_at),
     INDEX idx_is_read (is_read)
@@ -99,9 +101,7 @@ function fb_stars(int $n): string {
         <button class="nav-link <?= $active_tab === 'inbox' ? 'active' : '' ?>"
                 data-bs-toggle="tab" data-bs-target="#tab-inbox" type="button" role="tab">
             Inbox
-            <?php if ($unread_cnt > 0): ?>
-                <span class="badge bg-primary ms-1"><?= $unread_cnt ?> unread</span>
-            <?php endif; ?>
+            <span class="badge bg-primary ms-1<?= $unread_cnt > 0 ? '' : ' d-none' ?>" data-inbox-count="feedback" data-count-suffix=" unread"><?= $unread_cnt ?> unread</span>
         </button>
     </li>
     <li class="nav-item" role="presentation">
@@ -143,10 +143,13 @@ function fb_stars(int $n): string {
                                 <?php foreach ($rows as $r):
                                     $unread = !(int)$r['is_read'];
                                 ?>
-                                    <tr class="<?= $unread ? 'table-active' : '' ?>" style="<?= $unread ? 'font-weight: 600;' : '' ?>">
+                                    <?php $ref = 'feedback:' . (int)$r['id']; ?>
+                                    <tr class="<?= $unread ? 'inbox-unread' : '' ?>"
+                                        data-inbox="feedback" data-inbox-id="<?= (int)$r['id'] ?>"
+                                        data-unread="<?= $unread ? '1' : '0' ?>">
                                         <td class="text-center">
                                             <?php if ($unread): ?>
-                                                <span class="badge bg-primary rounded-pill" title="Unread">&nbsp;</span>
+                                                <span class="badge bg-primary rounded-pill" title="Unread" data-inbox-unread-only="<?= $ref ?>">&nbsp;</span>
                                             <?php endif; ?>
                                         </td>
                                         <td><?= date('Y-m-d H:i', strtotime($r['created_at'])) ?></td>
@@ -162,15 +165,14 @@ function fb_stars(int $n): string {
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-inbox-open
                                                     data-bs-toggle="modal" data-bs-target="#viewModal<?= (int)$r['id'] ?>">
                                                 View
                                             </button>
-                                            <?php if ($unread): ?>
-                                                <a href="index.php?page=customer_feedback.php&mark_read=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline-secondary">Mark read</a>
-                                            <?php else: ?>
-                                                <a href="index.php?page=customer_feedback.php&mark_read=<?= (int)$r['id'] ?>&unread=1" class="btn btn-sm btn-outline-secondary">Mark unread</a>
-                                            <?php endif; ?>
+                                            <?php /* Both are rendered so opening the submission can swap
+                                                     them without a reload (admin/js/inbox.js). */ ?>
+                                            <a href="index.php?page=customer_feedback.php&mark_read=<?= (int)$r['id'] ?>" class="btn btn-sm btn-outline-secondary<?= $unread ? '' : ' d-none' ?>" data-inbox-unread-only="<?= $ref ?>">Mark read</a>
+                                            <a href="index.php?page=customer_feedback.php&mark_read=<?= (int)$r['id'] ?>&unread=1" class="btn btn-sm btn-outline-secondary<?= $unread ? ' d-none' : '' ?>" data-inbox-read-only="<?= $ref ?>">Mark unread</a>
                                             <a href="index.php?page=customer_feedback.php&delete=<?= (int)$r['id'] ?>"
                                                class="btn btn-sm btn-outline-danger"
                                                onclick="return confirm('Delete this submission?')">Delete</a>
@@ -289,10 +291,15 @@ function fb_stars(int $n): string {
                         <h6 class="fw-bold mt-3">Suggestion</h6>
                         <p style="white-space: pre-line;"><?= htmlspecialchars($r['suggestion']) ?></p>
                     <?php endif; ?>
+                    <p class="small text-muted mb-0 mt-3<?= empty($r['read_by']) ? ' d-none' : '' ?>" data-inbox-viewed-by="feedback:<?= (int)$r['id'] ?>">
+                        <?php if (!empty($r['read_by'])): ?>
+                            First opened by <?= htmlspecialchars($r['read_by']) ?> on <?= htmlspecialchars(date('j M Y, H:i', strtotime($r['read_at']))) ?>.
+                        <?php endif; ?>
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <?php if (!(int)$r['is_read']): ?>
-                        <a href="index.php?page=customer_feedback.php&mark_read=<?= (int)$r['id'] ?>" class="btn btn-outline-secondary">Mark Read</a>
+                        <a href="index.php?page=customer_feedback.php&mark_read=<?= (int)$r['id'] ?>" class="btn btn-outline-secondary" data-inbox-unread-only="feedback:<?= (int)$r['id'] ?>">Mark Read</a>
                     <?php endif; ?>
                     <?php if (!empty($r['email'])): ?>
                         <a href="mailto:<?= htmlspecialchars($r['email']) ?>" class="btn btn-primary">

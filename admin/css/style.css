@@ -535,3 +535,20 @@ h1, h2, h3, h4, h5, h6,
     color: var(--bs-secondary-color);
     font-size: 0.75rem;
 }
+
+/* ══════════════════════════════════════════════
+   INBOXES — unopened submissions (admin/js/inbox.js)
+══════════════════════════════════════════════ */
+/* A submission nobody has opened yet. Cleared as soon as it is opened. */
+tr.inbox-unread > td {
+    background-color: rgba(255, 193, 7, 0.12);
+    font-weight: 600;
+}
+
+/* The row a notification link pointed at, briefly highlighted on arrival. */
+tr.inbox-flash > td {
+    animation: inbox-flash 2.4s ease-out;
+}
+@keyframes inbox-flash {
+    from { background-color: rgba(43, 51, 136, 0.28); }
+}

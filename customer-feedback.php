@@ -44,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             suggestion TEXT,
             email VARCHAR(150),
             is_read TINYINT(1) DEFAULT 0,
+            read_at DATETIME DEFAULT NULL,
+            read_by VARCHAR(50) DEFAULT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             INDEX idx_created (created_at),
             INDEX idx_is_read (is_read)

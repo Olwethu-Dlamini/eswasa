@@ -10,11 +10,13 @@
 if (!defined('ESWASA_ADMIN')) exit('Direct access not permitted.');
 require_once __DIR__ . '/../../includes/cms_helpers.php';
 
+// "viewed" is set automatically the first time an application is opened
+// (admin/js/inbox.js); the others are chosen by hand.
 $app_statuses = [
-    'new'       => ['bg-primary',   'New'],
-    'viewed'    => ['bg-info text-dark', 'Viewed'],
+    'new'       => ['bg-primary',           'New'],
+    'viewed'    => ['bg-info text-dark',    'Viewed'],
     'contacted' => ['bg-warning text-dark', 'Contacted'],
-    'closed'    => ['bg-secondary', 'Closed'],
+    'closed'    => ['bg-secondary',         'Closed'],
 ];
 
 // ── Status update ─────────────────────────────────────────────
@@ -94,9 +96,12 @@ foreach ($rows as $r) {
     if (isset($counts[$r['status']])) $counts[$r['status']]++;
 }
 
-$app_badge = function (string $status) use ($app_statuses) {
+// $ref ("training_application:12") lets admin/js/inbox.js relabel the badge
+// when the application is opened.
+$app_badge = function (string $status, string $ref = '') use ($app_statuses) {
     [$cls, $label] = $app_statuses[$status] ?? ['bg-light text-dark', $status];
-    return '<span class="badge ' . $cls . '">' . htmlspecialchars($label) . '</span>';
+    $attr = $ref !== '' ? ' data-inbox-status="' . htmlspecialchars($ref) . '"' : '';
+    return '<span class="badge ' . $cls . '"' . $attr . '>' . htmlspecialchars($label) . '</span>';
 };
 ?>
 
@@ -154,8 +159,14 @@ $app_badge = function (string $status) use ($app_statuses) {
                     </thead>
                     <tbody>
                     <?php foreach ($rows as $r):
-                        $modal_id = 'amodal_' . (int)$r['id']; ?>
-                        <tr>
+                        $modal_id = 'amodal_' . (int)$r['id'];
+                        $is_new = $r['status'] === 'new';
+                        $ref = 'training_application:' . (int)$r['id']; ?>
+                        <tr class="<?= $is_new ? 'inbox-unread' : '' ?>"
+                            data-inbox="training_application" data-inbox-id="<?= (int)$r['id'] ?>"
+                            data-unread="<?= $is_new ? '1' : '0' ?>" data-viewed-status="viewed"
+                            data-viewed-label="<?= htmlspecialchars($app_statuses['viewed'][1]) ?>"
+                            data-viewed-class="<?= htmlspecialchars($app_statuses['viewed'][0]) ?>">
                             <td class="small text-nowrap"><?= htmlspecialchars(date('Y-m-d H:i', strtotime($r['created_at']))) ?></td>
                             <td>
                                 <div class="fw-semibold"><?= htmlspecialchars($r['full_name']) ?></div>
@@ -168,9 +179,9 @@ $app_badge = function (string $status) use ($app_statuses) {
                                 <div class="fw-semibold"><?= htmlspecialchars((string)$r['training_code']) ?></div>
                                 <div class="small text-muted"><?= htmlspecialchars((string)$r['intake_label']) ?></div>
                             </td>
-                            <td><?= $app_badge((string)$r['status']) ?></td>
+                            <td><?= $app_badge((string)$r['status'], $ref) ?></td>
                             <td class="text-nowrap">
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#<?= $modal_id ?>">
+                                <button class="btn btn-sm btn-outline-primary" data-inbox-open data-bs-toggle="modal" data-bs-target="#<?= $modal_id ?>">
                                     <i class="fas fa-eye"></i> View
                                 </button>
                                 <a href="?<?= htmlspecialchars(http_build_query(['page' => 'training_applications.php', 'training' => $filter, 'delete_application' => (int)$r['id']])) ?>"
@@ -188,14 +199,15 @@ $app_badge = function (string $status) use ($app_statuses) {
     </div>
 
     <?php foreach ($rows as $r):
-        $modal_id = 'amodal_' . (int)$r['id']; ?>
+        $modal_id = 'amodal_' . (int)$r['id'];
+        $ref = 'training_application:' . (int)$r['id']; ?>
         <div class="modal fade" id="<?= $modal_id ?>" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             Application #<?= (int)$r['id'] ?>
-                            <?= $app_badge((string)$r['status']) ?>
+                            <?= $app_badge((string)$r['status'], $ref) ?>
                             <small class="text-muted ms-2"><?= htmlspecialchars(date('d M Y, H:i', strtotime($r['created_at']))) ?></small>
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -222,10 +234,16 @@ $app_badge = function (string $status) use ($app_statuses) {
                             <p style="white-space: pre-line;"><?= htmlspecialchars($r['comments']) ?></p>
                         <?php endif; ?>
 
+                        <p class="small text-muted<?= empty($r['read_by']) ? ' d-none' : '' ?>" data-inbox-viewed-by="<?= $ref ?>">
+                            <?php if (!empty($r['read_by'])): ?>
+                                First opened by <?= htmlspecialchars($r['read_by']) ?> on <?= htmlspecialchars(date('j M Y, H:i', strtotime($r['read_at']))) ?>.
+                            <?php endif; ?>
+                        </p>
+
                         <h6>Status</h6>
                         <form method="POST" class="mb-3 d-flex gap-2 align-items-center">
                             <input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                            <select name="update_status" class="form-select form-select-sm" style="max-width:200px;">
+                            <select name="update_status" class="form-select form-select-sm" style="max-width:200px;" data-inbox-status-select="<?= $ref ?>">
                                 <?php foreach ($app_statuses as $val => [$cls, $lbl]): ?>
                                     <option value="<?= $val ?>" <?= $r['status'] === $val ? 'selected' : '' ?>><?= $lbl ?></option>
                                 <?php endforeach; ?>

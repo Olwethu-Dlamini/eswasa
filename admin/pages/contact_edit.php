@@ -303,7 +303,10 @@ $messages = $conn->query("SELECT * FROM eswasa_contact_messages ORDER BY created
                     </thead>
                     <tbody>
                         <?php while ($msg = $messages->fetch_assoc()): ?>
-                            <tr style="<?= $msg['status'] == 'new' ? 'background-color: #fff8e1;' : '' ?>">
+                            <?php $is_new = $msg['status'] === 'new'; $ref = 'contact:' . (int)$msg['id']; ?>
+                            <tr class="<?= $is_new ? 'inbox-unread' : '' ?>"
+                                data-inbox="contact" data-inbox-id="<?= (int)$msg['id'] ?>"
+                                data-unread="<?= $is_new ? '1' : '0' ?>" data-viewed-status="read">
                                 <td><?= htmlspecialchars($msg['name']) ?></td>
                                 <td><?= htmlspecialchars($msg['email']) ?></td>
                                 <td><?= htmlspecialchars($msg['subject']) ?></td>
@@ -311,7 +314,7 @@ $messages = $conn->query("SELECT * FROM eswasa_contact_messages ORDER BY created
                                 <td>
                                     <form method="POST" style="display:inline;">
                                         <input type="hidden" name="id" value="<?= $msg['id'] ?>">
-                                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" data-inbox-status-select="<?= $ref ?>">
                                             <option value="new" <?= $msg['status'] == 'new' ? 'selected' : '' ?>>New</option>
                                             <option value="read" <?= $msg['status'] == 'read' ? 'selected' : '' ?>>Read</option>
                                             <option value="replied" <?= $msg['status'] == 'replied' ? 'selected' : '' ?>>Replied</option>
@@ -321,9 +324,12 @@ $messages = $conn->query("SELECT * FROM eswasa_contact_messages ORDER BY created
                                 </td>
                                 <td>
                                     <!-- View button triggers modal -->
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-primary view-message-btn" 
-                                            data-id="<?= $msg['id'] ?>"
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-primary view-message-btn"
+                                            data-inbox-open
+                                            data-id="<?= (int)$msg['id'] ?>"
+                                            data-read-by="<?= htmlspecialchars((string)($msg['read_by'] ?? '')) ?>"
+                                            data-read-at="<?= !empty($msg['read_at']) ? htmlspecialchars(date('j M Y, H:i', strtotime($msg['read_at']))) : '' ?>"
                                             data-name="<?= htmlspecialchars($msg['name']) ?>"
                                             data-email="<?= htmlspecialchars($msg['email']) ?>"
                                             data-phone="<?= htmlspecialchars($msg['phone']) ?>"
@@ -386,7 +392,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const em = document.createElement('em');
             em.textContent = 'Sent on: ' + (d.date || '');
             sent.appendChild(em);
-            body.append(label, message, document.createElement('hr'), sent);
+
+            // Who opened it first. Filled in by inbox.js when this opening is
+            // the first one.
+            const opened = document.createElement('p');
+            opened.className = 'small text-muted mb-0' + (d.readBy ? '' : ' d-none');
+            opened.dataset.inboxViewedBy = 'contact:' + d.id;
+            opened.textContent = d.readBy ? 'First opened by ' + d.readBy + ' on ' + d.readAt + '.' : '';
+
+            body.append(label, message, document.createElement('hr'), sent, opened);
 
             bootstrap.Modal.getOrCreateInstance(document.getElementById('viewMessageModal')).show();
         });
