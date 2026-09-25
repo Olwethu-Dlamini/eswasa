@@ -299,6 +299,17 @@ function eswasa_notify_submission(mysqli $conn, string $key, int $id, string $su
             ? eswasa_site_url('admin/index.php?' . http_build_query(['page' => $ib['page'], 'view' => $id]))
             : eswasa_site_url('admin/index.php?' . http_build_query(['page' => $ib['page']]));
 
+        // The database's clock, not PHP's: the admin lists submissions by
+        // their created_at, and PHP and MySQL need not share a time zone.
+        $received = null;
+        try {
+            if ($res = @$conn->query('SELECT NOW()')) {
+                $received = strtotime((string)$res->fetch_row()[0]) ?: null;
+            }
+        } catch (Throwable $e) {
+        }
+        $opts['received'] = $received ?? time();
+
         $html = eswasa_notification_html($title, $rows, $admin_url, $ib['inbox'], $opts);
         return eswasa_send_mail(
             $conn,
@@ -359,7 +370,7 @@ function eswasa_notification_html(string $title, array $rows, string $admin_url,
         .     '<a href="' . $e($admin_url) . '" style="display:inline-block;background:#2B3388;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:5px;font-weight:bold;">Open in the admin</a>'
         .   '</p>'
         .   '<p style="margin:18px 0 0;font-size:12px;color:#8a8fa8;">'
-        .     'Received ' . $e(date('j F Y \a\t H:i')) . '. ' . $reply
+        .     'Received ' . $e(date('j F Y \a\t H:i', (int)($opts['received'] ?? time()))) . '. ' . $reply
         .     'It is also saved under ' . $e($inbox) . ' in the admin.'
         .   '</p>'
         . '</div>'
