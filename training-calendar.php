@@ -843,7 +843,7 @@ if (isset($_GET['applied'])) {
 <?php foreach ($train_cal_sessions as $row):
     if (empty($row['intakes'])) continue; // a session with no intakes can't render meaningfully
 ?>
-            { id: <?= (int)$row['id'] ?>, code: <?= json_encode($row['code'], JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($row['family'], JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($row['title'], JSON_UNESCAPED_UNICODE) ?>, colour: <?= json_encode(trim((string)($row['colour'] ?? '')) ?: null) ?>, sessions: [
+            { sessionId: <?= (int)$row['id'] ?>, code: <?= json_encode($row['code'], JSON_UNESCAPED_UNICODE) ?>, family: <?= json_encode($row['family'], JSON_UNESCAPED_UNICODE) ?>, title: <?= json_encode($row['title'], JSON_UNESCAPED_UNICODE) ?>, colour: <?= json_encode(trim((string)($row['colour'] ?? '')) ?: null) ?>, sessions: [
 <?php foreach ($row['intakes'] as $s): ?>
                 { start: <?= json_encode($s['start']) ?>, end: <?= json_encode($s['end']) ?>, label: <?= json_encode($s['label'], JSON_UNESCAPED_UNICODE) ?> },
 <?php endforeach; ?>
@@ -1115,7 +1115,9 @@ if (isset($_GET['applied'])) {
         function openApplyModal(training, session) {
             document.getElementById('modal-date').textContent = session.label;
             document.getElementById('modal-event').textContent = `${training.code} — ${training.title}`;
-            document.getElementById('apply-session-id').value = training.id;
+            // sessionId, not id: the script below reuses t.id for the card's
+            // position in the list.
+            document.getElementById('apply-session-id').value = training.sessionId;
             document.getElementById('apply-intake-start').value = session.start;
             document.getElementById('apply-intake-label').value = session.label;
             new bootstrap.Modal(document.getElementById('applyModal')).show();
