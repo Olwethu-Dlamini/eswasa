@@ -45,6 +45,25 @@ function requireLogin() {
     }
 }
 
+// Per-session token for forms whose effect reaches outside the admin — the
+// SMTP login, and where every form's submissions are emailed. The admin has
+// no other protection against cross-site requests, and without it a page on
+// any other site could have an admin's browser point notifications (and the
+// personal data in them) at an address of its choosing.
+function csrf_token() {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+function csrf_field() {
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(csrf_token()) . '">';
+}
+function csrf_valid() {
+    $sent = $_POST['csrf_token'] ?? '';
+    return is_string($sent) && !empty($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $sent);
+}
+
 // Function to get current user info
 function getCurrentUser($conn) {
     if (isLoggedIn()) {

@@ -16,6 +16,12 @@ foreach (eswasa_inboxes() as $ib) {
 $smtp_keys = array_column(ESWASA_MAIL_SETTING_KEYS, 1, null);
 $smtp_key_of = array_combine(array_keys(ESWASA_MAIL_SETTING_KEYS), $smtp_keys);
 
+// ---- Every POST here must come from this page (see csrf_valid()) ----
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['send_test_email']) || isset($_POST['save_settings'])) && !csrf_valid()) {
+    set_flash('danger', 'That form had expired, so nothing was changed. Please try again.');
+    redirect_self();
+}
+
 // ---- POST: send a test email ----
 // Uses the saved settings, so what is tested is exactly what the forms use.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_test_email'])) {
@@ -73,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
     // Fields set by an environment variable on the server are shown read-only
     // and never written here: the environment would override them anyway.
     $current = eswasa_mail_settings($conn);
+    $stored_before = pc_get_many($conn, $smtp_keys);
     $smtp = [];
     foreach (['host', 'port', 'secure', 'username', 'from_email', 'from_name'] as $f) {
         if ($current['source'][$f] !== 'env') {
@@ -110,9 +117,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
 
     // The password is write-only: the form never shows it, so a blank box
     // means "keep what is saved". Clearing it takes the explicit checkbox.
+    //
+    // Except when the server or the username changes: then a saved password
+    // is never carried over to the new login. Otherwise pointing the server
+    // field somewhere else would hand the saved password to that server on
+    // the next email, without anyone ever having typed it there.
     $password_note = '';
+    $password_dropped = false;
+    $login_changed = (isset($smtp['host']) && $smtp['host'] !== (string)($stored_before[$smtp_key_of['host']] ?? ''))
+        || (isset($smtp['username']) && $smtp['username'] !== (string)($stored_before[$smtp_key_of['username']] ?? ''));
     if ($current['source']['password'] !== 'env') {
-        if (!empty($_POST['clear_smtp_password'])) {
+        $typed = (string)($_POST[$smtp_key_of['password']] ?? '');
+        if ($login_changed && $typed === '' && $current['password'] !== '') {
+            pc_save($conn, $smtp_key_of['password'], '');
+            $password_note = ' The SMTP server or username changed, so the saved password was removed: enter it again.';
+            $password_dropped = true;
+        } elseif (!empty($_POST['clear_smtp_password'])) {
             pc_save($conn, $smtp_key_of['password'], '');
             $password_note = ' SMTP password removed.';
         } elseif (($_POST[$smtp_key_of['password']] ?? '') !== '') {
@@ -124,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
     $host_note = $smtp['host'] ?? 'set on the server';
     log_activity($conn, 'settings.save', 'Site Settings',
         'SMTP server: ' . ($host_note !== '' ? $host_note : 'none') . '.' . $password_note);
-    set_flash('success', 'Settings saved.' . $password_note);
+    set_flash($password_dropped ? 'warning' : 'success', 'Settings saved.' . $password_note);
     redirect_self();
 }
 
@@ -173,6 +193,7 @@ $env_attr = function (string $f) use ($mail) {
     <div class="col-lg-7">
         <form method="post" autocomplete="off">
             <input type="hidden" name="save_settings" value="1">
+            <?= csrf_field() ?>
 
             <div class="card mb-4">
                 <div class="card-header"><i class="fas fa-chart-line me-2"></i>Website Analytics</div>
@@ -329,6 +350,7 @@ $env_attr = function (string $f) use ($mail) {
 
                 <form method="post" class="d-flex gap-2">
                     <input type="hidden" name="send_test_email" value="1">
+                    <?= csrf_field() ?>
                     <input type="email" class="form-control form-control-sm" name="test_to" required
                            value="<?= htmlspecialchars($current_user_email) ?>" placeholder="you@example.com">
                     <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
