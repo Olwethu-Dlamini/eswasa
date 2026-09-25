@@ -30,6 +30,16 @@ function isLoggedIn() {
 // Function to redirect to login if not logged in
 function requireLogin() {
     if (!isLoggedIn()) {
+        // Remember where they were going, so a link in a notification email
+        // still lands on the submission once they have signed in. Only the
+        // admin's own page parameters are kept, always under index.php, so
+        // this can never be turned into a redirect to somewhere else.
+        $keep = array_intersect_key($_GET, array_flip(['page', 'view', 'tab', 'training']));
+        $keep = array_filter($keep, 'is_string');
+        if (!empty($keep['page'])) {
+            $keep['page'] = basename($keep['page']);
+            $_SESSION['after_login'] = 'index.php?' . http_build_query($keep);
+        }
         header('Location: login.php');
         exit();
     }

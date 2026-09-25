@@ -28,7 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['username'] = $user['username'];
 
             log_activity($conn, 'login', 'users#' . (int)$user['id'], 'Successful login');
-            header('Location: index.php?page=index_edit.php');
+
+            // Back to the page that sent them here (see requireLogin()), e.g.
+            // a submission linked from a notification email.
+            $target = $_SESSION['after_login'] ?? 'index.php?page=index_edit.php';
+            unset($_SESSION['after_login']);
+            header('Location: ' . $target);
             exit();
         } else {
             $error = 'Invalid password.';
